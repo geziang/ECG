@@ -1,6 +1,9 @@
 # ===== 数据与权重（体积大，不入库）=====
 *.whl
-ECG_SSL_LFBT-main/data/
+ECG_SSL_LFBT-main/data/*
+!ECG_SSL_LFBT-main/data/multilib/
+ECG_SSL_LFBT-main/data/multilib/*
+!ECG_SSL_LFBT-main/data/multilib/manifest.json
 ECG_SSL_LFBT-main/ptb-xl/
 ECG_SSL_LFBT-main/MDT_DATA/
 ECG_SSL_LFBT-main/checkpoint/
