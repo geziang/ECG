@@ -36,6 +36,17 @@ parser.add_argument('--print-freq', default=100, type=int, metavar='N',
 parser.add_argument('--seed', default=0, type=int, metavar='N', help='random seed')
 parser.add_argument('--checkpoint-dir', default='./checkpoint/', type=Path,
                     metavar='DIR', help='path to checkpoint directory')
+# ===== S1/D9: VICReg 化开关 (默认全关 == B0) =====
+parser.add_argument('--loss-mode', default='bt', choices=['bt', 'vicreg'],
+                    help='目标函数: bt=原版 Barlow Twins (B0), vicreg=D9 三项化')
+parser.add_argument('--vicreg-sim', default=25.0, type=float, help='VICReg invariance(MSE) 系数')
+parser.add_argument('--vicreg-var', default=25.0, type=float, help='VICReg variance hinge 系数')
+parser.add_argument('--vicreg-cov', default=1.0, type=float, help='VICReg covariance 系数')
+parser.add_argument('--vicreg-var-eps', default=1e-4, type=float, help='variance hinge 的 sqrt 内 eps')
+parser.add_argument('--vicreg-keep-bn', action='store_true',
+                    help='vicreg 模式下保留输出 BN(affine=False); 默认去除, 方差交给 hinge')
+parser.add_argument('--projector-norm', default='batchnorm', choices=['batchnorm', 'layernorm'],
+                    help='projector 隐层归一化: batchnorm=B0 原版, layernorm=D9 消融')
 
 
 def off_diagonal(x):
@@ -62,7 +73,10 @@ class LeadFusionBT(object):
             layers = []
             for j in range(len(sizes) - 2):
                 layers.append(nn.Linear(sizes[j], sizes[j + 1], bias=False))
-                layers.append(nn.BatchNorm1d(sizes[j + 1]))
+                if args.projector_norm == 'layernorm':
+                    layers.append(nn.LayerNorm(sizes[j + 1]))
+                else:
+                    layers.append(nn.BatchNorm1d(sizes[j + 1]))
                 layers.append(nn.ReLU(inplace=True))
             layers.append(nn.Linear(sizes[-2], sizes[-1], bias=False))
             self.projector_group.append(nn.Sequential(*layers).to(self.device))
@@ -70,12 +84,48 @@ class LeadFusionBT(object):
         for i in range(args.num_leads):
             self.bn_group.append(nn.BatchNorm1d(sizes[-1], affine=False).to(self.device))
 
+    def _pair_loss(self, zi, zj):
+        """D9: 单导联对的 VICReg 三项损失 (官方口径: MSE + std hinge + off-diag cov/d)。
+
+        zi/zj 为 projector 原始输出 (keep-bn 模式下已过输出 BN)。
+        """
+        inv = nn.functional.mse_loss(zi, zj)
+        var = (torch.relu(1.0 - torch.sqrt(zi.var(dim=0) + self.args.vicreg_var_eps)).mean()
+               + torch.relu(1.0 - torch.sqrt(zj.var(dim=0) + self.args.vicreg_var_eps)).mean()) / 2
+        cov = 0
+        for z in (zi, zj):
+            zc = z - z.mean(dim=0)
+            c = (zc.T @ zc) / z.shape[0]
+            cov = cov + off_diagonal(c).pow_(2).sum() / z.shape[1]
+        cov = cov / 2
+        return (self.args.vicreg_sim * inv
+                + self.args.vicreg_var * var
+                + self.args.vicreg_cov * cov)
+
     def forward(self, y1, y2):
         z1_list = list()
         z2_list = list()
         for i in range(self.args.num_leads):
             z1_list.append(self.projector_group[i](self.backbone_group[i](y1[:, [i], :])))
             z2_list.append(self.projector_group[i](self.backbone_group[i](y2[:, [i], :])))
+        if self.args.loss_mode == 'vicreg':
+            # D9: bn 语义交给 variance hinge; keep-bn 开关可保留输出 BN(whitening-lite 消融)
+            if self.args.vicreg_keep_bn:
+                z1_list = [self.bn_group[i](z1_list[i]) for i in range(self.args.num_leads)]
+                z2_list = [self.bn_group[i](z2_list[i]) for i in range(self.args.num_leads)]
+            loss_r = 0
+            loss_t = 0
+            for i in range(self.args.num_leads):
+                for j in range(self.args.num_leads):
+                    ls = self._pair_loss(z1_list[i], z2_list[j])
+                    if i == j:
+                        loss_r += ls
+                    else:
+                        loss_t += ls
+            loss_r = loss_r / self.args.num_leads
+            loss_t = loss_t / (self.args.num_leads * (self.args.num_leads - 1))
+            loss = self.args.gamma * loss_r + (1 - self.args.gamma) * loss_t
+            return loss, loss_r, loss_t
         loss_r = 0
         loss_t = 0
         for i in range(self.args.num_leads):
