@@ -1,0 +1,41 @@
+# ===== 数据与权重（体积大，不入库）=====
+*.whl
+ECG_SSL_LFBT-main/data/
+ECG_SSL_LFBT-main/ptb-xl/
+ECG_SSL_LFBT-main/MDT_DATA/
+ECG_SSL_LFBT-main/checkpoint/
+ECG_SSL_LFBT-main/feat/
+ECG_SSL_LFBT-main/ft_models/
+*.pth
+*.npy
+*.dat
+*.mat
+*.hea
+*.MDT
+
+# ===== Python 运行时 =====
+venv/
+.venv/
+__pycache__/
+*.pyc
+*.egg-info/
+
+# ===== 日志与临时产物 =====
+*.log
+ECG_SSL_LFBT-main/pt_err.txt
+ECG_SSL_LFBT-main/pt_run_log.txt
+ECG_SSL_LFBT-main/pt_full_log.txt
+ECG_SSL_LFBT-main/pt_log.txt
+ECG_SSL_LFBT-main/lp_run_log.txt
+ECG_SSL_LFBT-main/ft_run_log.txt
+ECG_SSL_LFBT-main/debug.log
+runs/
+runs_e*/
+results_e*/
+runlog/
+
+# ===== 系统与编辑器 =====
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/

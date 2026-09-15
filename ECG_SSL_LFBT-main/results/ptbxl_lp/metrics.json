@@ -1,0 +1,7 @@
+{
+ "auroc": 0.912578024655135,
+ "auprc": 0.7176817849274493,
+ "checkpoint": "checkpoint\\ptxl_gamma08\\encoder_group.pth",
+ "num_classes": 5,
+ "seed": 0
+}

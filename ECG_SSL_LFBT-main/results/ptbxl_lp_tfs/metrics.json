@@ -1,0 +1,7 @@
+{
+ "auroc": 0.4699627731417225,
+ "auprc": 0.19301572232438274,
+ "checkpoint": "random-init",
+ "num_classes": 5,
+ "seed": 0
+}

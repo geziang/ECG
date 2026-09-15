@@ -1,0 +1,7 @@
+experiment,auroc,auprc,checkpoint,fraction,num_classes,note
+ptbxl_lp,0.9126,0.7177,checkpoint\ptxl_gamma08\encoder_group.pth,,5,
+ptbxl_lp_tfs,0.47,0.193,random-init,,5,
+ptbxl_ft_1.0,0.9197,0.7173,checkpoint\ptxl_gamma08\encoder_group.pth,1.0,,
+ptbxl_ft_0.1,0.8756,0.6431,checkpoint\ptxl_gamma08\encoder_group.pth,0.1,,
+ptbxl_ft_tfs,0.8839,0.6715,random-init,1.0,,
+ptbxl_ft_tfs_0.1,0.8385,0.5836,random-init,0.1,,
