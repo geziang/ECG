@@ -5,11 +5,13 @@ PY="C:/Users/admin/.conda/envs/DL/python.exe"
 export PYTHONUNBUFFERED=1
 SUM=runlog/S1/overnight_summary.md
 
-# 等夜间队列写完结束标记(最多等到 09:00, 防呆)
+# 等夜间队列写完结束标记(最多等 13 小时防呆)
+waited=0
 while ! grep -q "夜间队列全部结束" "$SUM" 2>/dev/null; do
-  h=$(date +%H%M)
-  [ "$h" -ge 0900 ] && { echo "[$(date +%H:%M)] 超过 09:00 放弃接力" >> "$SUM"; exit 1; }
-  sleep 120
+  sleep 120; waited=$((waited + 2))
+  if [ "$waited" -ge 780 ]; then
+    echo "[$(date +%H:%M)] 等待超时(13h)放弃接力" >> "$SUM"; exit 1
+  fi
 done
 
 echo "[$(date +%H:%M)] == 接力: B0 seed2 复跑开始 ==" >> "$SUM"
