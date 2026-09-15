@@ -32,7 +32,6 @@ ECG_SSL_LFBT-main/debug.log
 runs/
 runs_e*/
 results_e*/
-runlog/
 
 # ===== 系统与编辑器 =====
 .DS_Store

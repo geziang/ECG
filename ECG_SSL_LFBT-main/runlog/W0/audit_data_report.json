@@ -1,0 +1,193 @@
+{
+ "generated_at": "2026-09-15T17:49:59",
+ "checks": {
+  "pretrain_dirs": {
+   "pt_pretrain_count": 17418,
+   "pt_pretrain_expect": 17418,
+   "pt_pretrain_naming": "sample_XXXXX",
+   "pretrain_count": 21837,
+   "pretrain_expect_全量": 21837,
+   "pretrain_naming": "HRxxxxx",
+   "conclusion": "pt_pretrain=冻结协议(folds1-8, sample_索引命名)；pretrain=全集(HR命名, 未用)"
+  },
+  "downstream_A_ptbxl": {
+   "train": {
+    "per_class": {
+     "CD": 1680,
+     "HYP": 416,
+     "MI": 2043,
+     "NORM": 7577,
+     "STTC": 1923
+    },
+    "total": 13639
+   },
+   "val": {
+    "per_class": {
+     "CD": 206,
+     "HYP": 65,
+     "MI": 233,
+     "NORM": 951,
+     "STTC": 259
+    },
+    "total": 1714
+   },
+   "test": {
+    "per_class": {
+     "CD": 229,
+     "HYP": 56,
+     "MI": 256,
+     "NORM": 952,
+     "STTC": 246
+    },
+    "total": 1739
+   },
+   "total": 17092
+  },
+  "downstream_B_gfold": {
+   "dir_counts": {
+    "train": 15505,
+    "val": 3407,
+    "test": 3387
+   },
+   "manifest_split_counts": {
+    "train": 13639,
+    "val": 1714,
+    "test": 1739,
+    "pretrain": 3779
+   },
+   "manifest_in_pretrain": {
+    "true": 17418,
+    "false": 3453
+   },
+   "manifest_naming": "HR%05d ↔ ecg_id（可 join 官方 csv）",
+   "manifest_vs_A_match": true,
+   "manifest_protocol_reading": "manifest 即体系A口径：downstream(train 13,639⊂pretrain 17,418) + 纯预训练 3,779 + val/test 3,453(=in_pretrain False)；体系B为旧划分，与 manifest 偏离，待 W0 定版",
+   "duplicate_files": {
+    "total_files": 22299,
+    "unique": 21835,
+    "dup_names_count": 464,
+    "split_combos": {
+     "('train', 'val')": 284,
+     "('test', 'train')": 177,
+     "('test', 'val')": 3
+    }
+   }
+  },
+  "isolation_leakage": {
+   "fold_to_split": {
+    "test": {
+     "1": 314,
+     "2": 339,
+     "3": 335,
+     "4": 352,
+     "5": 345,
+     "6": 351,
+     "7": 339,
+     "8": 354,
+     "9": 346,
+     "10": 308
+    },
+    "train": {
+     "1": 1547,
+     "2": 1555,
+     "3": 1557,
+     "4": 1508,
+     "5": 1554,
+     "6": 1557,
+     "7": 1545,
+     "8": 1524,
+     "9": 1566,
+     "10": 1562
+    },
+    "val": {
+     "1": 356,
+     "2": 326,
+     "3": 353,
+     "4": 359,
+     "5": 330,
+     "6": 315,
+     "7": 339,
+     "8": 344,
+     "9": 314,
+     "10": 367
+    }
+   },
+   "patient_isolation_violations": 1513,
+   "violation_patient_ids_head": [
+    302,
+    304,
+    305,
+    307,
+    308,
+    310,
+    318,
+    319,
+    320,
+    321
+   ],
+   "unmapped_ecg_ids": [
+    137,
+    139,
+    140,
+    141,
+    142,
+    143,
+    145,
+    456,
+    458,
+    459
+   ],
+   "unmapped_count": 38,
+   "in_pretrain_leakage_val_test": [],
+   "leakage_count": 0
+  },
+  "baseline_sha256": {
+   "expect": "026033d532d4e42a1b53ca9c4d2e95f9c09b2daaaab5c9041c9d474a1356cdad",
+   "got": "026033d532d4e42a1b53ca9c4d2e95f9c09b2daaaab5c9041c9d474a1356cdad",
+   "match": true
+  },
+  "npy_spot_check": [
+   {
+    "where": "pt_pretrain",
+    "file": "sample_00001.npy",
+    "descr": "<f4",
+    "shape": [
+     8,
+     2048
+    ],
+    "ok": true
+   },
+   {
+    "where": "pretrain",
+    "file": "HR00001.npy",
+    "descr": "<f8",
+    "shape": [
+     8,
+     5000
+    ],
+    "ok": false
+   },
+   {
+    "where": "ptbxl",
+    "file": "sample_00041.npy",
+    "descr": "<f4",
+    "shape": [
+     8,
+     2048
+    ],
+    "ok": true
+   },
+   {
+    "where": "downstream",
+    "file": "HR00002.npy",
+    "descr": "<f8",
+    "shape": [
+     8,
+     5000
+    ],
+    "ok": false
+   }
+  ]
+ },
+ "pass": false
+}
