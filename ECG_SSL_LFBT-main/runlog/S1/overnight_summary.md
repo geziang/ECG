@@ -26,3 +26,13 @@ AUROC =  0.9005837216616774
 AUPRC =  0.6829720242622008
 [10:02:26] 夜间队列全部结束
 [10:03] == 接力: B0 seed2 复跑开始 ==
+AUROC =  0.9157079113708878
+AUPRC =  0.7257903894547031
+[12:09] 接力队列结束(预计 ~08:30)
+[12:10] == D9 确认: d9r1 seed --loss-mode vicreg --vicreg-sim 1 --vicreg-var 10 --vicreg-cov 1 开始 ==
+[12:10] d9r1 seed--loss-mode vicreg --vicreg-sim 1 --vicreg-var 10 --vicreg-cov 1 预训练失败
+[12:10] == D9 确认: d9lite seed --bt-var-hinge 10 开始 ==
+[12:10] d9lite seed--bt-var-hinge 10 预训练失败
+[12:10] 下午队列结束(D9 最终判定材料齐)
+[12:11] 修正: 下午队列参数顺序 bug 已修复,重新启动(12:10 的秒败为脚本 bug 非训练问题)
+[12:11] == D9 确认: d9r1 seed 0 开始 ==
