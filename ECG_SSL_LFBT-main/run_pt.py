@@ -61,6 +61,15 @@ parser.add_argument('--d1l-shuffle', action='store_true',
                     help='D1L NEG 负对照: 打乱目标矩阵的导联归属(同值随机重排), 应不涨点才有效')
 parser.add_argument('--aug-params', default='0.5,1.0,0.0,0.5', type=str,
                     help='RRC-TO 增强参数 crop_low,crop_up,mask_low,mask_up (默认=论文原值,从未扫过)')
+# ===== 跨域迁移候选 (batch4) =====
+parser.add_argument('--speed-perturb', default='1.0,1.0', type=str,
+                    help='速度扰动(语音迁移) low,high 因子;默认 1.0,1.0=关闭')
+parser.add_argument('--view2-params', default='', type=str,
+                    help='非对称增强(半监督视觉迁移): 视图2 独立 RRC-TO 参数;空=两视图同分布(B0)')
+parser.add_argument('--lead-swap-prob', default=0.0, type=float,
+                    help='相邻导联互换增强(阵列迁移, 电极错位模拟)概率;0=关闭')
+parser.add_argument('--cautious', action='store_true',
+                    help='Cautious Adam(优化器前沿迁移): 屏蔽与梯度符号相反的动量更新')
 
 
 def off_diagonal(x):
@@ -68,6 +77,21 @@ def off_diagonal(x):
     n, m = x.shape
     assert n == m
     return x.flatten()[:-1].view(n - 1, n + 1)[:, 1:].flatten()
+
+
+class CautiousAdam(optim.Adam):
+    """Cautious Optimizer (2024, 迁移版): 屏蔽与当前梯度符号相反的动量更新。"""
+
+    @torch.no_grad()
+    def step(self, closure=None):
+        prevs = [(p, p.detach().clone())
+                 for g in self.param_groups for p in g['params'] if p.grad is not None]
+        super().step(closure)
+        for p, prev in prevs:
+            update = p - prev
+            mask = (update * p.grad) < 0
+            if mask.any():
+                p.mul_(~mask).add_(prev * mask)
 
 
 class LeadFusionBT(object):
@@ -253,19 +277,35 @@ def main_worker(gpu, args):
                     param_weights.append(param)
 
     parameters = param_weights + param_biases
-    optimizer = optim.Adam(parameters, lr=args.learning_rate)
+    if getattr(args, 'cautious', False):
+        optimizer = CautiousAdam(parameters, lr=args.learning_rate)
+    else:
+        optimizer = optim.Adam(parameters, lr=args.learning_rate)
 
     # N4: 权重 EMA(不含 BN 统计, 标准 weight-EMA 口径)
     ema_shadows = None
     if args.ema_decay > 0:
         ema_shadows = [p.detach().clone() for p in parameters]
 
-    t = transforms.Compose([
-        RandomResizeCropTimeOut(
-            params=[float(v) for v in args.aug_params.split(',')]),
-        ToTensor()
-    ])
-    dataset = ECGDatasetFolder(args.data_dir, transform=MultiViewDataInjector([t, t]))
+    aug_p = [float(v) for v in args.aug_params.split(',')]
+    from data_utils.augmentations import SpeedPerturbRRC_TO, AdjacentLeadSwap
+    sp = tuple(float(v) for v in args.speed_perturb.split(','))
+    if (sp[0], sp[1]) == (1.0, 1.0) and args.lead_swap_prob <= 0:
+        t = transforms.Compose([RandomResizeCropTimeOut(params=aug_p), ToTensor()])
+    else:
+        t = transforms.Compose([
+            AdjacentLeadSwap(prob=args.lead_swap_prob),
+            SpeedPerturbRRC_TO(params=aug_p, speed=sp),
+            ToTensor()])
+    if args.view2_params:
+        t2 = transforms.Compose([
+            AdjacentLeadSwap(prob=args.lead_swap_prob),
+            SpeedPerturbRRC_TO(
+                params=[float(v) for v in args.view2_params.split(',')], speed=sp),
+            ToTensor()])
+    else:
+        t2 = t
+    dataset = ECGDatasetFolder(args.data_dir, transform=MultiViewDataInjector([t, t2]))
     loader = torch.utils.data.DataLoader(
         dataset, batch_size=args.batch_size, num_workers=args.workers, shuffle=True,
         pin_memory=True)

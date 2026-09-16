@@ -122,3 +122,41 @@ class RandomLeadMask:
         if squeeze_batch:
             return output[0], valid_mask[0]
         return output, valid_mask
+
+
+class SpeedPerturbRRC_TO(object):
+    """速度扰动 + RRC-TO(语音 speed perturb 迁移): 先随机时间缩放(模拟心率变化),
+    再走原版 rrc_to。speed=(1.0,1.0) 时与 RandomResizeCropTimeOut 行为一致。"""
+
+    def __init__(self, params=None, speed=(1.0, 1.0)):
+        self.params = params if params is not None else [0.5, 1.0, 0.0, 0.5]
+        self.speed = speed
+
+    def __call__(self, x):
+        orig_len = x.shape[1]
+        lo, hi = self.speed
+        if lo < 1.0 or hi > 1.0:
+            factor = random.uniform(lo, hi)
+            x = resample(x, max(32, int(orig_len / factor)), axis=1)
+        out = rrc_to(x, *self.params)
+        if out.shape[1] != orig_len:
+            out = resample(out, orig_len, axis=1)
+        return out
+
+
+class AdjacentLeadSwap(object):
+    """相邻导联互换增强(电极错位模拟, 阵列信号迁移): 以 prob 概率随机交换一对相邻胸导。
+    对接 37 条件电极错位鲁棒评估线。prob=0 时恒等。"""
+
+    CHEST_PAIRS = [(2, 3), (3, 4), (4, 5), (5, 6), (6, 7)]  # (V1,V2)...(V5,V6)
+
+    def __init__(self, prob=0.0):
+        self.prob = prob
+
+    def __call__(self, x):
+        if self.prob <= 0 or random.random() >= self.prob:
+            return x
+        i, j = random.choice(self.CHEST_PAIRS)
+        x = np.array(x, copy=True)
+        x[[i, j], :] = x[[j, i], :]
+        return x

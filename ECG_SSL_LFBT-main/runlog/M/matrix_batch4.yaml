@@ -1,0 +1,15 @@
+# M 矩阵 第四批: 跨域迁移模块(语音/半监督视觉/阵列信号/优化器)
+baseline: {name: B0, auprc_seed0: 0.7177}
+configs:
+  - name: speed_perturb
+    args: "--speed-perturb 0.85,1.15"
+    seeds: [0]
+  - name: asym_view
+    args: "--view2-params 0.9,1.0,0.0,0.1"
+    seeds: [0]
+  - name: lead_swap02
+    args: "--lead-swap-prob 0.2"
+    seeds: [0]
+  - name: cautious_adam
+    args: "--cautious"
+    seeds: [0]
