@@ -1,0 +1,13 @@
+# M 矩阵 第一批粗探 (1 seed, PTB-XL 单库, Δ 锚点 B0 seed0=0.7177)
+# 判号: mean>0 → 升 3 seed 符号一致确认 (m_screen.py --confirm <name>)
+baseline: {name: B0, auprc_seed0: 0.7177}
+configs:
+  - name: d1l_05_02
+    args: "--d1l 0.5,0.2"
+    seeds: [0]
+  - name: d1l_neg
+    args: "--d1l 0.5,0.2 --d1l-shuffle"
+    seeds: [0]
+  - name: n4_ema999
+    args: "--ema-decay 0.999"
+    seeds: [0]

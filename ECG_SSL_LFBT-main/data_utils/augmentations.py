@@ -1,3 +1,4 @@
+from dataclasses import dataclass
 import random
 import numpy as np
 import torch
@@ -56,3 +57,68 @@ class ToTensor(object):
             return torch.tensor(x).float()
         else:
             return torch.tensor(x[self.leads, :]).float()
+        return torch.as_tensor(np.array(signal, copy=True), dtype=torch.float32)
+
+
+@dataclass
+class RandomLeadMask:
+    probability: float = 0.5
+    min_masked_leads: int = 1
+    max_masked_leads: int = 2
+
+    def __post_init__(self) -> None:
+        if not 0.0 <= self.probability <= 1.0:
+            raise ValueError("probability must be in [0, 1]")
+        if self.min_masked_leads < 0:
+            raise ValueError("min_masked_leads must be non-negative")
+        if self.max_masked_leads < self.min_masked_leads:
+            raise ValueError("max_masked_leads must be >= min_masked_leads")
+
+    def __call__(self, signal):
+        if torch.is_tensor(signal):
+            return self._mask_tensor(signal)
+        return self._mask_array(np.asarray(signal))
+
+    def _mask_tensor(self, signal: torch.Tensor):
+        squeeze_batch = signal.ndim == 2
+        batched = signal.unsqueeze(0) if squeeze_batch else signal
+        if batched.ndim != 3:
+            raise ValueError("expected [D, L] or [B, D, L]")
+        output = batched.clone()
+        batch_size, num_leads, _ = output.shape
+        valid_mask = torch.ones(batch_size, num_leads, dtype=torch.bool, device=output.device)
+        max_masked = min(self.max_masked_leads, max(0, num_leads - 1))
+        min_masked = min(self.min_masked_leads, max_masked)
+        for batch_index in range(batch_size):
+            if torch.rand((), device=output.device).item() >= self.probability or max_masked == 0:
+                continue
+            count = int(torch.randint(min_masked, max_masked + 1, (), device=output.device).item())
+            if count == 0:
+                continue
+            indices = torch.randperm(num_leads, device=output.device)[:count]
+            output[batch_index, indices, :] = 0
+            valid_mask[batch_index, indices] = False
+        if squeeze_batch:
+            return output[0], valid_mask[0]
+        return output, valid_mask
+
+    def _mask_array(self, signal: np.ndarray):
+        squeeze_batch = signal.ndim == 2
+        batched = signal[None, ...] if squeeze_batch else signal
+        if batched.ndim != 3:
+            raise ValueError("expected [D, L] or [B, D, L]")
+        output = np.array(batched, copy=True)
+        batch_size, num_leads, _ = output.shape
+        valid_mask = np.ones((batch_size, num_leads), dtype=bool)
+        max_masked = min(self.max_masked_leads, max(0, num_leads - 1))
+        min_masked = min(self.min_masked_leads, max_masked)
+        for batch_index in range(batch_size):
+            if np.random.random() >= self.probability or max_masked == 0:
+                continue
+            count = np.random.randint(min_masked, max_masked + 1) if max_masked else 0
+            indices = np.random.choice(num_leads, size=count, replace=False)
+            output[batch_index, indices, :] = 0
+            valid_mask[batch_index, indices] = False
+        if squeeze_batch:
+            return output[0], valid_mask[0]
+        return output, valid_mask

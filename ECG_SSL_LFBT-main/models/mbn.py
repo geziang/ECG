@@ -1,110 +1,138 @@
+from pathlib import Path
+
 import torch
 import torch.nn as nn
-# from models.net_base_network import EncoderNet
+
+from models.lead_attention import build_fusion
 from models.vgg_1d import VGG16
+from utils.checkpoint import load_torch_checkpoint
+
+
+def _checkpoint_state_lists(checkpoint):
+    if "backbone_state_dict_list" in checkpoint:
+        return checkpoint["backbone_state_dict_list"]
+    if "backbone_state_dict" in checkpoint:
+        states = checkpoint["backbone_state_dict"]
+        return [item.state_dict() if hasattr(item, "state_dict") else item for item in states]
+    return None
 
 
 class MultiBranchNet(nn.Module):
-    def __init__(self, num_classes, num_leads=8, checkpoint=None):
-        super(MultiBranchNet, self).__init__()
-        load_params = dict()
-        if checkpoint is not None:
-            map_location = torch.device("cuda") if torch.cuda.is_available() else torch.device("cpu")
-            load_params = torch.load(checkpoint, map_location=map_location)
-        encoder_ii = VGG16(ch_in=1, alpha=0.125)
-        if "backbone_state_dict" in load_params:
-            missing_keys, unexpected_keys = encoder_ii.load_state_dict(
-                load_params["backbone_state_dict"][0].state_dict(), strict=False)
-            assert missing_keys == ['fc.weight', 'fc.bias'] and unexpected_keys == []
-            print("lead-ii - successfully load weights.")
-        self.encoder_ii = torch.nn.Sequential(*list(encoder_ii.children())[:-1])
-        del encoder_ii
-
-        encoder_iii = VGG16(ch_in=1, alpha=0.125)
-        if "backbone_state_dict" in load_params:
-            missing_keys, unexpected_keys = encoder_iii.load_state_dict(
-                load_params["backbone_state_dict"][1].state_dict(), strict=False)
-            assert missing_keys == ['fc.weight', 'fc.bias'] and unexpected_keys == []
-            print("lead-iii - successfully load weights.")
-        self.encoder_iii = torch.nn.Sequential(*list(encoder_iii.children())[:-1])
-        del encoder_iii
-
-        encoder_v1 = VGG16(ch_in=1, alpha=0.125)
-        if "backbone_state_dict" in load_params:
-            missing_keys, unexpected_keys = encoder_v1.load_state_dict(
-                load_params["backbone_state_dict"][2].state_dict(), strict=False)
-            assert missing_keys == ['fc.weight', 'fc.bias'] and unexpected_keys == []
-            print("lead-v1 - successfully load weights.")
-        self.encoder_v1 = torch.nn.Sequential(*list(encoder_v1.children())[:-1])
-        del encoder_v1
-
-        encoder_v2 = VGG16(ch_in=1, alpha=0.125)
-        if "backbone_state_dict" in load_params:
-            missing_keys, unexpected_keys = encoder_v2.load_state_dict(
-                load_params["backbone_state_dict"][3].state_dict(), strict=False)
-            assert missing_keys == ['fc.weight', 'fc.bias'] and unexpected_keys == []
-            print("lead-v2 - successfully load weights.")
-        self.encoder_v2 = torch.nn.Sequential(*list(encoder_v2.children())[:-1])
-        del encoder_v2
-
-        encoder_v3 = VGG16(ch_in=1, alpha=0.125)
-        if "backbone_state_dict" in load_params:
-            missing_keys, unexpected_keys = encoder_v3.load_state_dict(
-                load_params["backbone_state_dict"][4].state_dict(), strict=False)
-            assert missing_keys == ['fc.weight', 'fc.bias'] and unexpected_keys == []
-            print("lead-v3 - successfully load weights.")
-        self.encoder_v3 = torch.nn.Sequential(*list(encoder_v3.children())[:-1])
-        del encoder_v3
-
-        encoder_v4 = VGG16(ch_in=1, alpha=0.125)
-        if "backbone_state_dict" in load_params:
-            missing_keys, unexpected_keys = encoder_v4.load_state_dict(
-                load_params["backbone_state_dict"][5].state_dict(), strict=False)
-            assert missing_keys == ['fc.weight', 'fc.bias'] and unexpected_keys == []
-            print("lead-v4 - successfully load weights.")
-        self.encoder_v4 = torch.nn.Sequential(*list(encoder_v4.children())[:-1])
-        del encoder_v4
-
-        encoder_v5 = VGG16(ch_in=1, alpha=0.125)
-        if "backbone_state_dict" in load_params:
-            missing_keys, unexpected_keys = encoder_v5.load_state_dict(
-                load_params["backbone_state_dict"][6].state_dict(), strict=False)
-            assert missing_keys == ['fc.weight', 'fc.bias'] and unexpected_keys == []
-            print("lead-v5 - successfully load weights.")
-        self.encoder_v5 = torch.nn.Sequential(*list(encoder_v5.children())[:-1])
-        del encoder_v5
-
-        encoder_v6 = VGG16(ch_in=1, alpha=0.125)
-        if "backbone_state_dict" in load_params:
-            missing_keys, unexpected_keys = encoder_v6.load_state_dict(
-                load_params["backbone_state_dict"][7].state_dict(), strict=False)
-            assert missing_keys == ['fc.weight', 'fc.bias'] and unexpected_keys == []
-            print("lead-v6 - successfully load weights.")
-        self.encoder_v6 = torch.nn.Sequential(*list(encoder_v6.children())[:-1])
-        del encoder_v6
-
+    def __init__(
+        self,
+        num_classes,
+        num_leads=8,
+        checkpoint=None,
+        fusion="concat",
+        feature_dim=64,
+        attention_hidden_dim=32,
+        dropout=0.1,
+        map_location="cpu",
+    ):
+        super().__init__()
         self.num_classes = num_classes
         self.num_leads = num_leads
-        self.fc = nn.Linear(512, num_classes)
+        self.feature_dim = feature_dim
+        self.fusion_name = fusion
+        self.encoder_group = nn.ModuleList()
+        for _ in range(num_leads):
+            backbone = VGG16(ch_in=1, alpha=0.125)
+            if backbone.output_dim != feature_dim:
+                raise ValueError("feature_dim does not match the VGG scaling factor")
+            self.encoder_group.append(backbone.model)
 
-    def forward(self, x):
-        x_ii = x[:, [0], :]
-        feat_ii = self.encoder_ii(x_ii)
-        x_iii = x[:, [1], :]
-        feat_iii = self.encoder_iii(x_iii)
-        x_v1 = x[:, [2], :]
-        feat_v1 = self.encoder_v1(x_v1)
-        x_v2 = x[:, [3], :]
-        feat_v2 = self.encoder_v2(x_v2)
-        x_v3 = x[:, [4], :]
-        feat_v3 = self.encoder_v3(x_v3)
-        x_v4 = x[:, [5], :]
-        feat_v4 = self.encoder_v4(x_v4)
-        x_v5 = x[:, [6], :]
-        feat_v5 = self.encoder_v5(x_v5)
-        x_v6 = x[:, [7], :]
-        feat_v6 = self.encoder_v6(x_v6)
-        feat = torch.concat([feat_ii, feat_iii, feat_v1, feat_v2, feat_v3, feat_v4, feat_v5, feat_v6], dim=1)
-        feat_ = feat.view(feat.shape[0], feat.shape[1])
-        y = self.fc(feat_)
-        return y  # , feat
+        self.fusion = build_fusion(
+            fusion,
+            feature_dim=feature_dim,
+            num_leads=num_leads,
+            attention_hidden_dim=attention_hidden_dim,
+            dropout=dropout,
+        )
+        final_dim = num_leads * feature_dim
+        if self.fusion is not None:
+            final_dim += feature_dim
+        self.fc = nn.Linear(final_dim, num_classes)
+
+        if checkpoint is not None and str(checkpoint).lower() != "none":
+            self.load_pretrained(checkpoint, map_location=map_location)
+
+    def load_pretrained(self, checkpoint_path, map_location="cpu"):
+        checkpoint = load_torch_checkpoint(Path(checkpoint_path), map_location=map_location)
+        state_list = _checkpoint_state_lists(checkpoint)
+        if state_list is None:
+            raise ValueError(f"checkpoint has no encoder state list: {checkpoint_path}")
+        if len(state_list) != self.num_leads:
+            raise ValueError(
+                f"checkpoint contains {len(state_list)} encoders, expected {self.num_leads}"
+            )
+        for index, (encoder, state) in enumerate(zip(self.encoder_group, state_list)):
+            model_state = {
+                key.removeprefix("model."): value
+                for key, value in state.items()
+                if key.startswith("model.")
+            }
+            if not model_state:
+                model_state = state
+            missing, unexpected = encoder.load_state_dict(model_state, strict=False)
+            if unexpected or missing:
+                raise ValueError(
+                    f"lead {index} checkpoint mismatch: missing={missing}, unexpected={unexpected}"
+                )
+        fusion_state = checkpoint.get("fusion_state_dict")
+        if self.fusion is not None and fusion_state:
+            saved_fusion = checkpoint.get("fusion", checkpoint.get("config", {}).get("fusion"))
+            if saved_fusion and saved_fusion != self.fusion_name:
+                raise ValueError(
+                    f"checkpoint fusion is {saved_fusion}, requested {self.fusion_name}"
+                )
+            self.fusion.load_state_dict(fusion_state)
+
+    def extract_lead_features(self, x):
+        if x.ndim != 3 or x.shape[1] != self.num_leads:
+            raise ValueError(f"expected [B, {self.num_leads}, L], received {tuple(x.shape)}")
+        features = [
+            encoder(x[:, lead_index : lead_index + 1, :]).flatten(1)
+            for lead_index, encoder in enumerate(self.encoder_group)
+        ]
+        return torch.stack(features, dim=1)
+
+    def forward_features(self, x, valid_mask=None):
+        lead_features = self.extract_lead_features(x)
+        if valid_mask is None:
+            valid_mask = x.abs().sum(dim=-1) > 0
+        lead_features = lead_features * valid_mask.to(lead_features.dtype).unsqueeze(-1)
+        original_feature = lead_features.flatten(1)
+        fusion_feature = None
+        lead_weights = None
+        final_feature = original_feature
+        if self.fusion is not None:
+            fusion_feature, lead_weights = self.fusion(lead_features, valid_mask)
+            final_feature = torch.cat([original_feature, fusion_feature], dim=1)
+        return {
+            "lead_features": lead_features,
+            "original_feature": original_feature,
+            "fusion_feature": fusion_feature,
+            "lead_weights": lead_weights,
+            "final_feature": final_feature,
+        }
+
+    def forward(self, x, valid_mask=None, return_features=False):
+        features = self.forward_features(x, valid_mask=valid_mask)
+        logits = self.fc(features["final_feature"])
+        if return_features:
+            features["logits"] = logits
+            return features
+        return logits
+
+    def freeze_encoders(self):
+        for encoder in self.encoder_group:
+            encoder.eval()
+            for parameter in encoder.parameters():
+                parameter.requires_grad = False
+
+    def freeze_fusion(self):
+        if self.fusion is None:
+            return
+        self.fusion.eval()
+        for parameter in self.fusion.parameters():
+            parameter.requires_grad = False
