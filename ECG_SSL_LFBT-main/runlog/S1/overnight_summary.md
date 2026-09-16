@@ -41,3 +41,12 @@ AUROC =  0.863028840890142
 AUPRC =  0.6105628673196649
 [14:29] == D9 确认: d9lite seed 0 开始 ==
 [16:25] == M 第一批粗探启动 (D1L / D1L-NEG / N4) ==
+[m_screen] 计划 3 个 run (fast=False, 基线 Δ 锚点 0.7177)
+  - d1l_05_02 seed0: --d1l 0.5,0.2
+  - d1l_neg seed0: --d1l 0.5,0.2 --d1l-shuffle
+  - n4_ema999 seed0: --ema-decay 0.999
+[m_screen] $ C:\Users\admin\.conda\envs\DL\python.exe run_pt.py --data-dir data/pt_pretrain --epochs 200 --batch-size 128 --workers 6 --seed 0 --checkpoint-dir F:\新实验\ECG_SSL_LFBT-main\checkpoint\M\d1l_05_02_seed0 --d1l 0.5,0.2
+[16:29] d9lite seed0 预训练完成
+AUROC =  0.9104476936852777
+AUPRC =  0.7046788912974769
+[16:31] 下午队列结束(D9 最终判定材料齐)
