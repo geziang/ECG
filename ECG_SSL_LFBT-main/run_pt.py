@@ -49,6 +49,8 @@ parser.add_argument('--projector-norm', default='batchnorm', choices=['batchnorm
                     help='projector 隐层归一化: batchnorm=B0 原版, layernorm=D9 消融')
 parser.add_argument('--bt-var-hinge', default=0.0, type=float,
                     help='D9-lite: BT 目标之上对 projector 原始输出加 variance hinge 的权重 (0=关闭,逐位等于 B0)')
+parser.add_argument('--fast-backbone', action='store_true',
+                    help='M0 提速: 分组卷积合并 8 导联主干+投影头(数值等价 rel<1e-6);默认关闭=原路径')
 
 
 def off_diagonal(x):
@@ -63,13 +65,24 @@ class LeadFusionBT(object):
         super().__init__()
         self.args = args
         self.device = 'cuda' if torch.cuda.is_available() else 'cpu'
+        self.fast = getattr(args, 'fast_backbone', False)
+        sizes = [64] + list(map(int, args.projector.split('-')))
+        if self.fast:
+            from models.parallel_vgg import ParallelVGG16, ParallelProjector
+            self.p_vgg = ParallelVGG16(num_leads=args.num_leads, ch_in=1).to(self.device)
+            self.p_proj = ParallelProjector(num_leads=args.num_leads, sizes=sizes).to(self.device)
+            self.bn_all = nn.BatchNorm1d(sizes[-1] * args.num_leads, affine=False).to(self.device)
+            # 兼容原字段(优化器构建/保存路径判空用)
+            self.backbone_group = []
+            self.projector_group = []
+            self.bn_group = []
+            return
         self.backbone_group = list()
         for i in range(args.num_leads):
             backbone = VGG16(ch_in=1, alpha=0.125)
             backbone.fc = nn.Identity()
             self.backbone_group.append(backbone.to(self.device))
 
-        sizes = [64] + list(map(int, args.projector.split('-')))
         self.projector_group = list()
         for i in range(args.num_leads):
             layers = []
@@ -85,6 +98,25 @@ class LeadFusionBT(object):
         self.bn_group = list()
         for i in range(args.num_leads):
             self.bn_group.append(nn.BatchNorm1d(sizes[-1], affine=False).to(self.device))
+
+    def _embed(self, y):
+        """(B, L, T) -> 原始 projector 输出 z 列表 (每导联 (B, d))。"""
+        if not self.fast:
+            z_list = list()
+            for i in range(self.args.num_leads):
+                z_list.append(self.projector_group[i](self.backbone_group[i](y[:, [i], :])))
+            return z_list
+        feat = self.p_vgg(y).view(y.shape[0], self.args.num_leads, -1)
+        z = self.p_proj(feat)  # (B, L, d)
+        return [z[:, i, :] for i in range(self.args.num_leads)]
+
+    def _bn_embed(self, z_list):
+        """BT 路径的输出 BN: 每导联 affine=False。"""
+        if not self.fast:
+            return [self.bn_group[i](z_list[i]) for i in range(self.args.num_leads)]
+        z = torch.stack(z_list, dim=1)  # (B, L, d)
+        zb = self.bn_all(z.reshape(z.shape[0], -1)).reshape_as(z)
+        return [zb[:, i, :] for i in range(self.args.num_leads)]
 
     def _pair_loss(self, zi, zj):
         """D9: 单导联对的 VICReg 三项损失 (官方口径: MSE + std hinge + off-diag cov/d)。
@@ -105,16 +137,13 @@ class LeadFusionBT(object):
                 + self.args.vicreg_cov * cov)
 
     def forward(self, y1, y2):
-        z1_list = list()
-        z2_list = list()
-        for i in range(self.args.num_leads):
-            z1_list.append(self.projector_group[i](self.backbone_group[i](y1[:, [i], :])))
-            z2_list.append(self.projector_group[i](self.backbone_group[i](y2[:, [i], :])))
+        z1_list = self._embed(y1)
+        z2_list = self._embed(y2)
         if self.args.loss_mode == 'vicreg':
             # D9: bn 语义交给 variance hinge; keep-bn 开关可保留输出 BN(whitening-lite 消融)
             if self.args.vicreg_keep_bn:
-                z1_list = [self.bn_group[i](z1_list[i]) for i in range(self.args.num_leads)]
-                z2_list = [self.bn_group[i](z2_list[i]) for i in range(self.args.num_leads)]
+                z1_list = self._bn_embed(z1_list)
+                z2_list = self._bn_embed(z2_list)
             loss_r = 0
             loss_t = 0
             for i in range(self.args.num_leads):
@@ -128,11 +157,13 @@ class LeadFusionBT(object):
             loss_t = loss_t / (self.args.num_leads * (self.args.num_leads - 1))
             loss = self.args.gamma * loss_r + (1 - self.args.gamma) * loss_t
             return loss, loss_r, loss_t
+        z1b = self._bn_embed(z1_list)
+        z2b = self._bn_embed(z2_list)
         loss_r = 0
         loss_t = 0
         for i in range(self.args.num_leads):
             for j in range(self.args.num_leads):
-                c = self.bn_group[i](z1_list[i]).T @ self.bn_group[j](z2_list[j])
+                c = z1b[i].T @ z2b[j]
                 c.div_(self.args.batch_size)
                 on_diag = torch.diagonal(c).add_(-1).pow_(2).sum()
                 off_diag = off_diagonal(c).pow_(2).sum()
@@ -161,28 +192,35 @@ def main_worker(gpu, args):
     args.checkpoint_dir.mkdir(parents=True, exist_ok=True)
     model = LeadFusionBT(args)
 
-    param_weights = []
-    param_biases = []
-    for md in model.backbone_group:
-        for param in md.parameters():
-            if param.ndim == 1:
-                param_biases.append(param)
-            else:
-                param_weights.append(param)
+    if model.fast:
+        param_weights = [p for p in model.p_vgg.parameters() if p.ndim > 1]
+        param_biases = [p for p in model.p_vgg.parameters() if p.ndim == 1]
+        for md in (model.p_proj, model.bn_all):
+            for param in md.parameters():
+                (param_biases if param.ndim == 1 else param_weights).append(param)
+    else:
+        param_weights = []
+        param_biases = []
+        for md in model.backbone_group:
+            for param in md.parameters():
+                if param.ndim == 1:
+                    param_biases.append(param)
+                else:
+                    param_weights.append(param)
 
-    for md in model.projector_group:
-        for param in md.parameters():
-            if param.ndim == 1:
-                param_biases.append(param)
-            else:
-                param_weights.append(param)
+        for md in model.projector_group:
+            for param in md.parameters():
+                if param.ndim == 1:
+                    param_biases.append(param)
+                else:
+                    param_weights.append(param)
 
-    for md in model.bn_group:
-        for param in md.parameters():
-            if param.ndim == 1:
-                param_biases.append(param)
-            else:
-                param_weights.append(param)
+        for md in model.bn_group:
+            for param in md.parameters():
+                if param.ndim == 1:
+                    param_biases.append(param)
+                else:
+                    param_weights.append(param)
 
     parameters = param_weights + param_biases
     optimizer = optim.Adam(parameters, lr=args.learning_rate)
@@ -228,10 +266,18 @@ def main_worker(gpu, args):
 
     # 双格式保存: 兼容旧版(模块对象列表) + 纯 state_dict (跨版本稳定, 指南 §5 P1)
     ckpt_path = args.checkpoint_dir / 'encoder_group.pth'
-    torch.save({
-        'backbone_state_dict': model.backbone_group,
-        'backbone_state_dict_list': [enc.state_dict() for enc in model.backbone_group],
-    }, ckpt_path)
+    if model.fast:
+        from models.parallel_vgg import export_parallel_to_state_dicts
+        sd_list = export_parallel_to_state_dicts(model.p_vgg)
+        torch.save({
+            'backbone_state_dict': sd_list,
+            'backbone_state_dict_list': sd_list,
+        }, ckpt_path)
+    else:
+        torch.save({
+            'backbone_state_dict': model.backbone_group,
+            'backbone_state_dict_list': [enc.state_dict() for enc in model.backbone_group],
+        }, ckpt_path)
     sha = hashlib.sha256(ckpt_path.read_bytes()).hexdigest()
     print("Checkpoint saved:", ckpt_path)
     print("SHA256:", sha)
