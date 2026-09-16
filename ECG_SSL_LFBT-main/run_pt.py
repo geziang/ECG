@@ -47,6 +47,8 @@ parser.add_argument('--vicreg-keep-bn', action='store_true',
                     help='vicreg 模式下保留输出 BN(affine=False); 默认去除, 方差交给 hinge')
 parser.add_argument('--projector-norm', default='batchnorm', choices=['batchnorm', 'layernorm'],
                     help='projector 隐层归一化: batchnorm=B0 原版, layernorm=D9 消融')
+parser.add_argument('--bt-var-hinge', default=0.0, type=float,
+                    help='D9-lite: BT 目标之上对 projector 原始输出加 variance hinge 的权重 (0=关闭,逐位等于 B0)')
 
 
 def off_diagonal(x):
@@ -142,6 +144,15 @@ class LeadFusionBT(object):
         loss_r = loss_r / self.args.num_leads
         loss_t = loss_t / (self.args.num_leads * (self.args.num_leads - 1))
         loss = self.args.gamma * loss_r + (1 - self.args.gamma) * loss_t
+        if getattr(self.args, 'bt_var_hinge', 0.0) > 0:
+            # D9-lite: 最小防塌补丁, 仅对 16 个原始嵌入 (8导联x2视图) 加 variance hinge
+            hinge = 0
+            for z_list in (z1_list, z2_list):
+                for z in z_list:
+                    hinge = hinge + torch.relu(
+                        1.0 - torch.sqrt(z.var(dim=0) + self.args.vicreg_var_eps)).mean()
+            loss = loss + self.args.bt_var_hinge * hinge / (2 * self.args.num_leads)
+            loss_r = loss_r + self.args.bt_var_hinge * hinge / (2 * self.args.num_leads)
         return loss, loss_r, loss_t
 
 
