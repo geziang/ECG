@@ -1,0 +1,16 @@
+# M 矩阵 第二批: B0 自身超参邻域重调(协议从 NFH+batch2048 换成 PTB-XL+batch128,最优点应重找)
+# 依据: B0 seed 方差 0.81pt 显示区域敏感,而 gamma/lambd 从论文原值从未被动过
+baseline: {name: B0, auprc_seed0: 0.7177}
+configs:
+  - name: b0_gamma07
+    args: "--gamma 0.7"
+    seeds: [0]
+  - name: b0_gamma09
+    args: "--gamma 0.9"
+    seeds: [0]
+  - name: b0_lambd003
+    args: "--lambd 0.003"
+    seeds: [0]
+  - name: b0_lambd01
+    args: "--lambd 0.01"
+    seeds: [0]
