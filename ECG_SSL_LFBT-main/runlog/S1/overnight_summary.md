@@ -74,3 +74,10 @@ AUPRC =  0.6105628673196649
 ata/ptbxl --checkpoint F:\新实验\ECG_SSL_LFBT-main\checkpoint\M\b0_gamma07_seed0\encoder_group.pth --num-classes 5 --feat-dir F:\新实验\ECG_SSL_LFBT-main\feat\M_b0_gamma07_seed0 --seed 0 --workers 6
 [m_screen] ✔ b0_gamma07_seed0: AUPRC=0.7136 Δ=-0.0041
 [m_screen] $ C:\Users\admin\.conda\envs\DL\python.exe run_pt.py --data-dir data/pt_pretrain --epochs 200 --batch-size 128 --workers 6 --seed 0 --checkpoint-dir F:\新实验\ECG_SSL_LFBT-main\checkpoint\M\b0_gamma09_seed0 --gamma 0.9
+[m_screen] $ C:\Users\admin\.conda\envs\DL\python.exe run_lp.py --data-dir data/ptbxl --checkpoint F:\新实验\ECG_SSL_LFBT-main\checkpoint\M\b0_gamma09_seed0\encoder_group.pth --num-classes 5 --feat-dir F:\新实验\ECG_SSL_LFBT-main\feat\M_b0_gamma09_seed0 --seed 0 --workers 6
+[m_screen] ✔ b0_gamma09_seed0: AUPRC=0.7111 Δ=-0.0066
+[m_screen] $ C:\Users\admin\.conda\envs\DL\python.exe run_pt.py --data-dir data/pt_pretrain --epochs 200 --batch-size 128 --workers 6 --seed 0 --checkpoint-dir F:\新实验\ECG_SSL_LFBT-main\checkpoint\M\b0_lambd003_seed0 --lambd 0.003
+[m_screen] $ C:\Users\admin\.conda\envs\DL\python.exe run_lp.py --data-dir data/ptbxl --checkpoint F:\新实验\ECG_SSL_LFBT-main\checkpoint\M\b0_lambd003_seed0\encoder_group.pth --num-classes 5 --feat-dir F:\新实验\ECG_SSL_LFBT-main\feat\M_b0_lambd003_seed0 --seed 0 --workers 6
+[m_screen] ✔ b0_lambd003_seed0: AUPRC=0.7086 Δ=-0.0091
+[m_screen] $ C:\Users\admin\.conda\envs\DL\python.exe run_pt.py --data-dir data/pt_pretrain --epochs 200 --batch-size 128 --workers 6 --seed 0 --checkpoint-dir F:\新实验\ECG_SSL_LFBT-main\checkpoint\M\b0_lambd01_seed0 --lambd 0.01
+[05:12] M3 等待超时(12h)退出
