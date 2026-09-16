@@ -1,0 +1,6 @@
+# 条件批次: 仅当 gamma09 探针为正时由 queue_m5 触发
+baseline: {name: B0, auprc_seed0: 0.7177}
+configs:
+  - name: b0_gamma095
+    args: "--gamma 0.95"
+    seeds: [0]

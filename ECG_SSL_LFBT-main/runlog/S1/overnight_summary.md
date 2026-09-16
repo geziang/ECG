@@ -46,7 +46,31 @@ AUPRC =  0.6105628673196649
   - d1l_neg seed0: --d1l 0.5,0.2 --d1l-shuffle
   - n4_ema999 seed0: --ema-decay 0.999
 [m_screen] $ C:\Users\admin\.conda\envs\DL\python.exe run_pt.py --data-dir data/pt_pretrain --epochs 200 --batch-size 128 --workers 6 --seed 0 --checkpoint-dir F:\新实验\ECG_SSL_LFBT-main\checkpoint\M\d1l_05_02_seed0 --d1l 0.5,0.2
-[16:29] d9lite seed0 预训练完成
-AUROC =  0.9104476936852777
-AUPRC =  0.7046788912974769
-[16:31] 下午队列结束(D9 最终判定材料齐)
+[m_screen] $ C:\Users\admin\.conda\envs\DL\python.exe run_lp.py --data-dir data/ptbxl --checkpoint F:\新实验\ECG_SSL_LFBT-main\checkpoint\M\d1l_05_02_seed0\encoder_group.pth --num-classes 5 --feat-dir F:\新实验\ECG_SSL_LFBT-main\feat\M_d1l_05_02_seed0 --seed 0 --workers 6
+[m_screen] ✔ d1l_05_02_seed0: AUPRC=0.7117 Δ=-0.0060
+[m_screen] $ C:\Users\admin\.conda\envs\DL\python.exe run_pt.py --data-dir data/pt_pretrain --epochs 200 --batch-size 128 --workers 6 --seed 0 --checkpoint-dir F:\新实验\ECG_SSL_LFBT-main\checkpoint\M\d1l_neg_seed0 --d1l 0.5,0.2 --d1l-shuffle
+[m_screen] $ C:\Users\admin\.conda\envs\DL\python.exe run_lp.py --data-dir data/ptbxl --checkpoint F:\新实验\ECG_SSL_LFBT-main\checkpoint\M\d1l_neg_seed0\encoder_group.pth --num-classes 5 --feat-dir F:\新实验\ECG_SSL_LFBT-main\feat\M_d1l_neg_seed0 --seed 0 --workers 6
+[m_screen] ✔ d1l_neg_seed0: AUPRC=0.7081 Δ=-0.0096
+[m_screen] $ C:\Users\admin\.conda\envs\DL\python.exe run_pt.py --data-dir data/pt_pretrain --epochs 200 --batch-size 128 --workers 6 --seed 0 --checkpoint-dir F:\新实验\ECG_SSL_LFBT-main\checkpoint\M\n4_ema999_seed0 --ema-decay 0.999
+[m_screen] $ C:\Users\admin\.conda\envs\DL\python.exe run_lp.py --data-dir data/ptbxl --checkpoint F:\新实验\ECG_SSL_LFBT-main\checkpoint\M\n4_ema999_seed0\encoder_group.pth --num-classes 5 --feat-dir F:\新实验\ECG_SSL_LFBT-main\feat\M_n4_ema999_seed0 --seed 0 --workers 6
+[m_screen] ✔ n4_ema999_seed0: AUPRC=0.6909 Δ=-0.0268
+
+[m_screen] 当前矩阵:
+  d1l_05_02          s0 Δ=-0.006 ❌
+  d1l_neg            s0 Δ=-0.0096 ❌
+  n4_ema999          s0 Δ=-0.0268 ❌
+[22:06] M 第一批结束
+[22:08] == M 第二批启动: B0 超参邻域重调(gamma 0.7/0.9, lambd 0.003/0.01) ==
+[m_screen] 计划 5 个 run (fast=False, 基线 Δ 锚点 0.7177)
+  - aug_crop_strong seed0: --aug-params 0.4,1.0,0.0,0.5
+  - aug_crop_weak seed0: --aug-params 0.7,1.0,0.0,0.5
+  - aug_mask_weak seed0: --aug-params 0.5,1.0,0.0,0.3
+  - proj_dim1024 seed0: --projector 1024-1024-1024
+  - proj_dim4096 seed0: --projector 4096-4096-4096
+[m_screen] $ C:\Users\admin\.conda\envs\DL\python.exe run_pt.py --data-dir data/pt_pretrain --epochs 200 --batch-size 128 --workers 6 --seed 0 --checkpoint-dir F:\新实验\ECG_SSL_LFBT-main\checkpoint\M\aug_crop_strong_seed0 --aug-params 0.4,1.0,0.0,0.5
+[m_screen] $ C:\Users\admin\.conda\envs\DL\python.exe run_lp.py --data-dir data/ptbxl --checkpoint F:\新实验\ECG_SSL_LFBT-main\checkpoint\M\aug_crop_strong_seed0\encoder_group.pth --num-classes 5 --feat-dir F:\新实验\ECG_SSL_LFBT-main\feat\M_aug_crop_strong_seed0 --seed 0 --workers 6
+[m_screen] ✔ aug_crop_strong_seed0: AUPRC=0.7107 Δ=-0.0070
+[m_screen] $ C:\Users\admin\.conda\envs\DL\python.exe run_pt.py --data-dir data/pt_pretrain --epochs 200 --batch-size 128 --workers 6 --seed 0 --checkpoint-dir F:\新实验\ECG_SSL_LFBT-main\checkpoint\M\aug_crop_weak_seed0 --aug-params 0.7,1.0,0.0,0.5
+ata/ptbxl --checkpoint F:\新实验\ECG_SSL_LFBT-main\checkpoint\M\b0_gamma07_seed0\encoder_group.pth --num-classes 5 --feat-dir F:\新实验\ECG_SSL_LFBT-main\feat\M_b0_gamma07_seed0 --seed 0 --workers 6
+[m_screen] ✔ b0_gamma07_seed0: AUPRC=0.7136 Δ=-0.0041
+[m_screen] $ C:\Users\admin\.conda\envs\DL\python.exe run_pt.py --data-dir data/pt_pretrain --epochs 200 --batch-size 128 --workers 6 --seed 0 --checkpoint-dir F:\新实验\ECG_SSL_LFBT-main\checkpoint\M\b0_gamma09_seed0 --gamma 0.9
