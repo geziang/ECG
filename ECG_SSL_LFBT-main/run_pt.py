@@ -51,6 +51,14 @@ parser.add_argument('--bt-var-hinge', default=0.0, type=float,
                     help='D9-lite: BT 目标之上对 projector 原始输出加 variance hinge 的权重 (0=关闭,逐位等于 B0)')
 parser.add_argument('--fast-backbone', action='store_true',
                     help='M0 提速: 分组卷积合并 8 导联主干+投影头(数值等价 rel<1e-6);默认关闭=原路径')
+# ===== M 矩阵候选开关 (N4/D1L) =====
+parser.add_argument('--ema-decay', default=0.0, type=float,
+                    help='N4: 权重 EMA 衰减系数(如 0.999);0=关闭。开启时 checkpoint 存 EMA 权重')
+parser.add_argument('--d1l', default='', type=str,
+                    help='D1L: 结构化目标矩阵 "ii_iii,adjacent" (如 "0.5,0.2");空=关闭(B0)。'
+                         'inter-loss 的跨导联相关目标从 0 改为生理拓扑设定值')
+parser.add_argument('--d1l-shuffle', action='store_true',
+                    help='D1L NEG 负对照: 打乱目标矩阵的导联归属(同值随机重排), 应不涨点才有效')
 
 
 def off_diagonal(x):
@@ -67,6 +75,19 @@ class LeadFusionBT(object):
         self.device = 'cuda' if torch.cuda.is_available() else 'cpu'
         self.fast = getattr(args, 'fast_backbone', False)
         sizes = [64] + list(map(int, args.projector.split('-')))
+        # D1L: 结构化目标矩阵 (lead 序: ii,iii,v1..v6 = 0..7)
+        self.d1l_P = None
+        if getattr(args, 'd1l', ''):
+            a, b = map(float, args.d1l.split(','))
+            P = torch.zeros(args.num_leads, args.num_leads)
+            P[0, 1] = P[1, 0] = a          # II-III (Einthoven 相邻)
+            for k in range(2, args.num_leads - 1):  # 相邻胸导 V1-V2 ... V5-V6
+                P[k, k + 1] = P[k + 1, k] = b
+            if getattr(args, 'd1l_shuffle', False):  # NEG 负对照: 固定种子打乱导联归属
+                g = torch.Generator().manual_seed(12345)
+                perm = torch.randperm(args.num_leads, generator=g)
+                P = P[perm][:, perm]
+            self.d1l_P = P.to(self.device)
         if self.fast:
             from models.parallel_vgg import ParallelVGG16, ParallelProjector
             self.p_vgg = ParallelVGG16(num_leads=args.num_leads, ch_in=1).to(self.device)
@@ -157,16 +178,23 @@ class LeadFusionBT(object):
             loss_t = loss_t / (self.args.num_leads * (self.args.num_leads - 1))
             loss = self.args.gamma * loss_r + (1 - self.args.gamma) * loss_t
             return loss, loss_r, loss_t
-        z1b = self._bn_embed(z1_list)
-        z2b = self._bn_embed(z2_list)
+        z1b = self._bn_embed(z1_list) if self.fast else None
+        z2b = self._bn_embed(z2_list) if self.fast else None
         loss_r = 0
         loss_t = 0
         for i in range(self.args.num_leads):
             for j in range(self.args.num_leads):
-                c = z1b[i].T @ z2b[j]
+                # 注意: 保持 B0 原始结构(每对重算 BN)——梯度求和顺序影响逐位一致性
+                c1 = z1b[i] if self.fast else self.bn_group[i](z1_list[i])
+                c2 = z2b[j] if self.fast else self.bn_group[j](z2_list[j])
+                c = c1.T @ c2
                 c.div_(self.args.batch_size)
                 on_diag = torch.diagonal(c).add_(-1).pow_(2).sum()
-                off_diag = off_diagonal(c).pow_(2).sum()
+                if self.d1l_P is not None and i != j:
+                    tau = self.d1l_P[i, j]
+                    off_diag = (off_diagonal(c) - tau).pow(2).sum()
+                else:
+                    off_diag = off_diagonal(c).pow_(2).sum()
                 ls = on_diag + self.args.lambd * off_diag
                 if i == j:
                     loss_r += ls
@@ -225,6 +253,11 @@ def main_worker(gpu, args):
     parameters = param_weights + param_biases
     optimizer = optim.Adam(parameters, lr=args.learning_rate)
 
+    # N4: 权重 EMA(不含 BN 统计, 标准 weight-EMA 口径)
+    ema_shadows = None
+    if args.ema_decay > 0:
+        ema_shadows = [p.detach().clone() for p in parameters]
+
     t = transforms.Compose([
         RandomResizeCropTimeOut(),
         ToTensor()
@@ -246,6 +279,10 @@ def main_worker(gpu, args):
             loss, loss_r, loss_t = model.forward(y1, y2)
             loss.backward()
             optimizer.step()
+            if ema_shadows is not None:
+                with torch.no_grad():
+                    for p, s in zip(parameters, ema_shadows):
+                        s.mul_(args.ema_decay).add_(p.detach(), alpha=1 - args.ema_decay)
             if step % args.print_freq == 0:
                 stats = dict(epoch=epoch, step=step,
                              loss=loss.item(),
@@ -263,6 +300,12 @@ def main_worker(gpu, args):
 
         print("\nEpoch end. Time: %f - Average loss %f - loss_r %f - loss_t %f.\n" % (
             ep_end_time - ep_start_time, total_loss, total_loss_r, total_loss_t))
+
+    # N4: 保存前把 EMA 影子权重换入(EMA 开启时 checkpoint 即 EMA 权重)
+    if ema_shadows is not None:
+        with torch.no_grad():
+            for p, s in zip(parameters, ema_shadows):
+                p.copy_(s)
 
     # 双格式保存: 兼容旧版(模块对象列表) + 纯 state_dict (跨版本稳定, 指南 §5 P1)
     ckpt_path = args.checkpoint_dir / 'encoder_group.pth'
