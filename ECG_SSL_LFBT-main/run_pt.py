@@ -59,6 +59,8 @@ parser.add_argument('--d1l', default='', type=str,
                          'inter-loss 的跨导联相关目标从 0 改为生理拓扑设定值')
 parser.add_argument('--d1l-shuffle', action='store_true',
                     help='D1L NEG 负对照: 打乱目标矩阵的导联归属(同值随机重排), 应不涨点才有效')
+parser.add_argument('--aug-params', default='0.5,1.0,0.0,0.5', type=str,
+                    help='RRC-TO 增强参数 crop_low,crop_up,mask_low,mask_up (默认=论文原值,从未扫过)')
 
 
 def off_diagonal(x):
@@ -259,7 +261,8 @@ def main_worker(gpu, args):
         ema_shadows = [p.detach().clone() for p in parameters]
 
     t = transforms.Compose([
-        RandomResizeCropTimeOut(),
+        RandomResizeCropTimeOut(
+            params=[float(v) for v in args.aug_params.split(',')]),
         ToTensor()
     ])
     dataset = ECGDatasetFolder(args.data_dir, transform=MultiViewDataInjector([t, t]))
