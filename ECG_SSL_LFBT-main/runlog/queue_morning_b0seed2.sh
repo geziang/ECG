@@ -10,7 +10,7 @@ waited=0
 while ! grep -q "夜间队列全部结束" "$SUM" 2>/dev/null; do
   sleep 120; waited=$((waited + 2))
   if [ "$waited" -ge 780 ]; then
-    echo "[$(date +%H:%M)] 等待超时(13h)放弃接力" >> "$SUM"; exit 1
+    echo "[$(date +%H:%M)] 等待超时(6h)放弃接力" >> "$SUM"; exit 1
   fi
 done
 
