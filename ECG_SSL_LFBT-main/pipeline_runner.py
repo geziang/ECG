@@ -115,13 +115,29 @@ def live_pt_count():
         return 99
 
 
-def admission_ok(cfg):
+def admission_ok(cfg, e006_pending=False):
     """类型准入: e006_pt 实测峰值 ~13GB(谱分支), 必须独占; 其余重任务(run_pt/ar)并发上限 2。
-    准入不满足时跳过该任务先做别的, 不阻塞本车道。"""
+    2026-09-17 21:30 修复判决线饿死: 若队列中尚有 e006 任务未完成, 探针/ar 一律降为
+    '全场空闲才准入'(count==0), 保证 psfull 判决实验按 HOSTS §三 优先序尽快独占运行,
+    而不是被两条探针车道永久占满槽位。准入不满足时跳过先做别的, 不阻塞本车道。"""
     n = live_pt_count()
     if cfg["type"] == "e006_pt":
         return n == 0
+    if e006_pending:
+        return n == 0
     return n < 2
+
+
+def e006_pending_in(queue, done):
+    """本车道队列中是否还有未完成、未在跑的 e006 任务。"""
+    for cfg, s in queue:
+        if cfg["type"] != "e006_pt":
+            continue
+        tag = f"{cfg['name']}_seed{s}"
+        if (cfg["name"], str(s)) not in done and not lp_has_auprc(tag) \
+                and not tag_running(tag):
+            return True
+    return False
 
 
 def wait_slot(max_pts=3):
@@ -374,6 +390,7 @@ def main():
     retries = {}
     while queue:
         picked = None
+        e006p = e006_pending_in(queue, done_names())
         for i, (cfg, s) in enumerate(queue):
             tag = f"{cfg['name']}_seed{s}"
             if (cfg["name"], str(s)) in done_names() or lp_has_auprc(tag):
@@ -383,7 +400,7 @@ def main():
                 continue
             if tag_running(tag):
                 continue  # 他方在跑, 先看下一项
-            if not admission_ok(cfg):
+            if not admission_ok(cfg, e006p):
                 continue  # 类型准入不满足(如 e006 需独占), 先做下一项不空等
             if not claim(tag):
                 continue
