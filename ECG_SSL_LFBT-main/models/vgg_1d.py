@@ -32,6 +32,7 @@ class VGG16(nn.Module):
             nn.AdaptiveAvgPool1d(1)
         )
         self.fc = nn.Linear(int(512 * alpha), n_classes)
+        self.output_dim = int(512 * alpha)  # 恢复属性(mbn.py/run_ft.py 引用;纯属性声明,不影响任何计算路径)
 
     def forward(self, x):
         x = self.model(x)
