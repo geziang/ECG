@@ -52,7 +52,7 @@
 
 1. 训练期间请勿在本机开启其他大显存程序;ToDesk/向日葵留一个即可,GeForce Experience 后台录制建议关闭。
 2. `C:\Users\508\.condarc` 含 GBK 编码中文注释导致 conda 初始化报错(不影响训练,待修)。
-3. **本机当前无法直连 GitHub**(直连超时;本地代理 127.0.0.1:7897 未开启;仓库为 zip 拉取、暂无 .git)。本报告与 HOSTS.md 登记改动已备好,待有网/开代理后 push。
+3. **GitHub 连通性波动**(直连时通时断;本地代理 127.0.0.1:7897 可用但常关)。工程副本 E:\GZA\ECG-main 无 .git;推送走独立 git 副本 E:\GZA\ECG-push-tmp(clone 自远程),本报告与 HOSTS.md 登记已 push(commit f957df3)。
 4. 本机对仓库的改动清单:`runlog/HOSTB_环境报告.md`(新增)、`runlog/HOSTS.md`(主机B 登记)、`pipeline_runner.py`(10G 闸门适配,若合并回主仓请注意主机A 的 24G 参数是 7800/3)、`runlog/hostB_b0_anchor.sh`(新增)。
 
 ---
