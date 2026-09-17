@@ -154,3 +154,14 @@ ata/ptbxl --checkpoint F:\新实验\ECG_SSL_LFBT-main\checkpoint\M\b0_gamma07_se
 [16:34] [laneD] 等待显存: speed_perturb_seed0 需要 7800MiB, 当前空闲 1387MiB (每60s重查)
 [16:43] [laneC] 流水线启动: 队列 10 项, 准入=活跃预训练<3 + 空闲显存≥7800MiB + run_pt 自闸门6500 兜底
 [16:43] [laneC] 启动任务 b0fast_seed0(空闲显存 10172MiB, 活跃预训练 2 个)
+[18:56] 车道B: crop_085 结束
+[18:56] FT10: b0_anchor
+[18:56] FT10: crop_weak_s0
+[18:56] 车道B: FT10 评估结束
+[18:56] == 车道B: batch6(新模块) ==
+[m_screen] 计划 4 个 run (fast=False, 基线 Δ 锚点 0.7177)
+  - d7_rec01 seed0: --d7-weight 0.1
+  - d7_rec003 seed0: --d7-weight 0.03
+  - n3_prob03 seed0: --n3-prob 0.3
+  - common_view01 seed0: --common-weight 0.1
+[m_screen] $ C:\Users\admin\.conda\envs\DL\python.exe run_pt.py --data-dir data/pt_pretrain --epochs 200 --batch-size 128 --workers 6 --seed 0 --checkpoint-dir F:\新实验\ECG_SSL_LFBT-main\checkpoint\M\d7_rec01_seed0 --d7-weight 0.1
