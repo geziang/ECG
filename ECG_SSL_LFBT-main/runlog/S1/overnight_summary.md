@@ -172,3 +172,4 @@ ata/ptbxl --checkpoint F:\新实验\ECG_SSL_LFBT-main\checkpoint\M\b0_gamma07_se
 [m_screen] $ C:\Users\admin\.conda\envs\DL\python.exe run_pt.py --data-dir data/pt_pretrain --epochs 200 --batch-size 128 --workers 6 --seed 0 --checkpoint-dir F:\新实验\ECG_SSL_LFBT-main\checkpoint\M\proj_dim1024_seed0 --projector 1024-1024-1024
 [19:44] == 车道B4 重建启动: FT10 重跑 ==
 [19:44] FT10: b0_anchor
+[19:47] 会话2(本聊天)发现 19:42 暂停指令,已停止误启的恢复车道 A2/B4;当前全机实验进程清零,遵守 ⏸ 状态;恢复走 pipeline_runner.py --lane C
