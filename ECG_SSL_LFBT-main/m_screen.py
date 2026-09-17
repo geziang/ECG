@@ -63,8 +63,14 @@ def append_result(row):
 def done_names():
     if not RESD.exists():
         return set()
+    done = set()
     with RESD.open(encoding="utf-8") as f:
-        return {(r["name"], r["seed"]) for r in csv.DictReader(f)}
+        for r in csv.DictReader(f):
+            try:
+                done.add((r["name"], r["seed"]))  # 并发追加容错: 跳过坏行
+            except Exception:
+                continue
+    return done
 
 
 def run_one(cfg, seed, fast, data_dir, baseline_auprc):
