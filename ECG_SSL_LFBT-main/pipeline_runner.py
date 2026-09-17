@@ -89,6 +89,29 @@ def tag_running(tag):
         return True  # 查询失败按占用处理
 
 
+def live_pt_count():
+    """当前 run_pt 进程数(含链与流水线启动的)。查询失败按满载 99 处理。"""
+    ps = ("Get-CimInstance Win32_Process -Filter \"Name like 'python%'\" | "
+          "Where-Object {$_.CommandLine -match 'run_pt\\.py'} | "
+          "Measure-Object | Select-Object -ExpandProperty Count")
+    try:
+        out = subprocess.run(["powershell", "-NoProfile", "-Command", ps],
+                             capture_output=True, text=True, timeout=90).stdout
+        return int(out.strip() or 0)
+    except Exception:
+        return 99
+
+
+def wait_slot(max_pts=3):
+    """准入控制: 全局 run_pt 并发上限(默认 3 = 两条链 + 本流水线一条)。"""
+    last = 0.0
+    while live_pt_count() >= max_pts:
+        if time.time() - last > 600:
+            log(f"等待预训练槽位: 已有 {live_pt_count()} 个 run_pt 在跑, 让位等待")
+            last = time.time()
+        time.sleep(60)
+
+
 def done_names():
     if not RESD.exists():
         return set()
@@ -205,6 +228,7 @@ def run_probe(cfg, seed, anchor):
     if cfg.get("args"):
         cmd += cfg["args"].split()
     need = 7800  # 实测单预训练峰值 6737MiB(09-17 性能计数器), 留 ~1GB 余量; 大于 LP 间隙可释放量, 不会抢跑链
+    wait_slot()
     wait_vram(need, tag)
     ok, text = sh_live(cmd, LOGD / f"pt_{tag}.log")
     if "SHA256" not in text:
@@ -232,7 +256,8 @@ def run_ar_or_e006(cfg, seed):
     """arb3_base / psfull_arb3: 预训练 + run_e006_downstream LP。"""
     tag = f"{cfg['name']}_seed{seed}"
     ck = CKPT / tag
-    wait_vram(9800, tag)
+    wait_slot()
+    wait_vram(7800, tag)
     if cfg["type"] == "ar_pt":
         cmd = [PY, "run_pt_ar.py", "--data-dir", "data/pt_pretrain",
                "--checkpoint-dir", ck, "--variant", "B0", "--fusion", "mean",
@@ -291,8 +316,9 @@ def main():
     if args.plan:
         return
 
-    log(f"流水线启动: 队列 {len(queue)} 项, 显存闸门 heavy=9800/fast=5000MiB")
+    log(f"流水线启动: 队列 {len(queue)} 项, 准入=活跃预训练<{3} + 空闲显存≥7800MiB + run_pt 自闸门6500 兜底")
     skipped_forever = set()
+    retries = {}
     while queue:
         picked = None
         for i, (cfg, s) in enumerate(queue):
@@ -317,17 +343,33 @@ def main():
         cfg, s = queue.pop(picked)
         skipped_forever.clear()
         tag = f"{cfg['name']}_seed{s}"
-        log(f"启动任务 {tag}(空闲显存 {vram_free()}MiB)")
+        log(f"启动任务 {tag}(空闲显存 {vram_free()}MiB, 活跃预训练 {live_pt_count()} 个)")
         try:
             if cfg["type"] == "probe":
                 delta = run_probe(cfg, s, anchor)
-                if delta is not None and delta > 0 and s == 0 and \
+                if delta is None:
+                    retries[tag] = retries.get(tag, 0) + 1
+                    if retries[tag] <= 2:
+                        queue.append((cfg, s))
+                        log(f"{tag} 失败, 第 {retries[tag]} 次重排队尾")
+                        time.sleep(60)
+                    else:
+                        log(f"{tag} 连续 3 次失败, 弃置待人工排查")
+                elif delta > 0 and s == 0 and \
                         not cfg.get("no_confirm"):
                     for cs in reversed(CONFIRM_SEEDS):
                         queue.insert(0, (cfg, cs))
                     log(f"{tag} Δ>0, 自动插队确认 seed {CONFIRM_SEEDS}(3-seed 符号门)")
             else:
-                run_ar_or_e006(cfg, s)
+                auprc = run_ar_or_e006(cfg, s)
+                if auprc is None:
+                    retries[tag] = retries.get(tag, 0) + 1
+                    if retries[tag] <= 2:
+                        queue.append((cfg, s))
+                        log(f"{tag} 失败, 第 {retries[tag]} 次重排队尾")
+                        time.sleep(60)
+                    else:
+                        log(f"{tag} 连续 3 次失败, 弃置待人工排查")
         finally:
             release(tag)
     log(f"流水线退出: 队列清空/全部完成")

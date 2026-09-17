@@ -451,8 +451,29 @@ def torchvision_version():
     return torchvision.__version__
 
 
+def wait_for_gpu_memory(need_mib=6500, poll_s=60):
+    """启动显存闸门(2026-09-17): 在 CUDA 初始化前等待空闲显存。
+    背景: 双链+多车道并发时曾出现 4 个预训练同时启动把 24.5G 显存占爆。
+    本闸门保证任何来源(m_screen/chain/pipeline_runner)启动的预训练, 在空闲显存
+    不足时于加载模型前排队等待, 物理上杜绝超发 OOM。nvidia-smi 不可用时直接放行。"""
+    import subprocess as _sp
+    while True:
+        try:
+            out = _sp.run(['nvidia-smi', '--query-gpu=memory.free',
+                           '--format=csv,noheader,nounits'],
+                          capture_output=True, text=True, timeout=60).stdout
+            free = int(out.strip().splitlines()[0])
+        except Exception:
+            return
+        if free >= need_mib:
+            return
+        print(f"[vram-gate] 等待显存: 需要 {need_mib}MiB, 当前空闲 {free}MiB ({poll_s}s 后重查)", flush=True)
+        time.sleep(poll_s)
+
+
 def main():
     args = parser.parse_args()
+    wait_for_gpu_memory()
     set_seed(args.seed)
     print("Pretraining Setting ======================================")
     print(args)

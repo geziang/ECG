@@ -239,10 +239,29 @@ class LinearProbing(object):
         self.classify()
 
 
+def wait_for_gpu_memory(need_mib=2500, poll_s=60):
+    """启动显存闸门(2026-09-17): LP/FT 为轻任务, 仅在空闲显存极低时排队, 防止挤爆并发预训练。"""
+    import subprocess as _sp
+    import time as _time
+    while True:
+        try:
+            out = _sp.run(['nvidia-smi', '--query-gpu=memory.free',
+                           '--format=csv,noheader,nounits'],
+                          capture_output=True, text=True, timeout=60).stdout
+            free = int(out.strip().splitlines()[0])
+        except Exception:
+            return
+        if free >= need_mib:
+            return
+        print(f"[vram-gate] 等待显存: 需要 {need_mib}MiB, 当前空闲 {free}MiB ({poll_s}s 后重查)", flush=True)
+        _time.sleep(poll_s)
+
+
 def main():
     args = parser.parse_args()
     if args.checkpoint is not None and str(args.checkpoint).lower() == "none":
         args.checkpoint = None  # TFS 随机初始化对照
+    wait_for_gpu_memory()
     set_seed(args.seed)
     print("Linear Probing Setting ======================================")
     print(args)
