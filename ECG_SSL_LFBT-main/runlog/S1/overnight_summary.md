@@ -188,3 +188,6 @@ ata/ptbxl --checkpoint F:\新实验\ECG_SSL_LFBT-main\checkpoint\M\b0_gamma07_se
 [20:57] [laneE] 全部剩余任务被他方占用或已认领, 10min 后重查
 [21:07] [laneE] 全部剩余任务被他方占用或已认领, 10min 后重查
 [21:18] [laneE] 全部剩余任务被他方占用或已认领, 10min 后重查
+[21:28] [laneE] 全部剩余任务被他方占用或已认领, 10min 后重查
+[21:38] [laneE] 全部剩余任务被他方占用或已认领, 10min 后重查
+[21:48] [laneE] 全部剩余任务被他方占用或已认领, 10min 后重查
