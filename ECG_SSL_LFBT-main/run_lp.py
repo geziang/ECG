@@ -32,6 +32,8 @@ parser.add_argument('--batch-size', default=128, type=int, metavar='N',
 parser.add_argument('--learning-rate', default=0.001, type=float, metavar='LR',
                     help='learning rate')
 parser.add_argument('--seed', default=0, type=int, metavar='N', help='random seed')
+parser.add_argument('--sinc-frontend', default=0, type=int,
+                    help='C1: 与预训练一致地重建 Sinc 带通前端(通道数 M; 0=普通 VGG)')
 
 
 class LinearProbing(object):
@@ -45,6 +47,10 @@ class LinearProbing(object):
         lead_names = ["ii", "iii", "v1", "v2", "v3", "v4", "v5", "v6"]
         for i in range(args.num_leads):
             encoder = VGG16(ch_in=1, alpha=0.125)
+            if getattr(args, 'sinc_frontend', 0) > 0:
+                # C1: 与 run_pt 相同的前端手术, 保证 state_dict 形状匹配
+                from models.sinc_conv import apply_sinc_frontend
+                apply_sinc_frontend(encoder, int(args.sinc_frontend))
             if load_params is not None:
                 # 兼容两种 checkpoint 格式 (指南 §5 P1)
                 if 'backbone_state_dict_list' in load_params:

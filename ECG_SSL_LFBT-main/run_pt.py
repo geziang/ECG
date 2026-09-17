@@ -78,6 +78,17 @@ parser.add_argument('--n3-prob', default=0.0, type=float,
                     help='N3 患者级正对: 第二视图换成同患者另一记录的概率(0=关闭)')
 parser.add_argument('--common-weight', default=0.0, type=float,
                     help='共模视图: 各导联与跨导联均值信号的 BT 对齐项权重(0=关闭)')
+# ===== 主机B 任务开关 (HOSTS §四; 默认全关 == B0) =====
+parser.add_argument('--h3-weight', default=0.0, type=float,
+                    help='H3 患者身份不变性(轻量去相关): 患者共享方向偏离批均值的惩罚权重 (0=关闭)')
+parser.add_argument('--h3-prob', default=0.3, type=float,
+                    help='H3 三元组中同患者伙伴视图的触发概率(与 n3_prob 同默认值保持两臂对称)')
+parser.add_argument('--sinc-frontend', default=0, type=int,
+                    help='C1 Sinc 带通前端: 第一层替换为参数化带通滤波器组的通道数 M(16/32; 0=关闭)')
+parser.add_argument('--sinc-reg', default=0.01, type=float,
+                    help='C1 频带正则权重(带宽约束 [1,15]Hz, 防退化全带=普通卷积)')
+parser.add_argument('--sinc-kernel', default=101, type=int,
+                    help='C1 Sinc 核长(点数; 有效采样率 204.8Hz)')
 
 
 def off_diagonal(x):
@@ -153,6 +164,16 @@ class LeadFusionBT(object):
         self.bn_group = list()
         for i in range(args.num_leads):
             self.bn_group.append(nn.BatchNorm1d(sizes[-1], affine=False).to(self.device))
+        # C1: Sinc 带通前端替换(慢路径; model[0][0]=Conv1d(1,C1,k3)+BN+ReLU -> SincConv(1,M)+BN+ReLU)
+        self.sinc_M = 0
+        if getattr(args, 'sinc_frontend', 0) > 0:
+            assert not self.fast, "C1 Sinc 前端暂不支持 fast 路径"
+            from models.sinc_conv import apply_sinc_frontend
+            self.sinc_M = int(args.sinc_frontend)
+            for backbone in self.backbone_group:
+                apply_sinc_frontend(backbone, self.sinc_M,
+                                    kernel_size=int(getattr(args, 'sinc_kernel', 101)))
+                backbone.to(self.device)  # 手术在 .to(device) 之后发生, 需补搬运
         # D7: 并联重建支路(仅慢路径; 共享 backbone, 池化前特征接轻量解码器)
         self.d7_decoders = None
         if getattr(args, 'd7_weight', 0.0) > 0:
@@ -215,7 +236,7 @@ class LeadFusionBT(object):
                 + self.args.vicreg_var * var
                 + self.args.vicreg_cov * cov)
 
-    def forward(self, y1, y2):
+    def forward(self, y1, y2, y_pair=None, pair_mask=None):
         z1_list = self._embed(y1)
         z2_list = self._embed(y2)
         if self.args.loss_mode == 'vicreg':
@@ -288,6 +309,33 @@ class LeadFusionBT(object):
             cm = cm / self.args.num_leads
             loss = loss + self.args.common_weight * cm
             loss_r = loss_r + self.args.common_weight * cm
+        if getattr(self.args, 'h3_weight', 0.0) > 0 and y_pair is not None and pair_mask is not None:
+            # H3 患者身份不变性(轻量去相关, 主机B): 患者共享方向 mu_p=(z1+z_pair)/2,
+            # 惩罚其在批内的离散度(患者间协方差 off-block -> 0), 尺度按批内 std(stopgrad)
+            # 归一保持与 BT on-diagonal 同量级; 仅对有同患者伙伴的行前向(flag 过滤)。
+            if bool(pair_mask.any()):
+                idx = pair_mask.nonzero(as_tuple=True)[0]
+                yp = y_pair[idx]
+                h3 = 0
+                for i in range(self.args.num_leads):
+                    z1s = z1_list[i][idx]
+                    zps = self.projector_group[i](self.backbone_group[i](yp[:, [i], :]))
+                    mu = (z1s + zps) / 2
+                    mu_bar = mu.mean(dim=0, keepdim=True)
+                    sigma = z1s.std(dim=0, keepdim=True).detach() + 1e-4
+                    h3 = h3 + ((mu - mu_bar) / sigma).pow(2).mean()
+                h3 = h3 / self.args.num_leads
+                loss = loss + self.args.h3_weight * h3
+                loss_r = loss_r + self.args.h3_weight * h3
+        if self.sinc_M > 0:
+            # C1 频带正则: 带宽压在 [1,15]Hz, 防退化全带=普通卷积(主机B)
+            from models.sinc_conv import sinc_band_penalty
+            sreg = 0
+            for backbone in self.backbone_group:
+                sreg = sreg + sinc_band_penalty(backbone.model[0][0][0])
+            sreg = sreg / self.args.num_leads
+            loss = loss + self.args.sinc_reg * sreg
+            loss_r = loss_r + self.args.sinc_reg * sreg
         return loss, loss_r, loss_t
 
 
@@ -362,7 +410,12 @@ def main_worker(gpu, args):
             ToTensor()])
     else:
         t2 = t
-    if getattr(args, 'n3_prob', 0.0) > 0:
+    if getattr(args, 'h3_weight', 0.0) > 0:
+        from data_utils.h3_dataset import H3TripletDataset
+        from data_utils.n3_dataset import load_patient_map
+        dataset = H3TripletDataset(args.data_dir, t, t2,
+                                   load_patient_map(), prob=args.h3_prob)
+    elif getattr(args, 'n3_prob', 0.0) > 0:
         from data_utils.n3_dataset import N3PairsDataset, load_patient_map
         dataset = N3PairsDataset(args.data_dir, t,
                                  load_patient_map(), prob=args.n3_prob)
@@ -377,11 +430,18 @@ def main_worker(gpu, args):
         total_loss_r = 0
         total_loss_t = 0
         ep_start_time = time.time()
-        for step, ((y1, y2), _) in enumerate(loader, start=epoch * len(loader)):
-            y1 = y1.to(model.device, non_blocking=True)
-            y2 = y2.to(model.device, non_blocking=True)
+        for step, batch in enumerate(loader, start=epoch * len(loader)):
+            (views, flag) = batch
+            y1 = views[0].to(model.device, non_blocking=True)
+            y2 = views[1].to(model.device, non_blocking=True)
+            if len(views) == 3:
+                # H3 三元组: y_pair=同患者伙伴视图, flag=是否有效
+                y_pair = views[2].to(model.device, non_blocking=True)
+                pair_mask = flag.to(model.device).float() > 0.5
+            else:
+                y_pair, pair_mask = None, None
             optimizer.zero_grad()
-            loss, loss_r, loss_t = model.forward(y1, y2)
+            loss, loss_r, loss_t = model.forward(y1, y2, y_pair, pair_mask)
             loss.backward()
             optimizer.step()
             if ema_shadows is not None:
@@ -429,6 +489,15 @@ def main_worker(gpu, args):
     sha = hashlib.sha256(ckpt_path.read_bytes()).hexdigest()
     print("Checkpoint saved:", ckpt_path)
     print("SHA256:", sha)
+
+    # C1: 导出学到的截止频率(可解释性: 直方图数据; HOSTS §四 P2)
+    if model.sinc_M > 0:
+        from models.sinc_conv import sinc_bands
+        bands = {f"lead{i}": sinc_bands(model.backbone_group[i].model[0][0][0])
+                 for i in range(args.num_leads)}
+        with open(args.checkpoint_dir / "sinc_bands.json", "w") as f:
+            json.dump(bands, f, indent=1)
+        print("Sinc bands exported:", args.checkpoint_dir / "sinc_bands.json")
 
     # 环境与配置记录 (指南 §6-6)
     info = dict(

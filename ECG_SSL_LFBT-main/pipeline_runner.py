@@ -39,6 +39,8 @@ SUMMARY = ROOT / "runlog" / "S1" / "overnight_summary.md"
 ANCHOR = 0.7177  # B0 seed0 冻结锚点
 CONFIRM_SEEDS = [2, 4]
 STALE_CLAIM_H = 16
+VRAM_NEED = 7800  # 预训练车道显存闸门(MiB); 主机B(10G) 用 --vram-need 7000
+MAX_PTS = [3]     # 全局 run_pt 并发上限; 主机B(单车道) 用 --max-pts 1
 
 LANE = "X"
 
@@ -103,7 +105,7 @@ def live_pt_count():
 
 
 def wait_slot(max_pts=3):
-    """准入控制: 全局 run_pt 并发上限(默认 3 = 两条链 + 本流水线一条)。"""
+    """准入控制: 全局 run_pt 并发上限(默认 3 = 主机A 双链+本流水线; 主机B(10G)启动传 --max-pts 1)。"""
     last = 0.0
     while live_pt_count() >= max_pts:
         if time.time() - last > 600:
@@ -227,18 +229,21 @@ def run_probe(cfg, seed, anchor):
         cmd.append("--fast-backbone")
     if cfg.get("args"):
         cmd += cfg["args"].split()
-    need = 7800  # 实测单预训练峰值 6737MiB(09-17 性能计数器), 留 ~1GB 余量; 大于 LP 间隙可释放量, 不会抢跑链
-    wait_slot()
+    if cfg.get("sinc"):
+        cmd += ["--sinc-frontend", str(cfg["sinc"])]
+    need = VRAM_NEED
+    wait_slot(MAX_PTS[0])
     wait_vram(need, tag)
     ok, text = sh_live(cmd, LOGD / f"pt_{tag}.log")
     if "SHA256" not in text:
         log(f"预训练失败 {tag}(详见 pt 日志)")
         return None
-    ok, text = sh_live(
-        [PY, "run_lp.py", "--data-dir", "data/ptbxl", "--checkpoint",
-         ck / "encoder_group.pth", "--num-classes", 5, "--feat-dir",
-         FEAT / f"M_{tag}", "--seed", 0, "--workers", 6],
-        LOGD / f"lp_{tag}.log")
+    lp_cmd = [PY, "run_lp.py", "--data-dir", "data/ptbxl", "--checkpoint",
+              ck / "encoder_group.pth", "--num-classes", 5, "--feat-dir",
+              FEAT / f"M_{tag}", "--seed", 0, "--workers", 6]
+    if cfg.get("sinc"):
+        lp_cmd += ["--sinc-frontend", str(cfg["sinc"])]
+    ok, text = sh_live(lp_cmd, LOGD / f"lp_{tag}.log")
     auroc, auprc = parse_lp(text)
     if auprc is None:
         log(f"LP 失败 {tag}")
@@ -256,8 +261,8 @@ def run_ar_or_e006(cfg, seed):
     """arb3_base / psfull_arb3: 预训练 + run_e006_downstream LP。"""
     tag = f"{cfg['name']}_seed{seed}"
     ck = CKPT / tag
-    wait_slot()
-    wait_vram(7800, tag)
+    wait_slot(MAX_PTS[0])
+    wait_vram(VRAM_NEED, tag)
     if cfg["type"] == "ar_pt":
         cmd = [PY, "run_pt_ar.py", "--data-dir", "data/pt_pretrain",
                "--checkpoint-dir", ck, "--variant", "B0", "--fusion", "mean",
@@ -294,15 +299,39 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--lane", required=True)
     ap.add_argument("--queue", default="runlog/M/pipeline_queue.yaml")
+    ap.add_argument("--results", default="matrix_results.csv",
+                    help="结果 csv 文件名(主机B 用 matrix_results_hostB.csv, 红线 §五-3)")
     ap.add_argument("--stagger", type=int, default=0)
+    ap.add_argument("--max-pts", type=int, default=3,
+                    help="全局 run_pt 并发上限(主机A 默认 3; 主机B 10G 单车道传 1)")
+    ap.add_argument("--vram-need", type=int, default=7800,
+                    help="预训练车道显存闸门 MiB(主机A 默认 7800; 主机B 10G 传 7000)")
     ap.add_argument("--plan", action="store_true")
     args = ap.parse_args()
     LANE = args.lane
+    global RESD, VRAM_NEED
+    RESD = LOGD / args.results
+    VRAM_NEED = args.vram_need
+    MAX_PTS[0] = args.max_pts
     if args.stagger:
         time.sleep(args.stagger)
 
     spec = yaml.safe_load((ROOT / args.queue).read_text(encoding="utf-8"))
     anchor = spec.get("anchor", ANCHOR)
+    if anchor == "auto":
+        # 主机B 红线: Δ 只对本机 B0 锚点; auto=从本机结果 csv 的 b0 行读取,
+        # 无 b0 行则拒绝启动(预注册条件的脚本化检查, HOSTS §五-8)
+        b0 = None
+        if RESD.exists():
+            with RESD.open(encoding="utf-8") as f:
+                for r in csv.DictReader(f):
+                    if r.get("name") == "b0" and r.get("auprc"):
+                        b0 = float(r["auprc"])
+        if b0 is None:
+            log(f"anchor=auto 但 {RESD.name} 无 b0 行 -> 拒绝启动(先完成本机 B0 锚点)")
+            return
+        anchor = b0
+        log(f"anchor=auto: 采用本机 B0 锚点 AUPRC={anchor:.4f}")
     queue = []
     for cfg in spec["tasks"]:
         for s in cfg.get("seeds", [0]):
@@ -316,7 +345,7 @@ def main():
     if args.plan:
         return
 
-    log(f"流水线启动: 队列 {len(queue)} 项, 准入=活跃预训练<{3} + 空闲显存≥7800MiB + run_pt 自闸门6500 兜底")
+    log(f"流水线启动: 队列 {len(queue)} 项, 准入=run_pt 并发槽位 + 空闲显存闸门 + run_pt 自闸门6500 兜底")
     skipped_forever = set()
     retries = {}
     while queue:
