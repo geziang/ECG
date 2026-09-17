@@ -1,0 +1,19 @@
+# 多车道补充流水线队列 (pipeline_runner.py 消费)
+# 所有权划分 (2026-09-17 16:20 确认):
+#   - 车道B链 (chainB2/B3) 已确认存活: crop_085 / FT10×2 / batch6×4 / D1L×AR-B3 —— 不入本队列
+#   - 车道A m_screen 孤儿存活: aug_mask_weak / proj_dim1024 / proj_dim4096 —— 放队尾兜底(孤儿若死由本队列接手)
+#   - chainA.sh 后半段所有权未确认: B0fast / batch4×4 / AR-B3 / P1/S1×AR-B3 —— 本队列主体
+# 防撞: 活进程扫描 + csv 完成行 + claim 认领, 与链并发安全
+anchor: 0.7177
+tasks:
+  - {name: b0fast, type: probe, fast: true, args: "", no_confirm: true, seeds: [0]}
+  - {name: speed_perturb, type: probe, args: "--speed-perturb 0.85,1.15", seeds: [0]}
+  - {name: asym_view, type: probe, args: "--view2-params 0.9,1.0,0.0,0.1", seeds: [0]}
+  - {name: lead_swap02, type: probe, args: "--lead-swap-prob 0.2", seeds: [0]}
+  - {name: cautious_adam, type: probe, args: "--cautious", seeds: [0]}
+  - {name: arb3_base, type: ar_pt, args: "", seeds: [0]}
+  - {name: psfull_arb3, type: e006_pt, args: "", seeds: [0]}
+  # ---- 队尾兜底: 仅当车道A孤儿死掉且未完成时才会真正执行 ----
+  - {name: aug_mask_weak, type: probe, args: "--aug-params 0.5,1.0,0.0,0.3", seeds: [0]}
+  - {name: proj_dim1024, type: probe, args: "--projector 1024-1024-1024", seeds: [0]}
+  - {name: proj_dim4096, type: probe, args: "--projector 4096-4096-4096", seeds: [0]}
