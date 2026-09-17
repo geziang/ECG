@@ -4,7 +4,9 @@
 >
 > **认领方式**:把对应任务行的状态改为 `🏃<主机名>(开始时间)` 并 commit+push;完成后改为 ✅,并把结果行写入本主机结果文件(§五-3)。
 > **更新纪律**:任务状态每次变化(领取/完成/失败)立即 push;长任务不必频繁汇报,但必须写明预计完成时间。
-> 文档路径:`runlog/HOSTS.md`;最后更新:**2026-09-17 17:00,主机A(Win4090)**。
+> 文档路径:`runlog/HOSTS.md`;最后更新:**2026-09-17 17:15,主机A(Win4090)**。
+>
+> **分工总原则(2026-09-17 定)**:存量筛选/判决任务(§二、§三)**全部由主机A认领**,其他主机不得启动;**其他主机的任务是复现基线锚点 + 开创新方法**(§四)。
 
 ---
 
@@ -16,7 +18,7 @@
 | 主机B | (待登记) | (待登记) | 🆓 |
 | 主机C | (待登记) | (待登记) | 🆓 |
 
-新主机入场四步:①按 §五-6 准备并校验数据;②**先跑本机 B0 锚点**(§五-1 红线);③在上表登记硬件与环境;④从 §四 未认领池领取任务。
+新主机入场四步:①按 §五-6 准备并校验数据;②**先跑本机 B0 锚点**(§五-1 红线);③在上表登记硬件与环境;④按 §四 开展创新方法并在登记表挂号。
 
 ## 二、主机A:正在执行(⛔ 其他主机禁止启动)
 
@@ -41,21 +43,32 @@
 
 **条件追加(自动)**:以上任何 seed0 探针 Δ>0,主机A将自动补跑该探针 seed2/4 确认轮(3-seed 符号一致门)。
 
-## 四、未认领任务池(🆓 任何主机可领取;领取后改状态并 push)
+**队尾(⛔ 同样全部由主机A认领;`pipeline_runner.py` 待命,车道槽位空闲后自动接力,当前维持双车道让显存):**
 
-| 任务 | 类型 | 命令要点 | 状态 |
-|---|---|---|---|
-| `speed_perturb` seed0 | 预训练+LP | `--speed-perturb 0.85,1.15` | 🆓(主机A暂挂,可领取) |
-| `asym_view` seed0 | 同上 | `--view2-params 0.9,1.0,0.0,0.1` | 🆓(同上) |
-| `lead_swap02` seed0 | 同上 | `--lead-swap-prob 0.2` | 🆓(同上) |
-| `cautious_adam` seed0 | 同上 | `--cautious` | 🆓(同上) |
-| `arb3_base` seed0 | AR-B3 基座 | `run_pt_ar --variant B0 --fusion mean --fusion-bt-weight 0.2 --lead-mask-prob 0.5` | 🆓 |
-| `psfull_arb3` seed0 | **判决实验** | `run_e006_physiospatial --profile physiospatial --base-variant ar_b3 --ablation full` | 🆓(主机A暂挂,优先推荐) |
-| `b0fast` 校准 | 预训练+LP | `run_pt --fast-backbone`(仅当计划开辟 fast 探针路线时才需要) | 🆓 |
-| CPSC 跨库评价 | 评估轴④ | 用既有 checkpoint 做 CPSC LP/FT(需先准备 CPSC 数据) | 🆓 |
-| E007/LGA 5-seed 扩展 | 判决复核 | 实验机(E 盘)已有完整 E001 工程,勿在他机重复搭建 | 🆓(建议固定在实验机) |
+9. `b0fast` 校准(`--fast-backbone`,fast 探针路线锚点)
+10. `speed_perturb` seed0(`--speed-perturb 0.85,1.15`)
+11. `asym_view` seed0(`--view2-params 0.9,1.0,0.0,0.1`)
+12. `lead_swap02` seed0(`--lead-swap-prob 0.2`)
+13. `cautious_adam` seed0(`--cautious`)
+14. `arb3_base` seed0(AR-B3 基座,`run_pt_ar --variant B0 --fusion mean --fusion-bt-weight 0.2 --lead-mask-prob 0.5`)
+15. `psfull_arb3` seed0(**判决实验**,`run_e006_physiospatial --profile physiospatial --base-variant ar_b3 --ablation full`)
+16. CPSC 跨库评价(评估轴④,用既有 checkpoint,需先备 CPSC 数据)
 
-> "主机A暂挂"= 主机A的 `pipeline_runner.py` 具备一键执行能力但当前停用(显存让位)。**其他主机一旦领取,A 即放弃该任务**(A 重启流水线前会先查本表)。
+**自有机内部分工**:E007/LGA 5-seed 扩展与 η=0.01 复核固定在实验机(E 盘,已有完整 E001 工程)执行,同样不属于其他主机的任务。
+
+## 四、其他主机的分工:复现基线锚点 + 开创新方法
+
+**其他主机不参与 §二/§三 的任何任务**,要做的是:
+
+1. **入场即跑本机 B0 锚点**:按 §五-2 冻结协议预训练+LP(约 2h),结果写 `runlog/M/matrix_results_<主机名>.csv`——这是该主机后续一切 Δ 的分母,没有它你的数字无法解释;
+2. **开创新方法**:新模块 / 新损失 / 新增强 / 新预训练目标……方向不限,按 §五 红线执行与报告;建议每个新方法先 seed0 粗探,Δ>0 再升 3-seed 确认(可复用 `m_screen.py --confirm` 逻辑);
+3. **在下表登记,避免多主机撞题**(领取时把状态改成 🏃 并 push):
+
+### 新方法登记表
+
+| 方法名 | 主机 | 一句话设计 | 状态 | 结果文件 |
+|---|---|---|---|---|
+| (示例)xxx 注意力变体 | 主机B | 投影头上加轻量通道注意力 | 🆓 | matrix_results_hostB.csv |
 
 ## 五、多主机方法学红线(必读,违反=数据作废)
 
