@@ -1,0 +1,15 @@
+# b6: 新模块粗探(D7/N3/共模)
+baseline: {name: B0, auprc_seed0: 0.7177}
+configs:
+  - name: d7_rec01
+    args: "--d7-weight 0.1"
+    seeds: [0]
+  - name: d7_rec003
+    args: "--d7-weight 0.03"
+    seeds: [0]
+  - name: n3_prob03
+    args: "--n3-prob 0.3"
+    seeds: [0]
+  - name: common_view01
+    args: "--common-weight 0.1"
+    seeds: [0]

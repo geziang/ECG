@@ -42,8 +42,11 @@ class LeadFusionBT(nn.Module):
         lead_mask_probability=0.0,
         min_masked_leads=1,
         max_masked_leads=2,
+        d1l_targets=None,
     ):
         super().__init__()
+        # D1L: 结构化目标矩阵 (ii-iii / 相邻胸导非零目标), None=关闭(与 E006 逐位一致)
+        self.d1l_targets = d1l_targets
         self.num_leads = num_leads
         self.feature_dim = 64
         self.gamma = gamma
@@ -91,12 +94,15 @@ class LeadFusionBT(nn.Module):
             dim=1,
         )
 
-    def _barlow_loss(self, left, right, left_bn, right_bn):
+    def _barlow_loss(self, left, right, left_bn, right_bn, tau=0.0):
         batch_size = left.shape[0]
         correlation = left_bn(left).T @ right_bn(right)
         correlation = correlation / batch_size
         on_diagonal = torch.diagonal(correlation).add(-1).pow(2).sum()
-        off_diagonal_loss = off_diagonal(correlation).pow(2).sum()
+        if tau != 0.0:
+            off_diagonal_loss = (off_diagonal(correlation) - tau).pow(2).sum()
+        else:
+            off_diagonal_loss = off_diagonal(correlation).pow(2).sum()
         return on_diagonal + self.lambd * off_diagonal_loss
 
     def forward(self, view_a, view_b):
@@ -117,11 +123,15 @@ class LeadFusionBT(nn.Module):
         loss_inter = view_a.new_zeros(())
         for left_index in range(self.num_leads):
             for right_index in range(self.num_leads):
+                tau_ij = 0.0
+                if self.d1l_targets is not None and left_index != right_index:
+                    tau_ij = float(self.d1l_targets[left_index, right_index])
                 pair_loss = self._barlow_loss(
                     projections_a[left_index],
                     projections_b[right_index],
                     self.bn_group[left_index],
                     self.bn_group[right_index],
+                    tau=tau_ij,
                 )
                 if left_index == right_index:
                     loss_intra = loss_intra + pair_loss

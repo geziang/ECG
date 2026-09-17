@@ -115,8 +115,8 @@ ata/ptbxl --checkpoint F:\新实验\ECG_SSL_LFBT-main\checkpoint\M\b0_gamma07_se
   - proj_dim1024 seed0: --projector 1024-1024-1024
   - proj_dim4096 seed0: --projector 4096-4096-4096
 [m_screen] $ C:\Users\admin\.conda\envs\DL\python.exe run_pt.py --data-dir data/pt_pretrain --epochs 200 --batch-size 128 --workers 6 --seed 0 --checkpoint-dir F:\新实验\ECG_SSL_LFBT-main\checkpoint\M\aug_crop_080_seed0 --aug-params 0.8,1.0,0.0,0.5
-[10:18] == 车道B启动: aug_crop_weak 3seed 确认 ==
-[m_screen] 计划 2 个 run (fast=False, 基线 Δ 锚点 0.7177)
-  - aug_crop_weak seed2: --aug-params 0.7,1.0,0.0,0.5
-  - aug_crop_weak seed4: --aug-params 0.7,1.0,0.0,0.5
-[m_screen] $ C:\Users\admin\.conda\envs\DL\python.exe run_pt.py --data-dir data/pt_pretrain --epochs 200 --batch-size 128 --workers 6 --seed 2 --checkpoint-dir F:\新实验\ECG_SSL_LFBT-main\checkpoint\M\aug_crop_weak_seed2 --aug-params 0.7,1.0,0.0,0.5
+[m_screen] $ C:\Users\admin\.conda\envs\DL\python.exe run_lp.py --data-dir data/ptbxl --checkpoint F:\新实验\ECG_SSL_LFBT-main\checkpoint\M\aug_crop_080_seed0\encoder_group.pth --num-classes 5 --feat-dir F:\新实验\ECG_SSL_LFBT-main\feat\M_aug_crop_080_seed0 --seed 0 --workers 6
+[m_screen] ✔ aug_crop_080_seed0: AUPRC=0.7165 Δ=-0.0012
+[m_screen] $ C:\Users\admin\.conda\envs\DL\python.exe run_pt.py --data-dir data/pt_pretrain --epochs 200 --batch-size 128 --workers 6 --seed [m_screen] $ C:\Users\admin\.conda\envs\DL\python.exe run_lp.py --data-dir data/ptbxl --checkpoint F:\新实验\ECG_SSL_LFBT-main\checkpoint\M\aug_crop_weak_seed2\encoder_group.pth --num-classes 5 --feat-dir F:\新实验\ECG_SSL_LFBT-main\feat\M_aug_crop_weak_seed2 --seed 0 --workers 6
+[m_screen] ✔ aug_crop_weak_seed2: AUPRC=0.7100 Δ=-0.0077
+[m_screen] $ C:\Users\admin\.conda\envs\DL\python.exe run_pt.py --data-dir data/pt_pretrain --epochs 200 --batch-size 128 --workers 6 --seed 4 --checkpoint-dir F:\新实验\ECG_SSL_LFBT-main\checkpoint\M\aug_crop_weak_seed4 --aug-params 0.7,1.0,0.0,0.5

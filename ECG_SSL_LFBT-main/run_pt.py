@@ -74,6 +74,10 @@ parser.add_argument('--d7-weight', default=0.0, type=float,
                     help='D7 掩码重建支路权重 η(0=关闭;推荐 0.1 起)')
 parser.add_argument('--d7-mask', default=0.5, type=float,
                     help='D7 时间掩码比例(跨导联同掩码,重建被掩段)')
+parser.add_argument('--n3-prob', default=0.0, type=float,
+                    help='N3 患者级正对: 第二视图换成同患者另一记录的概率(0=关闭)')
+parser.add_argument('--common-weight', default=0.0, type=float,
+                    help='共模视图: 各导联与跨导联均值信号的 BT 对齐项权重(0=关闭)')
 
 
 def off_diagonal(x):
@@ -271,6 +275,19 @@ class LeadFusionBT(object):
             rec = self._d7_recon_loss(y1)
             loss = loss + self.args.d7_weight * rec
             loss_r = loss_r + self.args.d7_weight * rec
+        if getattr(self.args, 'common_weight', 0.0) > 0:
+            # 共模视图: 各导联与跨导联均值信号(噪声抵消)的 BT 对齐(相关锚定式,非拉近)
+            y_common = y1.mean(dim=1, keepdim=True)  # (B,1,T)
+            zc_list = self._embed(y_common.repeat(1, self.args.num_leads, 1))
+            cm = 0
+            for i in range(self.args.num_leads):
+                c = self.bn_group[i](z1_list[i]).T @ self.bn_group[i](zc_list[i])
+                c.div_(self.args.batch_size)
+                cm = cm + torch.diagonal(c).add_(-1).pow_(2).sum() \
+                    + self.args.lambd * off_diagonal(c).pow_(2).sum()
+            cm = cm / self.args.num_leads
+            loss = loss + self.args.common_weight * cm
+            loss_r = loss_r + self.args.common_weight * cm
         return loss, loss_r, loss_t
 
 
@@ -345,7 +362,12 @@ def main_worker(gpu, args):
             ToTensor()])
     else:
         t2 = t
-    dataset = ECGDatasetFolder(args.data_dir, transform=MultiViewDataInjector([t, t2]))
+    if getattr(args, 'n3_prob', 0.0) > 0:
+        from data_utils.n3_dataset import N3PairsDataset, load_patient_map
+        dataset = N3PairsDataset(args.data_dir, t,
+                                 load_patient_map(), prob=args.n3_prob)
+    else:
+        dataset = ECGDatasetFolder(args.data_dir, transform=MultiViewDataInjector([t, t2]))
     loader = torch.utils.data.DataLoader(
         dataset, batch_size=args.batch_size, num_workers=args.workers, shuffle=True,
         pin_memory=True)

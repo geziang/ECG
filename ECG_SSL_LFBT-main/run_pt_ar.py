@@ -67,6 +67,22 @@ def save_resume_state(path, epoch, model, optimizer):
     )
 
 
+def build_d1l_targets(args):
+    if not args.d1l:
+        return None
+    import torch as _t
+    a, b = map(float, args.d1l.split(","))
+    P = _t.zeros(args.num_leads, args.num_leads)
+    P[0, 1] = P[1, 0] = a
+    for k in range(2, args.num_leads - 1):
+        P[k, k + 1] = P[k + 1, k] = b
+    if args.d1l_shuffle:
+        g = _t.Generator().manual_seed(12345)
+        perm = _t.randperm(args.num_leads, generator=g)
+        P = P[perm][:, perm]
+    return P
+
+
 def main():
     args = build_parser().parse_args()
     set_seed(args.seed)
