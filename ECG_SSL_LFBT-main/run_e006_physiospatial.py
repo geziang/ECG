@@ -56,7 +56,25 @@ def validate_dataset(dataset, leads, length):
         raise ValueError(f"{sample_path} does not satisfy the [{leads}, {length}] LFBT input contract")
 
 
+def wait_for_gpu_memory(need_mib=12000, poll_s=60):
+    """启动显存闸门(2026-09-17 20:25 补, e006 谱分支实测峰值 ~13G 故阈值 12000): 与 run_pt.py 同款, CUDA 初始化前排队。"""
+    import subprocess as _sp
+    while True:
+        try:
+            out = _sp.run(['nvidia-smi', '--query-gpu=memory.free',
+                           '--format=csv,noheader,nounits'],
+                          capture_output=True, text=True, timeout=60).stdout
+            free = int(out.strip().splitlines()[0])
+        except Exception:
+            return
+        if free >= need_mib:
+            return
+        print(f"[vram-gate] 等待显存: 需要 {need_mib}MiB, 当前空闲 {free}MiB ({poll_s}s 后重查)", flush=True)
+        time.sleep(poll_s)
+
+
 def main():
+    wait_for_gpu_memory()
     args = parser().parse_args()
     set_seed(args.seed)
     args.checkpoint_dir.mkdir(parents=True, exist_ok=True)

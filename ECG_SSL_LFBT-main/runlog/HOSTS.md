@@ -4,9 +4,11 @@
 >
 > **认领方式**:把对应任务行的状态改为 `🏃<主机名>(开始时间)` 并 commit+push;完成后改为 ✅,并把结果行写入本主机结果文件(§五-3)。
 > **更新纪律**:任务状态每次变化(领取/完成/失败)立即 push;长任务不必频繁汇报,但必须写明预计完成时间。
-> 文档路径:`runlog/HOSTS.md`;最后更新:**2026-09-17 17:15,主机A(Win4090)**。
+> 文档路径:`runlog/HOSTS.md`;最后更新:**2026-09-17 20:55,主机A(Win4090)恢复运行并完成 A-P2 开关实现**。
 >
-> **分工总原则(2026-09-17 定)**:存量筛选/判决任务(§二、§三)**全部由主机A认领**,其他主机不得启动;**其他主机的任务是复现基线锚点 + 开创新方法**(§四)。
+> **主机A当前状态:🏃 已恢复(20:21)**——laneC=`arb3_base`、laneD=`d7_rec01` 预训练中;`psfull_arb3` 待独占槽位(e006 类实测峰值 ~13G,准入已改独占);laneE 全队列待槽位;FT10×B0 锚点与 H5 特征重抽在 2.5G 轻闸门排队。20:24 曾因准入正则漏计 ar/e006 入口导致 psfull+arb3 并发打爆显存(149MiB 空闲),已根治(正则补漏+e006 独占+run_pt_ar/run_e006 补 6500/12000MiB 自闸门)。
+>
+> **本轮再分配三原则(2026-09-17 晚,用户指令)**:①台账只按实际情况分配任务,**实现细节(开关/脚本/单测)由各主机自理**;②**总目标 = 尽快拿到至少一个过 3-seed 门的涨点、出成果**,判决线优先于扫描线;③已判死/无判值任务一律清除,机时不许再花。
 
 ---
 
@@ -14,8 +16,8 @@
 
 | 主机 | 硬件 | 关键环境 | 当前状态 |
 |---|---|---|---|
-| **主机A = `Win4090`**(本条目维护机,F:\新实验) | RTX 4090 24G / 32 逻辑核 / 128G RAM | Win10,Python 3.10.11,torch 2.0.0+cu118,conda env `DL` | 🏃 双车道运行中(§二) |
-| **主机B = `DESKTOP-0PBLCND`**(E:\GZA) | RTX 3080 10G / 16 逻辑核 / 64G RAM,**单车道** | Win10,Python 3.11.9,torch 2.5.1+cu121,conda env `DL`;数据已校验(17,418/13,639/1,714/1,739),闸门已按 10G 适配 | 🏃 B0 锚点运行中(09-17 19:03 起,约 4.5~7h);**待任务分配** |
+| **主机A = `Win4090`**(F:\新实验) | RTX 4090 24G / 32 逻辑核 / 128G RAM,双车道 | Win10,Python 3.10.11,torch 2.0.0+cu118,conda env `DL` | 🏃 三车道+轻任务(20:21 恢复;显存 ~21.5G 含 mimic) |
+| **主机B = `DESKTOP-0PBLCND`**(E:\GZA) | RTX 3080 10G / 16 逻辑核 / 64G RAM,**单车道** | Win10,Python 3.11.9,torch 2.5.1+cu121;数据已校验(含 5 个损坏 .mat 修复);推送走 `ECG-push-tmp` | 🏃 B0 锚点运行中(19:03 起,约 4.5~7h);**任务已分配(§四)** |
 | 主机C | (待登记) | (待登记) | 🆓 |
 
 新主机入场四步:①按 §五-6 准备并校验数据;②**先跑本机 B0 锚点**(§五-1 红线);③在上表登记硬件与环境;④按 §四 开展创新方法并在登记表挂号。
@@ -45,14 +47,9 @@
 
 **队尾(⛔ 同样全部由主机A认领;`pipeline_runner.py` 待命,车道槽位空闲后自动接力,当前维持双车道让显存):**
 
-9. `b0fast` 校准(`--fast-backbone`,fast 探针路线锚点)
-10. `speed_perturb` seed0(`--speed-perturb 0.85,1.15`)
-11. `asym_view` seed0(`--view2-params 0.9,1.0,0.0,0.1`)
-12. `lead_swap02` seed0(`--lead-swap-prob 0.2`)
-13. `cautious_adam` seed0(`--cautious`)
-14. `arb3_base` seed0(AR-B3 基座,`run_pt_ar --variant B0 --fusion mean --fusion-bt-weight 0.2 --lead-mask-prob 0.5`)
-15. `psfull_arb3` seed0(**判决实验**,`run_e006_physiospatial --profile physiospatial --base-variant ar_b3 --ablation full`)
-16. CPSC 跨库评价(评估轴④,用既有 checkpoint,需先备 CPSC 数据)
+> **A-P2 状态(主机A,20:55)**:① 开关全部实现并**8 项单测全过**(`--blur-pool/--pool-power/--whiten/--whiten-ln/--whiten-shuffle`;关态与 git HEAD 参照逐位一致、白化协方差=I、NEG 可逆),h2/t3/h1(预注册 3 seeds)+ LN-NEG + 位置-NEG 共 5 条已入 `pipeline_queue.yaml`;② **秩诊断初版**:旧缓存特征 erank/d=0.29~0.32(逐导联)/0.110(全局)< 0.5 → 判塌缩,**但该缓存标签 22 类、来源存疑**,正在以 SHA256 校验过的 B0 checkpoint 重抽特征复核(`feat/h5_b0_regen`),**复核不塌缩则 h1 三条立即出队**;③ H5 校准脚本就绪(`calibrate_lp.py`:train 上 StandardScaler+Logistic C 网格,val 选 C、test 仅评一次),待重抽特征后出数;④ TFS 基线秩诊断待补。
+
+### A-P3 队尾(有空位再跑)
 
 **自有机内部分工**:E007/LGA 5-seed 扩展与 η=0.01 复核固定在实验机(E 盘,已有完整 E001 工程)执行,同样不属于其他主机的任务。
 

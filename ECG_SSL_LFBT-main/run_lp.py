@@ -34,6 +34,9 @@ parser.add_argument('--learning-rate', default=0.001, type=float, metavar='LR',
 parser.add_argument('--seed', default=0, type=int, metavar='N', help='random seed')
 parser.add_argument('--sinc-frontend', default=0, type=int,
                     help='C1: 与预训练一致地重建 Sinc 带通前端(通道数 M; 0=普通 VGG)')
+# ===== A-P2 架构开关(须与预训练一致, 否则特征口径错) =====
+parser.add_argument('--blur-pool', default=0, type=int, help='H2: 与预训练一致才可正确加载 blurpool checkpoint')
+parser.add_argument('--pool-power', default=0.0, type=float, help='T3: 与预训练一致才可正确评估')
 
 
 class LinearProbing(object):
@@ -46,7 +49,9 @@ class LinearProbing(object):
             load_params = torch.load(args.checkpoint, map_location=self.device)
         lead_names = ["ii", "iii", "v1", "v2", "v3", "v4", "v5", "v6"]
         for i in range(args.num_leads):
-            encoder = VGG16(ch_in=1, alpha=0.125)
+            encoder = VGG16(ch_in=1, alpha=0.125,
+                            blur_pool=int(getattr(args, 'blur_pool', 0)),
+                            pool_power=float(getattr(args, 'pool_power', 0.0)))
             if getattr(args, 'sinc_frontend', 0) > 0:
                 # C1: 与 run_pt 相同的前端手术, 保证 state_dict 形状匹配
                 from models.sinc_conv import apply_sinc_frontend

@@ -41,6 +41,16 @@ CONFIRM_SEEDS = [2, 4]
 STALE_CLAIM_H = 16
 VRAM_NEED = 7800  # 预训练车道显存闸门(MiB); 主机B(10G) 用 --vram-need 7000
 MAX_PTS = [3]     # 全局 run_pt 并发上限; 主机B(单车道) 用 --max-pts 1
+LP_ARCH_FLAGS = ("--blur-pool", "--pool-power")  # 预训练架构开关需同步透传给 run_lp
+
+
+def lp_arch_args(args_str):
+    toks = (args_str or "").split()
+    out = []
+    for i, t in enumerate(toks):
+        if t in LP_ARCH_FLAGS and i + 1 < len(toks):
+            out += [t, toks[i + 1]]
+    return out
 
 LANE = "X"
 
@@ -92,9 +102,10 @@ def tag_running(tag):
 
 
 def live_pt_count():
-    """当前 run_pt 进程数(含链与流水线启动的)。查询失败按满载 99 处理。"""
+    """当前预训练进程数(run_pt / run_pt_ar / run_e006_physiospatial, 含链与流水线启动的)。
+    09-17 20:25 修正: 原正则漏掉 ar/e006 入口, 导致 psfull 与 arb3 同时准入打爆显存。"""
     ps = ("Get-CimInstance Win32_Process -Filter \"Name like 'python%'\" | "
-          "Where-Object {$_.CommandLine -match 'run_pt\\.py'} | "
+          "Where-Object {$_.CommandLine -match 'run_pt(_ar)?\\.py|run_e006_physiospatial\\.py'} | "
           "Measure-Object | Select-Object -ExpandProperty Count")
     try:
         out = subprocess.run(["powershell", "-NoProfile", "-Command", ps],
@@ -102,6 +113,15 @@ def live_pt_count():
         return int(out.strip() or 0)
     except Exception:
         return 99
+
+
+def admission_ok(cfg):
+    """类型准入: e006_pt 实测峰值 ~13GB(谱分支), 必须独占; 其余重任务(run_pt/ar)并发上限 2。
+    准入不满足时跳过该任务先做别的, 不阻塞本车道。"""
+    n = live_pt_count()
+    if cfg["type"] == "e006_pt":
+        return n == 0
+    return n < 2
 
 
 def wait_slot(max_pts=3):
@@ -240,7 +260,7 @@ def run_probe(cfg, seed, anchor):
         return None
     lp_cmd = [PY, "run_lp.py", "--data-dir", "data/ptbxl", "--checkpoint",
               ck / "encoder_group.pth", "--num-classes", 5, "--feat-dir",
-              FEAT / f"M_{tag}", "--seed", 0, "--workers", 6]
+              FEAT / f"M_{tag}", "--seed", 0, "--workers", 6] + lp_arch_args(cfg.get("args", ""))
     if cfg.get("sinc"):
         lp_cmd += ["--sinc-frontend", str(cfg["sinc"])]
     ok, text = sh_live(lp_cmd, LOGD / f"lp_{tag}.log")
@@ -261,8 +281,12 @@ def run_ar_or_e006(cfg, seed):
     """arb3_base / psfull_arb3: 预训练 + run_e006_downstream LP。"""
     tag = f"{cfg['name']}_seed{seed}"
     ck = CKPT / tag
-    wait_slot(MAX_PTS[0])
-    wait_vram(VRAM_NEED, tag)
+    if cfg["type"] == "e006_pt":
+        wait_slot(max_pts=1)   # e006 实测峰值 ~13GB, 独占
+        wait_vram(13000, tag)
+    else:
+        wait_slot(MAX_PTS[0])
+        wait_vram(VRAM_NEED, tag)
     if cfg["type"] == "ar_pt":
         cmd = [PY, "run_pt_ar.py", "--data-dir", "data/pt_pretrain",
                "--checkpoint-dir", ck, "--variant", "B0", "--fusion", "mean",
@@ -359,6 +383,8 @@ def main():
                 continue
             if tag_running(tag):
                 continue  # 他方在跑, 先看下一项
+            if not admission_ok(cfg):
+                continue  # 类型准入不满足(如 e006 需独占), 先做下一项不空等
             if not claim(tag):
                 continue
             picked = i
@@ -379,8 +405,8 @@ def main():
                 if delta is None:
                     retries[tag] = retries.get(tag, 0) + 1
                     if retries[tag] <= 2:
-                        queue.append((cfg, s))
-                        log(f"{tag} 失败, 第 {retries[tag]} 次重排队尾")
+                        queue.insert(0, (cfg, s))  # 失败保优先级, 插队首重试
+                        log(f"{tag} 失败, 第 {retries[tag]} 次重试插队首")
                         time.sleep(60)
                     else:
                         log(f"{tag} 连续 3 次失败, 弃置待人工排查")
@@ -394,8 +420,8 @@ def main():
                 if auprc is None:
                     retries[tag] = retries.get(tag, 0) + 1
                     if retries[tag] <= 2:
-                        queue.append((cfg, s))
-                        log(f"{tag} 失败, 第 {retries[tag]} 次重排队尾")
+                        queue.insert(0, (cfg, s))  # 失败保优先级, 插队首重试
+                        log(f"{tag} 失败, 第 {retries[tag]} 次重试插队首")
                         time.sleep(60)
                     else:
                         log(f"{tag} 连续 3 次失败, 弃置待人工排查")

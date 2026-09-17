@@ -1,0 +1,81 @@
+{
+ "feat_dir": "F:\\新实验\\ECG_SSL_LFBT-main\\feat",
+ "grid": [
+  0.01,
+  0.03,
+  0.1,
+  0.3,
+  1.0,
+  3.0,
+  10.0
+ ],
+ "ts": "09-17 20:33",
+ "raw_C0.01": {
+  "val_auprc": 0.0729,
+  "val_auroc": 0.6256
+ },
+ "raw_C0.03": {
+  "val_auprc": 0.0746,
+  "val_auroc": 0.6269
+ },
+ "raw_C0.1": {
+  "val_auprc": 0.0761,
+  "val_auroc": 0.6266
+ },
+ "raw_C0.3": {
+  "val_auprc": 0.0772,
+  "val_auroc": 0.6235
+ },
+ "raw_C1.0": {
+  "val_auprc": 0.078,
+  "val_auroc": 0.6189
+ },
+ "raw_C3.0": {
+  "val_auprc": 0.0775,
+  "val_auroc": 0.6136
+ },
+ "raw_C10.0": {
+  "val_auprc": 0.0771,
+  "val_auroc": 0.6093
+ },
+ "std_C0.01": {
+  "val_auprc": 0.0774,
+  "val_auroc": 0.6244
+ },
+ "std_C0.03": {
+  "val_auprc": 0.0778,
+  "val_auroc": 0.62
+ },
+ "std_C0.1": {
+  "val_auprc": 0.078,
+  "val_auroc": 0.6144
+ },
+ "std_C0.3": {
+  "val_auprc": 0.0773,
+  "val_auroc": 0.6102
+ },
+ "std_C1.0": {
+  "val_auprc": 0.0763,
+  "val_auroc": 0.6076
+ },
+ "std_C3.0": {
+  "val_auprc": 0.0759,
+  "val_auroc": 0.6064
+ },
+ "std_C10.0": {
+  "val_auprc": 0.0757,
+  "val_auroc": 0.606
+ },
+ "chosen": {
+  "standardize": true,
+  "C": 0.1
+ },
+ "test": {
+  "auprc": 0.0707,
+  "auroc": 0.6107
+ },
+ "old_head": {
+  "auroc": null,
+  "auprc": null
+ }
+}
