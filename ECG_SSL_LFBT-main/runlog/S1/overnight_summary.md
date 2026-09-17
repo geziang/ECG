@@ -165,3 +165,10 @@ ata/ptbxl --checkpoint F:\新实验\ECG_SSL_LFBT-main\checkpoint\M\b0_gamma07_se
   - n3_prob03 seed0: --n3-prob 0.3
   - common_view01 seed0: --common-weight 0.1
 [m_screen] $ C:\Users\admin\.conda\envs\DL\python.exe run_pt.py --data-dir data/pt_pretrain --epochs 200 --batch-size 128 --workers 6 --seed 0 --checkpoint-dir F:\新实验\ECG_SSL_LFBT-main\checkpoint\M\d7_rec01_seed0 --d7-weight 0.1
+[19:42] == 车道A2 重建启动 ==
+[m_screen] 计划 2 个 run (fast=False, 基线 Δ 锚点 0.7177)
+  - proj_dim1024 seed0: --projector 1024-1024-1024
+  - proj_dim4096 seed0: --projector 4096-4096-4096
+[m_screen] $ C:\Users\admin\.conda\envs\DL\python.exe run_pt.py --data-dir data/pt_pretrain --epochs 200 --batch-size 128 --workers 6 --seed 0 --checkpoint-dir F:\新实验\ECG_SSL_LFBT-main\checkpoint\M\proj_dim1024_seed0 --projector 1024-1024-1024
+[19:44] == 车道B4 重建启动: FT10 重跑 ==
+[19:44] FT10: b0_anchor
