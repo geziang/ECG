@@ -1,0 +1,6 @@
+# 车道B接力填充: crop 细化边界探针(若 0.8 也正则此点补缝)
+baseline: {name: B0, auprc_seed0: 0.7177}
+configs:
+  - name: aug_crop_085
+    args: "--aug-params 0.85,1.0,0.0,0.5"
+    seeds: [0]

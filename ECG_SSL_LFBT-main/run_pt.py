@@ -70,6 +70,10 @@ parser.add_argument('--lead-swap-prob', default=0.0, type=float,
                     help='相邻导联互换增强(阵列迁移, 电极错位模拟)概率;0=关闭')
 parser.add_argument('--cautious', action='store_true',
                     help='Cautious Adam(优化器前沿迁移): 屏蔽与梯度符号相反的动量更新')
+parser.add_argument('--d7-weight', default=0.0, type=float,
+                    help='D7 掩码重建支路权重 η(0=关闭;推荐 0.1 起)')
+parser.add_argument('--d7-mask', default=0.5, type=float,
+                    help='D7 时间掩码比例(跨导联同掩码,重建被掩段)')
 
 
 def off_diagonal(x):
@@ -145,6 +149,30 @@ class LeadFusionBT(object):
         self.bn_group = list()
         for i in range(args.num_leads):
             self.bn_group.append(nn.BatchNorm1d(sizes[-1], affine=False).to(self.device))
+        # D7: 并联重建支路(仅慢路径; 共享 backbone, 池化前特征接轻量解码器)
+        self.d7_decoders = None
+        if getattr(args, 'd7_weight', 0.0) > 0:
+            assert not self.fast, "D7 暂不支持 fast 路径"
+            from models.decoders import SmallDecoder
+            self.d7_decoders = nn.ModuleList(
+                [SmallDecoder().to(self.device) for _ in range(args.num_leads)])
+
+    def _d7_recon_loss(self, y1):
+        """对第一视图做跨导联同掩码, 重建被掩段(MSE 仅在被掩位置)。"""
+        B, L, T = y1.shape
+        mlen = max(1, int(self.args.d7_mask * T))
+        mstart = torch.randint(0, T - mlen, (1,)).item()
+        mask = torch.zeros(1, 1, T, device=y1.device)
+        mask[..., mstart:mstart + mlen] = 1.0
+        xm = y1 * (1 - mask)
+        rec_loss = 0
+        for i in range(L):
+            feat_map = self.backbone_group[i].model[:-1](xm[:, [i], :])
+            rec = self.d7_decoders[i](feat_map)  # (B, 1, T)
+            rec_loss = rec_loss + nn.functional.mse_loss(
+                rec[:, 0, mstart:mstart + mlen],
+                y1[:, i, mstart:mstart + mlen])
+        return rec_loss / L
 
     def _embed(self, y):
         """(B, L, T) -> 原始 projector 输出 z 列表 (每导联 (B, d))。"""
@@ -238,6 +266,11 @@ class LeadFusionBT(object):
                         1.0 - torch.sqrt(z.var(dim=0) + self.args.vicreg_var_eps)).mean()
             loss = loss + self.args.bt_var_hinge * hinge / (2 * self.args.num_leads)
             loss_r = loss_r + self.args.bt_var_hinge * hinge / (2 * self.args.num_leads)
+        if getattr(self, 'd7_decoders', None) is not None:
+            # D7: 并联掩码重建支路 L = L_BT + η·L_rec
+            rec = self._d7_recon_loss(y1)
+            loss = loss + self.args.d7_weight * rec
+            loss_r = loss_r + self.args.d7_weight * rec
         return loss, loss_r, loss_t
 
 
@@ -271,6 +304,13 @@ def main_worker(gpu, args):
 
         for md in model.bn_group:
             for param in md.parameters():
+                if param.ndim == 1:
+                    param_biases.append(param)
+                else:
+                    param_weights.append(param)
+
+        if getattr(model, 'd7_decoders', None) is not None:
+            for param in model.d7_decoders.parameters():
                 if param.ndim == 1:
                     param_biases.append(param)
                 else:
