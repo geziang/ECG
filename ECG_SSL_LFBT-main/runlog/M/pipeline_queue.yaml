@@ -1,19 +1,29 @@
-# 多车道补充流水线队列 (pipeline_runner.py 消费)
-# 所有权划分 (2026-09-17 16:20 确认):
-#   - 车道B链 (chainB2/B3) 已确认存活: crop_085 / FT10×2 / batch6×4 / D1L×AR-B3 —— 不入本队列
-#   - 车道A m_screen 孤儿存活: aug_mask_weak / proj_dim1024 / proj_dim4096 —— 放队尾兜底(孤儿若死由本队列接手)
-#   - chainA.sh 后半段所有权未确认: B0fast / batch4×4 / AR-B3 / P1/S1×AR-B3 —— 本队列主体
-# 防撞: 活进程扫描 + csv 完成行 + claim 认领, 与链并发安全
+# 主流水线队列 (pipeline_runner.py 消费; 2026-09-17 20:10 依 HOSTS.md §三 重排)
+# 重排说明:
+#   - 判决线置顶: arb3_base → psfull_arb3 (E006 重确认, 全项目最接近涨点, 零新代码)
+#   - d7/common_view/proj_dim 提前; 跨域四件套退居队尾 (原队尾顺序不变)
+#   - 移除 aug_mask_weak (已完成 ❌) 与孤儿兜底注释 (chain 链已死, 本队列唯一入口)
+#   - n3_prob03 移交主机B (与 H3 三选一配对, 见 HOSTS §四); D1L×AR-B3 / crop_weak FT10 已砍 (见 HOSTS §二)
+# 防撞: 活进程扫描 + csv 完成行 + claim 认领 (机制未动)
 anchor: 0.7177
 tasks:
-  - {name: b0fast, type: probe, fast: true, args: "", no_confirm: true, seeds: [0]}
+  - {name: arb3_base, type: ar_pt, args: "", seeds: [0]}
+  - {name: psfull_arb3, type: e006_pt, args: "", seeds: [0]}
+  - {name: d7_rec01, type: probe, args: "--d7-weight 0.1", seeds: [0]}
+  - {name: d7_rec003, type: probe, args: "--d7-weight 0.03", seeds: [0]}
+  - {name: common_view01, type: probe, args: "--common-weight 0.1", seeds: [0]}
+  - {name: proj_dim1024, type: probe, args: "--projector 1024-1024-1024", seeds: [0]}
+  - {name: proj_dim4096, type: probe, args: "--projector 4096-4096-4096", seeds: [0]}
   - {name: speed_perturb, type: probe, args: "--speed-perturb 0.85,1.15", seeds: [0]}
   - {name: asym_view, type: probe, args: "--view2-params 0.9,1.0,0.0,0.1", seeds: [0]}
   - {name: lead_swap02, type: probe, args: "--lead-swap-prob 0.2", seeds: [0]}
   - {name: cautious_adam, type: probe, args: "--cautious", seeds: [0]}
-  - {name: arb3_base, type: ar_pt, args: "", seeds: [0]}
-  - {name: psfull_arb3, type: e006_pt, args: "", seeds: [0]}
-  # ---- 队尾兜底: 仅当车道A孤儿死掉且未完成时才会真正执行 ----
-  - {name: aug_mask_weak, type: probe, args: "--aug-params 0.5,1.0,0.0,0.3", seeds: [0]}
-  - {name: proj_dim1024, type: probe, args: "--projector 1024-1024-1024", seeds: [0]}
-  - {name: proj_dim4096, type: probe, args: "--projector 4096-4096-4096", seeds: [0]}
+  - {name: b0fast, type: probe, fast: true, args: "", no_confirm: true, seeds: [0]}
+  # ---- 06 文献第一批 (HOSTS §三 A-P2): A 实现开关并通过"默认关==B0 逐位一致"单测后,
+  #      取消注释入队。开关名可自定, 语义如下 (判定门与 NEG 纪律见 06 v2):
+  #      h2_blur3 = 每个 MaxPool1d 后插 filt=3 固定二项式低通核再下采样 (零参数, 抗混叠)
+  #      t3_pow3  = 末端 AdaptiveAvgPool1d 换 Q=3 广义幂均值 (零参数, 数值稳定版)
+  #      h1_white8 = 编码器 64 维 h 分 8 组组内白化 (仅当有效秩诊断证实塌缩才入队)
+  # - {name: h2_blur3, type: probe, args: "--blur-pool 3", seeds: [0]}
+  # - {name: t3_pow3, type: probe, args: "--pool-power 3", seeds: [0]}
+  # - {name: h1_white8, type: probe, args: "--whiten 8", seeds: [0]}

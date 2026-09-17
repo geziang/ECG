@@ -1,3 +1,7 @@
+# ⚠️ 本文件已作废 (2026-09-17 20:10): chainB3 链已死, 任务去向如下, 勿再用 m_screen 消费本文件——
+#   d7_rec01 / d7_rec003 / common_view01 → 已并入 runlog/M/pipeline_queue.yaml (HOSTS §三 A-P1)
+#   n3_prob03 → 移交主机B, 与 H3 身份不变性臂同机配对三选一 (HOSTS §四)
+# 原内容仅留档:
 # b6: 新模块粗探(D7/N3/共模)
 baseline: {name: B0, auprc_seed0: 0.7177}
 configs:
