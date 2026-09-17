@@ -1,0 +1,18 @@
+# 裁剪轴追边界(0.7-1.0 已正 +0.27, 趋势未到头) + b3 剩余
+baseline: {name: B0, auprc_seed0: 0.7177}
+configs:
+  - name: aug_crop_080
+    args: "--aug-params 0.8,1.0,0.0,0.5"
+    seeds: [0]
+  - name: aug_crop_090
+    args: "--aug-params 0.9,1.0,0.0,0.5"
+    seeds: [0]
+  - name: aug_mask_weak
+    args: "--aug-params 0.5,1.0,0.0,0.3"
+    seeds: [0]
+  - name: proj_dim1024
+    args: "--projector 1024-1024-1024"
+    seeds: [0]
+  - name: proj_dim4096
+    args: "--projector 4096-4096-4096"
+    seeds: [0]

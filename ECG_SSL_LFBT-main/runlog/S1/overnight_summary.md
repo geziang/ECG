@@ -80,4 +80,30 @@ ata/ptbxl --checkpoint F:\新实验\ECG_SSL_LFBT-main\checkpoint\M\b0_gamma07_se
 [m_screen] $ C:\Users\admin\.conda\envs\DL\python.exe run_lp.py --data-dir data/ptbxl --checkpoint F:\新实验\ECG_SSL_LFBT-main\checkpoint\M\b0_lambd003_seed0\encoder_group.pth --num-classes 5 --feat-dir F:\新实验\ECG_SSL_LFBT-main\feat\M_b0_lambd003_seed0 --seed 0 --workers 6
 [m_screen] ✔ b0_lambd003_seed0: AUPRC=0.7086 Δ=-0.0091
 [m_screen] $ C:\Users\admin\.conda\envs\DL\python.exe run_pt.py --data-dir data/pt_pretrain --epochs 200 --batch-size 128 --workers 6 --seed 0 --checkpoint-dir F:\新实验\ECG_SSL_LFBT-main\checkpoint\M\b0_lambd01_seed0 --lambd 0.01
-[05:12] M3 等待超时(12h)退出
+[m_screen] $ C:\Users\admin\.conda\envs\DL\python.exe run_lp.py --data-dir data/ptbxl --checkpoint F:\新实验\ECG_SSL_LFBT-main\checkpoint\M\b0_lambd01_seed0\encoder_group.pth --num-classes 5 --feat-dir F:\新实验\ECG_SSL_LFBT-main\feat\M_b0_lambd01_seed0 --seed 0 --workers 6
+[m_screen] ✔ b0_lambd01_seed0: AUPRC=0.7109 Δ=-0.0068
+
+[m_screen] 当前矩阵:
+  b0_gamma07         s0 Δ=-0.0041 ❌
+  b0_gamma09         s0 Δ=-0.0066 ❌
+  b0_lambd003        s0 Δ=-0.0091 ❌
+  b0_lambd01         s0 Δ=-0.0068 ❌
+[06:30] M 第二批结束
+[06:31] == M 第三批启动: 增强扫描+投影维度 ==
+[m_screen] 计划 4 个 run (fast=False, 基线 Δ 锚点 0.7177)
+  - aug_crop_weak seed0: --aug-params 0.7,1.0,0.0,0.5
+  - aug_mask_weak seed0: --aug-params 0.5,1.0,0.0,0.3
+  - proj_dim1024 seed0: --projector 1024-1024-1024
+  - proj_dim4096 seed0: --projector 4096-4096-4096
+[m_screen] $ C:\Users\admin\.conda\envs\DL\python.exe run_pt.py --data-dir data/pt_pretrain --epochs 200 --batch-size 128 --workers 6 --seed 0 --checkpoint-dir F:\新实验\ECG_SSL_LFBT-main\checkpoint\M\aug_crop_weak_seed0 --aug-params 0.7,1.0,0.0,0.5
+[m_screen] $ C:\Users\admin\.conda\envs\DL\python.exe run_lp.py --data-dir data/ptbxl --checkpoint F:\新实验\ECG_SSL_LFBT-main\checkpoint\M\aug_crop_weak_seed0\encoder_group.pth --num-classes 5 --feat-dir F:\新实验\ECG_SSL_LFBT-main\feat\M_aug_crop_weak_seed0 --seed 0 --workers 6
+[m_screen] ✔ aug_crop_weak_seed0: AUPRC=0.7204 Δ=+0.0027
+[m_screen] $ C:\Users\admin\.conda\envs\DL\python.exe run_pt.py --data-dir data/pt_pretrain --epochs 200 --batch-size 128 --workers 6 --seed 0 --checkpoint-dir F:\新实验\ECG_SSL_LFBT-main\checkpoint\M\aug_mask_weak_seed0 --aug-params 0.5,1.0,0.0,0.3
+[09:34] == v2 链条启动: 裁剪趋势优先(aug_crop_weak +0.27 首个正探针) ==
+[m_screen] 计划 5 个 run (fast=False, 基线 Δ 锚点 0.7177)
+  - aug_crop_080 seed0: --aug-params 0.8,1.0,0.0,0.5
+  - aug_crop_090 seed0: --aug-params 0.9,1.0,0.0,0.5
+  - aug_mask_weak seed0: --aug-params 0.5,1.0,0.0,0.3
+  - proj_dim1024 seed0: --projector 1024-1024-1024
+  - proj_dim4096 seed0: --projector 4096-4096-4096
+[m_screen] $ C:\Users\admin\.conda\envs\DL\python.exe run_pt.py --data-dir data/pt_pretrain --epochs 200 --batch-size 128 --workers 6 --seed 0 --checkpoint-dir F:\新实验\ECG_SSL_LFBT-main\checkpoint\M\aug_crop_080_seed0 --aug-params 0.8,1.0,0.0,0.5
