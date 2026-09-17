@@ -117,6 +117,40 @@ ata/ptbxl --checkpoint F:\新实验\ECG_SSL_LFBT-main\checkpoint\M\b0_gamma07_se
 [m_screen] $ C:\Users\admin\.conda\envs\DL\python.exe run_pt.py --data-dir data/pt_pretrain --epochs 200 --batch-size 128 --workers 6 --seed 0 --checkpoint-dir F:\新实验\ECG_SSL_LFBT-main\checkpoint\M\aug_crop_080_seed0 --aug-params 0.8,1.0,0.0,0.5
 [m_screen] $ C:\Users\admin\.conda\envs\DL\python.exe run_lp.py --data-dir data/ptbxl --checkpoint F:\新实验\ECG_SSL_LFBT-main\checkpoint\M\aug_crop_080_seed0\encoder_group.pth --num-classes 5 --feat-dir F:\新实验\ECG_SSL_LFBT-main\feat\M_aug_crop_080_seed0 --seed 0 --workers 6
 [m_screen] ✔ aug_crop_080_seed0: AUPRC=0.7165 Δ=-0.0012
-[m_screen] $ C:\Users\admin\.conda\envs\DL\python.exe run_pt.py --data-dir data/pt_pretrain --epochs 200 --batch-size 128 --workers 6 --seed [m_screen] $ C:\Users\admin\.conda\envs\DL\python.exe run_lp.py --data-dir data/ptbxl --checkpoint F:\新实验\ECG_SSL_LFBT-main\checkpoint\M\aug_crop_weak_seed2\encoder_group.pth --num-classes 5 --feat-dir F:\新实验\ECG_SSL_LFBT-main\feat\M_aug_crop_weak_seed2 --seed 0 --workers 6
-[m_screen] ✔ aug_crop_weak_seed2: AUPRC=0.7100 Δ=-0.0077
-[m_screen] $ C:\Users\admin\.conda\envs\DL\python.exe run_pt.py --data-dir data/pt_pretrain --epochs 200 --batch-size 128 --workers 6 --seed 4 --checkpoint-dir F:\新实验\ECG_SSL_LFBT-main\checkpoint\M\aug_crop_weak_seed4 --aug-params 0.7,1.0,0.0,0.5
+[m_screen] $ C:\Users\admin\.conda\envs\DL\python.exe run_pt.py --data-dir data/pt_pretrain --epochs 200 --batch-size 128 --workers 6 --seed [m_screen] $ C:\Users\admin\.conda\envs\DL\python.exe run_lp.py --data-dir data/ptbxl --checkpoint F:\新实验\[m_screen] $ C:\Users\admin\.conda\envs\DL\python.exe run_lp.py --data-dir data/ptbxl --checkpoint F:\新实验\ECG_SSL_LFBT-main\checkpoint\M\aug_crop_090_seed0\encoder_group.pth --num-classes 5 --feat-dir F:\新实验\ECG_SSL_LFBT-main\feat\M_aug_crop_090_seed0 --seed 0 --workers 6
+[m_screen] ✔ aug_crop_090_seed0: AUPRC=0.7081 Δ=-0.0096
+[m_screen] $ C:\Users\admin\.conda\envs\DL\python.exe run_pt.py --data-dir data/pt_pretrain --epochs 200 --batch-size 128 --workers 6 --seed 0 --[m_screen] $ C:\Users\admin\.conda\envs\DL\python.exe run_lp.py --data-dir data/ptbxl --checkpoint F:\新实验\ECG_SSL_LFBT-main\checkpoint\M\aug_crop_weak_seed4\encoder_group.pth --num-classes 5 --feat-dir F:\新实验\ECG_SSL_LFBT-main\feat\M_aug_crop_weak_seed4 --seed 0 --workers 6
+[m_screen] ✔ aug_crop_weak_seed4: AUPRC=0.7123 Δ=-0.0054
+
+[m_screen] 当前矩阵:
+  aug_crop_090       s0 Δ=-0.0096 ❌
+  aug_crop_weak      s4 Δ=-0.0054 ❌
+[16:00] 车道B: 确认轮结束
+[16:00] == 车道B接力: crop_085 探针 ==
+[m_screen] 计划 1 个 run (fast=False, 基线 Δ 锚点 0.7177)
+  - aug_crop_085 seed0: --aug-params 0.85,1.0,0.0,0.5
+[m_screen] $ C:\Users\admin\.conda\envs\DL\python.exe run_pt.py --data-dir data/pt_pretrain --epochs 200 --batch-size 128 --workers 6 --seed 0 --checkpoint-dir F:\新实验\ECG_SSL_LFBT-main\checkpoint\M\aug_crop_085_seed0 --aug-params 0.85,1.0,0.0,0.5
+[16:19] [laneC] 流水线启动: 队列 10 项, 显存闸门 heavy=9800/fast=5000MiB
+[16:19] [laneC] 启动任务 b0fast_seed0(空闲显存 2756MiB)
+[16:19] [laneC] 等待显存: b0fast_seed0 需要 5000MiB, 当前空闲 2756MiB (每60s重查)
+[16:20] [laneC] 流水线启动: 队列 10 项, 显存闸门 heavy=9800/fast=5000MiB
+[16:20] [laneC] 启动任务 b0fast_seed0(空闲显存 2761MiB)
+[16:20] [laneC] 等待显存: b0fast_seed0 需要 9800MiB, 当前空闲 2761MiB (每60s重查)
+[16:22] [laneD] 流水线启动: 队列 10 项, 显存闸门 heavy=9800/fast=5000MiB
+[16:22] [laneD] 启动任务 speed_perturb_seed0(空闲显存 2747MiB)
+[16:22] [laneD] 等待显存: speed_perturb_seed0 需要 9800MiB, 当前空闲 2747MiB (每60s重查)
+[16:22] [laneD] 流水线启动: 队列 10 项, 显存闸门 heavy=9800/fast=5000MiB
+[16:22] [laneD] 启动任务 asym_view_seed0(空闲显存 2747MiB)
+[16:22] [laneD] 等待显存: asym_view_seed0 需要 9800MiB, 当前空闲 2747MiB (每60s重查)
+[16:23] [laneC] 流水线启动: 队列 10 项, 显存闸门 heavy=9800/fast=5000MiB
+[16:23] [laneC] 启动任务 b0fast_seed0(空闲显存 2724MiB)
+[16:23] [laneC] 等待显存: b0fast_seed0 需要 7800MiB, 当前空闲 2724MiB (每60s重查)
+[16:24] [laneD] 流水线启动: 队列 10 项, 显存闸门 heavy=9800/fast=5000MiB
+[16:24] [laneD] 启动任务 speed_perturb_seed0(空闲显存 2751MiB)
+[16:24] [laneD] 等待显存: speed_perturb_seed0 需要 7800MiB, 当前空闲 2751MiB (每60s重查)
+[16:30] [laneC] 等待显存: b0fast_seed0 需要 9800MiB, 当前空闲 1254MiB (每60s重查)
+[16:32] [laneD] 等待显存: speed_perturb_seed0 需要 9800MiB, 当前空闲 1313MiB (每60s重查)
+[16:32] [laneD] 等待显存: asym_view_seed0 需要 9800MiB, 当前空闲 1386MiB (每60s重查)
+[16:34] [laneD] 等待显存: speed_perturb_seed0 需要 7800MiB, 当前空闲 1387MiB (每60s重查)
+[16:43] [laneC] 流水线启动: 队列 10 项, 准入=活跃预训练<3 + 空闲显存≥7800MiB + run_pt 自闸门6500 兜底
+[16:43] [laneC] 启动任务 b0fast_seed0(空闲显存 10172MiB, 活跃预训练 2 个)
