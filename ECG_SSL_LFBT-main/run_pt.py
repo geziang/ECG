@@ -348,7 +348,9 @@ class LeadFusionBT(object):
             # H3 患者身份不变性(轻量去相关, 主机B): 患者共享方向 mu_p=(z1+z_pair)/2,
             # 惩罚其在批内的离散度(患者间协方差 off-block -> 0), 尺度按批内 std(stopgrad)
             # 归一保持与 BT on-diagonal 同量级; 仅对有同患者伙伴的行前向(flag 过滤)。
-            if bool(pair_mask.any()):
+            # 仅当带伙伴样本数 >= 2 时计算(批大小 1 无法过训练态 BatchNorm;
+            # ~6.4% 样本带 flag, 每 batch 恰 1 个的概率 ~0.2%, 跳过无碍统计)
+            if int(pair_mask.sum()) >= 2:
                 idx = pair_mask.nonzero(as_tuple=True)[0]
                 yp = y_pair[idx]
                 h3 = 0
