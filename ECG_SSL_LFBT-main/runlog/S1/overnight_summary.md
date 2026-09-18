@@ -281,3 +281,6 @@ ata/ptbxl --checkpoint F:\新实验\ECG_SSL_LFBT-main\checkpoint\M\b0_gamma07_se
 [11:05] [laneF] 流水线启动: 队列 23 项, 准入=run_pt 并发槽位 + 空闲显存闸门 + run_pt 自闸门6500 兜底
 [11:05] [laneF] 启动任务 proj_dim1024_seed0(空闲显存 5155MiB, 活跃预训练 2 个)
 [11:05] [laneF] 等待显存: proj_dim1024_seed0 需要 7800MiB, 当前空闲 5159MiB (每60s重查)
+[11:15] [laneF] 等待显存: proj_dim1024_seed0 需要 7800MiB, 当前空闲 5170MiB (每60s重查)
+[11:25] [laneF] 等待显存: proj_dim1024_seed0 需要 7800MiB, 当前空闲 5466MiB (每60s重查)
+[11:30] 巡检: 判决线关闭——psfull_arb3 LP 0.7075 vs arb3_base 0.7180, 配对Δ=−1.04pt(AUPRC)❌, E006先验A机不复现, 不补seed; 车道健康(common~130ep/d7重跑/proj1024候闸); 详见 hourly_report.md

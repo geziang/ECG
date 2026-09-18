@@ -1,30 +1,26 @@
-# 每小时巡检报告 2026-09-18 11:10(首份)
+# 每小时巡检报告(主机A)— 2026-09-18 11:00~11:30(与 11:10 并行实例合并版)
 
-## 一、GPU
-18971 / 24564 MiB(77%),利用率 94%。正常(告警阈值 23500MiB)。
+## ★ 本小时头条:判决线读数(负)
 
-## 二、车道与进程
-- 3 个 pipeline_runner 全部存活:laneC(pid 50312,跑 common_view01)、laneF(11:05 重启后认领 proj_dim1024,等显存闸门)、laneG(pid 20160,跑 d7_rec01);
-- psfull 判决 LP(pid 27452,run_e006_downstream)在跑;
-- 全部 python 进程与 DataLoader worker 数量正常,无孤儿。
+**`psfull_arb3` LP:AUPRC 0.7075 / AUROC 0.9117;配对基座 `arb3_base` LP:AUPRC 0.7180 / AUROC 0.9116**
+**→ 判决配对 Δ = −1.04pt(AUPRC)/ +0.01pt(AUROC)** —— 未达 +0.3pt 触发线,**不补 seed,判决线关闭 ❌**
 
-## 三、在跑任务
-| 任务 | 进度 | 佐证 | ETA |
-|---|---|---|---|
-| psfull_arb3 LP(判决) | epoch ~60/100,~24s/ep | 日志 65s 内 +4KB | **~11:25** |
-| common_view01 PT | epoch ≥91/200 | pmon SM 20–72%(日志块缓冲延迟,非卡死) | ~12:00 |
-| d7_rec01 PT(重跑) | 早期 epoch | pmon SM 41–72%(日志仅头部=缓冲) | ~15:00 |
-| proj_dim1024 PT | 已认领,停 7800MiB 闸门(空闲 5159MiB) | laneF 日志 | ~12:00 随 common 释放自动启动 |
+科学含义:①E006 的 P1+S1×AR-B3 增益(异机 3080 上曾 +0.40pt 且 3/3)**在 A 机单机配对协议下不复现**,反而 −1pt;②结合 E007/LGA 在 B0 上显著负,"先验上鲁棒基座"假设在两种基座上均已证伪;③SD-LFBT 组合拼接不触发;正收益库仍为 0(累计 18 判定行)。两条 csv 行已补,claim 已清。
 
-## 四、自上小时新完成
-matrix_results.csv +1 行:`09-18 11:00, arb3_base, ar_pt, AUPRC 0.718`(与 lp_arb3_base_seed0/metrics.json 0.717958 一致,系前会话手动 LP 链收尾落行,巡检核验无误)。psfull 判决行尚未出现。
+## 一、GPU 与车道
 
-## 五、本小时采取的动作
-纯巡逻,无写操作。(注:laneF 重启与 csv arb3 行均为主会话/前会话所为,本巡检仅核验。)
+- 显存 18,971/24,564 MiB(77%),利用率 94%,无告警;
+- laneC(common_view01,~epoch 130/200,ETA ~12:00)、laneF(11:05 重启,认领 proj_dim1024 停 7800 闸门,common 释放即启动)、laneG(d7_rec01 重跑,ETA ~15:00)全部存活;
+- 判活方法修正(11:10 实例贡献):PT 日志 mtime 冻结属 stdout 块缓冲假象,**判活以 pmon SM% / 日志字节数增长为准**。
 
-## 六、告警与待办
-1. 【判读修正·重要】"PT 日志 mtime 冻结 >20min"为 stdout 重定向块缓冲假象(约 8KB/次刷盘);已用 `nvidia-smi pmon -s u` 确认两 PT 均在计算。**后续巡检判活以 pmon SM% 或日志字节数增长为准,mtime 单独不构成告警。**
-2. 【待主会话】psfull 判决 LP ETA ~11:25:Δ = psfull − arb3_base(0.7180),≥ +0.003 → 队列加 seed2/4 并起新 runner 接走;≤0 → 记 ❌ 关线。
-3. 【待办】laneC/laneG runner 内存仍持旧并发上限 2(10:50 修码前启动);二者各自空闲时可择机重启对齐 3,主会话已知。
-4. 【git】main 与远端分叉(远端含主机B run_pt.py 改动,红线禁合并);本报告随 runlog 提交后停靠 hostA-sync 侧分支,待空闲窗口由主会话合并。
-5. 无 OOM / Traceback / 同任务双失败;无 runner 死亡;watchdog_relay 按规定保持废弃未动。
+## 二、处置记录
+
+1. 10:45 laneG 自动接手 d7_rec01(过夜事故恢复项)✓;
+2. arb3_base(11:00)与 psfull_arb3(11:26)判定行补录、认领清理 ✓;
+3. 无挂死(CPU 采样/pmon 双验证)、无 OOM、无同任务双失败。
+
+## 三、剩余与里程碑
+
+- 剩余 ~19 项:common_view01 → proj_dim1024/4096 → **A-P2 五探针(h2/t3/h1 ×3seeds + 两 NEG)= 现在的主攻希望** → 队尾;
+- 里程碑:~12:00 common_view01 出数(同裁决 C2 立项);午后 A-P2 开跑;h1 去留待秩诊断复核(`diagnose_rank.py --feat-dir feat/h5_b0_regen`);
+- 待办:laneC/G 旧并发码择机重启对齐 3;git 积压提交(远端有主机 B 新改动,训练存活期禁 pull 合并,停靠待空闲窗口)。

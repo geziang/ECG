@@ -1,0 +1,23 @@
+{
+  "auroc": 0.911580055227137,
+  "auprc": 0.717957950489402,
+  "accuracy": 0.7630822311673375,
+  "macro_f1": 0.6196572678947841,
+  "macro_recall": 0.5796506465377715,
+  "num_samples": 1739,
+  "class_names": [
+    "CD",
+    "HYP",
+    "MI",
+    "NORM",
+    "STTC"
+  ],
+  "task": "lp",
+  "fraction": 1.0,
+  "eval_split": "test",
+  "base_variant": "ar_b3",
+  "fusion": "mean",
+  "seed": 0,
+  "best_val_loss": 0.6481797184262957,
+  "model_sha256": "b7813ab878befaabceb014da744f026846715311c08ebdbe3cee3cb4fbbdd782"
+}
