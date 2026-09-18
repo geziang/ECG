@@ -303,3 +303,15 @@ ata/ptbxl --checkpoint F:\新实验\ECG_SSL_LFBT-main\checkpoint\M\b0_gamma07_se
 [13:39] [laneC] 等待显存: proj_dim4096_seed0 需要 7800MiB, 当前空闲 5864MiB (每60s重查)
 [13:49] [laneC] 等待显存: proj_dim4096_seed0 需要 7800MiB, 当前空闲 5864MiB (每60s重查)
 [13:59] [laneC] 等待显存: proj_dim4096_seed0 需要 7800MiB, 当前空闲 5859MiB (每60s重查)
+[14:09] [laneC] 等待显存: proj_dim4096_seed0 需要 7800MiB, 当前空闲 5857MiB (每60s重查)
+[14:19] [laneC] 等待显存: proj_dim4096_seed0 需要 7800MiB, 当前空闲 5815MiB (每60s重查)
+[14:28] [laneG] ✔ d7_rec01_seed0: AUPRC=0.7064 Δ=-0.0113
+[14:28] [laneG] 启动任务 h2_blur3_seed0(空闲显存 2577MiB, 活跃预训练 2 个)
+[14:28] [laneG] 等待显存: h2_blur3_seed0 需要 7800MiB, 当前空闲 2577MiB (每60s重查)
+[14:38] [laneG] 等待显存: h2_blur3_seed0 需要 7800MiB, 当前空闲 2322MiB (每60s重查)
+[14:48] [laneG] 等待显存: h2_blur3_seed0 需要 7800MiB, 当前空闲 2322MiB (每60s重查)
+[14:50] [laneF] ✔ proj_dim1024_seed0: AUPRC=0.7092 Δ=-0.0085
+[14:50] [laneF] 启动任务 h2_blur3_seed2(空闲显存 7369MiB, 活跃预训练 1 个)
+[14:50] [laneF] 等待显存: h2_blur3_seed2 需要 7800MiB, 当前空闲 7369MiB (每60s重查)
+[14:58] [laneG] 等待显存: h2_blur3_seed0 需要 7800MiB, 当前空闲 7369MiB (每60s重查)
+[15:00] [laneF] 等待显存: h2_blur3_seed2 需要 7800MiB, 当前空闲 7370MiB (每60s重查)
