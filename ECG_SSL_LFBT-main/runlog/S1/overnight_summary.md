@@ -361,3 +361,8 @@ ata/ptbxl --checkpoint F:\新实验\ECG_SSL_LFBT-main\checkpoint\M\b0_gamma07_se
 [19:00] [laneF] 等待显存: h2_blur3_seed4 需要 7800MiB, 当前空闲 1189MiB (每60s重查)
 [19:01] [laneC] 预训练失败 asym_view_seed0(详见 pt 日志)
 [19:01] [laneC] asym_view_seed0 失败, 第 1 次重排队尾
+[19:02] [laneC] 启动任务 lead_swap02_seed0(空闲显存 7536MiB, 活跃预训练 1 个)
+[19:02] [laneC] 等待显存: lead_swap02_seed0 需要 7800MiB, 当前空闲 7536MiB (每60s重查)
+[19:02] [laneG2] 流水线启动: 队列 23 项, 准入=run_pt 并发槽位 + 空闲显存闸门 + run_pt 自闸门6500 兜底
+[19:02] [laneG2] 启动任务 t3_pow3_seed0(空闲显存 19918MiB, 活跃预训练 0 个)
+[19:05] 巡检: h2分裂数据(s0❌−0.92/s2✅+0.40,A-P2首正信号!), seed4决胜票已开跑(~22:00); proj4096让位挪独占窗口; t3_s0并行
