@@ -277,3 +277,7 @@ ata/ptbxl --checkpoint F:\新实验\ECG_SSL_LFBT-main\checkpoint\M\b0_gamma07_se
 [10:41] [laneF] 全部剩余任务被他方占用或已认领, 10min 后重查
 [10:45] [laneG] 启动任务 d7_rec01_seed0(空闲显存 14024MiB, 活跃预训练 1 个)
 [10:51] [laneF] 全部剩余任务被他方占用或已认领, 10min 后重查
+[11:01] [laneF] 全部剩余任务被他方占用或已认领, 10min 后重查
+[11:05] [laneF] 流水线启动: 队列 23 项, 准入=run_pt 并发槽位 + 空闲显存闸门 + run_pt 自闸门6500 兜底
+[11:05] [laneF] 启动任务 proj_dim1024_seed0(空闲显存 5155MiB, 活跃预训练 2 个)
+[11:05] [laneF] 等待显存: proj_dim1024_seed0 需要 7800MiB, 当前空闲 5159MiB (每60s重查)
