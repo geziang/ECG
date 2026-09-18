@@ -125,7 +125,7 @@ def admission_ok(cfg, e006_pending=False):
         return n == 0
     if e006_pending:
         return n == 0
-    return n < 2
+    return n < MAX_PTS[0]  # 09-18 10:50: mimic 退出后显存富余, 2->3 并发(3x6.7+桌面2.1=22.2<24.5)
 
 
 def e006_pending_in(queue, done):
