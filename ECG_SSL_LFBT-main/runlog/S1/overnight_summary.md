@@ -333,3 +333,11 @@ ata/ptbxl --checkpoint F:\新实验\ECG_SSL_LFBT-main\checkpoint\M\b0_gamma07_se
 [16:04] [laneC] 预训练失败 speed_perturb_seed0(详见 pt 日志)
 [16:04] [laneC] speed_perturb_seed0 失败, 第 1 次重排队尾
 [16:10] 巡检更正: proj4096系挂死(CPU冻结/98%util系僵尸空转)已击杀; h2_blur3 s0+s2入场; laneC抢入的speed_perturb让位清除; 双探针17.7/24.5健康
+[16:05] [laneC] 启动任务 asym_view_seed0(空闲显存 5276MiB, 活跃预训练 2 个)
+[16:05] [laneC] 等待显存: asym_view_seed0 需要 7800MiB, 当前空闲 5276MiB (每60s重查)
+[16:15] [laneC] 等待显存: asym_view_seed0 需要 7800MiB, 当前空闲 5280MiB (每60s重查)
+[16:25] [laneC] 等待显存: asym_view_seed0 需要 7800MiB, 当前空闲 5276MiB (每60s重查)
+[16:35] [laneC] 等待显存: asym_view_seed0 需要 7800MiB, 当前空闲 5151MiB (每60s重查)
+[16:45] [laneC] 等待显存: asym_view_seed0 需要 7800MiB, 当前空闲 5170MiB (每60s重查)
+[16:55] [laneC] 等待显存: asym_view_seed0 需要 7800MiB, 当前空闲 5101MiB (每60s重查)
+[17:00] 巡检: 无新判定; h2_blur3 s0/s2 ep27/200(131s/ep, ETA~23:20)双探针健康(CPU验证); asym_view候闸; 无事故
