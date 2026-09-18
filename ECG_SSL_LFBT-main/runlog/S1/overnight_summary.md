@@ -348,3 +348,16 @@ ata/ptbxl --checkpoint F:\新实验\ECG_SSL_LFBT-main\checkpoint\M\b0_gamma07_se
 [17:45] [laneC] 等待显存: asym_view_seed0 需要 7800MiB, 当前空闲 5136MiB (每60s重查)
 [17:55] [laneC] 等待显存: asym_view_seed0 需要 7800MiB, 当前空闲 5136MiB (每60s重查)
 [18:00] 巡检: 无新判定; h2 s0/s2 ep91/200提速(56s/ep, ETA提前~19:40), CPU验证双活; 无事故
+[18:05] [laneC] 等待显存: asym_view_seed0 需要 7800MiB, 当前空闲 5162MiB (每60s重查)
+[18:15] [laneC] 等待显存: asym_view_seed0 需要 7800MiB, 当前空闲 5153MiB (每60s重查)
+[18:25] [laneC] 等待显存: asym_view_seed0 需要 7800MiB, 当前空闲 5162MiB (每60s重查)
+[18:35] [laneC] 等待显存: asym_view_seed0 需要 7800MiB, 当前空闲 5155MiB (每60s重查)
+[18:45] [laneC] 等待显存: asym_view_seed0 需要 7800MiB, 当前空闲 5159MiB (每60s重查)
+[18:55] [laneC] 等待显存: asym_view_seed0 需要 7800MiB, 当前空闲 5130MiB (每60s重查)
+[18:59] [laneG] ✔ h2_blur3_seed0: AUPRC=0.7085 Δ=-0.0092
+[18:59] [laneG] 启动任务 proj_dim4096_seed0(空闲显存 12939MiB, 活跃预训练 1 个)
+[19:00] [laneF] ✔ h2_blur3_seed2: AUPRC=0.7217 Δ=+0.0040
+[19:00] [laneF] 启动任务 h2_blur3_seed4(空闲显存 1185MiB, 活跃预训练 2 个)
+[19:00] [laneF] 等待显存: h2_blur3_seed4 需要 7800MiB, 当前空闲 1189MiB (每60s重查)
+[19:01] [laneC] 预训练失败 asym_view_seed0(详见 pt 日志)
+[19:01] [laneC] asym_view_seed0 失败, 第 1 次重排队尾
