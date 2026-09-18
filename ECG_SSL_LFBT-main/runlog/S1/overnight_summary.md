@@ -378,3 +378,21 @@ ata/ptbxl --checkpoint F:\新实验\ECG_SSL_LFBT-main\checkpoint\M\b0_gamma07_se
 [20:32] [laneC] 等待显存: lead_swap02_seed0 需要 7800MiB, 当前空闲 5700MiB (每60s重查)
 [20:42] [laneC] 等待显存: lead_swap02_seed0 需要 7800MiB, 当前空闲 5682MiB (每60s重查)
 [20:52] [laneC] 等待显存: lead_swap02_seed0 需要 7800MiB, 当前空闲 5727MiB (每60s重查)
+[21:02] [laneC] 等待显存: lead_swap02_seed0 需要 7800MiB, 当前空闲 5724MiB (每60s重查)
+[21:12] [laneC] 等待显存: lead_swap02_seed0 需要 7800MiB, 当前空闲 5718MiB (每60s重查)
+[21:22] [laneC] 等待显存: lead_swap02_seed0 需要 7800MiB, 当前空闲 5722MiB (每60s重查)
+[21:32] [laneC] 等待显存: lead_swap02_seed0 需要 7800MiB, 当前空闲 5448MiB (每60s重查)
+[21:42] [laneC] 等待显存: lead_swap02_seed0 需要 7800MiB, 当前空闲 5452MiB (每60s重查)
+[21:48] [laneG2] LP 失败 t3_pow3_seed0
+[21:48] [laneG2] t3_pow3_seed0 失败, 第 1 次重试插队首
+[21:49] [laneF] ✔ h2_blur3_seed4: AUPRC=0.7149 Δ=-0.0028
+[21:49] [laneF] 启动任务 t3_pow3_seed2(空闲显存 12926MiB, 活跃预训练 1 个)
+[21:49] [laneG2] 启动任务 t3_pow3_seed0(空闲显存 6226MiB, 活跃预训练 2 个)
+[21:49] [laneG2] 等待显存: t3_pow3_seed0 需要 7800MiB, 当前空闲 6226MiB (每60s重查)
+[21:59] [laneG2] 等待显存: t3_pow3_seed0 需要 7800MiB, 当前空闲 6128MiB (每60s重查)
+[22:09] [laneG2] 等待显存: t3_pow3_seed0 需要 7800MiB, 当前空闲 6121MiB (每60s重查)
+[22:19] [laneG2] 等待显存: t3_pow3_seed0 需要 7800MiB, 当前空闲 6121MiB (每60s重查)
+[22:29] [laneG2] 等待显存: t3_pow3_seed0 需要 7800MiB, 当前空闲 6129MiB (每60s重查)
+[22:39] [laneG2] 等待显存: t3_pow3_seed0 需要 7800MiB, 当前空闲 6120MiB (每60s重查)
+[22:49] [laneG2] 等待显存: t3_pow3_seed0 需要 7800MiB, 当前空闲 6134MiB (每60s重查)
+[22:59] [laneG2] 等待显存: t3_pow3_seed0 需要 7800MiB, 当前空闲 6128MiB (每60s重查)
