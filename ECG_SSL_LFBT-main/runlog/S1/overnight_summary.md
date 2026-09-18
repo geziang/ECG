@@ -373,3 +373,8 @@ ata/ptbxl --checkpoint F:\新实验\ECG_SSL_LFBT-main\checkpoint\M\b0_gamma07_se
 [19:52] [laneC] 等待显存: lead_swap02_seed0 需要 7800MiB, 当前空闲 5726MiB (每60s重查)
 [20:00] 巡检: 无新判定; h2_s4决胜票+t3_s0双跑(ep27/200, ETA~23:20); CPU双活; 无事故
 [20:02] [laneC] 等待显存: lead_swap02_seed0 需要 7800MiB, 当前空闲 5728MiB (每60s重查)
+[20:12] [laneC] 等待显存: lead_swap02_seed0 需要 7800MiB, 当前空闲 5700MiB (每60s重查)
+[20:22] [laneC] 等待显存: lead_swap02_seed0 需要 7800MiB, 当前空闲 5686MiB (每60s重查)
+[20:32] [laneC] 等待显存: lead_swap02_seed0 需要 7800MiB, 当前空闲 5700MiB (每60s重查)
+[20:42] [laneC] 等待显存: lead_swap02_seed0 需要 7800MiB, 当前空闲 5682MiB (每60s重查)
+[20:52] [laneC] 等待显存: lead_swap02_seed0 需要 7800MiB, 当前空闲 5727MiB (每60s重查)
