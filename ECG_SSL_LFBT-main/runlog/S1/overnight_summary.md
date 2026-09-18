@@ -284,3 +284,10 @@ ata/ptbxl --checkpoint F:\新实验\ECG_SSL_LFBT-main\checkpoint\M\b0_gamma07_se
 [11:15] [laneF] 等待显存: proj_dim1024_seed0 需要 7800MiB, 当前空闲 5170MiB (每60s重查)
 [11:25] [laneF] 等待显存: proj_dim1024_seed0 需要 7800MiB, 当前空闲 5466MiB (每60s重查)
 [11:30] 巡检: 判决线关闭——psfull_arb3 LP 0.7075 vs arb3_base 0.7180, 配对Δ=−1.04pt(AUPRC)❌, E006先验A机不复现, 不补seed; 车道健康(common~130ep/d7重跑/proj1024候闸); 详见 hourly_report.md
+[11:35] [laneF] 等待显存: proj_dim1024_seed0 需要 7800MiB, 当前空闲 1843MiB (每60s重查)
+[11:45] [laneF] 等待显存: proj_dim1024_seed0 需要 7800MiB, 当前空闲 1827MiB (每60s重查)
+[11:55] [laneF] 等待显存: proj_dim1024_seed0 需要 7800MiB, 当前空闲 1888MiB (每60s重查)
+[11:59] [laneC] ✔ common_view01_seed0: AUPRC=0.7028 Δ=-0.0149
+[11:59] [laneC] 启动任务 proj_dim4096_seed0(空闲显存 5849MiB, 活跃预训练 2 个)
+[11:59] [laneC] 等待显存: proj_dim4096_seed0 需要 7800MiB, 当前空闲 5849MiB (每60s重查)
+[12:00] 巡检: common_view01 ❌Δ−1.49pt(C2随之不立项); 判决线维持关闭; 双预训练满载(d7_rec01 ep27/proj1024起步,proj4096候闸), 三车道健康, 无事故; 详见 hourly_report.md

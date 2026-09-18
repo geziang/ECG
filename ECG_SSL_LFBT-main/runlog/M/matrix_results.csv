@@ -17,3 +17,4 @@ ts,name,seed,args,auroc,auprc,delta,fast
 09-18 09:29,d7_rec003,0,--d7-weight 0.03,0.9161,0.7158,-0.0019,0
 09-18 11:00,arb3_base,0,ar_pt,0.9116,0.718,0.0003,0
 09-18 11:25,psfull_arb3,0,e006_pt,0.9117,0.7075,-0.0102,0
+09-18 11:59,common_view01,0,--common-weight 0.1,0.9108,0.7028,-0.0149,0
