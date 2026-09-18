@@ -327,3 +327,9 @@ ata/ptbxl --checkpoint F:\新实验\ECG_SSL_LFBT-main\checkpoint\M\b0_gamma07_se
 [15:50] [laneF] 等待显存: h2_blur3_seed2 需要 7800MiB, 当前空闲 7318MiB (每60s重查)
 [15:58] [laneG] 等待显存: h2_blur3_seed0 需要 7800MiB, 当前空闲 7313MiB (每60s重查)
 [16:00] [laneF] 等待显存: h2_blur3_seed2 需要 7800MiB, 当前空闲 7334MiB (每60s重查)
+[16:02] [laneC] 预训练失败 proj_dim4096_seed0(详见 pt 日志)
+[16:02] [laneC] proj_dim4096_seed0 失败, 第 1 次重排队尾
+[16:03] [laneC] 启动任务 speed_perturb_seed0(空闲显存 12311MiB, 活跃预训练 2 个)
+[16:04] [laneC] 预训练失败 speed_perturb_seed0(详见 pt 日志)
+[16:04] [laneC] speed_perturb_seed0 失败, 第 1 次重排队尾
+[16:10] 巡检更正: proj4096系挂死(CPU冻结/98%util系僵尸空转)已击杀; h2_blur3 s0+s2入场; laneC抢入的speed_perturb让位清除; 双探针17.7/24.5健康
