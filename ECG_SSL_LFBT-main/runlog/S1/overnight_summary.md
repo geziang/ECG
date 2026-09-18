@@ -291,3 +291,9 @@ ata/ptbxl --checkpoint F:\新实验\ECG_SSL_LFBT-main\checkpoint\M\b0_gamma07_se
 [11:59] [laneC] 启动任务 proj_dim4096_seed0(空闲显存 5849MiB, 活跃预训练 2 个)
 [11:59] [laneC] 等待显存: proj_dim4096_seed0 需要 7800MiB, 当前空闲 5849MiB (每60s重查)
 [12:00] 巡检: common_view01 ❌Δ−1.49pt(C2随之不立项); 判决线维持关闭; 双预训练满载(d7_rec01 ep27/proj1024起步,proj4096候闸), 三车道健康, 无事故; 详见 hourly_report.md
+[12:09] [laneC] 等待显存: proj_dim4096_seed0 需要 7800MiB, 当前空闲 5842MiB (每60s重查)
+[12:19] [laneC] 等待显存: proj_dim4096_seed0 需要 7800MiB, 当前空闲 5842MiB (每60s重查)
+[12:29] [laneC] 等待显存: proj_dim4096_seed0 需要 7800MiB, 当前空闲 5842MiB (每60s重查)
+[12:39] [laneC] 等待显存: proj_dim4096_seed0 需要 7800MiB, 当前空闲 5842MiB (每60s重查)
+[12:49] [laneC] 等待显存: proj_dim4096_seed0 需要 7800MiB, 当前空闲 5842MiB (每60s重查)
+[12:59] [laneC] 等待显存: proj_dim4096_seed0 需要 7800MiB, 当前空闲 5841MiB (每60s重查)
