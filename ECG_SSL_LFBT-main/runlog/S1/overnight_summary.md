@@ -341,3 +341,9 @@ ata/ptbxl --checkpoint F:\新实验\ECG_SSL_LFBT-main\checkpoint\M\b0_gamma07_se
 [16:45] [laneC] 等待显存: asym_view_seed0 需要 7800MiB, 当前空闲 5170MiB (每60s重查)
 [16:55] [laneC] 等待显存: asym_view_seed0 需要 7800MiB, 当前空闲 5101MiB (每60s重查)
 [17:00] 巡检: 无新判定; h2_blur3 s0/s2 ep27/200(131s/ep, ETA~23:20)双探针健康(CPU验证); asym_view候闸; 无事故
+[17:05] [laneC] 等待显存: asym_view_seed0 需要 7800MiB, 当前空闲 5099MiB (每60s重查)
+[17:15] [laneC] 等待显存: asym_view_seed0 需要 7800MiB, 当前空闲 5096MiB (每60s重查)
+[17:25] [laneC] 等待显存: asym_view_seed0 需要 7800MiB, 当前空闲 5103MiB (每60s重查)
+[17:35] [laneC] 等待显存: asym_view_seed0 需要 7800MiB, 当前空闲 5108MiB (每60s重查)
+[17:45] [laneC] 等待显存: asym_view_seed0 需要 7800MiB, 当前空闲 5136MiB (每60s重查)
+[17:55] [laneC] 等待显存: asym_view_seed0 需要 7800MiB, 当前空闲 5136MiB (每60s重查)
