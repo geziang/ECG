@@ -1,0 +1,63 @@
+{
+ "feat_dir": "F:\\新实验\\ECG_SSL_LFBT-main\\feat\\h5_b0_regen",
+ "N": 13639,
+ "D": 512,
+ "per_lead": {
+  "II": {
+   "erank": 25.96,
+   "erank/d": 0.406,
+   "rankme": 5.23,
+   "pr": 37.46
+  },
+  "III": {
+   "erank": 28.34,
+   "erank/d": 0.443,
+   "rankme": 5.28,
+   "pr": 39.35
+  },
+  "V1": {
+   "erank": 26.57,
+   "erank/d": 0.415,
+   "rankme": 4.82,
+   "pr": 37.85
+  },
+  "V2": {
+   "erank": 28.25,
+   "erank/d": 0.441,
+   "rankme": 5.11,
+   "pr": 39.66
+  },
+  "V3": {
+   "erank": 24.44,
+   "erank/d": 0.382,
+   "rankme": 4.98,
+   "pr": 36.31
+  },
+  "V4": {
+   "erank": 23.84,
+   "erank/d": 0.373,
+   "rankme": 4.7,
+   "pr": 35.69
+  },
+  "V5": {
+   "erank": 22.99,
+   "erank/d": 0.359,
+   "rankme": 5.0,
+   "pr": 34.71
+  },
+  "V6": {
+   "erank": 22.94,
+   "erank/d": 0.358,
+   "rankme": 4.24,
+   "pr": 34.63
+  }
+ },
+ "ts": "09-18 10:48",
+ "overall": {
+  "erank": 61.39,
+  "erank/d": 0.12,
+  "rankme": 6.52,
+  "pr": 172.19
+ },
+ "h1_gate": "塌缩(H1 立项)"
+}

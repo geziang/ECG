@@ -1,5 +1,5 @@
 {
- "feat_dir": "F:\\新实验\\ECG_SSL_LFBT-main\\feat",
+ "feat_dir": "F:\\新实验\\ECG_SSL_LFBT-main\\feat\\h5_b0_regen",
  "grid": [
   0.01,
   0.03,
@@ -9,73 +9,73 @@
   3.0,
   10.0
  ],
- "ts": "09-17 20:33",
+ "ts": "09-18 10:48",
  "raw_C0.01": {
-  "val_auprc": 0.0729,
-  "val_auroc": 0.6256
+  "val_auprc": 0.6975,
+  "val_auroc": 0.9159
  },
  "raw_C0.03": {
-  "val_auprc": 0.0746,
-  "val_auroc": 0.6269
+  "val_auprc": 0.7112,
+  "val_auroc": 0.9203
  },
  "raw_C0.1": {
-  "val_auprc": 0.0761,
-  "val_auroc": 0.6266
+  "val_auprc": 0.7134,
+  "val_auroc": 0.9213
  },
  "raw_C0.3": {
-  "val_auprc": 0.0772,
-  "val_auroc": 0.6235
+  "val_auprc": 0.7068,
+  "val_auroc": 0.9196
  },
  "raw_C1.0": {
-  "val_auprc": 0.078,
-  "val_auroc": 0.6189
+  "val_auprc": 0.6976,
+  "val_auroc": 0.9154
  },
  "raw_C3.0": {
-  "val_auprc": 0.0775,
-  "val_auroc": 0.6136
+  "val_auprc": 0.6848,
+  "val_auroc": 0.9107
  },
  "raw_C10.0": {
-  "val_auprc": 0.0771,
-  "val_auroc": 0.6093
+  "val_auprc": 0.6746,
+  "val_auroc": 0.9074
  },
  "std_C0.01": {
-  "val_auprc": 0.0774,
-  "val_auroc": 0.6244
+  "val_auprc": 0.7079,
+  "val_auroc": 0.9203
  },
  "std_C0.03": {
-  "val_auprc": 0.0778,
-  "val_auroc": 0.62
+  "val_auprc": 0.7,
+  "val_auroc": 0.9175
  },
  "std_C0.1": {
-  "val_auprc": 0.078,
-  "val_auroc": 0.6144
+  "val_auprc": 0.694,
+  "val_auroc": 0.9128
  },
  "std_C0.3": {
-  "val_auprc": 0.0773,
-  "val_auroc": 0.6102
+  "val_auprc": 0.681,
+  "val_auroc": 0.9082
  },
  "std_C1.0": {
-  "val_auprc": 0.0763,
-  "val_auroc": 0.6076
+  "val_auprc": 0.6695,
+  "val_auroc": 0.9048
  },
  "std_C3.0": {
-  "val_auprc": 0.0759,
-  "val_auroc": 0.6064
+  "val_auprc": 0.6652,
+  "val_auroc": 0.9031
  },
  "std_C10.0": {
-  "val_auprc": 0.0757,
-  "val_auroc": 0.606
+  "val_auprc": 0.6623,
+  "val_auroc": 0.9026
  },
  "chosen": {
-  "standardize": true,
+  "standardize": false,
   "C": 0.1
  },
  "test": {
-  "auprc": 0.0707,
-  "auroc": 0.6107
+  "auprc": 0.7149,
+  "auroc": 0.9123
  },
  "old_head": {
-  "auroc": null,
-  "auprc": null
+  "auroc": 0.9125814417597449,
+  "auprc": 0.7173071061564275
  }
 }

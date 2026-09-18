@@ -14,12 +14,15 @@ ts = transforms.Compose(
 )
 
 
-def get_data_loaders(data_path, batch_size, num_workers, train_shuffle=True, train_ratio=1.0, seed=0):
+def get_data_loaders(data_path, batch_size, num_workers, train_shuffle=True, train_ratio=1.0, seed=0,
+                     return_metadata=False):
     # 用 pathlib 拼接, 不再依赖传入路径是否带末尾分隔符 (指南 §5 P0)
+    # return_metadata=True: 额外返回 class_names(run_e006_downstream 需要; 2026-09-18 兼容补)
     root = Path(data_path)
     train_dataset = ECGDatasetFolder(root / "train", transform=ts)
     val_dataset = ECGDatasetFolder(root / "val", transform=ts)
     test_dataset = ECGDatasetFolder(root / "test", transform=ts)
+    class_names = list(getattr(train_dataset, "classes", []))  # random_split 前先取
 
     if train_ratio < 1.0:
         train_num = len(train_dataset)
@@ -32,6 +35,8 @@ def get_data_loaders(data_path, batch_size, num_workers, train_shuffle=True, tra
     val_loader = data.DataLoader(val_dataset, batch_size=batch_size, shuffle=False, num_workers=num_workers)
     test_loader = data.DataLoader(test_dataset, batch_size=batch_size, shuffle=False, num_workers=num_workers)
 
+    if return_metadata:
+        return train_loader, val_loader, test_loader, class_names
     return train_loader, val_loader, test_loader
 
 
