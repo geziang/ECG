@@ -17,7 +17,7 @@
 | 主机 | 硬件 | 关键环境 | 当前状态 |
 |---|---|---|---|
 | **主机A = `Win4090`**(F:\新实验) | RTX 4090 24G / 32 逻辑核 / 128G RAM,双车道 | Win10,Python 3.10.11,torch 2.0.0+cu118,conda env `DL` | 🏃 三车道+轻任务(20:21 恢复;显存 ~21.5G 含 mimic) |
-| **主机B = `DESKTOP-0PBLCND`**(E:\GZA) | RTX 3080 10G / 16 逻辑核 / 64G RAM,**单车道** | Win10,Python 3.11.9,torch 2.5.1+cu121;数据已校验(含 5 个损坏 .mat 修复);推送走 `ECG-push-tmp` | 🆓 空闲(§四 seed0 队列 09-18 07:25 完成:锚点0.7158; n3 Δ-0.0097❌ / h3 Δ-0.1498❌ / sinc Δ-0.0271❌;三选一=不动最优,患者轴关闭) |
+| **主机B = `DESKTOP-0PBLCND`**(E:\GZA) | RTX 3080 10G / 16 逻辑核 / 64G RAM,**单车道** | Win10,Python 3.11.9,torch 2.5.1+cu121;数据已校验(含 5 个损坏 .mat 修复);推送走 `ECG-push-tmp` | 🆓 空闲(§四 seed0 队列 09-18 07:25 完成:锚点0.7158; n3 Δ-0.0097❌ / h3 Δ-0.1498❌ / sinc Δ-0.0271❌;三选一=不动最优,患者轴关闭)🏃 P3 第二批队列已挂(c3_align/c3_plain对照/h4_hrv, 09-18 晨启动; 第一批已判负: n3 -0.0097 / h3 -0.1498 / sinc -0.0271) |
 | 主机C | (待登记) | (待登记) | 🆓 |
 
 新主机入场四步:①按 §五-6 准备并校验数据;②**先跑本机 B0 锚点**(§五-1 红线);③在上表登记硬件与环境;④按 §四 开展创新方法并在登记表挂号。
@@ -68,6 +68,8 @@
 | (示例)xxx 注意力变体 | 主机B | 投影头上加轻量通道注意力 | 🆓 | matrix_results_hostB.csv |
 | H3 患者身份不变性(轻量去相关) | 主机B | 患者均值离散度压零(--h3-weight) | ✅ 判负 s0 Δ-0.1498(0.3权重破坏性强;复核可试0.03) | matrix_results_hostB.csv |
 | C1 Sinc 带通前端 | 主机B | 第一层换参数化带通组(--sinc-frontend 16) | ✅ 判负 s0 Δ-0.0271(bands.json已存) | matrix_results_hostB.csv |
+| C3 准周期 MixUp | 主机B | FFT相位对齐后小比例混合(--mixup-prob/--mixup-align) | 🏃 第二批已实现并启动(对齐复核 roll 还原=True, 普通MixUp对照同机配对) | matrix_results_hostB.csv |
+| H4 HRV 借口 | 主机B | gqrs R峰->HRV四统计回归辅助头(--hrv-weight) | 🏃 第二批已实现并启动(17,415/17,418 目标有效) | matrix_results_hostB.csv |
 
 ## 五、多主机方法学红线(必读,违反=数据作废)
 

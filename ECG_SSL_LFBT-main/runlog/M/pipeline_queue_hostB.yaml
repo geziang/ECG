@@ -1,14 +1,11 @@
-# 主机B 队列 (HOSTS.md §四 任务分配, 2026-09-17 晚)
-# 红线: Δ 一律对本机 B0 锚点 -> anchor: auto (从 matrix_results_hostB.csv 的 b0 行读取,
-#       无 b0 行则 runner 拒绝启动; 预注册条件已脚本化, 符合 HOSTS §五-8)
-# 顺序 = 分配优先级: P1 患者轴三选一(n3 拉近 / H3 去除 / B0 不动) -> P2 C1 Sinc 前端
-# Δ>0 的 probe 由 runner 自动补 seed2/4 (3-seed 符号门); C3/H4 (P3) 实现后另行入队
-# 启动命令(主机B 10G 单车道):
-#   python pipeline_runner.py --lane B --queue runlog/M/pipeline_queue_hostB.yaml \
-#       --results matrix_results_hostB.csv --max-pts 1 --vram-need 7000
+# 主机B 队列 第二批 (HOSTS §四 P3: C3 准周期 MixUp + H4 HRV 借口, 2026-09-18 晨)
+# 第一批(n3/h3/sinc)已全部完成判负, 见 matrix_results_hostB.csv
+# anchor: auto = 本机 B0 锚点(csv b0 行 0.7158); Δ>0 自动补 seed2/4(对照臂 no_confirm)
+# C3 纪律: 普通 MixUp 对照(--mixup-align 0)与对齐版同参数同机配对
+# 启动: python pipeline_runner.py --lane B --queue runlog/M/pipeline_queue_hostB.yaml \
+#     --results matrix_results_hostB.csv --max-pts 1 --vram-need 7000
 anchor: auto
 tasks:
-  - {name: n3_prob03, type: probe, args: "--n3-prob 0.3", seeds: [0]}
-  - {name: h3_decor03, type: probe, args: "--h3-weight 0.3", seeds: [0]}
-  - {name: sinc_m16, type: probe, args: "--sinc-frontend 16", sinc: 16, seeds: [0]}
-  # C1 过线后扫 M=32: - {name: sinc_m32, type: probe, args: "--sinc-frontend 32", sinc: 32, seeds: [0]}
+  - {name: c3_align_mix02, type: probe, args: "--mixup-prob 0.5 --mixup-align 1", seeds: [0]}
+  - {name: c3_plain_mix02, type: probe, args: "--mixup-prob 0.5 --mixup-align 0", no_confirm: true, seeds: [0]}
+  - {name: h4_hrv01, type: probe, args: "--hrv-weight 0.1", seeds: [0]}

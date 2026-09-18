@@ -11,7 +11,7 @@ from data_utils.data_folder import ECGDatasetFolder
 from data_utils.multi_view_data_injector import MultiViewDataInjector
 from data_utils.augmentations import RandomResizeCropTimeOut, ToTensor
 from data_utils.seed_utils import set_seed
-from models.vgg_1d import VGG16, group_whiten, group_ln
+from models.vgg_1d import VGG16
 
 parser = argparse.ArgumentParser(description='Lead-Fusion Barlow Twins Pretraining')
 parser.add_argument('--data-dir', type=Path, required=True,
@@ -64,17 +64,6 @@ parser.add_argument('--aug-params', default='0.5,1.0,0.0,0.5', type=str,
 # ===== 跨域迁移候选 (batch4) =====
 parser.add_argument('--speed-perturb', default='1.0,1.0', type=str,
                     help='速度扰动(语音迁移) low,high 因子;默认 1.0,1.0=关闭')
-# ===== 06 文献第一批开关 (A-P2, 默认关==B0 逐位一致) =====
-parser.add_argument('--blur-pool', default=0, type=int,
-                    help='H2 抗混叠下采样: >0 时每个下采样点前加 filt=N 固定二项式低通(零参数)')
-parser.add_argument('--pool-power', default=0.0, type=float,
-                    help='T3 幂均值池化: >0 时末端池化换 Q=N 广义幂均值(带符号稳定版,零参数)')
-parser.add_argument('--whiten', default=0, type=int,
-                    help='H1 分组白化: >0 时编码器 64 维 h 分 N 组组内白化(零参数,仅预训练 forward)')
-parser.add_argument('--whiten-ln', action='store_true',
-                    help='H1 LN-NEG: 分组 LayerNorm 替代白化(只标准化不去相关), 须与 --whiten 同用')
-parser.add_argument('--whiten-shuffle', action='store_true',
-                    help='H1 位置-NEG: 白化前固定随机置换维度(白化错误分组), 须与 --whiten 同用')
 parser.add_argument('--view2-params', default='', type=str,
                     help='非对称增强(半监督视觉迁移): 视图2 独立 RRC-TO 参数;空=两视图同分布(B0)')
 parser.add_argument('--lead-swap-prob', default=0.0, type=float,
@@ -100,6 +89,13 @@ parser.add_argument('--sinc-reg', default=0.01, type=float,
                     help='C1 频带正则权重(带宽约束 [1,15]Hz, 防退化全带=普通卷积)')
 parser.add_argument('--sinc-kernel', default=101, type=int,
                     help='C1 Sinc 核长(点数; 有效采样率 204.8Hz)')
+# ===== 主机B P3 开关 (HOSTS §四; 默认全关 == B0) =====
+parser.add_argument('--mixup-prob', default=0.0, type=float,
+                    help='C3 准周期 MixUp: 每样本与随机他样本混合的概率(0=关闭)')
+parser.add_argument('--mixup-align', default=1, type=int, choices=[0, 1],
+                    help='C3 相位对齐: 1=FFT互相关对齐(准周期版), 0=普通 MixUp 对照')
+parser.add_argument('--hrv-weight', default=0.0, type=float,
+                    help='H4 HRV 借口: lead-II 表征回归 HRV 统计的辅助头权重(0=关闭; 需 data/pt_hrv.npz)')
 
 
 def off_diagonal(x):
@@ -130,18 +126,6 @@ class LeadFusionBT(object):
         self.args = args
         self.device = 'cuda' if torch.cuda.is_available() else 'cpu'
         self.fast = getattr(args, 'fast_backbone', False)
-        # A-P2 开关守卫: H2/T3 不支持 fast 分组卷积路径, 也不与 D7 组合(D7 取 model[:-1] 特征图)
-        _bp, _pp = int(getattr(args, 'blur_pool', 0)), float(getattr(args, 'pool_power', 0.0))
-        assert not (self.fast and (_bp or _pp)), "H2/T3 暂不支持 fast 路径"
-        assert not (getattr(args, 'd7_weight', 0.0) > 0 and (_bp or _pp)), "H2/T3 暂不与 D7 组合"
-        self.whiten_g = int(getattr(args, 'whiten', 0))
-        self.whiten_ln_on = bool(getattr(args, 'whiten_ln', False))
-        # 位置-NEG: 固定种子置换(与训练 seed 无关, 保证可复现)
-        _perm = torch.randperm(64, generator=torch.Generator().manual_seed(0))
-        self.whiten_perm = _perm
-        self.whiten_inv = torch.empty_like(_perm)
-        self.whiten_inv[_perm] = torch.arange(64)
-        self.whiten_shuffle_on = bool(getattr(args, 'whiten_shuffle', False))
         sizes = [64] + list(map(int, args.projector.split('-')))
         # D1L: 结构化目标矩阵 (lead 序: ii,iii,v1..v6 = 0..7)
         self.d1l_P = None
@@ -168,9 +152,7 @@ class LeadFusionBT(object):
             return
         self.backbone_group = list()
         for i in range(args.num_leads):
-            backbone = VGG16(ch_in=1, alpha=0.125,
-                             blur_pool=int(getattr(args, 'blur_pool', 0)),
-                             pool_power=float(getattr(args, 'pool_power', 0.0)))
+            backbone = VGG16(ch_in=1, alpha=0.125)
             backbone.fc = nn.Identity()
             self.backbone_group.append(backbone.to(self.device))
 
@@ -199,6 +181,12 @@ class LeadFusionBT(object):
                 apply_sinc_frontend(backbone, self.sinc_M,
                                     kernel_size=int(getattr(args, 'sinc_kernel', 101)))
                 backbone.to(self.device)  # 手术在 .to(device) 之后发生, 需补搬运
+        # H4: HRV 回归辅助头(lead-II 64 维表征 -> 4 统计量; 仅慢路径)
+        self.hrv_head = None
+        if getattr(args, 'hrv_weight', 0.0) > 0:
+            assert not self.fast, "H4 暂不支持 fast 路径"
+            self.hrv_head = nn.Sequential(          # 64 = int(512*alpha), alpha=0.125
+                nn.Linear(64, 32), nn.ReLU(), nn.Linear(32, 4)).to(self.device)
         # D7: 并联重建支路(仅慢路径; 共享 backbone, 池化前特征接轻量解码器)
         self.d7_decoders = None
         if getattr(args, 'd7_weight', 0.0) > 0:
@@ -229,17 +217,7 @@ class LeadFusionBT(object):
         if not self.fast:
             z_list = list()
             for i in range(self.args.num_leads):
-                h = self.backbone_group[i](y[:, [i], :])
-                if self.whiten_g > 0:
-                    if self.whiten_shuffle_on:
-                        h = h[:, self.whiten_perm.to(h.device)]
-                        h = group_whiten(h, self.whiten_g)
-                        h = h[:, self.whiten_inv.to(h.device)]  # H1 位置-NEG: 白化错误分组
-                    elif self.whiten_ln_on:
-                        h = group_ln(h, self.whiten_g)  # H1 LN-NEG: 只标准化不去相关
-                    else:
-                        h = group_whiten(h, self.whiten_g)  # H1: 组内白化后再进 projector
-                z_list.append(self.projector_group[i](h))
+                z_list.append(self.projector_group[i](self.backbone_group[i](y[:, [i], :])))
             return z_list
         feat = self.p_vgg(y).view(y.shape[0], self.args.num_leads, -1)
         z = self.p_proj(feat)  # (B, L, d)
@@ -271,7 +249,8 @@ class LeadFusionBT(object):
                 + self.args.vicreg_var * var
                 + self.args.vicreg_cov * cov)
 
-    def forward(self, y1, y2, y_pair=None, pair_mask=None):
+    def forward(self, y1, y2, y_pair=None, pair_mask=None,
+                hrv_target=None, hrv_valid=None):
         z1_list = self._embed(y1)
         z2_list = self._embed(y2)
         if self.args.loss_mode == 'vicreg':
@@ -373,6 +352,15 @@ class LeadFusionBT(object):
             sreg = sreg / self.args.num_leads
             loss = loss + self.args.sinc_reg * sreg
             loss_r = loss_r + self.args.sinc_reg * sreg
+        if getattr(self.args, 'hrv_weight', 0.0) > 0 and self.hrv_head is not None \
+                and hrv_target is not None and hrv_valid is not None:
+            # H4 借口: lead-II 表征回归全库归一化的 HRV 统计(仅有效样本行)
+            m = hrv_valid > 0.5
+            if bool(m.any()):
+                feat = self.backbone_group[0](y1[:, [0], :])   # (B, 64) lead II
+                l4 = nn.functional.mse_loss(self.hrv_head(feat), hrv_target[m])
+                loss = loss + self.args.hrv_weight * l4
+                loss_r = loss_r + self.args.hrv_weight * l4
         return loss, loss_r, loss_t
 
 
@@ -418,6 +406,13 @@ def main_worker(gpu, args):
                 else:
                     param_weights.append(param)
 
+        if getattr(model, 'hrv_head', None) is not None:
+            for param in model.hrv_head.parameters():
+                if param.ndim == 1:
+                    param_biases.append(param)
+                else:
+                    param_weights.append(param)
+
     parameters = param_weights + param_biases
     if getattr(args, 'cautious', False):
         optimizer = CautiousAdam(parameters, lr=args.learning_rate)
@@ -447,7 +442,17 @@ def main_worker(gpu, args):
             ToTensor()])
     else:
         t2 = t
-    if getattr(args, 'h3_weight', 0.0) > 0:
+    if getattr(args, 'mixup_prob', 0.0) > 0:
+        from data_utils.c3_mixup import MixUpDataset
+        dataset = MixUpDataset(args.data_dir, t, t2,
+                               prob=args.mixup_prob, align=bool(args.mixup_align))
+    elif getattr(args, 'hrv_weight', 0.0) > 0:
+        from data_utils.h4_dataset import HRVDataset
+        hrv_npz = Path('data/pt_hrv.npz')
+        if not hrv_npz.exists():
+            raise FileNotFoundError('H4 需先运行 runlog/prep_hrv.py 生成 data/pt_hrv.npz')
+        dataset = HRVDataset(args.data_dir, t, t2, str(hrv_npz))
+    elif getattr(args, 'h3_weight', 0.0) > 0:
         from data_utils.h3_dataset import H3TripletDataset
         from data_utils.n3_dataset import load_patient_map
         dataset = H3TripletDataset(args.data_dir, t, t2,
@@ -471,14 +476,18 @@ def main_worker(gpu, args):
             (views, flag) = batch
             y1 = views[0].to(model.device, non_blocking=True)
             y2 = views[1].to(model.device, non_blocking=True)
-            if len(views) == 3:
+            y_pair = pair_mask = hrv_t = hrv_v = None
+            if isinstance(flag, (tuple, list)):
+                # H4: flag = (targets(B,4), valid(B,))
+                hrv_t = flag[0].to(model.device, non_blocking=True)
+                hrv_v = flag[1].to(model.device, non_blocking=True)
+            elif len(views) == 3:
                 # H3 三元组: y_pair=同患者伙伴视图, flag=是否有效
                 y_pair = views[2].to(model.device, non_blocking=True)
                 pair_mask = flag.to(model.device).float() > 0.5
-            else:
-                y_pair, pair_mask = None, None
             optimizer.zero_grad()
-            loss, loss_r, loss_t = model.forward(y1, y2, y_pair, pair_mask)
+            loss, loss_r, loss_t = model.forward(y1, y2, y_pair, pair_mask,
+                                                 hrv_target=hrv_t, hrv_valid=hrv_v)
             loss.backward()
             optimizer.step()
             if ema_shadows is not None:
