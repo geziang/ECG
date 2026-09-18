@@ -19,7 +19,7 @@
 | 主机 | 硬件 | 关键环境 | 当前状态 |
 |---|---|---|---|
 | **主机A = `Win4090`**(F:\新实验) | RTX 4090 24G / 32 逻辑核 / 128G RAM,双车道 | Win10,Python 3.10.11,torch 2.0.0+cu118,conda env `DL` | 🏃 三车道+轻任务(20:21 恢复;显存 ~21.5G 含 mimic) |
-| **主机B = `DESKTOP-0PBLCND`**(E:\GZA) | RTX 3080 10G / 16 逻辑核 / 64G RAM,**单车道** | Win10,Python 3.11.9,torch 2.5.1+cu121;数据已校验(含 5 个损坏 .mat 修复);推送走 `ECG-push-tmp` | 🏃 P3 第二批队列已挂(c3_align/c3_plain对照/h4_hrv, 09-18 晨启动; 第一批已判负: n3 -0.0097 / h3 -0.1498 / sinc -0.0271) |
+| **主机B = `DESKTOP-0PBLCND`**(E:\GZA) | RTX 3080 10G / 16 逻辑核 / 64G RAM,**单车道** | Win10,Python 3.11.9,torch 2.5.1+cu121;数据已校验(含 5 个损坏 .mat 修复);推送走 `ECG-push-tmp` | 🟢 §四任务书全部完成·机器空闲待分配(两批六探针Δ全负, 详见§四判定行) |
 | 主机C | (待登记) | (待登记) | 🆓 |
 
 新主机入场四步:①按 §五-6 准备并校验数据;②**先跑本机 B0 锚点**(§五-1 红线);③在上表登记硬件与环境;④按 §四 开展创新方法并在登记表挂号。
@@ -70,8 +70,8 @@
 | (示例)xxx 注意力变体 | 主机B | 投影头上加轻量通道注意力 | 🆓 | matrix_results_hostB.csv |
 | H3 患者身份不变性(轻量去相关) | 主机B | 患者均值离散度压零(--h3-weight) | ✅ 判负 s0 Δ-0.1498(0.3权重破坏性强;复核可试0.03) | matrix_results_hostB.csv |
 | C1 Sinc 带通前端 | 主机B | 第一层换参数化带通组(--sinc-frontend 16) | ✅ 判负 s0 Δ-0.0271(bands.json已存) | matrix_results_hostB.csv |
-| C3 准周期 MixUp | 主机B | FFT相位对齐后小比例混合(--mixup-prob/--mixup-align) | 🏃 第二批已实现并启动(对齐复核 roll 还原=True, 普通MixUp对照同机配对) | matrix_results_hostB.csv |
-| H4 HRV 借口 | 主机B | gqrs R峰->HRV四统计回归辅助头(--hrv-weight) | 🏃 第二批已实现并启动(17,415/17,418 目标有效) | matrix_results_hostB.csv |
+| C3 准周期 MixUp | 主机B | FFT相位对齐后小比例混合(--mixup-prob/--mixup-align) | ✅ 判负 s0: 对齐Δ-0.0169 / 普通Δ-0.0144 双负(配对结论: 对齐无增益, MixUp轴含对齐一并关闭) | matrix_results_hostB.csv |
+| H4 HRV 借口 | 主机B | gqrs R峰->HRV四统计回归辅助头(--hrv-weight) | ✅ 判负 s0 Δ-0.0026(0.1权重下HRV辅助头无增益; 期间R5自愈1次=hrv_head按mask索引, a78e7de) | matrix_results_hostB.csv |
 
 ## 五、多主机方法学红线(必读,违反=数据作废)
 
@@ -93,3 +93,4 @@
 > 主机B(DESKTOP-0PBLCND)于 09-17 19:10 登记入场:环境详情见 `runlog/HOSTB_环境报告.md`;入场 B0 锚点运行中,完成后结果写 `runlog/M/matrix_results_hostB.csv`;未认领 §二/§三 任何任务,等待 §四 分配。(登记已 push,commit f957df3)
 
 > 主机B 终报(09-18 07:30):§四 seed0 三项+n3 全部完成,Δ 全负,详见 runlog/M/matrix_results_hostB.csv 与 runlog/M/hostB_auto_report.md;机器空闲可接新任务。n3_prob03(拉近)Δ-0.0097 一并判负——患者轴三选一结论=不动(B0)最优。
+> 主机B 第二批终报(09-18 19:28):C3配对(对齐-0.0169/普通-0.0144)与 H4(-0.0026)均判负,§四任务书清零;两批六探针Δ全负,均"不动最优"。matrix_results_hostB.csv 与 hostB_auto_report.md 已随本提交入库。机器空闲待分配。
