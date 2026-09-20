@@ -258,7 +258,7 @@ def append_result(row):
 def run_probe(cfg, seed, anchor):
     name, tag = cfg["name"], f"{cfg['name']}_seed{seed}"
     ck = CKPT / tag
-    cmd = [PY, "run_pt.py", "--data-dir", "data/pt_pretrain", "--epochs", 200,
+    cmd = [PY, "-u", "run_pt.py", "--data-dir", "data/pt_pretrain", "--epochs", 200,
            "--batch-size", 128, "--workers", 4, "--seed", seed,
            "--checkpoint-dir", ck]
     if cfg.get("fast"):
