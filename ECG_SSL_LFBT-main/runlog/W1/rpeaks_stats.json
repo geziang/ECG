@@ -1,0 +1,11 @@
+{
+ "total": 17418,
+ "v5_detected": 17417,
+ "ii_fallback": 1,
+ "failed": 0,
+ "success_rate": 1.0,
+ "median_peaks": 12,
+ "min_peaks": 4,
+ "max_peaks": 31,
+ "wall_s": 301.0
+}

@@ -257,12 +257,11 @@ def test_t3_masked_recon_loss_normalization():
     mask = torch.zeros(B, 1, T, device=m.device)
     mask[:, :, 100:140] = 1.0     # 40 点
     orig = torch.randn(B, 8, T, device=m.device)
-    val = m._masked_recon_loss(y, orig, mask)
-    # 手工: 对每导联 decoder 输出的被掩点误差之和 / (40*8)
+    fms = [m.backbone_group[i].model[:-1](y[:, [i], :]) for i in range(8)]
+    val = m._masked_recon_loss(fms, orig, mask)
     tot = 0.0
     with torch.no_grad():
-        for i in range(8):
-            fm = m.backbone_group[i].model[:-1](y[:, [i], :])
+        for i, fm in enumerate(fms):
             rec = m.d7_decoders[i](fm)
             tot += ((rec - orig[:, [i], :]).pow(2) * mask).sum().item()
     ref = tot / (mask.sum().item() * 8)

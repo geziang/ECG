@@ -107,9 +107,24 @@ class CCMDataset(torch.utils.data.Dataset):
         self.ratio = float(ratio)
         self.crop = tuple(crop)
         self.num_leads = num_leads
-        cache = np.load(str(rpeak_npz), allow_pickle=True)
-        self.rp = {str(k): np.asarray(v) for k, v in cache.items()}
+        self.rp = {}
+        if style == 'ccm':  # multiseg 不需要 R 峰缓存
+            cache = np.load(str(rpeak_npz), allow_pickle=True)
+            self.rp = {str(k): np.asarray(v) for k, v in cache.items()}
+        self.init_fallback = None
         self.stats = {'ccm_ok': 0, 'ccm_fallback': 0, 'views': 0}
+        if style == 'ccm' and len(self.base.samples):
+            # 诊断(任务书 §4.3): 抽样 256 条估计周期覆盖不足的回退率。
+            # 训练期逐视图计数发生在 worker 进程, 不回传主进程 -> 只报此 init 估计。
+            import random as _rnd
+            from pathlib import PurePath as _PP
+            for _ix in _rnd.sample(range(len(self.base.samples)),
+                                   min(256, len(self.base.samples))):
+                _path, _ = self.base.samples[_ix]
+                self._one_view(np.load(_path), _PP(str(_path)).stem)
+            self.init_fallback = round(self.stats['ccm_fallback']
+                                       / max(self.stats['views'], 1), 4)
+            self.stats = {'ccm_ok': 0, 'ccm_fallback': 0, 'views': 0}
 
     def __len__(self):
         return len(self.base.samples)

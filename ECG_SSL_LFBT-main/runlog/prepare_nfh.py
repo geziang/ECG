@@ -28,29 +28,29 @@ OUT_LEN = 2048
 
 
 def process_one(args):
-    stem, src_dir = args
+    hea_path = args[0]
     import wfdb
-    rec_path = str(Path(src_dir) / stem)
+    rec_path = str(hea_path.with_suffix(''))
     try:
         rec = wfdb.rdrecord(rec_path)
         leads = list(rec.sig_name)
         if not all(l in leads for l in LEADS_WANT):
-            return stem, None, f'missing_leads:{",".join(set(LEADS_WANT) - set(leads))}'
+            return hea_path.stem, None, f'missing_leads:{",".join(set(LEADS_WANT) - set(leads))}'
         sig = rec.p_signal[:, [leads.index(l) for l in LEADS_WANT]]  # (N, 8)
         if sig.shape[0] < OUT_LEN // 2:
-            return stem, None, f'too_short:{sig.shape[0]}'
+            return hea_path.stem, None, f'too_short:{sig.shape[0]}'
         if not np.isfinite(sig).all():
-            return stem, None, 'nonfinite'
+            return hea_path.stem, None, 'nonfinite'
         out = np.empty((8, OUT_LEN), dtype=np.float32)
         for i in range(8):
             x = resample(sig[:, i], OUT_LEN)
             sd = x.std()
             out[i] = (x - x.mean()) / (sd + 1e-8) if sd > 1e-6 else x * 0.0
         if float(np.abs(out).max()) > 1e3:  # 病态幅值
-            return stem, None, 'bad_amplitude'
-        return stem, (out, rec.fs, sig.shape[0]), None
+            hea_path.stem, None, 'bad_amplitude'
+        return hea_path.stem, (out, rec.fs, sig.shape[0]), None
     except Exception as e:  # noqa: BLE001
-        return stem, None, f'read_error:{type(e).__name__}'
+        return hea_path.stem, None, f'read_error:{type(e).__name__}'
 
 
 def main():
@@ -62,10 +62,10 @@ def main():
     ap.add_argument('--workers', type=int, default=12)
     args = ap.parse_args()
 
-    stems = sorted(p.stem for p in args.src.glob('*.hea'))
+    heas = sorted(args.src.rglob('*.hea'))
     if args.limit:
-        stems = stems[:args.limit]
-    print(f'[nfh] {len(stems)} records from {args.src}')
+        heas = heas[:args.limit]
+    print(f'[nfh] {len(heas)} records from {args.src}')
 
     args.out.mkdir(parents=True, exist_ok=True)
     t0 = time.time()
@@ -74,7 +74,7 @@ def main():
     n_ok = 0
     with Pool(args.workers) as pool:
         for k, (stem, payload, err) in enumerate(
-                pool.imap_unordered(process_one, [(s, args.src) for s in stems], chunksize=64)):
+                pool.imap_unordered(process_one, [(h,) for h in heas], chunksize=64)):
             if err:
                 anomalies[err.split(':')[0]] += 1
                 continue
@@ -86,7 +86,7 @@ def main():
             len_counter[int(raw_len)] += 1
             n_ok += 1
             if (k + 1) % 2000 == 0:
-                print(f'  {k + 1}/{len(stems)} ok={n_ok} ({time.time() - t0:.0f}s)', flush=True)
+                print(f'  {k + 1}/{len(heas)} ok={n_ok} ({time.time() - t0:.0f}s)', flush=True)
 
     dup = Counter(hashes.values())
     n_dup = sum(v - 1 for v in dup.values() if v > 1)
@@ -99,7 +99,7 @@ def main():
     manifest = dict(
         source=str(args.src),
         dataset='NFH / PhysioNet Challenge-2021 ningbo public subset',
-        n_raw=len(stems), n_clean=n_ok, n_anomaly=len(stems) - n_ok,
+        n_raw=len(heas), n_clean=n_ok, n_anomaly=len(heas) - n_ok,
         anomaly_breakdown=dict(anomalies),
         lead_mapping=dict(target=['II', 'III', 'V1', 'V2', 'V3', 'V4', 'V5', 'V6'],
                           source_standard='12-lead WFDB (Challenge-2021)'),

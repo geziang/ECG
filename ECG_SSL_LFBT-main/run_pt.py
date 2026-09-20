@@ -269,30 +269,32 @@ class LeadFusionBT(object):
                 y1[:, i, mstart:mstart + mlen])
         return rec_loss / L
 
-    def _masked_recon_loss(self, y_masked, y_orig, mask):
-        """T3 B2/B3: masked MSE —— 输入为遮挡视图, 目标为遮挡前原波形, 仅在被掩点计损。
-
-        mask: (B, 1, T) 0/1, 跨导联同步(同一时间窗); 按被掩点数归一(任务书 §4.2)。
-        """
-        B, L, T = y_masked.shape
+    def _masked_recon_loss(self, fmap_list, y_orig, mask):
+        """T3 B2/B3: masked MSE —— 解码器直接吃 _embed_full 缓存的池化前特征图
+        (消除重建路径的第二次骨干前向, 09-20 提速: 融合前 epoch 565s)。
+        重建目标为遮挡前原波形, 仅在被掩点计损; mask: (B,1,T) 跨导联同步。
+        重建损失监督视图1(mask 仍两视图独立生成, 见 data_utils/ccm.py)。"""
         m = mask[:, :1, :]                       # (B,1,T) 广播到全部导联
         npts = m.sum().clamp(min=1.0)
         rec_loss = 0
-        for i in range(L):
-            feat_map = self.backbone_group[i].model[:-1](y_masked[:, [i], :])
-            rec = self.d7_decoders[i](feat_map)  # (B, 1, T)
+        for i, fm in enumerate(fmap_list):
+            rec = self.d7_decoders[i](fm)        # (B, 1, T)
             rec_loss = rec_loss + ((rec - y_orig[:, [i], :]).pow(2) * m).sum()
-        return rec_loss / (npts * L)
+        return rec_loss / (npts * len(fmap_list))
 
-    def _embed_with_feats(self, y):
-        """同 _embed, 但额外返回每导联 64 维 GAP 特征(T2 ACL 区域支路用)。
-        前向无随机性, 与 _embed 数值一致; 仅在 ACL 开启时调用以复用主干计算。"""
-        z_list, f_list = list(), list()
+    def _embed_full(self, y):
+        """_embed 的融合版本: 额外返回每导联 64 维 GAP 特征(T2)与池化前特征图(T3)。
+        算子顺序与 VGG16.forward 完全一致(model[:-1] -> model[-1:] -> view -> fc),
+        z 数值与 _embed 逐位相同; 仅 ACL/重建开启时调用以复用主干计算。"""
+        z_list, f_list, fm_list = list(), list(), list()
         for i in range(self.args.num_leads):
-            f = self.backbone_group[i](y[:, [i], :])
+            bb = self.backbone_group[i]
+            fm = bb.model[:-1](y[:, [i], :])
+            fm_list.append(fm)
+            f = bb.model[-1:](fm).view(fm.shape[0], -1)
             f_list.append(f)
-            z_list.append(self.projector_group[i](f))
-        return z_list, f_list
+            z_list.append(self.projector_group[i](bb.fc(f)))
+        return z_list, f_list, fm_list
 
     def _embed(self, y):
         """(B, L, T) -> 原始 projector 输出 z 列表 (每导联 (B, d))。"""
@@ -334,9 +336,9 @@ class LeadFusionBT(object):
     def forward(self, y1, y2, y_pair=None, pair_mask=None,
                 hrv_target=None, hrv_valid=None, rec=None):
         self.last_extra = {}
-        if self.acl_nets is not None:
-            z1_list, f1_list = self._embed_with_feats(y1)
-            z2_list, f2_list = self._embed_with_feats(y2)
+        if self.acl_nets is not None or rec is not None:
+            z1_list, f1_list, fm1_list = self._embed_full(y1)
+            z2_list, f2_list, fm2_list = self._embed_full(y2)
         else:
             z1_list = self._embed(y1)
             z2_list = self._embed(y2)
@@ -398,11 +400,11 @@ class LeadFusionBT(object):
             loss_r = loss_r + self.args.bt_var_hinge * hinge / (2 * self.args.num_leads)
         if rec is not None:
             # T3 B2/B3 (任务书 07 §4.2): 数据管线提供两视图独立 mask + 原波形目标,
-            # masked MSE 按被掩点归一; L = L_BT + η·L_rec(η 即 --d7-weight)
+            # masked MSE 按被掩点归一; L = L_BT + η·L_rec(η 即 --d7-weight)。
+            # 重建监督视图1(两视图 mask 均独立生成; 解码器吃融合特征图, 09-20 提速)
             loss_bt_term = loss
             o1, o2, m1, m2 = rec
-            rec_val = (self._masked_recon_loss(y1, o1, m1)
-                       + self._masked_recon_loss(y2, o2, m2)) / 2
+            rec_val = self._masked_recon_loss(fm1_list, o1, m1)
             loss = loss + self.args.d7_weight * rec_val
             loss_r = loss_r + self.args.d7_weight * rec_val
             self.last_extra['loss_rec'] = rec_val.item()
@@ -678,9 +680,10 @@ def main_worker(gpu, args):
         print("\nEpoch end. Time: %f - Average loss %f - loss_r %f - loss_t %f.\n" % (
             ep_end_time - ep_start_time, total_loss, total_loss_r, total_loss_t))
 
-        if getattr(args, 'rec_style', 'none') in ('multiseg', 'ccm'):
-            # T3 诊断: R峰缓存命中率(失败回退多段 mask 的比例)
-            print(json.dumps({'epoch': epoch, 'ccm_stats': dict(dataset.stats)}))
+        if getattr(args, 'rec_style', 'none') == 'ccm':
+            # T3 诊断: 回退率(init 抽样估计; 逐视图计数在 worker 侧不回传)
+            print(json.dumps({'epoch': epoch, 'ccm_stats': {
+                'init_fallback_rate': getattr(dataset, 'init_fallback', None)}}))
 
     # N4: 保存前把 EMA 影子权重换入(EMA 开启时 checkpoint 即 EMA 权重)
     if ema_shadows is not None:
