@@ -111,6 +111,13 @@ parser.add_argument('--mixup-align', default=1, type=int, choices=[0, 1],
                     help='C3 相位对齐: 1=FFT互相关对齐(准周期版), 0=普通 MixUp 对照')
 parser.add_argument('--hrv-weight', default=0.0, type=float,
                     help='H4 HRV 借口: lead-II 表征回归 HRV 统计的辅助头权重(0=关闭; 需 data/pt_hrv.npz)')
+# ===== ACL 四区受控实现 (任务书 T2/A2/A3/A4; 默认关==B0 逐位一致) =====
+parser.add_argument('--acl-region', default=0, type=int,
+                    help='ACL-ECG 四区: 0=关闭(B0); 1=真实解剖分组; 2/3/4=随机分组 partition 1/2/3(A4 NEG)')
+parser.add_argument('--acl-inter', default=1, type=int, choices=[0, 1],
+                    help='A2=0 仅区域内 InfoNCE; A3=1 加跨区域 Eq.(11)')
+parser.add_argument('--acl-gamma', default=0.5, type=float, help='A3: loss = g*intra + (1-g)*inter')
+parser.add_argument('--acl-tau', default=0.5, type=float, help='ACL InfoNCE 温度')
 
 
 def off_diagonal(x):
@@ -199,6 +206,17 @@ class LeadFusionBT(object):
                 "full": bool(getattr(args, 'd1l_full', False)),
                 "note": "tau -> cross-corr diagonal target; off-diag target = 0",
             }
+        # ACL 四区受控实现 (T2): 替换式区域目标, h(两导联 concat)->独立 region projector
+        self.acl_on = int(getattr(args, 'acl_region', 0)) > 0
+        self.acl_regions = None
+        self.acl_projectors = None
+        if self.acl_on:
+            assert not self.fast, "ACL 区域路径暂不支持 fast"
+            from models.acl_region import build_regions, RegionProjector
+            part = 0 if int(args.acl_region) == 1 else int(args.acl_region) - 1
+            self.acl_regions = build_regions(part)
+            self.acl_projectors = nn.ModuleList(
+                [RegionProjector(in_dim=128).to(self.device) for _ in range(4)])
         if self.fast:
             from models.parallel_vgg import ParallelVGG16, ParallelProjector
             self.p_vgg = ParallelVGG16(num_leads=args.num_leads, ch_in=1).to(self.device)
@@ -273,23 +291,28 @@ class LeadFusionBT(object):
                 y1[:, i, mstart:mstart + mlen])
         return rec_loss / L
 
+    def _encode_h(self, y):
+        """(B, L, T) -> 每导联编码器输出 h 列表 [(B,64)] (含 whiten, 与 projector 输入同口径)。
+        ACL 区域路径复用 (region 输入 = 区内两导联 h concat)。"""
+        hs = list()
+        for i in range(self.args.num_leads):
+            h = self.backbone_group[i](y[:, [i], :])
+            if self.whiten_g > 0:
+                if self.whiten_shuffle_on:
+                    h = h[:, self.whiten_perm.to(h.device)]
+                    h = group_whiten(h, self.whiten_g)
+                    h = h[:, self.whiten_inv.to(h.device)]  # H1 位置-NEG: 白化错误分组
+                elif self.whiten_ln_on:
+                    h = group_ln(h, self.whiten_g)  # H1 LN-NEG: 只标准化不去相关
+                else:
+                    h = group_whiten(h, self.whiten_g)  # H1: 组内白化后再进 projector
+            hs.append(h)
+        return hs
+
     def _embed(self, y):
         """(B, L, T) -> 原始 projector 输出 z 列表 (每导联 (B, d))。"""
         if not self.fast:
-            z_list = list()
-            for i in range(self.args.num_leads):
-                h = self.backbone_group[i](y[:, [i], :])
-                if self.whiten_g > 0:
-                    if self.whiten_shuffle_on:
-                        h = h[:, self.whiten_perm.to(h.device)]
-                        h = group_whiten(h, self.whiten_g)
-                        h = h[:, self.whiten_inv.to(h.device)]  # H1 位置-NEG: 白化错误分组
-                    elif self.whiten_ln_on:
-                        h = group_ln(h, self.whiten_g)  # H1 LN-NEG: 只标准化不去相关
-                    else:
-                        h = group_whiten(h, self.whiten_g)  # H1: 组内白化后再进 projector
-                z_list.append(self.projector_group[i](h))
-            return z_list
+            return [self.projector_group[i](h) for i, h in enumerate(self._encode_h(y))]
         feat = self.p_vgg(y).view(y.shape[0], self.args.num_leads, -1)
         z = self.p_proj(feat)  # (B, L, d)
         return [z[:, i, :] for i in range(self.args.num_leads)]
@@ -322,6 +345,14 @@ class LeadFusionBT(object):
 
     def forward(self, y1, y2, y_pair=None, pair_mask=None,
                 hrv_target=None, hrv_valid=None):
+        if self.acl_on:
+            # A2/A3 替换式区域目标 (任务书: 不与旧 LGA/inter 叠加): loss_r=intra, loss_t=inter
+            from models.acl_region import region_embed, acl_loss
+            u1 = region_embed(self._encode_h(y1), self.acl_regions, self.acl_projectors)
+            u2 = region_embed(self._encode_h(y2), self.acl_regions, self.acl_projectors)
+            loss, li, lt = acl_loss(u1, u2, float(self.args.acl_tau),
+                                    float(self.args.acl_gamma), bool(self.args.acl_inter))
+            return loss, li, lt
         z1_list = self._embed(y1)
         z2_list = self._embed(y2)
         if self.args.loss_mode == 'vicreg':
@@ -486,6 +517,13 @@ def main_worker(gpu, args):
 
         if getattr(model, 'hrv_head', None) is not None:
             for param in model.hrv_head.parameters():
+                if param.ndim == 1:
+                    param_biases.append(param)
+                else:
+                    param_weights.append(param)
+
+        if getattr(model, 'acl_projectors', None) is not None:
+            for param in model.acl_projectors.parameters():
                 if param.ndim == 1:
                     param_biases.append(param)
                 else:
