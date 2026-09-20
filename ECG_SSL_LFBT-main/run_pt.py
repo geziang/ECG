@@ -113,8 +113,8 @@ parser.add_argument('--acl-rand-seed', default=101, type=int,
                     help='A4 随机分组种子(任务书 T2: >=3 个 partition, 如 101/102/103)')
 parser.add_argument('--acl-projector', default='128-2048-2048-2048', type=str,
                     help='区域 projector MLP 规格(输入 128 = 两导联 64 维 concat)')
-parser.add_argument('--acl-tau', default=0.5, type=float,
-                    help='InfoNCE temperature')
+parser.add_argument('--acl-tau', default=0.1, type=float,
+                    help='InfoNCE temperature(ACL-ECG 论文: tau=0.1, 09-20 按 PDF 核对修正)')
 parser.add_argument('--acl-eta1', default=0.5, type=float,
                     help='区域内一致项权重 η1')
 parser.add_argument('--acl-eta2', default=0.5, type=float,
