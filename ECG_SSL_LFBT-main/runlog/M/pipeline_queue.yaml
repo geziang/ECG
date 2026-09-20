@@ -35,3 +35,8 @@ tasks:
   # - {name: h2_blur3, type: probe, args: "--blur-pool 3", seeds: [0]}
   # - {name: t3_pow3, type: probe, args: "--pool-power 3", seeds: [0]}
   # - {name: h1_white8, type: probe, args: "--whiten 8", seeds: [0]}
+  # ---- W1 任务书 A 线 1-seed 粗筛 (2026-09-20 入队; T1/T2 已实现于 w1-code-tasks, 待 b0fast 结束合并后生效;
+  #      注意: 现管道 LP 出 test 读数, 仅作粗探; 过粗门者须按任务书 T0 用 val 协议复核后才进 3-seed) ----
+  - {name: a1_d1l_fix, type: probe, args: "--d1l 0.5,0.2", seeds: [0], no_confirm: true}
+  - {name: a2_acl_intra, type: probe, args: "--acl-region 1 --acl-inter 0", seeds: [0], no_confirm: true}
+  - {name: a3_acl_inter, type: probe, args: "--acl-region 1 --acl-inter 1 --acl-gamma 0.5", seeds: [0], no_confirm: true}

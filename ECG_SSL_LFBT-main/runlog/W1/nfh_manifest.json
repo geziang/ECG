@@ -1,0 +1,44 @@
+{
+ "preprocess_version": "nfh-v1",
+ "source": "F:\\数据集\\ECG_data\\ningbo",
+ "source_fs_hz": 500,
+ "target_length": 2048,
+ "lead_mapping": {
+  "II": 1,
+  "III": 2,
+  "V1": 6,
+  "V2": 7,
+  "V3": 8,
+  "V4": 9,
+  "V5": 10,
+  "V6": 11
+ },
+ "normalization": "per-record z-score (mean/std over full 8x2048), eps=1e-5, float32",
+ "n_source": 34905,
+ "n_ok": 34905,
+ "n_excluded": {
+  "read_fail": 0,
+  "bad_shape": 0,
+  "non_finite": 0,
+  "flat_signal": 0
+ },
+ "excluded_records": {
+  "read_fail": [],
+  "bad_shape": [],
+  "non_finite": [],
+  "flat_signal": []
+ },
+ "n_sha256_duplicates": 3,
+ "sha256_duplicates": [
+  "JS33139==JS33140",
+  "JS45461==JS45462",
+  "JS19114==JS19115"
+ ],
+ "patient_audit_note": "NFH .hea 无患者 ID; 以 SHA256 内容查重替代; chapman_shaoxing(JS00001~JS10646) 与 ningbo(JS10647+) 编号区间互斥",
+ "matched_updates": {
+  "ptb_b0": "200 epochs x 17418/128 ~= 27216 steps",
+  "nfh_c1": "100 epochs x 34905/128 ~= 27270 steps",
+  "note": "C1 预训练用 --epochs 100 对齐 optimizer updates"
+ },
+ "wall_time_s": 482.0
+}

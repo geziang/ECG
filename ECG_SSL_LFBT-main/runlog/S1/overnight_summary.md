@@ -619,3 +619,5 @@ ata/ptbxl --checkpoint F:\新实验\ECG_SSL_LFBT-main\checkpoint\M\b0_gamma07_se
 [15:47] [laneG2] b0fast_seed0 连续 3 次失败, 弃置待人工排查
 [15:47] [laneG2] 流水线退出: 队列清空/全部完成
 [15:51] [laneF] 流水线退出: 队列清空/全部完成
+[19:30] [laneF] 流水线启动: 队列 23 项, 准入=run_pt 并发槽位 + 空闲显存闸门 + run_pt 自闸门6500 兜底
+[19:30] [laneF] 启动任务 b0fast_seed0(空闲显存 19858MiB, 活跃预训练 0 个)
