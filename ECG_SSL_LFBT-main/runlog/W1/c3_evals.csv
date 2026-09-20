@@ -1,0 +1,7 @@
+ckpt,downstream,auroc,auprc
+c1_nfh_b0,ptbxl,0.8907,0.6574
+c1_nfh_b0,cpsc,0.9538,0.7857
+c1_nfh_b0,chapman,0.9964,0.9891
+b0_anchor,ptbxl,0.9116,0.7177
+b0_anchor,cpsc,0.9608,0.8105
+b0_anchor,chapman,0.9932,0.9796

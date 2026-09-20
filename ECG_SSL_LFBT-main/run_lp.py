@@ -37,6 +37,8 @@ parser.add_argument('--sinc-frontend', default=0, type=int,
 # ===== A-P2 架构开关(须与预训练一致, 否则特征口径错) =====
 parser.add_argument('--blur-pool', default=0, type=int, help='H2: 与预训练一致才可正确加载 blurpool checkpoint')
 parser.add_argument('--pool-power', default=0.0, type=float, help='T3: 与预训练一致才可正确评估')
+parser.add_argument('--zero-leads', default='', type=str,
+                    help='缺导评估(任务书§5.3): 逗号分隔 lead 序号置零(0..7=II,III,V1..V6);空=完整导联')
 
 
 class LinearProbing(object):
@@ -68,6 +70,7 @@ class LinearProbing(object):
             self.encoder_list.append(torch.nn.Sequential(*list(encoder.children())[:-1]).to(self.device))
         self.num_classes = args.num_classes
         self.num_leads = args.num_leads
+        self.zero_leads = [int(c) for c in str(getattr(args, 'zero_leads', '') or '').split(',') if c.strip()]
 
     def infer_feature(self):
         train_loader, val_loader, test_loader = get_data_loaders(self.args.data_dir, self.args.batch_size,
@@ -81,6 +84,8 @@ class LinearProbing(object):
         with torch.no_grad():
             for i, (x, y) in tqdm(enumerate(train_loader)):
                 x, y = x.to(self.device), y.to(self.device)
+                if self.zero_leads:
+                    x[:, self.zero_leads, :] = 0.0
                 feat_ld_list = list()
                 for j in range(self.num_leads):
                     enc = self.encoder_list[j]
@@ -109,6 +114,8 @@ class LinearProbing(object):
         with torch.no_grad():
             for i, (x, y) in tqdm(enumerate(val_loader)):
                 x, y = x.to(self.device), y.to(self.device)
+                if self.zero_leads:
+                    x[:, self.zero_leads, :] = 0.0
                 feat_ld_list = list()
                 for j in range(self.num_leads):
                     x_ld = x[:, [j], :]
@@ -137,6 +144,8 @@ class LinearProbing(object):
         with torch.no_grad():
             for i, (x, y) in tqdm(enumerate(test_loader)):
                 x, y = x.to(self.device), y.to(self.device)
+                if self.zero_leads:
+                    x[:, self.zero_leads, :] = 0.0
                 feat_ld_list = list()
                 for j in range(self.num_leads):
                     x_ld = x[:, [j], :]
