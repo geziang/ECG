@@ -395,7 +395,7 @@ class LeadFusionBT(object):
             m = hrv_valid > 0.5
             if bool(m.any()):
                 feat = self.backbone_group[0](y1[:, [0], :])   # (B, 64) lead II
-                l4 = nn.functional.mse_loss(self.hrv_head(feat), hrv_target[m])
+                l4 = nn.functional.mse_loss(self.hrv_head(feat[m]), hrv_target[m])
                 loss = loss + self.args.hrv_weight * l4
                 loss_r = loss_r + self.args.hrv_weight * l4
         return loss, loss_r, loss_t
