@@ -11,7 +11,7 @@ from data_utils.data_folder import ECGDatasetFolder
 from data_utils.multi_view_data_injector import MultiViewDataInjector
 from data_utils.augmentations import RandomResizeCropTimeOut, ToTensor
 from data_utils.seed_utils import set_seed
-from models.vgg_1d import VGG16
+from models.vgg_1d import VGG16, group_whiten, group_ln
 
 parser = argparse.ArgumentParser(description='Lead-Fusion Barlow Twins Pretraining')
 parser.add_argument('--data-dir', type=Path, required=True,
@@ -64,6 +64,17 @@ parser.add_argument('--aug-params', default='0.5,1.0,0.0,0.5', type=str,
 # ===== 跨域迁移候选 (batch4) =====
 parser.add_argument('--speed-perturb', default='1.0,1.0', type=str,
                     help='速度扰动(语音迁移) low,high 因子;默认 1.0,1.0=关闭')
+# ===== 06 文献第一批开关 (A-P2, 默认关==B0 逐位一致; 2026-09-20 合并恢复) =====
+parser.add_argument('--blur-pool', default=0, type=int,
+                    help='H2 抗混叠下采样: >0 时每个下采样点前加 filt=N 固定二项式低通(零参数)')
+parser.add_argument('--pool-power', default=0.0, type=float,
+                    help='T3 幂均值池化: >0 时末端池化换 Q=N 广义幂均值(带符号稳定版,零参数)')
+parser.add_argument('--whiten', default=0, type=int,
+                    help='H1 分组白化: >0 时编码器 64 维 h 分 N 组组内白化(零参数,仅预训练 forward)')
+parser.add_argument('--whiten-ln', action='store_true',
+                    help='H1 LN-NEG: 分组 LayerNorm 替代白化(只标准化不去相关), 须与 --whiten 同用')
+parser.add_argument('--whiten-shuffle', action='store_true',
+                    help='H1 位置-NEG: 白化前固定随机置换维度(白化错误分组), 须与 --whiten 同用')
 parser.add_argument('--view2-params', default='', type=str,
                     help='非对称增强(半监督视觉迁移): 视图2 独立 RRC-TO 参数;空=两视图同分布(B0)')
 parser.add_argument('--lead-swap-prob', default=0.0, type=float,
@@ -126,6 +137,20 @@ class LeadFusionBT(object):
         self.args = args
         self.device = 'cuda' if torch.cuda.is_available() else 'cpu'
         self.fast = getattr(args, 'fast_backbone', False)
+        # A-P2 开关守卫: H2/T3 不支持 fast 分组卷积路径, 也不与 D7 组合(D7 取 model[:-1] 特征图)
+        _bp, _pp = int(getattr(args, 'blur_pool', 0)), float(getattr(args, 'pool_power', 0.0))
+        assert not (self.fast and (_bp or _pp)), "H2/T3 暂不支持 fast 路径"
+        assert not (getattr(args, 'd7_weight', 0.0) > 0 and (_bp or _pp)), "H2/T3 暂不与 D7 组合"
+        self.sinc_M = 0  # 2026-09-20 修复: fast 路径在下方提前 return, forward 无条件访问 sinc_M,
+        #  b0fast 因此 AttributeError 秒败 3 轮; 初始化必须提到 return 之前(升级逻辑仍在下方慢路径)
+        self.whiten_g = int(getattr(args, 'whiten', 0))
+        self.whiten_ln_on = bool(getattr(args, 'whiten_ln', False))
+        # 位置-NEG: 固定种子置换(与训练 seed 无关, 保证可复现)
+        _perm = torch.randperm(64, generator=torch.Generator().manual_seed(0))
+        self.whiten_perm = _perm
+        self.whiten_inv = torch.empty_like(_perm)
+        self.whiten_inv[_perm] = torch.arange(64)
+        self.whiten_shuffle_on = bool(getattr(args, 'whiten_shuffle', False))
         sizes = [64] + list(map(int, args.projector.split('-')))
         # D1L: 结构化目标矩阵 (lead 序: ii,iii,v1..v6 = 0..7)
         self.d1l_P = None
@@ -152,7 +177,9 @@ class LeadFusionBT(object):
             return
         self.backbone_group = list()
         for i in range(args.num_leads):
-            backbone = VGG16(ch_in=1, alpha=0.125)
+            backbone = VGG16(ch_in=1, alpha=0.125,
+                             blur_pool=int(getattr(args, 'blur_pool', 0)),
+                             pool_power=float(getattr(args, 'pool_power', 0.0)))
             backbone.fc = nn.Identity()
             self.backbone_group.append(backbone.to(self.device))
 
@@ -217,7 +244,17 @@ class LeadFusionBT(object):
         if not self.fast:
             z_list = list()
             for i in range(self.args.num_leads):
-                z_list.append(self.projector_group[i](self.backbone_group[i](y[:, [i], :])))
+                h = self.backbone_group[i](y[:, [i], :])
+                if self.whiten_g > 0:
+                    if self.whiten_shuffle_on:
+                        h = h[:, self.whiten_perm.to(h.device)]
+                        h = group_whiten(h, self.whiten_g)
+                        h = h[:, self.whiten_inv.to(h.device)]  # H1 位置-NEG: 白化错误分组
+                    elif self.whiten_ln_on:
+                        h = group_ln(h, self.whiten_g)  # H1 LN-NEG: 只标准化不去相关
+                    else:
+                        h = group_whiten(h, self.whiten_g)  # H1: 组内白化后再进 projector
+                z_list.append(self.projector_group[i](h))
             return z_list
         feat = self.p_vgg(y).view(y.shape[0], self.args.num_leads, -1)
         z = self.p_proj(feat)  # (B, L, d)

@@ -39,6 +39,20 @@ def power_pool(x, q=3.0, eps=1e-6):
     return out
 
 
+class PowerPool1d(nn.Module):
+    """T3 幂均值池化的模块版(零参数): 挂在 model 末尾, 输出 [B,C,1] 与 AdaptiveAvgPool1d 同形。
+    2026-09-20 修复: 原实现池化只在 forward 里补, run_lp/run_ft 用 children()[:-1] 直接调
+    self.model 取特征, T3 时 model 末尾无池化 -> 特征带时间维 -> LP 的 CE 崩。挂进 Sequential
+    后所有取特征路径口径一致; 无参数故 state_dict 键不变, 旧 checkpoint 直接加载。"""
+
+    def __init__(self, q=3.0):
+        super().__init__()
+        self.q = float(q)
+
+    def forward(self, x):
+        return power_pool(x, self.q)
+
+
 def group_whiten(h, g=8, eps=1e-5):
     """H1 分组白化(零参数): [B,D] 分 g 组, 组内 batch 统计白化(协方差->I)。
     Cholesky 失败时退化为组内标准化。仅预训练 forward 使用, 不入 checkpoint。"""
@@ -101,14 +115,14 @@ class VGG16(nn.Module):
         ]
         if self.pool_power == 0.0:
             _blocks.append(nn.AdaptiveAvgPool1d(1))  # 关态结构与原版逐层一致(state_dict 键名不变)
+        else:
+            _blocks.append(PowerPool1d(self.pool_power))  # T3: 全局池化入 model, LP/FT 同口径(见类注释)
         self.model = nn.Sequential(*_blocks)
         self.fc = nn.Linear(int(512 * alpha), n_classes)
         self.output_dim = int(512 * alpha)  # 恢复属性(mbn.py/run_ft.py 引用;纯属性声明,不影响任何计算路径)
 
     def forward(self, x):
-        x = self.model(x)
-        if self.pool_power != 0.0:
-            x = power_pool(x, self.pool_power)
+        x = self.model(x)  # T3 池化已入 model(PowerPool1d), 关态 AdaptiveAvgPool1d 原位不变
         x = x.view(-1, int(512 * self.alpha))
         x = self.fc(x)
         return x
