@@ -629,3 +629,19 @@ ata/ptbxl --checkpoint F:\新实验\ECG_SSL_LFBT-main\checkpoint\M\b0_gamma07_se
 [21:57] [laneG2] 启动任务 a2_acl_intra_seed0(空闲显存 12909MiB, 活跃预训练 2 个)
 [22:36] [laneC] 流水线启动: 队列 26 项, 准入=run_pt 并发槽位 + 空闲显存闸门 + run_pt 自闸门6500 兜底
 [22:36] [laneC] 启动任务 a3_acl_inter_seed0(空闲显存 7938MiB, 活跃预训练 2 个)
+[22:40] [laneG2] 流水线启动: 队列 26 项, 准入=run_pt 并发槽位 + 空闲显存闸门 + run_pt 自闸门6500 兜底
+[22:40] [laneG2] 启动任务 a2_acl_intra_seed0(空闲显存 13154MiB, 活跃预训练 1 个)
+[22:40] [laneC] 流水线启动: 队列 26 项, 准入=run_pt 并发槽位 + 空闲显存闸门 + run_pt 自闸门6500 兜底
+[22:40] [laneC] 启动任务 a3_acl_inter_seed0(空闲显存 12551MiB, 活跃预训练 2 个)
+[00:02] [laneF] 预训练失败 a1_d1l_fix_seed0(详见 pt 日志)
+[00:02] [laneF] a1_d1l_fix_seed0 失败, 第 1 次重试插队首
+[00:02] [laneC] 预训练失败 a3_acl_inter_seed0(详见 pt 日志)
+[00:02] [laneC] a3_acl_inter_seed0 失败, 第 1 次重试插队首
+[00:02] [laneG2] 预训练失败 a2_acl_intra_seed0(详见 pt 日志)
+[00:02] [laneG2] a2_acl_intra_seed0 失败, 第 1 次重试插队首
+[02:44] [laneF] 流水线启动: 队列 26 项, 准入=run_pt 并发槽位 + 空闲显存闸门 + run_pt 自闸门6500 兜底
+[02:44] [laneF] 启动任务 a1_d1l_fix_seed0(空闲显存 23467MiB, 活跃预训练 0 个)
+[02:44] [laneG2] 流水线启动: 队列 26 项, 准入=run_pt 并发槽位 + 空闲显存闸门 + run_pt 自闸门6500 兜底
+[02:44] [laneG2] 启动任务 a2_acl_intra_seed0(空闲显存 23482MiB, 活跃预训练 1 个)
+[02:44] [laneC] 流水线启动: 队列 26 项, 准入=run_pt 并发槽位 + 空闲显存闸门 + run_pt 自闸门6500 兜底
+[02:44] [laneC] 启动任务 a3_acl_inter_seed0(空闲显存 23493MiB, 活跃预训练 2 个)
