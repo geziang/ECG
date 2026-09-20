@@ -4,6 +4,7 @@ import hashlib
 import json
 import platform
 import time
+import numpy as np
 from torch import nn, optim
 import torch
 import torchvision.transforms as transforms
@@ -59,6 +60,9 @@ parser.add_argument('--d1l', default='', type=str,
                          'inter-loss 的跨导联相关目标从 0 改为生理拓扑设定值')
 parser.add_argument('--d1l-shuffle', action='store_true',
                     help='D1L NEG 负对照: 打乱目标矩阵的导联归属(同值随机重排), 应不涨点才有效')
+parser.add_argument('--d1l-full', action='store_true',
+                    help='D1L 闭合基线: 全1目标矩阵(所有跨导联对角目标=1==B0 隐式目标), '
+                         'loss 应与 B0 逐位一致; 仅用于单测/审计, 不入实验矩阵')
 parser.add_argument('--aug-params', default='0.5,1.0,0.0,0.5', type=str,
                     help='RRC-TO 增强参数 crop_low,crop_up,mask_low,mask_up (默认=论文原值,从未扫过)')
 # ===== 跨域迁移候选 (batch4) =====
@@ -107,6 +111,13 @@ parser.add_argument('--mixup-align', default=1, type=int, choices=[0, 1],
                     help='C3 相位对齐: 1=FFT互相关对齐(准周期版), 0=普通 MixUp 对照')
 parser.add_argument('--hrv-weight', default=0.0, type=float,
                     help='H4 HRV 借口: lead-II 表征回归 HRV 统计的辅助头权重(0=关闭; 需 data/pt_hrv.npz)')
+# ===== ACL 四区受控实现 (任务书 T2/A2/A3/A4; 默认关==B0 逐位一致) =====
+parser.add_argument('--acl-region', default=0, type=int,
+                    help='ACL-ECG 四区: 0=关闭(B0); 1=真实解剖分组; 2/3/4=随机分组 partition 1/2/3(A4 NEG)')
+parser.add_argument('--acl-inter', default=1, type=int, choices=[0, 1],
+                    help='A2=0 仅区域内 InfoNCE; A3=1 加跨区域 Eq.(11)')
+parser.add_argument('--acl-gamma', default=0.5, type=float, help='A3: loss = g*intra + (1-g)*inter')
+parser.add_argument('--acl-tau', default=0.5, type=float, help='ACL InfoNCE 温度')
 
 
 def off_diagonal(x):
@@ -152,19 +163,60 @@ class LeadFusionBT(object):
         self.whiten_inv[_perm] = torch.arange(64)
         self.whiten_shuffle_on = bool(getattr(args, 'whiten_shuffle', False))
         sizes = [64] + list(map(int, args.projector.split('-')))
-        # D1L: 结构化目标矩阵 (lead 序: ii,iii,v1..v6 = 0..7)
+        # D1L-fix (任务书 T1/A1, 2026-09-20): 结构化目标矩阵, lead 序: ii,iii,v1..v6 = 0..7
+        # 语义修正: τ 只进 cross-correlation 的 diagonal target (跨导联同坐标对齐),
+        # off-diagonal target 恒为 0 (旧实现把 τ 放 off_diagonal(c) 制造维度间冗余, 已撤回)。
+        # 矩阵契约: 对称 / diag=1 / PSD(eig >= -1e-6); '1,1' 全 1 矩阵为闭合基线
+        # (对角目标全 1 == B0 隐式目标, loss 应与 B0 逐位一致, 见单测)。
         self.d1l_P = None
-        if getattr(args, 'd1l', ''):
-            a, b = map(float, args.d1l.split(','))
-            P = torch.zeros(args.num_leads, args.num_leads)
-            P[0, 1] = P[1, 0] = a          # II-III (Einthoven 相邻)
-            for k in range(2, args.num_leads - 1):  # 相邻胸导 V1-V2 ... V5-V6
-                P[k, k + 1] = P[k + 1, k] = b
+        self.d1l_meta = None
+        if getattr(args, 'd1l', '') or getattr(args, 'd1l_full', False):
+            if getattr(args, 'd1l_full', False):
+                # 闭合基线: 全1矩阵 (所有跨导联对角目标=1 == B0 隐式目标), 仅用于单测/审计
+                P = torch.ones(args.num_leads, args.num_leads)
+            else:
+                a, b = map(float, args.d1l.split(','))
+                P = torch.eye(args.num_leads)
+                P[0, 1] = P[1, 0] = a          # II-III (Einthoven 相邻)
+                for k in range(2, args.num_leads - 1):  # 相邻胸导 V1-V2 ... V5-V6
+                    P[k, k + 1] = P[k + 1, k] = b
             if getattr(args, 'd1l_shuffle', False):  # NEG 负对照: 固定种子打乱导联归属
                 g = torch.Generator().manual_seed(12345)
                 perm = torch.randperm(args.num_leads, generator=g)
                 P = P[perm][:, perm]
+            P_raw = P.clone()
+            # PSD 投影(最近相关矩阵): 特征值裁剪到 >=0 后对角归一, 迭代至收敛
+            for _ in range(3):
+                if (torch.linalg.eigvalsh(P).min() >= -1e-6
+                        and torch.allclose(torch.diagonal(P), torch.ones(args.num_leads), atol=1e-6)):
+                    break
+                eig, vec = torch.linalg.eigh(P)
+                eig = eig.clamp_min(0.0)
+                P = vec @ torch.diag(eig) @ vec.T
+                d = torch.sqrt(torch.clamp(torch.diagonal(P), min=1e-12))
+                P = P / d[:, None] / d[None, :]
+            eigvals = torch.linalg.eigvalsh(P)
+            assert eigvals.min() >= -1e-6, f"D1L 目标矩阵非 PSD: min eig = {eigvals.min():.2e}"
             self.d1l_P = P.to(self.device)
+            self.d1l_meta = {
+                "raw": P_raw.cpu().numpy().tolist(),
+                "psd_projected": P.cpu().numpy().tolist(),
+                "eigenvalues": eigvals.cpu().numpy().tolist(),
+                "shuffle": bool(getattr(args, 'd1l_shuffle', False)),
+                "full": bool(getattr(args, 'd1l_full', False)),
+                "note": "tau -> cross-corr diagonal target; off-diag target = 0",
+            }
+        # ACL 四区受控实现 (T2): 替换式区域目标, h(两导联 concat)->独立 region projector
+        self.acl_on = int(getattr(args, 'acl_region', 0)) > 0
+        self.acl_regions = None
+        self.acl_projectors = None
+        if self.acl_on:
+            assert not self.fast, "ACL 区域路径暂不支持 fast"
+            from models.acl_region import build_regions, RegionProjector
+            part = 0 if int(args.acl_region) == 1 else int(args.acl_region) - 1
+            self.acl_regions = build_regions(part)
+            self.acl_projectors = nn.ModuleList(
+                [RegionProjector(in_dim=128).to(self.device) for _ in range(4)])
         if self.fast:
             from models.parallel_vgg import ParallelVGG16, ParallelProjector
             self.p_vgg = ParallelVGG16(num_leads=args.num_leads, ch_in=1).to(self.device)
@@ -239,23 +291,28 @@ class LeadFusionBT(object):
                 y1[:, i, mstart:mstart + mlen])
         return rec_loss / L
 
+    def _encode_h(self, y):
+        """(B, L, T) -> 每导联编码器输出 h 列表 [(B,64)] (含 whiten, 与 projector 输入同口径)。
+        ACL 区域路径复用 (region 输入 = 区内两导联 h concat)。"""
+        hs = list()
+        for i in range(self.args.num_leads):
+            h = self.backbone_group[i](y[:, [i], :])
+            if self.whiten_g > 0:
+                if self.whiten_shuffle_on:
+                    h = h[:, self.whiten_perm.to(h.device)]
+                    h = group_whiten(h, self.whiten_g)
+                    h = h[:, self.whiten_inv.to(h.device)]  # H1 位置-NEG: 白化错误分组
+                elif self.whiten_ln_on:
+                    h = group_ln(h, self.whiten_g)  # H1 LN-NEG: 只标准化不去相关
+                else:
+                    h = group_whiten(h, self.whiten_g)  # H1: 组内白化后再进 projector
+            hs.append(h)
+        return hs
+
     def _embed(self, y):
         """(B, L, T) -> 原始 projector 输出 z 列表 (每导联 (B, d))。"""
         if not self.fast:
-            z_list = list()
-            for i in range(self.args.num_leads):
-                h = self.backbone_group[i](y[:, [i], :])
-                if self.whiten_g > 0:
-                    if self.whiten_shuffle_on:
-                        h = h[:, self.whiten_perm.to(h.device)]
-                        h = group_whiten(h, self.whiten_g)
-                        h = h[:, self.whiten_inv.to(h.device)]  # H1 位置-NEG: 白化错误分组
-                    elif self.whiten_ln_on:
-                        h = group_ln(h, self.whiten_g)  # H1 LN-NEG: 只标准化不去相关
-                    else:
-                        h = group_whiten(h, self.whiten_g)  # H1: 组内白化后再进 projector
-                z_list.append(self.projector_group[i](h))
-            return z_list
+            return [self.projector_group[i](h) for i, h in enumerate(self._encode_h(y))]
         feat = self.p_vgg(y).view(y.shape[0], self.args.num_leads, -1)
         z = self.p_proj(feat)  # (B, L, d)
         return [z[:, i, :] for i in range(self.args.num_leads)]
@@ -288,6 +345,14 @@ class LeadFusionBT(object):
 
     def forward(self, y1, y2, y_pair=None, pair_mask=None,
                 hrv_target=None, hrv_valid=None):
+        if self.acl_on:
+            # A2/A3 替换式区域目标 (任务书: 不与旧 LGA/inter 叠加): loss_r=intra, loss_t=inter
+            from models.acl_region import region_embed, acl_loss
+            u1 = region_embed(self._encode_h(y1), self.acl_regions, self.acl_projectors)
+            u2 = region_embed(self._encode_h(y2), self.acl_regions, self.acl_projectors)
+            loss, li, lt = acl_loss(u1, u2, float(self.args.acl_tau),
+                                    float(self.args.acl_gamma), bool(self.args.acl_inter))
+            return loss, li, lt
         z1_list = self._embed(y1)
         z2_list = self._embed(y2)
         if self.args.loss_mode == 'vicreg':
@@ -319,12 +384,13 @@ class LeadFusionBT(object):
                 c2 = z2b[j] if self.fast else self.bn_group[j](z2_list[j])
                 c = c1.T @ c2
                 c.div_(self.args.batch_size)
-                on_diag = torch.diagonal(c).add_(-1).pow_(2).sum()
+                # D1L-fix: τ 只进对角目标(跨导联同坐标对齐), off-diag 目标恒为 0;
+                # 关态 (i==j 或 P=None) 走原 B0 算子与顺序, 逐位一致
                 if self.d1l_P is not None and i != j:
-                    tau = self.d1l_P[i, j]
-                    off_diag = (off_diagonal(c) - tau).pow(2).sum()
+                    on_diag = (torch.diagonal(c) - self.d1l_P[i, j]).pow(2).sum()
                 else:
-                    off_diag = off_diagonal(c).pow_(2).sum()
+                    on_diag = torch.diagonal(c).add_(-1).pow_(2).sum()
+                off_diag = off_diagonal(c).pow_(2).sum()
                 ls = on_diag + self.args.lambd * off_diag
                 if i == j:
                     loss_r += ls
@@ -405,6 +471,12 @@ def main_worker(gpu, args):
 
     args.checkpoint_dir.mkdir(parents=True, exist_ok=True)
     model = LeadFusionBT(args)
+    if getattr(model, 'd1l_meta', None) is not None:
+        # T1 契约: 导出目标矩阵/特征值/配置, 供审计与闭合基线复核
+        np.save(args.checkpoint_dir / "target_matrix.npy",
+                torch.tensor(model.d1l_meta["psd_projected"]))
+        with open(args.checkpoint_dir / "d1l_config.json", "w", encoding="utf-8") as f:
+            json.dump(model.d1l_meta, f, ensure_ascii=False, indent=1)
 
     if model.fast:
         param_weights = [p for p in model.p_vgg.parameters() if p.ndim > 1]
@@ -445,6 +517,13 @@ def main_worker(gpu, args):
 
         if getattr(model, 'hrv_head', None) is not None:
             for param in model.hrv_head.parameters():
+                if param.ndim == 1:
+                    param_biases.append(param)
+                else:
+                    param_weights.append(param)
+
+        if getattr(model, 'acl_projectors', None) is not None:
+            for param in model.acl_projectors.parameters():
                 if param.ndim == 1:
                     param_biases.append(param)
                 else:
