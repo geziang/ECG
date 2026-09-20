@@ -396,3 +396,226 @@ ata/ptbxl --checkpoint F:\新实验\ECG_SSL_LFBT-main\checkpoint\M\b0_gamma07_se
 [22:39] [laneG2] 等待显存: t3_pow3_seed0 需要 7800MiB, 当前空闲 6120MiB (每60s重查)
 [22:49] [laneG2] 等待显存: t3_pow3_seed0 需要 7800MiB, 当前空闲 6134MiB (每60s重查)
 [22:59] [laneG2] 等待显存: t3_pow3_seed0 需要 7800MiB, 当前空闲 6128MiB (每60s重查)
+[23:09] [laneG2] 等待显存: t3_pow3_seed0 需要 7800MiB, 当前空闲 6106MiB (每60s重查)
+[23:19] [laneG2] 等待显存: t3_pow3_seed0 需要 7800MiB, 当前空闲 6097MiB (每60s重查)
+[23:29] [laneG2] 等待显存: t3_pow3_seed0 需要 7800MiB, 当前空闲 6106MiB (每60s重查)
+[23:39] [laneG2] 等待显存: t3_pow3_seed0 需要 7800MiB, 当前空闲 6104MiB (每60s重查)
+[23:49] [laneG2] 等待显存: t3_pow3_seed0 需要 7800MiB, 当前空闲 6104MiB (每60s重查)
+[23:59] [laneG2] 等待显存: t3_pow3_seed0 需要 7800MiB, 当前空闲 6107MiB (每60s重查)
+[00:09] [laneG2] 等待显存: t3_pow3_seed0 需要 7800MiB, 当前空闲 6106MiB (每60s重查)
+[00:19] [laneG2] 等待显存: t3_pow3_seed0 需要 7800MiB, 当前空闲 6106MiB (每60s重查)
+[00:29] [laneG2] 等待显存: t3_pow3_seed0 需要 7800MiB, 当前空闲 6092MiB (每60s重查)
+[00:39] [laneG2] 等待显存: t3_pow3_seed0 需要 7800MiB, 当前空闲 6104MiB (每60s重查)
+[00:46] [laneC] ✔ lead_swap02_seed0: AUPRC=0.7109 Δ=-0.0068
+[00:46] [laneC] 启动任务 cautious_adam_seed0(空闲显存 6038MiB, 活跃预训练 2 个)
+[00:46] [laneC] 等待显存: cautious_adam_seed0 需要 7800MiB, 当前空闲 6038MiB (每60s重查)
+[00:53] [laneF] LP 失败 t3_pow3_seed2
+[00:53] [laneF] t3_pow3_seed2 失败, 第 1 次重试插队首
+[00:54] [laneF] 启动任务 t3_pow3_seed2(空闲显存 6106MiB, 活跃预训练 2 个)
+[00:54] [laneF] 等待显存: t3_pow3_seed2 需要 7800MiB, 当前空闲 6106MiB (每60s重查)
+[01:04] [laneF] 等待显存: t3_pow3_seed2 需要 7800MiB, 当前空闲 6105MiB (每60s重查)
+[01:14] [laneF] 等待显存: t3_pow3_seed2 需要 7800MiB, 当前空闲 6170MiB (每60s重查)
+[01:24] [laneF] 等待显存: t3_pow3_seed2 需要 7800MiB, 当前空闲 6169MiB (每60s重查)
+[01:34] [laneF] 等待显存: t3_pow3_seed2 需要 7800MiB, 当前空闲 6169MiB (每60s重查)
+[01:44] [laneF] 等待显存: t3_pow3_seed2 需要 7800MiB, 当前空闲 6160MiB (每60s重查)
+[01:54] [laneF] 等待显存: t3_pow3_seed2 需要 7800MiB, 当前空闲 6169MiB (每60s重查)
+[02:04] [laneF] 等待显存: t3_pow3_seed2 需要 7800MiB, 当前空闲 6169MiB (每60s重查)
+[02:14] [laneF] 等待显存: t3_pow3_seed2 需要 7800MiB, 当前空闲 6169MiB (每60s重查)
+[02:24] [laneF] 等待显存: t3_pow3_seed2 需要 7800MiB, 当前空闲 6169MiB (每60s重查)
+[02:34] [laneF] 等待显存: t3_pow3_seed2 需要 7800MiB, 当前空闲 6168MiB (每60s重查)
+[02:44] [laneF] 等待显存: t3_pow3_seed2 需要 7800MiB, 当前空闲 6164MiB (每60s重查)
+[02:54] [laneF] 等待显存: t3_pow3_seed2 需要 7800MiB, 当前空闲 6164MiB (每60s重查)
+[03:04] [laneF] 等待显存: t3_pow3_seed2 需要 7800MiB, 当前空闲 6164MiB (每60s重查)
+[03:14] [laneF] 等待显存: t3_pow3_seed2 需要 7800MiB, 当前空闲 6164MiB (每60s重查)
+[03:24] [laneF] 等待显存: t3_pow3_seed2 需要 7800MiB, 当前空闲 6164MiB (每60s重查)
+[03:34] [laneF] 等待显存: t3_pow3_seed2 需要 7800MiB, 当前空闲 6164MiB (每60s重查)
+[03:41] [laneG2] LP 失败 t3_pow3_seed0
+[03:41] [laneG2] t3_pow3_seed0 失败, 第 2 次重试插队首
+[03:42] [laneG2] 启动任务 t3_pow3_seed0(空闲显存 6162MiB, 活跃预训练 2 个)
+[03:42] [laneG2] 等待显存: t3_pow3_seed0 需要 7800MiB, 当前空闲 6162MiB (每60s重查)
+[03:52] [laneG2] 等待显存: t3_pow3_seed0 需要 7800MiB, 当前空闲 6166MiB (每60s重查)
+[04:02] [laneG2] 等待显存: t3_pow3_seed0 需要 7800MiB, 当前空闲 6170MiB (每60s重查)
+[04:12] [laneG2] 等待显存: t3_pow3_seed0 需要 7800MiB, 当前空闲 6164MiB (每60s重查)
+[04:22] [laneG2] 等待显存: t3_pow3_seed0 需要 7800MiB, 当前空闲 6170MiB (每60s重查)
+[04:32] [laneG2] 等待显存: t3_pow3_seed0 需要 7800MiB, 当前空闲 6171MiB (每60s重查)
+[04:42] [laneG2] 等待显存: t3_pow3_seed0 需要 7800MiB, 当前空闲 6170MiB (每60s重查)
+[04:52] [laneG2] 等待显存: t3_pow3_seed0 需要 7800MiB, 当前空闲 6170MiB (每60s重查)
+[05:02] [laneG2] 等待显存: t3_pow3_seed0 需要 7800MiB, 当前空闲 6169MiB (每60s重查)
+[05:12] [laneG2] 等待显存: t3_pow3_seed0 需要 7800MiB, 当前空闲 6170MiB (每60s重查)
+[05:22] [laneG2] 等待显存: t3_pow3_seed0 需要 7800MiB, 当前空闲 6164MiB (每60s重查)
+[05:32] [laneG2] 等待显存: t3_pow3_seed0 需要 7800MiB, 当前空闲 6164MiB (每60s重查)
+[05:42] [laneG2] 等待显存: t3_pow3_seed0 需要 7800MiB, 当前空闲 6166MiB (每60s重查)
+[05:52] [laneG2] 等待显存: t3_pow3_seed0 需要 7800MiB, 当前空闲 6156MiB (每60s重查)
+[06:03] [laneC] ✔ cautious_adam_seed0: AUPRC=0.6316 Δ=-0.0861
+[06:03] [laneC] 启动任务 b0fast_seed0(空闲显存 6092MiB, 活跃预训练 2 个)
+[06:03] [laneC] 等待显存: b0fast_seed0 需要 7800MiB, 当前空闲 6094MiB (每60s重查)
+[06:13] [laneC] 等待显存: b0fast_seed0 需要 7800MiB, 当前空闲 6094MiB (每60s重查)
+[06:23] [laneC] 等待显存: b0fast_seed0 需要 7800MiB, 当前空闲 6102MiB (每60s重查)
+[06:33] [laneC] 等待显存: b0fast_seed0 需要 7800MiB, 当前空闲 6102MiB (每60s重查)
+[06:36] [laneC] 预训练失败 b0fast_seed0(详见 pt 日志)
+[06:36] [laneC] b0fast_seed0 失败, 第 1 次重排队尾
+[06:37] [laneC] 启动任务 speed_perturb_seed0(空闲显存 12429MiB, 活跃预训练 1 个)
+[06:37] [laneF] LP 失败 t3_pow3_seed2
+[06:37] [laneF] t3_pow3_seed2 失败, 第 2 次重试插队首
+[06:38] [laneF] 启动任务 t3_pow3_seed2(空闲显存 6164MiB, 活跃预训练 2 个)
+[06:38] [laneF] 等待显存: t3_pow3_seed2 需要 7800MiB, 当前空闲 6164MiB (每60s重查)
+[06:48] [laneF] 等待显存: t3_pow3_seed2 需要 7800MiB, 当前空闲 6157MiB (每60s重查)
+[06:58] [laneF] 等待显存: t3_pow3_seed2 需要 7800MiB, 当前空闲 6164MiB (每60s重查)
+[07:08] [laneF] 等待显存: t3_pow3_seed2 需要 7800MiB, 当前空闲 6159MiB (每60s重查)
+[07:18] [laneF] 等待显存: t3_pow3_seed2 需要 7800MiB, 当前空闲 6159MiB (每60s重查)
+[07:28] [laneF] 等待显存: t3_pow3_seed2 需要 7800MiB, 当前空闲 6164MiB (每60s重查)
+[07:38] [laneF] 等待显存: t3_pow3_seed2 需要 7800MiB, 当前空闲 6162MiB (每60s重查)
+[07:48] [laneF] 等待显存: t3_pow3_seed2 需要 7800MiB, 当前空闲 6170MiB (每60s重查)
+[07:58] [laneF] 等待显存: t3_pow3_seed2 需要 7800MiB, 当前空闲 6162MiB (每60s重查)
+[08:08] [laneF] 等待显存: t3_pow3_seed2 需要 7800MiB, 当前空闲 6154MiB (每60s重查)
+[08:18] [laneF] 等待显存: t3_pow3_seed2 需要 7800MiB, 当前空闲 6156MiB (每60s重查)
+[08:28] [laneF] 等待显存: t3_pow3_seed2 需要 7800MiB, 当前空闲 6156MiB (每60s重查)
+[08:38] [laneF] 等待显存: t3_pow3_seed2 需要 7800MiB, 当前空闲 6159MiB (每60s重查)
+[08:48] [laneF] 等待显存: t3_pow3_seed2 需要 7800MiB, 当前空闲 6164MiB (每60s重查)
+[08:58] [laneF] 等待显存: t3_pow3_seed2 需要 7800MiB, 当前空闲 6165MiB (每60s重查)
+[09:05] [laneG2] LP 失败 t3_pow3_seed0
+[09:05] [laneG2] t3_pow3_seed0 连续 3 次失败, 弃置待人工排查
+[09:05] [laneG2] 启动任务 t3_pow3_seed4(空闲显存 6164MiB, 活跃预训练 2 个)
+[09:05] [laneG2] 等待显存: t3_pow3_seed4 需要 7800MiB, 当前空闲 6164MiB (每60s重查)
+[09:15] [laneG2] 等待显存: t3_pow3_seed4 需要 7800MiB, 当前空闲 6164MiB (每60s重查)
+[09:25] [laneG2] 等待显存: t3_pow3_seed4 需要 7800MiB, 当前空闲 6144MiB (每60s重查)
+[09:35] [laneG2] 等待显存: t3_pow3_seed4 需要 7800MiB, 当前空闲 6145MiB (每60s重查)
+[09:37] [laneC] ✔ speed_perturb_seed0: AUPRC=0.7108 Δ=-0.0069
+[09:37] [laneC] 启动任务 asym_view_seed0(空闲显存 6084MiB, 活跃预训练 2 个)
+[09:37] [laneC] 等待显存: asym_view_seed0 需要 7800MiB, 当前空闲 6084MiB (每60s重查)
+[09:47] [laneC] 等待显存: asym_view_seed0 需要 7800MiB, 当前空闲 6076MiB (每60s重查)
+[09:57] [laneC] 等待显存: asym_view_seed0 需要 7800MiB, 当前空闲 6076MiB (每60s重查)
+[10:07] [laneC] 等待显存: asym_view_seed0 需要 7800MiB, 当前空闲 6075MiB (每60s重查)
+[10:17] [laneC] 等待显存: asym_view_seed0 需要 7800MiB, 当前空闲 6084MiB (每60s重查)
+[10:27] [laneC] 等待显存: asym_view_seed0 需要 7800MiB, 当前空闲 6084MiB (每60s重查)
+[10:37] [laneC] 等待显存: asym_view_seed0 需要 7800MiB, 当前空闲 6076MiB (每60s重查)
+[10:47] [laneC] 等待显存: asym_view_seed0 需要 7800MiB, 当前空闲 6076MiB (每60s重查)
+[10:57] [laneC] 等待显存: asym_view_seed0 需要 7800MiB, 当前空闲 6084MiB (每60s重查)
+[11:07] [laneC] 等待显存: asym_view_seed0 需要 7800MiB, 当前空闲 6083MiB (每60s重查)
+[11:17] [laneC] 等待显存: asym_view_seed0 需要 7800MiB, 当前空闲 6076MiB (每60s重查)
+[11:27] [laneC] 等待显存: asym_view_seed0 需要 7800MiB, 当前空闲 6075MiB (每60s重查)
+[11:37] [laneC] 等待显存: asym_view_seed0 需要 7800MiB, 当前空闲 6076MiB (每60s重查)
+[11:47] [laneC] 等待显存: asym_view_seed0 需要 7800MiB, 当前空闲 6075MiB (每60s重查)
+[11:57] [laneC] 等待显存: asym_view_seed0 需要 7800MiB, 当前空闲 6075MiB (每60s重查)
+[12:02] [laneF] LP 失败 t3_pow3_seed2
+[12:02] [laneF] t3_pow3_seed2 连续 3 次失败, 弃置待人工排查
+[12:02] [laneF] 启动任务 proj_dim4096_seed0(空闲显存 6136MiB, 活跃预训练 2 个)
+[12:02] [laneF] 等待显存: proj_dim4096_seed0 需要 7800MiB, 当前空闲 6136MiB (每60s重查)
+[12:12] [laneF] 等待显存: proj_dim4096_seed0 需要 7800MiB, 当前空闲 6144MiB (每60s重查)
+[12:22] [laneF] 等待显存: proj_dim4096_seed0 需要 7800MiB, 当前空闲 6144MiB (每60s重查)
+[12:32] [laneF] 等待显存: proj_dim4096_seed0 需要 7800MiB, 当前空闲 6145MiB (每60s重查)
+[12:34] [laneG2] LP 失败 t3_pow3_seed4
+[12:34] [laneG2] t3_pow3_seed4 失败, 第 1 次重试插队首
+[12:35] [laneG2] 启动任务 t3_pow3_seed4(空闲显存 646MiB, 活跃预训练 2 个)
+[12:35] [laneG2] 等待显存: t3_pow3_seed4 需要 7800MiB, 当前空闲 646MiB (每60s重查)
+[12:45] [laneG2] 等待显存: t3_pow3_seed4 需要 7800MiB, 当前空闲 651MiB (每60s重查)
+[12:55] [laneG2] 等待显存: t3_pow3_seed4 需要 7800MiB, 当前空闲 651MiB (每60s重查)
+[13:05] [laneG2] 等待显存: t3_pow3_seed4 需要 7800MiB, 当前空闲 643MiB (每60s重查)
+[13:15] [laneG2] 等待显存: t3_pow3_seed4 需要 7800MiB, 当前空闲 643MiB (每60s重查)
+[13:25] [laneG2] 等待显存: t3_pow3_seed4 需要 7800MiB, 当前空闲 638MiB (每60s重查)
+[13:35] [laneG2] 等待显存: t3_pow3_seed4 需要 7800MiB, 当前空闲 643MiB (每60s重查)
+[13:45] [laneG2] 等待显存: t3_pow3_seed4 需要 7800MiB, 当前空闲 637MiB (每60s重查)
+[13:55] [laneG2] 等待显存: t3_pow3_seed4 需要 7800MiB, 当前空闲 643MiB (每60s重查)
+[14:05] [laneG2] 等待显存: t3_pow3_seed4 需要 7800MiB, 当前空闲 643MiB (每60s重查)
+[14:15] [laneG2] 等待显存: t3_pow3_seed4 需要 7800MiB, 当前空闲 643MiB (每60s重查)
+[14:25] [laneG2] 等待显存: t3_pow3_seed4 需要 7800MiB, 当前空闲 669MiB (每60s重查)
+[14:35] [laneG2] 等待显存: t3_pow3_seed4 需要 7800MiB, 当前空闲 656MiB (每60s重查)
+[14:45] [laneG2] 等待显存: t3_pow3_seed4 需要 7800MiB, 当前空闲 670MiB (每60s重查)
+[14:55] [laneG2] 等待显存: t3_pow3_seed4 需要 7800MiB, 当前空闲 598MiB (每60s重查)
+[15:03] [laneC] ✔ asym_view_seed0: AUPRC=0.7053 Δ=-0.0124
+[15:03] [laneC] 启动任务 b0fast_seed0(空闲显存 7333MiB, 活跃预训练 1 个)
+[15:03] [laneC] 等待显存: b0fast_seed0 需要 7800MiB, 当前空闲 7333MiB (每60s重查)
+[15:05] [laneG2] 等待显存: t3_pow3_seed4 需要 7800MiB, 当前空闲 7326MiB (每60s重查)
+[15:13] [laneC] 等待显存: b0fast_seed0 需要 7800MiB, 当前空闲 7325MiB (每60s重查)
+[15:15] [laneG2] 等待显存: t3_pow3_seed4 需要 7800MiB, 当前空闲 7325MiB (每60s重查)
+[15:23] [laneC] 等待显存: b0fast_seed0 需要 7800MiB, 当前空闲 7325MiB (每60s重查)
+[15:25] [laneG2] 等待显存: t3_pow3_seed4 需要 7800MiB, 当前空闲 7317MiB (每60s重查)
+[15:33] [laneC] 等待显存: b0fast_seed0 需要 7800MiB, 当前空闲 7331MiB (每60s重查)
+[15:35] [laneG2] 等待显存: t3_pow3_seed4 需要 7800MiB, 当前空闲 7317MiB (每60s重查)
+[15:43] [laneC] 等待显存: b0fast_seed0 需要 7800MiB, 当前空闲 7325MiB (每60s重查)
+[15:45] [laneG2] 等待显存: t3_pow3_seed4 需要 7800MiB, 当前空闲 7317MiB (每60s重查)
+[15:53] [laneC] 等待显存: b0fast_seed0 需要 7800MiB, 当前空闲 7331MiB (每60s重查)
+[15:55] [laneG2] 等待显存: t3_pow3_seed4 需要 7800MiB, 当前空闲 7317MiB (每60s重查)
+[16:03] [laneC] 等待显存: b0fast_seed0 需要 7800MiB, 当前空闲 7317MiB (每60s重查)
+[16:05] [laneG2] 等待显存: t3_pow3_seed4 需要 7800MiB, 当前空闲 7317MiB (每60s重查)
+[16:13] [laneC] 等待显存: b0fast_seed0 需要 7800MiB, 当前空闲 7326MiB (每60s重查)
+[16:15] [laneG2] 等待显存: t3_pow3_seed4 需要 7800MiB, 当前空闲 7317MiB (每60s重查)
+[16:23] [laneC] 等待显存: b0fast_seed0 需要 7800MiB, 当前空闲 7326MiB (每60s重查)
+[16:25] [laneG2] 等待显存: t3_pow3_seed4 需要 7800MiB, 当前空闲 7317MiB (每60s重查)
+[16:33] [laneC] 等待显存: b0fast_seed0 需要 7800MiB, 当前空闲 7317MiB (每60s重查)
+[16:35] [laneG2] 等待显存: t3_pow3_seed4 需要 7800MiB, 当前空闲 7317MiB (每60s重查)
+[16:43] [laneC] 等待显存: b0fast_seed0 需要 7800MiB, 当前空闲 7325MiB (每60s重查)
+[16:45] [laneG2] 等待显存: t3_pow3_seed4 需要 7800MiB, 当前空闲 7317MiB (每60s重查)
+[16:53] [laneC] 等待显存: b0fast_seed0 需要 7800MiB, 当前空闲 7325MiB (每60s重查)
+[16:55] [laneG2] 等待显存: t3_pow3_seed4 需要 7800MiB, 当前空闲 7317MiB (每60s重查)
+[17:00] [laneC] 预训练失败 b0fast_seed0(详见 pt 日志)
+[17:00] [laneC] b0fast_seed0 失败, 第 2 次重排队尾
+[17:01] [laneC] 启动任务 b0fast_seed0(空闲显存 12547MiB, 活跃预训练 1 个)
+[17:01] [laneF] ✔ proj_dim4096_seed0: AUPRC=0.7105 Δ=-0.0072
+[17:01] [laneF] 启动任务 t3_pow3_seed0(空闲显存 13035MiB, 活跃预训练 2 个)
+[17:01] [laneC] 预训练失败 b0fast_seed0(详见 pt 日志)
+[17:01] [laneC] b0fast_seed0 连续 3 次失败, 弃置待人工排查
+[17:01] [laneC] 流水线退出: 队列清空/全部完成
+[19:49] [laneG2] LP 失败 t3_pow3_seed4
+[19:49] [laneG2] t3_pow3_seed4 失败, 第 2 次重试插队首
+[19:50] [laneF] LP 失败 t3_pow3_seed0
+[19:50] [laneF] t3_pow3_seed0 失败, 第 1 次重试插队首
+[19:50] [laneG2] 启动任务 t3_pow3_seed4(空闲显存 19727MiB, 活跃预训练 0 个)
+[19:51] [laneF] 启动任务 t3_pow3_seed0(空闲显存 13035MiB, 活跃预训练 1 个)
+[22:44] [laneG2] LP 失败 t3_pow3_seed4
+[22:44] [laneG2] t3_pow3_seed4 连续 3 次失败, 弃置待人工排查
+[22:44] [laneG2] 启动任务 t3_pow3_seed2(空闲显存 19320MiB, 活跃预训练 0 个)
+[22:45] [laneF] LP 失败 t3_pow3_seed0
+[22:45] [laneF] t3_pow3_seed0 失败, 第 2 次重试插队首
+[22:46] [laneF] 启动任务 t3_pow3_seed0(空闲显存 13003MiB, 活跃预训练 1 个)
+[01:20] [laneG2] LP 失败 t3_pow3_seed2
+[01:20] [laneG2] t3_pow3_seed2 失败, 第 1 次重试插队首
+[01:21] [laneG2] 启动任务 t3_pow3_seed2(空闲显存 19313MiB, 活跃预训练 0 个)
+[01:22] [laneF] LP 失败 t3_pow3_seed0
+[01:22] [laneF] t3_pow3_seed0 连续 3 次失败, 弃置待人工排查
+[01:22] [laneF] 启动任务 t3_pow3_seed4(空闲显存 13093MiB, 活跃预训练 1 个)
+[04:09] [laneG2] LP 失败 t3_pow3_seed2
+[04:09] [laneG2] t3_pow3_seed2 失败, 第 2 次重试插队首
+[04:10] [laneF] LP 失败 t3_pow3_seed4
+[04:10] [laneF] t3_pow3_seed4 失败, 第 1 次重试插队首
+[04:10] [laneG2] 启动任务 t3_pow3_seed2(空闲显存 19779MiB, 活跃预训练 0 个)
+[04:11] [laneF] 启动任务 t3_pow3_seed4(空闲显存 13093MiB, 活跃预训练 1 个)
+[07:09] [laneG2] LP 失败 t3_pow3_seed2
+[07:09] [laneG2] t3_pow3_seed2 连续 3 次失败, 弃置待人工排查
+[07:09] [laneG2] 启动任务 h1_white8_seed0(空闲显存 19308MiB, 活跃预训练 0 个)
+[07:10] [laneF] LP 失败 t3_pow3_seed4
+[07:10] [laneF] t3_pow3_seed4 失败, 第 2 次重试插队首
+[07:11] [laneF] 启动任务 t3_pow3_seed4(空闲显存 13016MiB, 活跃预训练 1 个)
+[09:52] [laneF] LP 失败 t3_pow3_seed4
+[09:52] [laneF] t3_pow3_seed4 连续 3 次失败, 弃置待人工排查
+[09:52] [laneF] 启动任务 h1_white8_seed2(空闲显存 13025MiB, 活跃预训练 1 个)
+[09:55] [laneG2] ✔ h1_white8_seed0: AUPRC=0.7021 Δ=-0.0156
+[09:55] [laneG2] 启动任务 h1_white8_seed4(空闲显存 13025MiB, 活跃预训练 1 个)
+[12:51] [laneF] ✔ h1_white8_seed2: AUPRC=0.7074 Δ=-0.0103
+[12:51] [laneF] 启动任务 h1_ln_neg8_seed0(空闲显存 12998MiB, 活跃预训练 1 个)
+[12:53] [laneG2] ✔ h1_white8_seed4: AUPRC=0.7026 Δ=-0.0151
+[12:53] [laneG2] 启动任务 h1_pos_neg8_seed0(空闲显存 13031MiB, 活跃预训练 1 个)
+[15:28] [laneF] ✔ h1_ln_neg8_seed0: AUPRC=0.6990 Δ=-0.0187
+[15:28] [laneF] 启动任务 b0fast_seed0(空闲显存 13061MiB, 活跃预训练 1 个)
+[15:28] [laneF] 预训练失败 b0fast_seed0(详见 pt 日志)
+[15:28] [laneF] b0fast_seed0 失败, 第 1 次重试插队首
+[15:29] [laneF] 启动任务 b0fast_seed0(空闲显存 13061MiB, 活跃预训练 1 个)
+[15:29] [laneF] 预训练失败 b0fast_seed0(详见 pt 日志)
+[15:29] [laneF] b0fast_seed0 失败, 第 2 次重试插队首
+[15:30] [laneF] 启动任务 b0fast_seed0(空闲显存 13062MiB, 活跃预训练 1 个)
+[15:31] [laneF] 预训练失败 b0fast_seed0(详见 pt 日志)
+[15:31] [laneF] b0fast_seed0 连续 3 次失败, 弃置待人工排查
+[15:31] [laneF] 全部剩余任务被他方占用或已认领, 10min 后重查
+[15:41] [laneF] 全部剩余任务被他方占用或已认领, 10min 后重查
+[15:44] [laneG2] ✔ h1_pos_neg8_seed0: AUPRC=0.6951 Δ=-0.0226
+[15:45] [laneG2] 启动任务 b0fast_seed0(空闲显存 19855MiB, 活跃预训练 0 个)
+[15:45] [laneG2] 预训练失败 b0fast_seed0(详见 pt 日志)
+[15:45] [laneG2] b0fast_seed0 失败, 第 1 次重试插队首
+[15:46] [laneG2] 启动任务 b0fast_seed0(空闲显存 19855MiB, 活跃预训练 0 个)
+[15:46] [laneG2] 预训练失败 b0fast_seed0(详见 pt 日志)
+[15:46] [laneG2] b0fast_seed0 失败, 第 2 次重试插队首
+[15:47] [laneG2] 启动任务 b0fast_seed0(空闲显存 19847MiB, 活跃预训练 0 个)
+[15:47] [laneG2] 预训练失败 b0fast_seed0(详见 pt 日志)
+[15:47] [laneG2] b0fast_seed0 连续 3 次失败, 弃置待人工排查
+[15:47] [laneG2] 流水线退出: 队列清空/全部完成
+[15:51] [laneF] 流水线退出: 队列清空/全部完成
