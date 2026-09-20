@@ -38,3 +38,5 @@ ts,name,seed,args,auroc,auprc,delta,fast
 09-20 19:30,t3_pow3,4,--pool-power 3,0.9153,0.715,-0.0027,0
 09-20 21:55,b0fast,0,,0.9109,0.7055,-0.0122,1
 09-20 22:34,c1_nfh_b0,0,--data-dir data/pt_pretrain_nfh --epochs 100,0.8907,0.6574,-0.0603,0
+09-21 04:35,a3_acl_inter,0,--acl-region 1 --acl-inter 1 --acl-gamma 0.5 --acl-tau 0.1,0.9085,0.6994,-0.0183,0
+09-21 04:35,a2_acl_intra,0,--acl-region 1 --acl-inter 0 --acl-tau 0.1,0.8697,0.6266,-0.0911,0
