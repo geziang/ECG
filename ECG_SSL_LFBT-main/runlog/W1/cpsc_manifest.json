@@ -1,0 +1,59 @@
+{
+ "preprocess_version": "csc-v1",
+ "n_hea": 6877,
+ "n_labeled": 6877,
+ "n_unmapped_excluded": 0,
+ "n_processed": {
+  "ok": 6877
+ },
+ "class_counts": {
+  "NSR": {
+   "train": 642,
+   "val": 91,
+   "test": 185
+  },
+  "AF": {
+   "train": 854,
+   "val": 122,
+   "test": 245
+  },
+  "IAVB": {
+   "train": 480,
+   "val": 68,
+   "test": 138
+  },
+  "LBBB": {
+   "train": 130,
+   "val": 18,
+   "test": 39
+  },
+  "RBBB": {
+   "train": 1080,
+   "val": 154,
+   "test": 309
+  },
+  "PAC": {
+   "train": 418,
+   "val": 59,
+   "test": 121
+  },
+  "PVC": {
+   "train": 470,
+   "val": 67,
+   "test": 135
+  },
+  "STD": {
+   "train": 583,
+   "val": 83,
+   "test": 168
+  },
+  "STE": {
+   "train": 152,
+   "val": 21,
+   "test": 45
+  }
+ },
+ "split": "stratified 70/10/20 seed=0, record-level (1 record = 1 patient)",
+ "signal": "central 10s crop @500Hz (short->zero-pad), LFBT 8 leads, resample 2048, z-score",
+ "wall_time_s": 46.4
+}
