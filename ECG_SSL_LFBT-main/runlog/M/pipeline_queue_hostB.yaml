@@ -1,11 +1,25 @@
-# 主机B 队列 第二批 (HOSTS §四 P3: C3 准周期 MixUp + H4 HRV 借口, 2026-09-18 晨)
-# 第一批(n3/h3/sinc)已全部完成判负, 见 matrix_results_hostB.csv
-# anchor: auto = 本机 B0 锚点(csv b0 行 0.7158); Δ>0 自动补 seed2/4(对照臂 no_confirm)
-# C3 纪律: 普通 MixUp 对照(--mixup-align 0)与对齐版同参数同机配对
+# 主机B W1 队列 (任务书 07: A线 A1/A4 + B线 B1/B2/B3, 2026-09-20 启动)
+# 前两批(n3/h3/sinc/c3/h4)已全部判负, 见 matrix_results_hostB.csv
+# anchor: auto = 本机 B0 锚点 0.7158 (csv b0 行); Δ>0 自动补 seed2/4 (3-seed 符号门)
+# 优先序依据: 任务书 §一 "只押一个方法方向押 A3; 最容易正信号押 B3(CCM)";
+#   主机B分工(§六): 周二 A1+A4, 周三 B1/B2/B3 —— 压缩进 24h 单车道队列
+# 止损(§八): 1-seed Δ<-0.5pt 停; ≥+0.5pt 进 3-seed; NEG/对照臂 no_confirm
 # 启动: python pipeline_runner.py --lane B --queue runlog/M/pipeline_queue_hostB.yaml \
 #     --results matrix_results_hostB.csv --max-pts 1 --vram-need 7000
 anchor: auto
 tasks:
-  - {name: c3_align_mix02, type: probe, args: "--mixup-prob 0.5 --mixup-align 1", seeds: [0]}
-  - {name: c3_plain_mix02, type: probe, args: "--mixup-prob 0.5 --mixup-align 0", no_confirm: true, seeds: [0]}
-  - {name: h4_hrv01, type: probe, args: "--hrv-weight 0.1", seeds: [0]}
+  # ---- A 线 (T1 D1L-fix 翻案: τ 移对角, II-III=0.5 相邻胸导=0.2) ----
+  - {name: a1_d1lfix_05_02, type: probe, args: "--d1l 0.5,0.2", seeds: [0]}
+  # ---- B 线 (T3 B3 CCM 周期内遮挡 20% 两视图独立, η=0.1 起步) ----
+  - {name: b3_ccm_rec01, type: probe, args: "--rec-style ccm --d7-weight 0.1 --rec-ratio 0.2", seeds: [0]}
+  # ---- A 线 (T2 A4 随机分组 NEG, ≥3 partitions 101/102/103) ----
+  - {name: a4_rand_p101, type: probe, args: "--acl-mode full --acl-partition random --acl-rand-seed 101", no_confirm: true, seeds: [0]}
+  # ---- B 线 (B2 多段总20% 两视图独立 = 任务难度对照) ----
+  - {name: b2_multiseg_rec01, type: probe, args: "--rec-style multiseg --d7-weight 0.1 --rec-ratio 0.2", no_confirm: true, seeds: [0]}
+  # ---- A 线 (D1L-fix NEG: 打乱导联归属) ----
+  - {name: a1_d1lfix_neg, type: probe, args: "--d1l 0.5,0.2 --d1l-shuffle", no_confirm: true, seeds: [0]}
+  # ---- B 线 (B1 旧 D7 归档审计: 单段50%仅视图1) ----
+  - {name: b1_d7_arch01, type: probe, args: "--rec-style d7 --d7-weight 0.1", no_confirm: true, seeds: [0]}
+  # ---- A4 partition 2/3 (随机分组稳健性) ----
+  - {name: a4_rand_p102, type: probe, args: "--acl-mode full --acl-partition random --acl-rand-seed 102", no_confirm: true, seeds: [0]}
+  - {name: a4_rand_p103, type: probe, args: "--acl-mode full --acl-partition random --acl-rand-seed 103", no_confirm: true, seeds: [0]}
