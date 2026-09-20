@@ -23,3 +23,5 @@
 4. **5 分钟后验证**:laneF.out.log 出现"启动任务 a1_d1l_fix_seed0"或"等待显存";pt_a1_d1l_fix_seed0.log 无 "unrecognized arguments"(出现=w1 合并有误,告警勿重试)。
 5. **红线**:绝不杀进程;不改代码(合并是唯一 git 写操作);不动 worktree;不动 mimic。
 6. **完成后**:b0fast 与 A 线读数均由 runner 自动落 csv;巡检每 2.5 小时照常报告;本单任务完成后作废。
+
+> **[已完成 2026-09-20 21:57]** 接力已由主会话执行:b0fast 判负 -1.22pt 落 csv(38行完结);w1 已合并(0fc9e38);双车道已重启,a1_d1l_fix/a2_acl_intra 已入场。本单作废。

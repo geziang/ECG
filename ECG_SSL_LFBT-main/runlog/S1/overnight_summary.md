@@ -623,3 +623,9 @@ ata/ptbxl --checkpoint F:\新实验\ECG_SSL_LFBT-main\checkpoint\M\b0_gamma07_se
 [19:30] [laneF] 启动任务 b0fast_seed0(空闲显存 19858MiB, 活跃预训练 0 个)
 [21:55] [laneF] ✔ b0fast_seed0: AUPRC=0.7055 Δ=-0.0122
 [21:55] [laneF] 流水线退出: 队列清空/全部完成
+[21:57] [laneF] 流水线启动: 队列 26 项, 准入=run_pt 并发槽位 + 空闲显存闸门 + run_pt 自闸门6500 兜底
+[21:57] [laneF] 启动任务 a1_d1l_fix_seed0(空闲显存 13253MiB, 活跃预训练 1 个)
+[21:57] [laneG2] 流水线启动: 队列 26 项, 准入=run_pt 并发槽位 + 空闲显存闸门 + run_pt 自闸门6500 兜底
+[21:57] [laneG2] 启动任务 a2_acl_intra_seed0(空闲显存 12909MiB, 活跃预训练 2 个)
+[22:36] [laneC] 流水线启动: 队列 26 项, 准入=run_pt 并发槽位 + 空闲显存闸门 + run_pt 自闸门6500 兜底
+[22:36] [laneC] 启动任务 a3_acl_inter_seed0(空闲显存 7938MiB, 活跃预训练 2 个)
