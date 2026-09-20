@@ -40,3 +40,4 @@ ts,name,seed,args,auroc,auprc,delta,fast
 09-20 22:34,c1_nfh_b0,0,--data-dir data/pt_pretrain_nfh --epochs 100,0.8907,0.6574,-0.0603,0
 09-21 04:35,a3_acl_inter,0,--acl-region 1 --acl-inter 1 --acl-gamma 0.5 --acl-tau 0.1,0.9085,0.6994,-0.0183,0
 09-21 04:35,a2_acl_intra,0,--acl-region 1 --acl-inter 0 --acl-tau 0.1,0.8697,0.6266,-0.0911,0
+09-21 04:59,a1_d1l_fix,0,"--d1l 0.5,0.2",0.8822,0.6471,-0.0706,0

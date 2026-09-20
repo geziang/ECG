@@ -1,91 +1,105 @@
-"""acl_region.py — ACL-ECG 四解剖区域受控实现 (任务书 T2 / A2 / A3 / A4)。
+# -*- coding: utf-8 -*-
+"""acl_region.py — T2: ACL-ECG 式解剖区域关系目标 (任务书 07 §三 / 06 §三)。
 
-机制 (对照 ACL-ECG Sensors 2026, 26(3):1080):
-  - 固定四区: (II,III) / (V1,V2) / (V3,V4) / (V5,V6) (lead 序 0..7)
-  - 区域输入 = 区内两导联编码器输出 h(64) concat -> 128, 过独立 region projector -> u_r
-  - Eq.(10) 区域内 InfoNCE (loss_intra): 同区两视图为正, 批内其他 ECG 为负
-  - Eq.(11) 跨区域 InfoNCE (loss_inter): 同一 ECG 的区域 d(视图1) 与区域 d'≠d(视图2)
-    为正样本, 批内其他 ECG 为负样本 —— 注意它不把不同区域互相推远
-  - A4 NEG: 随机四区分组 (>=3 个 partition), 证明收益来自解剖结构而非参数量
+机制(对齐 ACL-ECG, Liu-Wu-Yuan 2026):
+  1. 四区域固定分组(lead 序 ii,iii,v1..v6 = 0..7):
+       下壁 (II,III)=(0,1) / 间隔 (V1,V2)=(2,3) / 前壁 (V3,V4)=(4,5) / 侧壁 (V5,V6)=(6,7)
+  2. 区域表示: 组内两条导联的 64 维 GAP 特征 concat(128) -> 独立区域 projector(2048)。
+     不做三组均值(与已判负的 LGA 硬拉近切割)。
+  3. L_intra (Eq.10 区域内一致): 同区域、同记录、跨视图为正; 批内其他记录(两视图)为负。
+  4. L_inter (Eq.11 区域间判别): d!=d' 时, 同一记录的区域 d(视图1) 与区域 d'(视图2) 仍是正
+     样本; 负样本只来自批内其他记录 —— 同一记录的其它区域特征绝不入负样本池,
+     即"不是把不同区域互相推远"(任务书 §3.1 红线)。
+  5. 随机分组 NEG (A4): --acl-partition random + --acl-rand-seed, ≥3 个 partition。
 
-设计约束:
-  - 默认关 (--acl-region 0) 时 run_pt 不经过本模块任何路径, B0 逐位一致
-  - InfoNCE 用对称 NT-Xent, 温度可配; loss = gamma*intra + (1-gamma)*inter (A3 gamma=0.5)
+默认关闭(不实例化)时对 B0 主路径零影响。
 """
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
-# 固定四区 (lead 序: ii,iii,v1..v6 = 0..7)
-ACL_REGIONS = ((0, 1), (2, 3), (4, 5), (6, 7))  # (II,III) (V1,V2) (V3,V4) (V5,V6)
-N_REGIONS = 4
+# 解剖四区(固定, 任务书 §3.2)
+REGIONS_ANATOMY = ((0, 1), (2, 3), (4, 5), (6, 7))
+LEAD_NAMES = ("II", "III", "V1", "V2", "V3", "V4", "V5", "V6")
 
 
-def build_regions(random_partition=0):
-    """返回区域分组元组。random_partition>0 时用固定种子生成第 N 个随机分组(A4 NEG)。"""
-    if random_partition <= 0:
-        return ACL_REGIONS
-    leads = list(range(8))
-    g = torch.Generator().manual_seed(1000 + random_partition)
-    perm = torch.randperm(8, generator=g).tolist()
-    leads = [leads[p] for p in perm]
-    return tuple((leads[2 * r], leads[2 * r + 1]) for r in range(N_REGIONS))
+def build_partition(kind="anatomy", rand_seed=101, num_leads=8):
+    """返回 4 个二元组分区。random: 固定种子打乱 8 导联再两两成组(组内排序保确定性)。"""
+    if kind == "anatomy":
+        return list(REGIONS_ANATOMY)
+    if kind == "random":
+        g = torch.Generator().manual_seed(int(rand_seed))
+        perm = torch.randperm(num_leads, generator=g).tolist()
+        parts = [tuple(sorted(perm[k * 2:k * 2 + 2])) for k in range(num_leads // 2)]
+        return parts
+    raise ValueError(f"未知 acl-partition: {kind}")
 
 
-class RegionProjector(nn.Module):
-    """区域 projector: 128 (2x64 concat) -> 2048 -> 2048, 与主 projector 同容量级。"""
+class RegionProjectors(nn.Module):
+    """每区域一个 MLP projector(结构镜像导联 projector: Linear-BN-ReLU 堆叠)。"""
 
-    def __init__(self, in_dim=128, sizes=(2048, 2048)):
+    def __init__(self, regions, feat_per_lead=64, spec="128-2048-2048-2048"):
         super().__init__()
-        layers, d = [], in_dim
-        for s in sizes:
-            layers += [nn.Linear(d, s, bias=False), nn.BatchNorm1d(s), nn.ReLU(inplace=True)]
-            d = s
-        self.net = nn.Sequential(*layers)
+        self.regions = [tuple(r) for r in regions]
+        sizes = list(map(int, spec.split('-')))
+        assert sizes[0] == feat_per_lead * 2, \
+            f"区域 projector 输入维 {sizes[0]} != 2×{feat_per_lead}(两导联 concat)"
+        self.nets = nn.ModuleList()
+        for _ in self.regions:
+            layers = []
+            for j in range(len(sizes) - 2):
+                layers.append(nn.Linear(sizes[j], sizes[j + 1], bias=False))
+                layers.append(nn.BatchNorm1d(sizes[j + 1]))
+                layers.append(nn.ReLU(inplace=True))
+            layers.append(nn.Linear(sizes[-2], sizes[-1], bias=False))
+            self.nets.append(nn.Sequential(*layers))
 
-    def forward(self, x):
-        return self.net(x)
-
-
-def region_embed(h_list, regions, projectors):
-    """h_list: 每导联编码器输出 [(B,64)]*8 -> 每区 concat 后投影 + L2 归一化 [(B,d)]*4。"""
-    u = []
-    for r, (i, j) in enumerate(regions):
-        x = torch.cat([h_list[i], h_list[j]], dim=1)
-        u.append(F.normalize(projectors[r](x), dim=1))
-    return u
-
-
-def info_nce(z_a, z_b, temperature=0.5):
-    """对称 NT-Xent (Eq.10 口径): 对角为正 (同 ECG 两视图), 批内其余为负。
-    z_a/z_b: (B, d) 已 L2 归一化。返回标量 loss。"""
-    b = z_a.size(0)
-    logits = z_a @ z_b.T / temperature          # (B,B), logits[k,l] = sim(a_k, b_l)
-    labels = torch.arange(b, device=z_a.device)
-    return 0.5 * (F.cross_entropy(logits, labels) + F.cross_entropy(logits.T, labels))
+    def forward(self, lead_feats):
+        """lead_feats: list[(B, 64) × 8] -> list[(B, out) × 4](区域 projector 原始输出)。"""
+        outs = []
+        for r, net in zip(self.regions, self.nets):
+            x = torch.cat([lead_feats[r[0]], lead_feats[r[1]]], dim=1)
+            outs.append(net(x))
+        return outs
 
 
-def intra_region_loss(u1, u2, temperature=0.5):
-    """Eq.(10): 每区两视图 InfoNCE, 区平均。u1/u2: [(B,d)]*4 (同区序)。"""
-    return torch.stack([info_nce(u1[r], u2[r], temperature) for r in range(len(u1))]).mean()
+def nt_xent_pair(z_a, z_b, tau=0.5):
+    """标准 NT-Xent(两视图对齐形态)。z_a/z_b: (B, d) 已按样本对齐, 内部 L2 归一。
+
+    正样本: z_a[i] <-> z_b[i](跨视图同记录); 负样本: 批内其他记录的 z_a/z_b(2B-2 个)。
+    """
+    B = z_a.shape[0]
+    za = F.normalize(z_a, dim=1)
+    zb = F.normalize(z_b, dim=1)
+    z = torch.cat([za, zb], dim=0)                      # (2B, d)
+    sim = z @ z.t() / tau                               # (2B, 2B)
+    self_mask = torch.eye(2 * B, dtype=torch.bool, device=z.device)
+    sim.masked_fill_(self_mask, float('-inf'))          # 排除自身
+    pos = torch.cat([torch.arange(B, 2 * B), torch.arange(0, B)], dim=0).to(z.device)
+    # anchor i 的正样本 = 跨视图同记录; 对角 -inf 后每行剩 2B-1 个有限值
+    return F.cross_entropy(sim, pos)
 
 
-def inter_region_pairs(num_regions=N_REGIONS):
-    """Eq.(11) 的区域对枚举 (r, r'), r != r' (同 ECG 跨区正样本; 不含推远项)。"""
-    return [(r, s) for r in range(num_regions) for s in range(num_regions) if r != s]
+def acl_losses(z1_regions, z2_regions, tau=0.5):
+    """返回 (L_intra, L_inter)。
 
-
-def inter_region_loss(u1, u2, temperature=0.5):
-    """Eq.(11): 对每对 r!=r', InfoNCE(u1_r, u2_r') —— 同一 ECG 的跨区跨视图为正,
-    批内其他 ECG 为负。对对平均。"""
-    pairs = inter_region_pairs(len(u1))
-    return torch.stack([info_nce(u1[r], u2[s], temperature) for r, s in pairs]).mean()
-
-
-def acl_loss(u1, u2, temperature=0.5, gamma=0.5, use_inter=True):
-    """总损失: A3 = gamma*intra + (1-gamma)*inter; A2 (use_inter=False) = 仅 intra。"""
-    li = intra_region_loss(u1, u2, temperature)
-    if not use_inter:
-        return li, li, torch.zeros_like(li)
-    lt = inter_region_loss(u1, u2, temperature)
-    return gamma * li + (1.0 - gamma) * lt, li, lt
+    L_intra: 同区域跨视图 NT-Xent, 4 区域求平均。
+    L_inter: d!=d' 有序对 (z1_d, z2_d') NT-Xent, 12 对求平均。
+      负样本池只含 (z1_d ∪ z2_d') 的批内其他记录 —— 同一记录的 z2_d / z1_d' 不在池中,
+      因此不同区域永不被推远(等价实现 ACL Eq.(11) 的 d!=d' 正样本语义)。
+    """
+    R = len(z1_regions)
+    l_intra = 0
+    for d in range(R):
+        l_intra = l_intra + nt_xent_pair(z1_regions[d], z2_regions[d], tau)
+    l_intra = l_intra / R
+    l_inter = 0
+    n_pair = 0
+    for d in range(R):
+        for dp in range(R):
+            if d == dp:
+                continue
+            l_inter = l_inter + nt_xent_pair(z1_regions[d], z2_regions[dp], tau)
+            n_pair += 1
+    l_inter = l_inter / n_pair
+    return l_intra, l_inter

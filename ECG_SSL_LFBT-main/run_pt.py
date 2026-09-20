@@ -4,7 +4,6 @@ import hashlib
 import json
 import platform
 import time
-import numpy as np
 from torch import nn, optim
 import torch
 import torchvision.transforms as transforms
@@ -12,7 +11,7 @@ from data_utils.data_folder import ECGDatasetFolder
 from data_utils.multi_view_data_injector import MultiViewDataInjector
 from data_utils.augmentations import RandomResizeCropTimeOut, ToTensor
 from data_utils.seed_utils import set_seed
-from models.vgg_1d import VGG16, group_whiten, group_ln
+from models.vgg_1d import VGG16
 
 parser = argparse.ArgumentParser(description='Lead-Fusion Barlow Twins Pretraining')
 parser.add_argument('--data-dir', type=Path, required=True,
@@ -60,25 +59,11 @@ parser.add_argument('--d1l', default='', type=str,
                          'inter-loss 的跨导联相关目标从 0 改为生理拓扑设定值')
 parser.add_argument('--d1l-shuffle', action='store_true',
                     help='D1L NEG 负对照: 打乱目标矩阵的导联归属(同值随机重排), 应不涨点才有效')
-parser.add_argument('--d1l-full', action='store_true',
-                    help='D1L 闭合基线: 全1目标矩阵(所有跨导联对角目标=1==B0 隐式目标), '
-                         'loss 应与 B0 逐位一致; 仅用于单测/审计, 不入实验矩阵')
 parser.add_argument('--aug-params', default='0.5,1.0,0.0,0.5', type=str,
                     help='RRC-TO 增强参数 crop_low,crop_up,mask_low,mask_up (默认=论文原值,从未扫过)')
 # ===== 跨域迁移候选 (batch4) =====
 parser.add_argument('--speed-perturb', default='1.0,1.0', type=str,
                     help='速度扰动(语音迁移) low,high 因子;默认 1.0,1.0=关闭')
-# ===== 06 文献第一批开关 (A-P2, 默认关==B0 逐位一致; 2026-09-20 合并恢复) =====
-parser.add_argument('--blur-pool', default=0, type=int,
-                    help='H2 抗混叠下采样: >0 时每个下采样点前加 filt=N 固定二项式低通(零参数)')
-parser.add_argument('--pool-power', default=0.0, type=float,
-                    help='T3 幂均值池化: >0 时末端池化换 Q=N 广义幂均值(带符号稳定版,零参数)')
-parser.add_argument('--whiten', default=0, type=int,
-                    help='H1 分组白化: >0 时编码器 64 维 h 分 N 组组内白化(零参数,仅预训练 forward)')
-parser.add_argument('--whiten-ln', action='store_true',
-                    help='H1 LN-NEG: 分组 LayerNorm 替代白化(只标准化不去相关), 须与 --whiten 同用')
-parser.add_argument('--whiten-shuffle', action='store_true',
-                    help='H1 位置-NEG: 白化前固定随机置换维度(白化错误分组), 须与 --whiten 同用')
 parser.add_argument('--view2-params', default='', type=str,
                     help='非对称增强(半监督视觉迁移): 视图2 独立 RRC-TO 参数;空=两视图同分布(B0)')
 parser.add_argument('--lead-swap-prob', default=0.0, type=float,
@@ -111,13 +96,29 @@ parser.add_argument('--mixup-align', default=1, type=int, choices=[0, 1],
                     help='C3 相位对齐: 1=FFT互相关对齐(准周期版), 0=普通 MixUp 对照')
 parser.add_argument('--hrv-weight', default=0.0, type=float,
                     help='H4 HRV 借口: lead-II 表征回归 HRV 统计的辅助头权重(0=关闭; 需 data/pt_hrv.npz)')
-# ===== ACL 四区受控实现 (任务书 T2/A2/A3/A4; 默认关==B0 逐位一致) =====
-parser.add_argument('--acl-region', default=0, type=int,
-                    help='ACL-ECG 四区: 0=关闭(B0); 1=真实解剖分组; 2/3/4=随机分组 partition 1/2/3(A4 NEG)')
-parser.add_argument('--acl-inter', default=1, type=int, choices=[0, 1],
-                    help='A2=0 仅区域内 InfoNCE; A3=1 加跨区域 Eq.(11)')
-parser.add_argument('--acl-gamma', default=0.5, type=float, help='A3: loss = g*intra + (1-g)*inter')
-parser.add_argument('--acl-tau', default=0.5, type=float, help='ACL InfoNCE 温度')
+# ===== W1 任务书(07) T1/T2/T3 开关 (默认全关 == B0 逐位一致) =====
+parser.add_argument('--rec-style', default='none',
+                    choices=['none', 'd7', 'multiseg', 'ccm'],
+                    help='T3 重建支路: none=关(B0); d7=旧版单段50%%仅视图1(B1归档审计); '
+                         'multiseg=B2 多段总20%%两视图独立; ccm=B3 周期内20%%不跨R峰(失败回退multiseg)')
+parser.add_argument('--rec-ratio', default=0.2, type=float,
+                    help='B2/B3 目标遮挡比例(任务书 §4.2: 约 20%%)')
+parser.add_argument('--rpeak-npz', default='data/pt_rpeaks.npz', type=str,
+                    help='R 峰缓存文件(gqrs 预计算, 见 runlog/prep_rpeaks.py)')
+parser.add_argument('--acl-mode', default='off', choices=['off', 'intra', 'full'],
+                    help='T2 ACL 区域目标: off=关(B0); intra=A2 仅区域内一致; full=A3 区域内+区域间 Eq.(11)')
+parser.add_argument('--acl-partition', default='anatomy', choices=['anatomy', 'random'],
+                    help='四区分组: anatomy=(II,III)/(V1,V2)/(V3,V4)/(V5,V6); random=A4 NEG')
+parser.add_argument('--acl-rand-seed', default=101, type=int,
+                    help='A4 随机分组种子(任务书 T2: >=3 个 partition, 如 101/102/103)')
+parser.add_argument('--acl-projector', default='128-2048-2048-2048', type=str,
+                    help='区域 projector MLP 规格(输入 128 = 两导联 64 维 concat)')
+parser.add_argument('--acl-tau', default=0.1, type=float,
+                    help='InfoNCE temperature(ACL-ECG 论文: tau=0.1, 09-20 按 PDF 核对修正)')
+parser.add_argument('--acl-eta1', default=0.5, type=float,
+                    help='区域内一致项权重 η1')
+parser.add_argument('--acl-eta2', default=0.5, type=float,
+                    help='区域间判别项权重 η2(ACL γ=0.5 当量: η1=η2)')
 
 
 def off_diagonal(x):
@@ -148,35 +149,22 @@ class LeadFusionBT(object):
         self.args = args
         self.device = 'cuda' if torch.cuda.is_available() else 'cpu'
         self.fast = getattr(args, 'fast_backbone', False)
-        # A-P2 开关守卫: H2/T3 不支持 fast 分组卷积路径, 也不与 D7 组合(D7 取 model[:-1] 特征图)
-        _bp, _pp = int(getattr(args, 'blur_pool', 0)), float(getattr(args, 'pool_power', 0.0))
-        assert not (self.fast and (_bp or _pp)), "H2/T3 暂不支持 fast 路径"
-        assert not (getattr(args, 'd7_weight', 0.0) > 0 and (_bp or _pp)), "H2/T3 暂不与 D7 组合"
-        self.sinc_M = 0  # 2026-09-20 修复: fast 路径在下方提前 return, forward 无条件访问 sinc_M,
-        #  b0fast 因此 AttributeError 秒败 3 轮; 初始化必须提到 return 之前(升级逻辑仍在下方慢路径)
-        self.whiten_g = int(getattr(args, 'whiten', 0))
-        self.whiten_ln_on = bool(getattr(args, 'whiten_ln', False))
-        # 位置-NEG: 固定种子置换(与训练 seed 无关, 保证可复现)
-        _perm = torch.randperm(64, generator=torch.Generator().manual_seed(0))
-        self.whiten_perm = _perm
-        self.whiten_inv = torch.empty_like(_perm)
-        self.whiten_inv[_perm] = torch.arange(64)
-        self.whiten_shuffle_on = bool(getattr(args, 'whiten_shuffle', False))
         sizes = [64] + list(map(int, args.projector.split('-')))
-        # D1L-fix (任务书 T1/A1, 2026-09-20): 结构化目标矩阵, lead 序: ii,iii,v1..v6 = 0..7
-        # 语义修正: τ 只进 cross-correlation 的 diagonal target (跨导联同坐标对齐),
-        # off-diagonal target 恒为 0 (旧实现把 τ 放 off_diagonal(c) 制造维度间冗余, 已撤回)。
-        # 矩阵契约: 对称 / diag=1 / PSD(eig >= -1e-6); '1,1' 全 1 矩阵为闭合基线
-        # (对角目标全 1 == B0 隐式目标, loss 应与 B0 逐位一致, 见单测)。
+        # D1L: 结构化目标矩阵 (lead 序: ii,iii,v1..v6 = 0..7)
+        # W1 T1 修正(任务书 07 §2.5/06 §二): τ 属于 cross-correlation 的【对角】目标
+        # (同一投影维度跨导联相关), 非对角目标恒 0。目标矩阵 T = I + P 需对称/对角1/PSD。
         self.d1l_P = None
-        self.d1l_meta = None
-        if getattr(args, 'd1l', '') or getattr(args, 'd1l_full', False):
-            if getattr(args, 'd1l_full', False):
-                # 闭合基线: 全1矩阵 (所有跨导联对角目标=1 == B0 隐式目标), 仅用于单测/审计
-                P = torch.ones(args.num_leads, args.num_leads)
+        self.d1l_eigs = None
+        if getattr(args, 'd1l', ''):
+            parts = [float(v) for v in args.d1l.split(',')]
+            P = torch.zeros(args.num_leads, args.num_leads)
+            if len(parts) == 1:
+                # τ≡v 全矩阵(闭合基线检查用, 如 "1" == B0 / "0" == 跨导完全去相关)
+                P.fill_(parts[0])
+                P.fill_diagonal_(0.0)
+                a = b = parts[0]
             else:
-                a, b = map(float, args.d1l.split(','))
-                P = torch.eye(args.num_leads)
+                a, b = parts
                 P[0, 1] = P[1, 0] = a          # II-III (Einthoven 相邻)
                 for k in range(2, args.num_leads - 1):  # 相邻胸导 V1-V2 ... V5-V6
                     P[k, k + 1] = P[k + 1, k] = b
@@ -184,39 +172,17 @@ class LeadFusionBT(object):
                 g = torch.Generator().manual_seed(12345)
                 perm = torch.randperm(args.num_leads, generator=g)
                 P = P[perm][:, perm]
-            P_raw = P.clone()
-            # PSD 投影(最近相关矩阵): 特征值裁剪到 >=0 后对角归一, 迭代至收敛
-            for _ in range(3):
-                if (torch.linalg.eigvalsh(P).min() >= -1e-6
-                        and torch.allclose(torch.diagonal(P), torch.ones(args.num_leads), atol=1e-6)):
-                    break
-                eig, vec = torch.linalg.eigh(P)
-                eig = eig.clamp_min(0.0)
-                P = vec @ torch.diag(eig) @ vec.T
-                d = torch.sqrt(torch.clamp(torch.diagonal(P), min=1e-12))
-                P = P / d[:, None] / d[None, :]
-            eigvals = torch.linalg.eigvalsh(P)
-            assert eigvals.min() >= -1e-6, f"D1L 目标矩阵非 PSD: min eig = {eigvals.min():.2e}"
+            T_target = P.clone()
+            T_target.fill_diagonal_(1.0)
+            eigs = torch.linalg.eigvalsh(T_target)
+            # PSD 纪律(任务书 07 §3.2): 结构化先验矩阵必须 PSD。
+            # 例外: tau≡1 闭合基线(等价 B0 的逐对对角目标, 全矩阵是路径图邻接+I,
+            # 数学上非 PSD 但损失逐对物化、不作为先验矩阵使用)——只记录不拦截。
+            if not (a == 1.0 and b == 1.0):
+                assert float(eigs.min()) >= -1e-6, \
+                    f"D1L 目标矩阵非 PSD: min eig = {float(eigs.min()):.3e}"
+            self.d1l_eigs = [round(float(v), 6) for v in eigs]
             self.d1l_P = P.to(self.device)
-            self.d1l_meta = {
-                "raw": P_raw.cpu().numpy().tolist(),
-                "psd_projected": P.cpu().numpy().tolist(),
-                "eigenvalues": eigvals.cpu().numpy().tolist(),
-                "shuffle": bool(getattr(args, 'd1l_shuffle', False)),
-                "full": bool(getattr(args, 'd1l_full', False)),
-                "note": "tau -> cross-corr diagonal target; off-diag target = 0",
-            }
-        # ACL 四区受控实现 (T2): 替换式区域目标, h(两导联 concat)->独立 region projector
-        self.acl_on = int(getattr(args, 'acl_region', 0)) > 0
-        self.acl_regions = None
-        self.acl_projectors = None
-        if self.acl_on:
-            assert not self.fast, "ACL 区域路径暂不支持 fast"
-            from models.acl_region import build_regions, RegionProjector
-            part = 0 if int(args.acl_region) == 1 else int(args.acl_region) - 1
-            self.acl_regions = build_regions(part)
-            self.acl_projectors = nn.ModuleList(
-                [RegionProjector(in_dim=128).to(self.device) for _ in range(4)])
         if self.fast:
             from models.parallel_vgg import ParallelVGG16, ParallelProjector
             self.p_vgg = ParallelVGG16(num_leads=args.num_leads, ch_in=1).to(self.device)
@@ -229,9 +195,7 @@ class LeadFusionBT(object):
             return
         self.backbone_group = list()
         for i in range(args.num_leads):
-            backbone = VGG16(ch_in=1, alpha=0.125,
-                             blur_pool=int(getattr(args, 'blur_pool', 0)),
-                             pool_power=float(getattr(args, 'pool_power', 0.0)))
+            backbone = VGG16(ch_in=1, alpha=0.125)
             backbone.fc = nn.Identity()
             self.backbone_group.append(backbone.to(self.device))
 
@@ -267,12 +231,26 @@ class LeadFusionBT(object):
             self.hrv_head = nn.Sequential(          # 64 = int(512*alpha), alpha=0.125
                 nn.Linear(64, 32), nn.ReLU(), nn.Linear(32, 4)).to(self.device)
         # D7: 并联重建支路(仅慢路径; 共享 backbone, 池化前特征接轻量解码器)
+        # W1 T3: multiseg/ccm 复用同一解码器池(masked MSE 见 _masked_recon_loss)
+        self.rec_style = getattr(args, 'rec_style', 'none')
         self.d7_decoders = None
-        if getattr(args, 'd7_weight', 0.0) > 0:
-            assert not self.fast, "D7 暂不支持 fast 路径"
+        if getattr(args, 'd7_weight', 0.0) > 0 or self.rec_style in ('d7', 'multiseg', 'ccm'):
+            assert not self.fast, "D7/重建支路暂不支持 fast 路径"
             from models.decoders import SmallDecoder
             self.d7_decoders = nn.ModuleList(
                 [SmallDecoder().to(self.device) for _ in range(args.num_leads)])
+        # T2: ACL 区域 projector(仅慢路径; 默认 off 不实例化, B0 主路径零影响)
+        self.acl_nets = None
+        self.acl_partition = None
+        if getattr(args, 'acl_mode', 'off') != 'off':
+            assert not self.fast, "ACL 区域支路暂不支持 fast 路径"
+            from models.acl_region import RegionProjectors, build_partition
+            self.acl_partition = build_partition(getattr(args, 'acl_partition', 'anatomy'),
+                                                 getattr(args, 'acl_rand_seed', 101),
+                                                 args.num_leads)
+            self.acl_nets = RegionProjectors(
+                self.acl_partition,
+                spec=getattr(args, 'acl_projector', '128-2048-2048-2048')).to(self.device)
 
     def _d7_recon_loss(self, y1):
         """对第一视图做跨导联同掩码, 重建被掩段(MSE 仅在被掩位置)。"""
@@ -291,28 +269,40 @@ class LeadFusionBT(object):
                 y1[:, i, mstart:mstart + mlen])
         return rec_loss / L
 
-    def _encode_h(self, y):
-        """(B, L, T) -> 每导联编码器输出 h 列表 [(B,64)] (含 whiten, 与 projector 输入同口径)。
-        ACL 区域路径复用 (region 输入 = 区内两导联 h concat)。"""
-        hs = list()
+    def _masked_recon_loss(self, fmap_list, y_orig, mask):
+        """T3 B2/B3: masked MSE —— 解码器直接吃 _embed_full 缓存的池化前特征图
+        (消除重建路径的第二次骨干前向, 09-20 提速: 融合前 epoch 565s)。
+        重建目标为遮挡前原波形, 仅在被掩点计损; mask: (B,1,T) 跨导联同步。
+        重建损失监督视图1(mask 仍两视图独立生成, 见 data_utils/ccm.py)。"""
+        m = mask[:, :1, :]                       # (B,1,T) 广播到全部导联
+        npts = m.sum().clamp(min=1.0)
+        rec_loss = 0
+        for i, fm in enumerate(fmap_list):
+            rec = self.d7_decoders[i](fm)        # (B, 1, T)
+            rec_loss = rec_loss + ((rec - y_orig[:, [i], :]).pow(2) * m).sum()
+        return rec_loss / (npts * len(fmap_list))
+
+    def _embed_full(self, y):
+        """_embed 的融合版本: 额外返回每导联 64 维 GAP 特征(T2)与池化前特征图(T3)。
+        算子顺序与 VGG16.forward 完全一致(model[:-1] -> model[-1:] -> view -> fc),
+        z 数值与 _embed 逐位相同; 仅 ACL/重建开启时调用以复用主干计算。"""
+        z_list, f_list, fm_list = list(), list(), list()
         for i in range(self.args.num_leads):
-            h = self.backbone_group[i](y[:, [i], :])
-            if self.whiten_g > 0:
-                if self.whiten_shuffle_on:
-                    h = h[:, self.whiten_perm.to(h.device)]
-                    h = group_whiten(h, self.whiten_g)
-                    h = h[:, self.whiten_inv.to(h.device)]  # H1 位置-NEG: 白化错误分组
-                elif self.whiten_ln_on:
-                    h = group_ln(h, self.whiten_g)  # H1 LN-NEG: 只标准化不去相关
-                else:
-                    h = group_whiten(h, self.whiten_g)  # H1: 组内白化后再进 projector
-            hs.append(h)
-        return hs
+            bb = self.backbone_group[i]
+            fm = bb.model[:-1](y[:, [i], :])
+            fm_list.append(fm)
+            f = bb.model[-1:](fm).view(fm.shape[0], -1)
+            f_list.append(f)
+            z_list.append(self.projector_group[i](bb.fc(f)))
+        return z_list, f_list, fm_list
 
     def _embed(self, y):
         """(B, L, T) -> 原始 projector 输出 z 列表 (每导联 (B, d))。"""
         if not self.fast:
-            return [self.projector_group[i](h) for i, h in enumerate(self._encode_h(y))]
+            z_list = list()
+            for i in range(self.args.num_leads):
+                z_list.append(self.projector_group[i](self.backbone_group[i](y[:, [i], :])))
+            return z_list
         feat = self.p_vgg(y).view(y.shape[0], self.args.num_leads, -1)
         z = self.p_proj(feat)  # (B, L, d)
         return [z[:, i, :] for i in range(self.args.num_leads)]
@@ -344,17 +334,14 @@ class LeadFusionBT(object):
                 + self.args.vicreg_cov * cov)
 
     def forward(self, y1, y2, y_pair=None, pair_mask=None,
-                hrv_target=None, hrv_valid=None):
-        if self.acl_on:
-            # A2/A3 替换式区域目标 (任务书: 不与旧 LGA/inter 叠加): loss_r=intra, loss_t=inter
-            from models.acl_region import region_embed, acl_loss
-            u1 = region_embed(self._encode_h(y1), self.acl_regions, self.acl_projectors)
-            u2 = region_embed(self._encode_h(y2), self.acl_regions, self.acl_projectors)
-            loss, li, lt = acl_loss(u1, u2, float(self.args.acl_tau),
-                                    float(self.args.acl_gamma), bool(self.args.acl_inter))
-            return loss, li, lt
-        z1_list = self._embed(y1)
-        z2_list = self._embed(y2)
+                hrv_target=None, hrv_valid=None, rec=None):
+        self.last_extra = {}
+        if self.acl_nets is not None or rec is not None:
+            z1_list, f1_list, fm1_list = self._embed_full(y1)
+            z2_list, f2_list, fm2_list = self._embed_full(y2)
+        else:
+            z1_list = self._embed(y1)
+            z2_list = self._embed(y2)
         if self.args.loss_mode == 'vicreg':
             # D9: bn 语义交给 variance hinge; keep-bn 开关可保留输出 BN(whitening-lite 消融)
             if self.args.vicreg_keep_bn:
@@ -384,13 +371,16 @@ class LeadFusionBT(object):
                 c2 = z2b[j] if self.fast else self.bn_group[j](z2_list[j])
                 c = c1.T @ c2
                 c.div_(self.args.batch_size)
-                # D1L-fix: τ 只进对角目标(跨导联同坐标对齐), off-diag 目标恒为 0;
-                # 关态 (i==j 或 P=None) 走原 B0 算子与顺序, 逐位一致
                 if self.d1l_P is not None and i != j:
-                    on_diag = (torch.diagonal(c) - self.d1l_P[i, j]).pow(2).sum()
+                    # D1L-fix (W1 T1, 任务书 07 §3.2): τ 进入对角目标(跨导同坐标相关),
+                    # 非对角目标恒 0(去冗余语义不变)。旧实现把 τ 放非对角 = 主动制造
+                    # 投影维度间交叉协方差, 旧 -0.60pt 结果撤回待翻案(06 §二)。
+                    tau = self.d1l_P[i, j]
+                    on_diag = (torch.diagonal(c) - tau).pow(2).sum()
+                    off_diag = off_diagonal(c).pow(2).sum()
                 else:
                     on_diag = torch.diagonal(c).add_(-1).pow_(2).sum()
-                off_diag = off_diagonal(c).pow_(2).sum()
+                    off_diag = off_diagonal(c).pow_(2).sum()
                 ls = on_diag + self.args.lambd * off_diag
                 if i == j:
                     loss_r += ls
@@ -408,11 +398,24 @@ class LeadFusionBT(object):
                         1.0 - torch.sqrt(z.var(dim=0) + self.args.vicreg_var_eps)).mean()
             loss = loss + self.args.bt_var_hinge * hinge / (2 * self.args.num_leads)
             loss_r = loss_r + self.args.bt_var_hinge * hinge / (2 * self.args.num_leads)
-        if getattr(self, 'd7_decoders', None) is not None:
-            # D7: 并联掩码重建支路 L = L_BT + η·L_rec
-            rec = self._d7_recon_loss(y1)
-            loss = loss + self.args.d7_weight * rec
-            loss_r = loss_r + self.args.d7_weight * rec
+        if rec is not None:
+            # T3 B2/B3 (任务书 07 §4.2): 数据管线提供两视图独立 mask + 原波形目标,
+            # masked MSE 按被掩点归一; L = L_BT + η·L_rec(η 即 --d7-weight)。
+            # 重建监督视图1(两视图 mask 均独立生成; 解码器吃融合特征图, 09-20 提速)
+            loss_bt_term = loss
+            o1, o2, m1, m2 = rec
+            rec_val = self._masked_recon_loss(fm1_list, o1, m1)
+            loss = loss + self.args.d7_weight * rec_val
+            loss_r = loss_r + self.args.d7_weight * rec_val
+            self.last_extra['loss_rec'] = rec_val.item()
+            self._diag_tensors = (loss_bt_term, self.args.d7_weight * rec_val)
+        elif getattr(self, 'd7_decoders', None) is not None \
+                and self.rec_style in ('d7', 'none'):
+            # D7 旧版(B1 归档审计 / 兼容仅 --d7-weight 的旧命令): 单段 50%, 仅视图 1
+            rec_d7 = self._d7_recon_loss(y1)
+            loss = loss + self.args.d7_weight * rec_d7
+            loss_r = loss_r + self.args.d7_weight * rec_d7
+            self.last_extra['loss_rec'] = rec_d7.item()
         if getattr(self.args, 'common_weight', 0.0) > 0:
             # 共模视图: 各导联与跨导联均值信号(噪声抵消)的 BT 对齐(相关锚定式,非拉近)
             y_common = y1.mean(dim=1, keepdim=True)  # (B,1,T)
@@ -464,6 +467,21 @@ class LeadFusionBT(object):
                 l4 = nn.functional.mse_loss(self.hrv_head(feat[m]), hrv_target[m])
                 loss = loss + self.args.hrv_weight * l4
                 loss_r = loss_r + self.args.hrv_weight * l4
+        if self.acl_nets is not None:
+            # T2 ACL 区域目标(任务书 07 §三): 区域 projector 输入 = 两导联 64 维 GAP concat;
+            # L = L_LFBT + η1·L_intra(区域内一致 Eq.10) [+ η2·L_inter(区域间判别 Eq.11)]
+            # 负样本只来自批内其他记录, 同一记录其它区域特征不入负样本池(不推远区域)。
+            from models.acl_region import acl_losses
+            z1r = self.acl_nets(f1_list)
+            z2r = self.acl_nets(f2_list)
+            l_intra, l_inter = acl_losses(z1r, z2r, tau=self.args.acl_tau)
+            acl_term = self.args.acl_eta1 * l_intra
+            self.last_extra['acl_intra'] = l_intra.item()
+            if self.args.acl_mode == 'full':
+                acl_term = acl_term + self.args.acl_eta2 * l_inter
+                self.last_extra['acl_inter'] = l_inter.item()
+            loss = loss + acl_term
+            loss_r = loss_r + acl_term
         return loss, loss_r, loss_t
 
 
@@ -471,12 +489,6 @@ def main_worker(gpu, args):
 
     args.checkpoint_dir.mkdir(parents=True, exist_ok=True)
     model = LeadFusionBT(args)
-    if getattr(model, 'd1l_meta', None) is not None:
-        # T1 契约: 导出目标矩阵/特征值/配置, 供审计与闭合基线复核
-        np.save(args.checkpoint_dir / "target_matrix.npy",
-                torch.tensor(model.d1l_meta["psd_projected"]))
-        with open(args.checkpoint_dir / "d1l_config.json", "w", encoding="utf-8") as f:
-            json.dump(model.d1l_meta, f, ensure_ascii=False, indent=1)
 
     if model.fast:
         param_weights = [p for p in model.p_vgg.parameters() if p.ndim > 1]
@@ -522,8 +534,8 @@ def main_worker(gpu, args):
                 else:
                     param_weights.append(param)
 
-        if getattr(model, 'acl_projectors', None) is not None:
-            for param in model.acl_projectors.parameters():
+        if getattr(model, 'acl_nets', None) is not None:
+            for param in model.acl_nets.parameters():
                 if param.ndim == 1:
                     param_biases.append(param)
                 else:
@@ -558,7 +570,18 @@ def main_worker(gpu, args):
             ToTensor()])
     else:
         t2 = t
-    if getattr(args, 'mixup_prob', 0.0) > 0:
+    if getattr(args, 'rec_style', 'none') in ('multiseg', 'ccm'):
+        # T3 B2/B3: 遮挡即增强 —— RRC 裁剪保留(aug-params 前两参数), 随机 TO 由
+        # CCM/多段 mask 替代; 两视图独立; 附带原波形与 mask 供 masked MSE。
+        from data_utils.ccm import CCMDataset
+        rpeak_npz = Path(args.rpeak_npz)
+        if args.rec_style == 'ccm' and not rpeak_npz.exists():
+            raise FileNotFoundError(
+                'B3 CCM 需先运行 runlog/prep_rpeaks.py 生成 data/pt_rpeaks.npz')
+        crop = tuple(float(v) for v in args.aug_params.split(',')[:2])
+        dataset = CCMDataset(args.data_dir, rpeak_npz, style=args.rec_style,
+                             ratio=args.rec_ratio, crop=crop)
+    elif getattr(args, 'mixup_prob', 0.0) > 0:
         from data_utils.c3_mixup import MixUpDataset
         dataset = MixUpDataset(args.data_dir, t, t2,
                                prob=args.mixup_prob, align=bool(args.mixup_align))
@@ -593,7 +616,14 @@ def main_worker(gpu, args):
             y1 = views[0].to(model.device, non_blocking=True)
             y2 = views[1].to(model.device, non_blocking=True)
             y_pair = pair_mask = hrv_t = hrv_v = None
-            if isinstance(flag, (tuple, list)):
+            rec_info = None
+            if len(views) == 4:
+                # T3 B2/B3: (masked1, masked2, orig1, orig2) + (mask1, mask2)
+                rec_info = (views[2].to(model.device, non_blocking=True),
+                            views[3].to(model.device, non_blocking=True),
+                            flag[0].to(model.device, non_blocking=True),
+                            flag[1].to(model.device, non_blocking=True))
+            elif isinstance(flag, (tuple, list)):
                 # H4: flag = (targets(B,4), valid(B,))
                 hrv_t = flag[0].to(model.device, non_blocking=True)
                 hrv_v = flag[1].to(model.device, non_blocking=True)
@@ -603,7 +633,25 @@ def main_worker(gpu, args):
                 pair_mask = flag.to(model.device).float() > 0.5
             optimizer.zero_grad()
             loss, loss_r, loss_t = model.forward(y1, y2, y_pair, pair_mask,
-                                                 hrv_target=hrv_t, hrv_valid=hrv_v)
+                                                 hrv_target=hrv_t, hrv_valid=hrv_v,
+                                                 rec=rec_info)
+            grad_ratio = None
+            if rec_info is not None and step % args.print_freq == 0 \
+                    and getattr(model, '_diag_tensors', None) is not None:
+                # T3 诊断(任务书 §4.3): 记录两路梯度范数比 ||∇L_rec||/||∇L_BT||
+                # (以 lead-II backbone 为探针, 每 print_freq 步一次, +2 次反向 ~2% 开销)
+                try:
+                    bt_t, rc_t = model._diag_tensors
+                    probe = [p for p in model.backbone_group[0].parameters()]
+                    g_bt = torch.autograd.grad(bt_t, probe, retain_graph=True,
+                                               allow_unused=True)
+                    g_rc = torch.autograd.grad(rc_t, probe, retain_graph=True,
+                                               allow_unused=True)
+                    n_bt = torch.sqrt(sum(g.pow(2).sum() for g in g_bt if g is not None))
+                    n_rc = torch.sqrt(sum(g.pow(2).sum() for g in g_rc if g is not None))
+                    grad_ratio = (n_rc / n_bt.clamp(min=1e-12)).item()
+                except Exception:
+                    grad_ratio = float('nan')
             loss.backward()
             optimizer.step()
             if ema_shadows is not None:
@@ -615,6 +663,10 @@ def main_worker(gpu, args):
                              loss=loss.item(),
                              loss_r=loss_r.item(),
                              loss_t=loss_t.item())
+                stats.update({k: round(v, 5) for k, v in
+                              getattr(model, 'last_extra', {}).items()})
+                if grad_ratio is not None:
+                    stats['grad_rec_bt'] = round(grad_ratio, 5)
                 print(json.dumps(stats))
             total_loss += loss.item()
             total_loss_r += loss_r.item()
@@ -627,6 +679,11 @@ def main_worker(gpu, args):
 
         print("\nEpoch end. Time: %f - Average loss %f - loss_r %f - loss_t %f.\n" % (
             ep_end_time - ep_start_time, total_loss, total_loss_r, total_loss_t))
+
+        if getattr(args, 'rec_style', 'none') == 'ccm':
+            # T3 诊断: 回退率(init 抽样估计; 逐视图计数在 worker 侧不回传)
+            print(json.dumps({'epoch': epoch, 'ccm_stats': {
+                'init_fallback_rate': getattr(dataset, 'init_fallback', None)}}))
 
     # N4: 保存前把 EMA 影子权重换入(EMA 开启时 checkpoint 即 EMA 权重)
     if ema_shadows is not None:
@@ -661,7 +718,32 @@ def main_worker(gpu, args):
             json.dump(bands, f, indent=1)
         print("Sinc bands exported:", args.checkpoint_dir / "sinc_bands.json")
 
-    # 环境与配置记录 (指南 §6-6)
+    # T1 工件(任务书 07 §T1): target_matrix.npy + 特征值 + 配置 JSON
+    if model.d1l_P is not None:
+        import numpy as _np
+        T_full = model.d1l_P.cpu().clone()
+        T_full.fill_diagonal_(1.0)
+        _np.save(args.checkpoint_dir / "target_matrix.npy", T_full.numpy())
+        with open(args.checkpoint_dir / "d1l_check.json", "w") as f:
+            json.dump(dict(d1l=args.d1l, shuffle=bool(args.d1l_shuffle),
+                           eigenvalues=model.d1l_eigs,
+                           min_eig=min(model.d1l_eigs),
+                           symmetric=True), f, indent=1)
+        print("D1L-fix artifacts saved: target_matrix.npy / d1l_check.json")
+
+    # 环境与配置记录 (指南 §6-6; W1 T0 增补 git_sha/host/dataset_hash/preprocess_version)
+    def _git_sha():
+        for cand in (Path("runlog/GIT_SHA.txt"), Path("../runlog/GIT_SHA.txt")):
+            if cand.exists():
+                return cand.read_text(encoding="utf-8").strip()
+        return "unknown"
+
+    def _dataset_hash():
+        m = Path(args.data_dir).parent / "manifest.json"
+        if m.exists():
+            return hashlib.sha256(m.read_bytes()).hexdigest()[:16]
+        return "no-manifest"
+
     info = dict(
         args=vars(args),
         python=platform.python_version(),
@@ -669,10 +751,16 @@ def main_worker(gpu, args):
         torchvision=torchvision_version(),
         cuda_build=torch.version.cuda,
         gpu=torch.cuda.get_device_name(0) if torch.cuda.is_available() else None,
+        host=platform.node(),
+        git_sha=_git_sha(),
+        dataset_hash=_dataset_hash(),
+        preprocess_version="v1-frozen-2026-09-17",
         seed=args.seed,
         checkpoint_sha256=sha,
         pretrain_dataset="PTB-XL folds 1-8 (替代 NFH, 非论文原始设置)",
     )
+    if model.acl_partition is not None:
+        info["acl_partition"] = [list(r) for r in model.acl_partition]
     with open(args.checkpoint_dir / "config.json", "w") as f:
         json.dump(info, f, indent=1, default=str)
 

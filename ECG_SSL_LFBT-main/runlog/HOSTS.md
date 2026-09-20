@@ -19,7 +19,7 @@
 | 主机 | 硬件 | 关键环境 | 当前状态 |
 |---|---|---|---|
 | **主机A = `Win4090`**(F:\新实验) | RTX 4090 24G / 32 逻辑核 / 128G RAM,双车道 | Win10,Python 3.10.11,torch 2.0.0+cu118,conda env `DL` | 🏃 三车道+轻任务(20:21 恢复;显存 ~21.5G 含 mimic) |
-| **主机B = `DESKTOP-0PBLCND`**(E:\GZA) | RTX 3080 10G / 16 逻辑核 / 64G RAM,**单车道** | Win10,Python 3.11.9,torch 2.5.1+cu121;数据已校验(含 5 个损坏 .mat 修复);推送走 `ECG-push-tmp` | 🟢 §四任务书全部完成·机器空闲待分配(两批六探针Δ全负, 详见§四判定行) |
+| **主机B = `DESKTOP-0PBLCND`**(E:\GZA) | RTX 3080 10G / 16 逻辑核 / 64G RAM,**单车道** | Win10,Python 3.11.9,torch 2.5.1+cu121;数据已校验(含 5 个损坏 .mat 修复);推送走 `ECG-push-tmp` | 🏃 W1任务书执行中(A1/A4/B1/B2/B3 队列,09-20 晚启动;T1/T2/T3 已实现,14项单测全过) |
 | 主机C | (待登记) | (待登记) | 🆓 |
 
 新主机入场四步:①按 §五-6 准备并校验数据;②**先跑本机 B0 锚点**(§五-1 红线);③在上表登记硬件与环境;④按 §四 开展创新方法并在登记表挂号。
@@ -80,6 +80,9 @@
 | C1 Sinc 带通前端 | 主机B | 第一层换参数化带通组(--sinc-frontend 16) | ✅ 判负 s0 Δ-0.0271(bands.json已存) | matrix_results_hostB.csv |
 | C3 准周期 MixUp | 主机B | FFT相位对齐后小比例混合(--mixup-prob/--mixup-align) | ✅ 判负 s0: 对齐Δ-0.0169 / 普通Δ-0.0144 双负(配对结论: 对齐无增益, MixUp轴含对齐一并关闭) | matrix_results_hostB.csv |
 | H4 HRV 借口 | 主机B | gqrs R峰->HRV四统计回归辅助头(--hrv-weight) | ✅ 判负 s0 Δ-0.0026(0.1权重下HRV辅助头无增益; 期间R5自愈1次=hrv_head按mask索引, a78e7de) | matrix_results_hostB.csv |
+| A1 D1L-fix 翻案(W1 T1) | 主机B | τ 移到 cross-corr 对角目标, off-diag 恒0; PSD 校验+target_matrix.npy 工件 | 🏃 队列中(09-20) | matrix_results_hostB.csv |
+| A4 ACL 随机分组 NEG(W1 T2) | 主机B | T2 ACL 完整实现(四区+独立projector+Eq10/11), A4=随机分区×3(101/102/103) | 🏃 队列中(09-20) | matrix_results_hostB.csv |
+| B1/B2/B3 重建线(W1 T3) | 主机B | 旧D7归档 / 多段20%两视图 / CCM周期内20%不跨R峰(gqrs缓存) | 🏃 队列中(09-20) | matrix_results_hostB.csv |
 
 ## 五、多主机方法学红线(必读,违反=数据作废)
 
@@ -102,3 +105,5 @@
 
 > 主机B 终报(09-18 07:30):§四 seed0 三项+n3 全部完成,Δ 全负,详见 runlog/M/matrix_results_hostB.csv 与 runlog/M/hostB_auto_report.md;机器空闲可接新任务。n3_prob03(拉近)Δ-0.0097 一并判负——患者轴三选一结论=不动(B0)最优。
 > 主机B 第二批终报(09-18 19:28):C3配对(对齐-0.0169/普通-0.0144)与 H4(-0.0026)均判负,§四任务书清零;两批六探针Δ全负,均"不动最优"。matrix_results_hostB.csv 与 hostB_auto_report.md 已随本提交入库。机器空闲待分配。
+
+> 主机B W1 启动(09-20 21:30):已 pull 85804dd 拿到《07-下周任务书》,按主机B分工实现 T1(D1L-fix: τ 对角目标/PSD/工件)、T2(models/acl_region.py 四区+独立projector+Eq.10/11, A4 随机分区×3)、T3(data_utils/ccm.py 多段+CCM 两视图独立 mask+masked MSE+梯度比诊断, R峰 gqrs 离线缓存 prep_rpeaks.py)、T0(config 增 git_sha/host/dataset_hash/preprocess_version);tests/test_w1.py **14/14 全过**(含默认关==B0 逐位一致、τ=1 闭合==B0、CCM 不跨 R 峰)。队列 pipeline_queue_hostB.yaml: a1_d1lfix→b3_ccm→a4_rand_p101→b2_multiseg→a1_neg→b1_d7_arch→a4_p102→a4_p103(单车道,每 run ~3.2h,预计 24h 完成前 7 项)。**NFH/Chapman 数据已在本机 E:\GZA\ECG_data**(ningbo 34,905 / chapman 10,247),runlog/prepare_nfh.py 审计+转换脚本已备好(纯 CPU 不占车道),主机A 可直接取用省掉下载与预处理;CPSC2018(icbeb) 本机缺失,待下载补周五跨库评估。

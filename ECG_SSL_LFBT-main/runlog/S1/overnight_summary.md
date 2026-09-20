@@ -649,3 +649,11 @@ ata/ptbxl --checkpoint F:\新实验\ECG_SSL_LFBT-main\checkpoint\M\b0_gamma07_se
 [04:35] [laneG2] ✔ a2_acl_intra_seed0: AUPRC=0.6266 Δ=-0.0911
 [04:35] [laneC] 全部剩余任务被他方占用或已认领, 10min 后重查
 [04:35] [laneG2] 全部剩余任务被他方占用或已认领, 10min 后重查
+[04:45] [laneG2] 全部剩余任务被他方占用或已认领, 10min 后重查
+[04:45] [laneC] 全部剩余任务被他方占用或已认领, 10min 后重查
+[04:55] [laneG2] 全部剩余任务被他方占用或已认领, 10min 后重查
+[04:55] [laneC] 全部剩余任务被他方占用或已认领, 10min 后重查
+[04:59] [laneF] ✔ a1_d1l_fix_seed0: AUPRC=0.6471 Δ=-0.0706
+[04:59] [laneF] 流水线退出: 队列清空/全部完成
+[05:05] [laneG2] 流水线退出: 队列清空/全部完成
+[05:05] [laneC] 流水线退出: 队列清空/全部完成
