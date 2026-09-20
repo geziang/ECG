@@ -33,3 +33,6 @@ ts,name,seed,args,auroc,auprc,delta,fast
 09-20 12:53,h1_white8,4,--whiten 8,0.9131,0.7026,-0.0151,0
 09-20 15:28,h1_ln_neg8,0,--whiten 8 --whiten-ln,0.9106,0.699,-0.0187,0
 09-20 15:44,h1_pos_neg8,0,--whiten 8 --whiten-shuffle,0.9096,0.6951,-0.0226,0
+09-20 19:27,t3_pow3,0,--pool-power 3,0.9162,0.7137,-0.004,0
+09-20 19:28,t3_pow3,2,--pool-power 3,0.915,0.7167,-0.001,0
+09-20 19:30,t3_pow3,4,--pool-power 3,0.9153,0.715,-0.0027,0
