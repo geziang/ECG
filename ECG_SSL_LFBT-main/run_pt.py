@@ -705,23 +705,36 @@ def main_worker(gpu, args):
         print("\nEpoch end. Time: %f - Average loss %f - loss_r %f - loss_t %f.\n" % (
             ep_end_time - ep_start_time, total_loss, total_loss_r, total_loss_t))
 
-        # 断点续训状态: 每 epoch 原子落盘(权重+优化器+EMA+RNG)
+        # 断点续训状态: 每 5 epoch 落盘(权重+优化器+EMA+RNG)。
+        # 2026-09-21 事故修正: GPU 张量直接 torch.save 在多进程并发下病态慢(三实例互踩 2.5h 未完成一次),
+        # 改为先整体 .cpu() 拷贝再序列化(CPU-only 字节流, D2H 一次性完成); 原子替换防半写。
         import os as _os
-        _snap = {}
-        for _name in ('backbone_group', 'projector_group', 'bn_group', 'p_vgg', 'p_proj',
-                      'bn_all', 'acl_projectors', 'hrv_head', 'd7_decoders'):
-            _mod = getattr(model, _name, None)
-            if _mod is None or (isinstance(_mod, list) and len(_mod) == 0):
-                continue
-            _snap[_name] = ([m.state_dict() for m in _mod] if isinstance(_mod, list)
-                            else _mod.state_dict())
-        _st = {'epoch': epoch, 'model': _snap, 'optimizer': optimizer.state_dict(),
-               'torch_rng': torch.get_rng_state()}
-        if ema_shadows is not None:
-            _st['ema_shadows'] = [s.detach().cpu().clone() for s in ema_shadows]
-        _tmp = state_path.with_suffix('.tmp')
-        torch.save(_st, _tmp)
-        _os.replace(_tmp, state_path)
+
+        def _to_cpu(sd):
+            if isinstance(sd, list):
+                return [{k: v.cpu() if torch.is_tensor(v) else v for k, v in s.items()} for s in sd]
+            return {k: v.cpu() if torch.is_tensor(v) else v for k, v in sd.items()}
+
+        if (epoch + 1) % 5 == 0 or epoch == args.epochs - 1:
+            _snap = {}
+            for _name in ('backbone_group', 'projector_group', 'bn_group', 'p_vgg', 'p_proj',
+                          'bn_all', 'acl_projectors', 'hrv_head', 'd7_decoders'):
+                _mod = getattr(model, _name, None)
+                if _mod is None or (isinstance(_mod, list) and len(_mod) == 0):
+                    continue
+                _snap[_name] = _to_cpu([m.state_dict() for m in _mod] if isinstance(_mod, list)
+                                       else _mod.state_dict())
+            _opt = optimizer.state_dict()
+            _opt['state'] = {k: {k2: (v2.cpu() if torch.is_tensor(v2) else v2)
+                                 for k2, v2 in v.items()} for k, v in _opt['state'].items()}
+            _opt['param_groups'] = _opt['param_groups']
+            _st = {'epoch': epoch, 'model': _snap, 'optimizer': _opt,
+                   'torch_rng': torch.get_rng_state()}
+            if ema_shadows is not None:
+                _st['ema_shadows'] = [s.detach().cpu().clone() for s in ema_shadows]
+            _tmp = state_path.with_suffix('.tmp')
+            torch.save(_st, _tmp)
+            _os.replace(_tmp, state_path)
 
         if getattr(args, 'rec_style', 'none') == 'ccm':
             # T3 诊断: 回退率(init 抽样估计; 逐视图计数在 worker 侧不回传)
