@@ -6,3 +6,10 @@ ts,name,seed,args,auroc,auprc,delta,fast
 09-18 13:21,c3_align_mix02,0,--mixup-prob 0.5 --mixup-align 1,0.9095,0.6989,-0.0169,0
 09-18 16:13,c3_plain_mix02,0,--mixup-prob 0.5 --mixup-align 0,0.9098,0.7014,-0.0144,0
 09-18 19:28,h4_hrv01,0,--hrv-weight 0.1,0.9125,0.7132,-0.0026,0
+09-20 23:28,a1_d1lfix_05_02,0,"--d1l 0.5,0.2",0.8822,0.64,-0.0758,0
+09-21 02:40,b3_ccm_rec01,0,--rec-style ccm --d7-weight 0.1 --rec-ratio 0.2,0.9122,0.7067,-0.0091,0
+09-21 05:55,a4_rand_p101,0,--acl-mode full --acl-partition random --acl-rand-seed 101,0.9145,0.7086,-0.0072,0
+09-21 09:05,b2_multiseg_rec01,0,--rec-style multiseg --d7-weight 0.1 --rec-ratio 0.2,0.9135,0.7141,-0.0017,0
+09-21 12:02,a1_d1lfix_neg,0,"--d1l 0.5,0.2 --d1l-shuffle",0.8841,0.6469,-0.0689,0
+09-21 18:14,a4_rand_p102,0,--acl-mode full --acl-partition random --acl-rand-seed 102,0.916,0.7109,-0.0049,0
+09-21 21:26,a4_rand_p103,0,--acl-mode full --acl-partition random --acl-rand-seed 103,0.9124,0.7089,-0.0069,0
