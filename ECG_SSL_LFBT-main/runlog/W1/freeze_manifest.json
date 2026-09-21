@@ -1,0 +1,28 @@
+{
+ "date": "2026-09-21",
+ "code_sha": "af076befb1ee487e5e6f17a2666854b7d1946044",
+ "anchors": {
+  "b0_lp_auprc_ptbxl": 0.7177,
+  "b0_ft10": [
+   0.8756,
+   0.6433
+  ]
+ },
+ "checkpoints": {
+  "b0_anchor": "026033d532d4e42a1b53ca9c4d2e95f9c09b2daaaab5c9041c9d474a1356cdad",
+  "c1_nfh_b0_seed0": "237f0607f62df54879977a6a2967c617628a4357eabdf74b50543faeb3b694e2",
+  "c2_nfh_trc_seed0": "RUNNING(完成后补)"
+ },
+ "data_manifests": [
+  "runlog/W1/nfh_manifest.json",
+  "runlog/W1/cpsc_manifest.json",
+  "runlog/W1/chapman_manifest.json",
+  "runlog/W1/nfh_sha256.txt"
+ ],
+ "eval_tables": [
+  "runlog/M/matrix_results.csv(42行)",
+  "runlog/W1/c3_evals.csv",
+  "runlog/W1/missing_lead_curves.csv(74行)"
+ ],
+ "protocol": "200ep/batch128/Adam1e-3/RRC-TO原值/PTB folds1-8; NFH=100ep matched-updates; LP/FT 单次评估"
+}
