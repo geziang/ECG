@@ -11,7 +11,7 @@
  "checkpoints": {
   "b0_anchor": "026033d532d4e42a1b53ca9c4d2e95f9c09b2daaaab5c9041c9d474a1356cdad",
   "c1_nfh_b0_seed0": "237f0607f62df54879977a6a2967c617628a4357eabdf74b50543faeb3b694e2",
-  "c2_nfh_trc_seed0": "RUNNING(完成后补)"
+  "c2_nfh_trc_seed0": "af242a89c340969fd57e70349e4b88e4bf6725c5586f5c12d62a96a199ed9524"
  },
  "data_manifests": [
   "runlog/W1/nfh_manifest.json",

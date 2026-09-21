@@ -1,1 +1,6 @@
 [c2] PT start 09-21 10:49
+[c2] PT_EXIT=0
+[c2] ptbxl: auroc=0.8860 auprc=0.6564 rc=0
+[c2] cpsc: auroc=0.9586 auprc=0.8092 rc=0
+[c2] chapman: auroc=0.9966 auprc=0.9889 rc=0
+[c2] DONE 09-21 12:10
