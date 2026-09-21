@@ -17,6 +17,8 @@ parser = argparse.ArgumentParser(description='Lead-Fusion Barlow Twins Pretraini
 parser.add_argument('--data-dir', type=Path, required=True,
                     metavar='DIR', help='data path')
 parser.add_argument('--num-leads', default=8, type=int, metavar='N', help="the number of leads")
+parser.add_argument('--resume', action='store_true',
+                    help='断点续训: checkpoint_dir/train_state.pth 存在时恢复 epoch/权重/优化器/RNG')
 parser.add_argument('--workers', default=6, type=int, metavar='N',
                     help='number of data loader workers')
 parser.add_argument('--epochs', default=200, type=int, metavar='N',
@@ -609,7 +611,27 @@ def main_worker(gpu, args):
         dataset, batch_size=args.batch_size, num_workers=args.workers, shuffle=True,
         pin_memory=True)
 
-    for epoch in range(0, args.epochs):
+    start_epoch = 0
+    state_path = args.checkpoint_dir / 'train_state.pth'
+    if getattr(args, 'resume', False) and state_path.exists():
+        st = torch.load(state_path, map_location='cpu')
+        for _name, _sd in st['model'].items():
+            _mod = getattr(model, _name)
+            if isinstance(_mod, list):
+                for _m, _s in zip(_mod, _sd):
+                    _m.load_state_dict(_s)
+            else:
+                _mod.load_state_dict(_sd)
+        optimizer.load_state_dict(st['optimizer'])
+        if ema_shadows is not None and st.get('ema_shadows') is not None:
+            for s_old, s_new in zip(ema_shadows, st['ema_shadows']):
+                s_old.copy_(s_new)
+        torch.set_rng_state(st['torch_rng'].cpu().to(torch.uint8)
+                            if hasattr(st['torch_rng'], 'cpu') else st['torch_rng'])
+        start_epoch = st['epoch'] + 1
+        print(f"[resume] 恢复自 epoch {st['epoch']}, 从 {start_epoch} 续训", flush=True)
+
+    for epoch in range(start_epoch, args.epochs):
         total_loss = 0
         total_loss_r = 0
         total_loss_t = 0
@@ -682,6 +704,24 @@ def main_worker(gpu, args):
 
         print("\nEpoch end. Time: %f - Average loss %f - loss_r %f - loss_t %f.\n" % (
             ep_end_time - ep_start_time, total_loss, total_loss_r, total_loss_t))
+
+        # 断点续训状态: 每 epoch 原子落盘(权重+优化器+EMA+RNG)
+        import os as _os
+        _snap = {}
+        for _name in ('backbone_group', 'projector_group', 'bn_group', 'p_vgg', 'p_proj',
+                      'bn_all', 'acl_projectors', 'hrv_head', 'd7_decoders'):
+            _mod = getattr(model, _name, None)
+            if _mod is None or (isinstance(_mod, list) and len(_mod) == 0):
+                continue
+            _snap[_name] = ([m.state_dict() for m in _mod] if isinstance(_mod, list)
+                            else _mod.state_dict())
+        _st = {'epoch': epoch, 'model': _snap, 'optimizer': optimizer.state_dict(),
+               'torch_rng': torch.get_rng_state()}
+        if ema_shadows is not None:
+            _st['ema_shadows'] = [s.detach().cpu().clone() for s in ema_shadows]
+        _tmp = state_path.with_suffix('.tmp')
+        torch.save(_st, _tmp)
+        _os.replace(_tmp, state_path)
 
         if getattr(args, 'rec_style', 'none') == 'ccm':
             # T3 诊断: 回退率(init 抽样估计; 逐视图计数在 worker 侧不回传)
