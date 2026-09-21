@@ -28,6 +28,9 @@ class MultiBranchNet(nn.Module):
         attention_hidden_dim=32,
         dropout=0.1,
         map_location="cpu",
+        blur_pool=0,
+        pool_power=0.0,
+        trc=0,
     ):
         super().__init__()
         self.num_classes = num_classes
@@ -36,7 +39,8 @@ class MultiBranchNet(nn.Module):
         self.fusion_name = fusion
         self.encoder_group = nn.ModuleList()
         for _ in range(num_leads):
-            backbone = VGG16(ch_in=1, alpha=0.125)
+            backbone = VGG16(ch_in=1, alpha=0.125, blur_pool=int(blur_pool),
+                               pool_power=float(pool_power), trc=int(trc))
             if backbone.output_dim != feature_dim:
                 raise ValueError("feature_dim does not match the VGG scaling factor")
             self.encoder_group.append(backbone.model)

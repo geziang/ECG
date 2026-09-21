@@ -30,13 +30,36 @@ parser.add_argument('--batch-size', default=128, type=int, metavar='N',
 parser.add_argument('--learning-rate', default=0.0001, type=float, metavar='LR',
                     help='learning rate')
 parser.add_argument('--seed', default=0, type=int, metavar='N', help='random seed')
+# ===== 与预训练一致的架构开关(任务书 08 §3.2: FT 必须传递并校验, 否则 C2 FT10 不可审计) =====
+parser.add_argument('--trc', default=0, type=int, help='TRC/GRN1D: 与预训练一致')
+parser.add_argument('--blur-pool', default=0, type=int, help='H2: 与预训练一致')
+parser.add_argument('--pool-power', default=0.0, type=float, help='T3: 与预训练一致')
 
 
 class FineTuning(object):
     def __init__(self, args):
         self.args = args
         self.device = torch.device("cuda") if torch.cuda.is_available() else torch.device("cpu")
-        self.model = MultiBranchNet(args.num_classes, checkpoint=args.checkpoint).to(self.device)
+        # 架构一致性校验(任务书 08 §3.2): checkpoint 旁 config.json 记录的架构开关必须与 FT 参数一致
+        if args.checkpoint is not None and str(args.checkpoint).lower() != "none":
+            _cfg_p = Path(args.checkpoint).parent / "config.json"
+            if _cfg_p.exists():
+                _cfg = json.loads(_cfg_p.read_text(encoding="utf-8"))
+                _a = _cfg.get("args", {})
+                for _k, _v in (("trc", int(args.trc)), ("blur_pool", int(args.blur_pool)),
+                               ("pool_power", float(args.pool_power))):
+                    try:
+                        _ck = float(_a.get(_k, 0))
+                    except (TypeError, ValueError):
+                        _ck = 0.0
+                    if abs(_ck - float(_v)) > 1e-9:
+                        raise SystemExit(
+                            f"[arch-mismatch] checkpoint 训练时 {_k}={_a.get(_k)} 但 FT 传 {_v};"
+                            f" FT 架构参数必须与预训练一致 (config: {_cfg_p})")
+        self.model = MultiBranchNet(args.num_classes, checkpoint=args.checkpoint,
+                                    blur_pool=int(args.blur_pool),
+                                    pool_power=float(args.pool_power),
+                                    trc=int(args.trc)).to(self.device)
         self.loss_fn = nn.CrossEntropyLoss().to(self.device)
 
     def train(self, data_loader, optimizer):
