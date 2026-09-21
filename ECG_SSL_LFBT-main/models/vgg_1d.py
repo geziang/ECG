@@ -87,12 +87,30 @@ def vgg_conv_block(in_list, out_list, k_list, p_list, pooling_k, pooling_s, pool
     return nn.Sequential(*layers)
 
 
+class GRN1D(nn.Module):
+    """TRC 导联内通道响应重标定 (E001 论文 Eq.14-17, 2026-09-21 忠实移植, W1-C2 comparator)。
+    Y = F + gamma*(F*n) + beta, n = F / ||F||_2(通道内时间维 L2); gamma/beta [1,C,1] 零初始化
+    -> 开态初始前向与关态逐位一致, 每导联 2C=128 参数(alpha=0.125 时), 8 导联共 1024。
+    插入点: block5+maxpool 后、全局池化前 (证据链 E001_2026-09-08 §128 行规格)。"""
+
+    def __init__(self, channels):
+        super().__init__()
+        self.gamma = nn.Parameter(torch.zeros(1, channels, 1))
+        self.beta = nn.Parameter(torch.zeros(1, channels, 1))
+
+    def forward(self, x):
+        r = x.norm(p=2, dim=-1, keepdim=True).clamp_min(1e-6)
+        n = x / r
+        return x + self.gamma * (x * n) + self.beta
+
+
 class VGG16(nn.Module):
-    def __init__(self, ch_in=8, n_classes=1000, alpha=0.5, blur_pool=0, pool_power=0.0):
+    def __init__(self, ch_in=8, n_classes=1000, alpha=0.5, blur_pool=0, pool_power=0.0, trc=0):
         super(VGG16, self).__init__()
         self.alpha = alpha
         self.blur_pool = int(blur_pool)    # H2: >0 时每个下采样点前加 filt=blur_pool 二项式低通
         self.pool_power = float(pool_power)  # T3: >0 时末端池化换广义幂均值 Q=pool_power
+        self.trc = int(trc)                # C2: >0 时 block5 后、GAP 前插 GRN1D(零初始化)
         c = 512 * alpha
 
         def _pool(c_out):
@@ -113,6 +131,8 @@ class VGG16(nn.Module):
             vgg_conv_block([512 * alpha, 512 * alpha, 512 * alpha], [512 * alpha, 512 * alpha, 512 * alpha], [3, 3, 3],
                            [1, 1, 1], 2, 2, pool_module=_pool(c)),
         ]
+        if self.trc > 0:
+            _blocks.append(GRN1D(int(c)))  # C2/TRC: block5+maxpool 后、全局池化前
         if self.pool_power == 0.0:
             _blocks.append(nn.AdaptiveAvgPool1d(1))  # 关态结构与原版逐层一致(state_dict 键名不变)
         else:

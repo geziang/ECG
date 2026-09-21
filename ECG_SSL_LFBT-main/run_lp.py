@@ -37,6 +37,7 @@ parser.add_argument('--sinc-frontend', default=0, type=int,
 # ===== A-P2 架构开关(须与预训练一致, 否则特征口径错) =====
 parser.add_argument('--blur-pool', default=0, type=int, help='H2: 与预训练一致才可正确加载 blurpool checkpoint')
 parser.add_argument('--pool-power', default=0.0, type=float, help='T3: 与预训练一致才可正确评估')
+parser.add_argument('--trc', default=0, type=int, help='C2: 与预训练一致才可正确加载 TRC/GRN1D checkpoint')
 parser.add_argument('--zero-leads', default='', type=str,
                     help='缺导评估(任务书§5.3): 逗号分隔 lead 序号置零(0..7=II,III,V1..V6);空=完整导联')
 
@@ -53,7 +54,8 @@ class LinearProbing(object):
         for i in range(args.num_leads):
             encoder = VGG16(ch_in=1, alpha=0.125,
                             blur_pool=int(getattr(args, 'blur_pool', 0)),
-                            pool_power=float(getattr(args, 'pool_power', 0.0)))
+                            pool_power=float(getattr(args, 'pool_power', 0.0)),
+                            trc=int(getattr(args, 'trc', 0)))
             if getattr(args, 'sinc_frontend', 0) > 0:
                 # C1: 与 run_pt 相同的前端手术, 保证 state_dict 形状匹配
                 from models.sinc_conv import apply_sinc_frontend

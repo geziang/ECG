@@ -115,6 +115,9 @@ parser.add_argument('--acl-projector', default='128-2048-2048-2048', type=str,
                     help='区域 projector MLP 规格(输入 128 = 两导联 64 维 concat)')
 parser.add_argument('--acl-tau', default=0.1, type=float,
                     help='InfoNCE temperature(ACL-ECG 论文: tau=0.1, 09-20 按 PDF 核对修正)')
+# ===== C2: TRC/GRN1D 时序适配器 (W1 §5.2, E001 Eq.14-17 忠实移植, 默认关==B0 逐位一致) =====
+parser.add_argument('--trc', default=0, type=int,
+                    help='C2: >0 时每导联 block5 后 GAP 前插 GRN1D(零初始化, +128参数/导联)')
 parser.add_argument('--acl-eta1', default=0.5, type=float,
                     help='区域内一致项权重 η1')
 parser.add_argument('--acl-eta2', default=0.5, type=float,
@@ -195,7 +198,7 @@ class LeadFusionBT(object):
             return
         self.backbone_group = list()
         for i in range(args.num_leads):
-            backbone = VGG16(ch_in=1, alpha=0.125)
+            backbone = VGG16(ch_in=1, alpha=0.125, trc=int(getattr(args, 'trc', 0)))
             backbone.fc = nn.Identity()
             self.backbone_group.append(backbone.to(self.device))
 
