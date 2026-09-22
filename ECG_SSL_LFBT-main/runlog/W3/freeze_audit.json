@@ -1,0 +1,135 @@
+{
+ "task": "A-0 freeze audit",
+ "date": "2026-09-22 19:45",
+ "host": "A(Win4090)",
+ "baseline_git_sha": "204d9b2",
+ "runs_code_sha": "fb08bc5",
+ "checkpoints": {
+  "b0_anchor(W1)": {
+   "expected": "026033d532d4e42a",
+   "recomputed": "026033d532d4e42a",
+   "match": true
+  },
+  "c1_nfh_seed0(W1)": {
+   "expected": "237f0607f62df548",
+   "recomputed": "237f0607f62df548",
+   "match": true
+  },
+  "c2_nfh_seed0(W1)": {
+   "expected": "af242a89c340969f",
+   "recomputed": "af242a89c340969f",
+   "match": true
+  },
+  "c1_seed0": {
+   "expected": "de0c28eedb308414",
+   "recomputed": "de0c28eedb308414",
+   "match": true
+  },
+  "c1_seed2": {
+   "expected": "26ebf0e26e5abee0",
+   "recomputed": "26ebf0e26e5abee0",
+   "match": true
+  },
+  "c1_seed4": {
+   "expected": "e599dbcdb6937218",
+   "recomputed": "e599dbcdb6937218",
+   "match": true
+  },
+  "c2_seed0": {
+   "expected": "af242a89c340969f",
+   "recomputed": "af242a89c340969f",
+   "match": true
+  },
+  "c2_seed2": {
+   "expected": "d3f8979f70cdce3d",
+   "recomputed": "d3f8979f70cdce3d",
+   "match": true
+  },
+  "c2_seed4": {
+   "expected": "5979f230172000c5",
+   "recomputed": "5979f230172000c5",
+   "match": true
+  },
+  "b0_seed2": {
+   "expected": "f39059a4430c2e7a",
+   "recomputed": "f39059a4430c2e7a",
+   "match": true
+  },
+  "b0_seed4": {
+   "expected": "ba4f2d3c99aff6b5",
+   "recomputed": "ba4f2d3c99aff6b5",
+   "match": true
+  }
+ },
+ "all_match": true,
+ "manifests": {
+  "nfh": {
+   "exists": true,
+   "n_ok": 34905,
+   "keys": [
+    "preprocess_version",
+    "source",
+    "source_fs_hz",
+    "target_length",
+    "lead_mapping",
+    "normalization"
+   ]
+  },
+  "cpsc": {
+   "exists": true,
+   "n_ok": "csc-v1",
+   "keys": [
+    "preprocess_version",
+    "n_hea",
+    "n_labeled",
+    "n_unmapped_excluded",
+    "n_processed",
+    "class_counts"
+   ]
+  },
+  "chapman": {
+   "exists": true,
+   "n_ok": "csc-v1",
+   "keys": [
+    "preprocess_version",
+    "n_hea",
+    "n_labeled",
+    "n_unmapped_excluded",
+    "n_processed",
+    "class_counts"
+   ]
+  }
+ },
+ "ledger": {
+  "rows": 28,
+  "dup_keys": 0,
+  "git_sha_values": [
+   "fb08bc5"
+  ],
+  "signs": {
+   "c2-c1 lp/cpsc": {
+    "per_seed_pt": [
+     2.35,
+     3.1,
+     1.46
+    ],
+    "sign": "+++",
+    "mean": 2.3
+   },
+   "c2-c1 ft10/ptbxl": {
+    "per_seed_pt": [
+     0.19,
+     1.38,
+     0.39
+    ],
+    "sign": "+++",
+    "mean": 0.65
+   }
+  }
+ },
+ "limitations": [
+  "W2 未保存逐记录预测概率(metrics.json 仅聚合) -> 不得声称 patient-level bootstrap, 仅 seed-level 描述统计+精确置换",
+  "B0 的 CPSC/Chapman 为 W1 单种子参考列",
+  "NFH 无患者 ID, CPSC/Chapman record-level split"
+ ]
+}
