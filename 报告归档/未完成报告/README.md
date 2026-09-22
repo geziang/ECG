@@ -13,10 +13,10 @@
 
 - A-1 TRC 插入位置实验等待教授确认；
 - A-3 FT20/FT40 仍是后备任务；
-- B-3 NFH 97 条明细已交付，但 A/B 两侧 `.mat` 字节比对仍待最终定案；
 - 开题报告中的心拍双视角、原始导联相关矩阵匹配、12 导联恢复、多模态睡眠和 cognitive-stress ECG 仍未尝试。
 
 当前唯一任务台账：[HOSTS.md](../../ECG_SSL_LFBT-main/runlog/HOSTS.md)。
+
 
 
 
