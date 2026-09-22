@@ -20,7 +20,24 @@
 |---|---|---|---|
 | **主机A = `Win4090`**(F:\新实验) | RTX 4090 24G / 32 逻辑核 / 128G RAM,双车道 | Win10,Python 3.10.11,torch 2.0.0+cu118,conda env `DL` | 🏃 三车道+轻任务(20:21 恢复;显存 ~21.5G 含 mimic) |
 | **主机B = `DESKTOP-0PBLCND`**(E:\GZA) | RTX 3080 10G / 16 逻辑核 / 64G RAM,**单车道** | Win10,Python 3.11.9,torch 2.5.1+cu121;数据已校验(含 5 个损坏 .mat 修复);推送走 `ECG-push-tmp` | 🟢 W1任务书执行完毕·机器空闲(7跑1弃全负, 09-21 21:39 队列清空; 终报见文末) |
-| 主机C | (待登记) | (待登记) | 🆓 |
+| 主机C | (待登记) | (待登记) | 🆓 | 
+
+## 一-A、W2 冻结后的新任务总览（2026-09-22，优先级高于下方历史队列）
+
+> W2 已完成并冻结于 `2c31a2b`；旧的 §二/§三 队列均视为历史记录，**不得据此重新启动训练**。新任务唯一入口是根目录《下一阶段双机任务书-2026-09-22.md》，结果统一写入 `runlog/W3/`。
+
+| 任务 | 主机 | 当前状态 | 交付物 | 停止线 |
+|---|---|---|---|---|
+| A-0 冻结哈希与协议复核 | A / Win4090 | 📋 待认领 | `runlog/W3/freeze_audit.json` | 任一 SHA/manifest 不一致即停 |
+| A-1 TRC 插入位置最小消融 | A / Win4090 | ⏸ 待教授确认 | `runlog/W3/trc_insertion/` | 仅 smoke→seed0；不升 seed2/4 |
+| A-2 冻结模型退化评估 | A / Win4090 | 📋 待认领 | `runlog/W3/robustness_*.csv` | 不重训，只复用冻结 checkpoint |
+| A-3 FT20/FT40 标签效率 | A / Win4090 | 💤 可选 | `runlog/W3/label_efficiency.csv` | 需保持既定协议，否则延期 |
+| B-0 冻结材料审计 | B / DESKTOP-0PBLCND | 📋 待认领 | `runlog/W3/freeze_audit_hostB.json`、协议说明 | 不改 W2 文件 |
+| B-1 统计与图表复算代码 | B / DESKTOP-0PBLCND | 📋 待认领 | `runlog/W3/paper_materials/` | 只做 seed-level 描述性统计 |
+| B-2 指标/预测保存扩展 | B / DESKTOP-0PBLCND | 📋 待认领 | `runlog/W3/metrics_schema/` | 先 smoke 与单测，不自动重评 test |
+| B-3 NFH 97 条剔除明细 | B / DESKTOP-0PBLCND | ⏳ 待资料 | `runlog/W3/nfh_exclusion_reconciliation.csv` | 无原始明细不得估算 |
+
+认领纪律：先 `git pull --ff-only origin main`，再把本表对应行改为 `🏃<主机>(时间)` 并 push；完成后改 `✅`，附结果路径、代码 SHA、数据/ checkpoint SHA。任何未登记的 GPU 训练均视为禁止。
 
 新主机入场四步:①按 §五-6 准备并校验数据;②**先跑本机 B0 锚点**(§五-1 红线);③在上表登记硬件与环境;④按 §四 开展创新方法并在登记表挂号。
 
