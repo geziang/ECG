@@ -1,0 +1,13 @@
+eval,downstream,ckpt,n_seeds,mean,sd,per_seed,mean_pm_sd,seed0_source,source_file,source_git_sha
+lp,ptbxl,b0,3,0.7119,0.0073,0.7177/0.7144/0.7037,0.7119±0.0073,W1 c3_evals(单种子参考),runlog/W2/confirm_results.csv;runlog/W1/c3_evals.csv,edd9aec
+lp,ptbxl,c1,3,0.6533,0.0107,0.6574/0.6412/0.6613,0.6533±0.0107,W2 ledger,runlog/W2/confirm_results.csv;runlog/W1/c3_evals.csv,edd9aec
+lp,ptbxl,c2,3,0.6554,0.0032,0.6564/0.6518/0.6579,0.6554±0.0032,W2 ledger,runlog/W2/confirm_results.csv;runlog/W1/c3_evals.csv,edd9aec
+ft10,ptbxl,b0,3,0.6449,0.0022,0.6433/0.6474/0.6440,0.6449±0.0022,W1 c3_evals(单种子参考),runlog/W2/confirm_results.csv;runlog/W1/c3_evals.csv,edd9aec
+ft10,ptbxl,c1,3,0.6279,0.0053,0.6341/0.6246/0.6251,0.6279±0.0053,W2 ledger,runlog/W2/confirm_results.csv;runlog/W1/c3_evals.csv,edd9aec
+ft10,ptbxl,c2,3,0.6345,0.0049,0.6360/0.6384/0.6290,0.6345±0.0049,W2 ledger,runlog/W2/confirm_results.csv;runlog/W1/c3_evals.csv,edd9aec
+lp,cpsc,b0,1,0.8105,0.0000,0.8105,0.8105±0.0000,W1 c3_evals(单种子参考),runlog/W2/confirm_results.csv;runlog/W1/c3_evals.csv,edd9aec
+lp,cpsc,c1,3,0.7823,0.0102,0.7857/0.7708/0.7904,0.7823±0.0102,W2 ledger,runlog/W2/confirm_results.csv;runlog/W1/c3_evals.csv,edd9aec
+lp,cpsc,c2,3,0.8053,0.0037,0.8092/0.8018/0.8050,0.8053±0.0037,W2 ledger,runlog/W2/confirm_results.csv;runlog/W1/c3_evals.csv,edd9aec
+lp,chapman,b0,1,0.9796,0.0000,0.9796,0.9796±0.0000,W1 c3_evals(单种子参考),runlog/W2/confirm_results.csv;runlog/W1/c3_evals.csv,edd9aec
+lp,chapman,c1,3,0.9889,0.0002,0.9891/0.9888/0.9888,0.9889±0.0002,W2 ledger,runlog/W2/confirm_results.csv;runlog/W1/c3_evals.csv,edd9aec
+lp,chapman,c2,3,0.9886,0.0004,0.9889/0.9888/0.9881,0.9886±0.0004,W2 ledger,runlog/W2/confirm_results.csv;runlog/W1/c3_evals.csv,edd9aec

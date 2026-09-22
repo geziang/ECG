@@ -1,0 +1,7 @@
+comparison,per_seed_pt,sign,mean_pt,verdict,source_git_sha
+lp/cpsc/C2-C1,+2.35/+3.10/+1.46,+++,+2.30,3/3同向,edd9aec
+lp/chapman/C2-C1,-0.02/+0.00/-0.07,-0-,-0.03,非一致,edd9aec
+lp/ptbxl/C2-C1,-0.10/+1.06/-0.34,-+-,+0.21,非一致,edd9aec
+ft10/ptbxl/C2-C1,+0.19/+1.38/+0.39,+++,+0.65,3/3同向,edd9aec
+lp/ptbxl/C1-B0,-6.03/-7.32/-4.24,---,-5.86,3/3同向,edd9aec
+ft10/ptbxl/C1-B0,-0.92/-2.28/-1.89,---,-1.70,3/3同向,edd9aec

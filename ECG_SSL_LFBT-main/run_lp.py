@@ -40,6 +40,17 @@ parser.add_argument('--pool-power', default=0.0, type=float, help='T3: 与预训
 parser.add_argument('--trc', default=0, type=int, help='C2: 与预训练一致才可正确加载 TRC/GRN1D checkpoint')
 parser.add_argument('--zero-leads', default='', type=str,
                     help='缺导评估(任务书§5.3): 逗号分隔 lead 序号置零(0..7=II,III,V1..V6);空=完整导联')
+# ===== W3 B-2 评估扩展(主机B, 默认全关 -> W2 行为与 metrics.json 内容不变) =====
+parser.add_argument('--extended-metrics', default=0, type=int,
+                    help='B-2: 1=metrics.json 附加 per-class AP/Macro-F1/Sens/Spec/混淆矩阵/ECE/Brier')
+parser.add_argument('--save-predictions', default='', type=str,
+                    help='B-2: 逐记录 y_true/y_pred/y_prob 落盘目录(必须位于 runlog/W3/ 下; 空=不保存)')
+parser.add_argument('--protocol-id', default='', type=str,
+                    help='B-2: 协议标识元数据(如 w3-robustness-v1)')
+parser.add_argument('--data-manifest-sha', default='', type=str,
+                    help='B-2: 数据 manifest SHA256 元数据')
+parser.add_argument('--checkpoint-sha', default='', type=str,
+                    help='B-2: checkpoint SHA256 元数据(留空且有 checkpoint 时自动计算)')
 
 
 class LinearProbing(object):
@@ -253,6 +264,30 @@ class LinearProbing(object):
         metrics = dict(auroc=float(auroc), auprc=float(auprc),
                        checkpoint=str(self.args.checkpoint) if self.args.checkpoint else "random-init",
                        num_classes=num_classes, seed=self.args.seed)
+
+        # ===== W3 B-2 扩展(默认关闭: 不加参数时 metrics.json 与 W2 逐字节一致) =====
+        if int(getattr(self.args, 'extended_metrics', 0)) or str(getattr(self.args, 'save_predictions', '') or ''):
+            import metrics_ext as _mx
+            _meta = {
+                "protocol_id": str(getattr(self.args, 'protocol_id', '') or ''),
+                "data_manifest_sha": str(getattr(self.args, 'data_manifest_sha', '') or ''),
+                "checkpoint": str(self.args.checkpoint) if self.args.checkpoint else "random-init",
+                "checkpoint_sha256": (str(getattr(self.args, 'checkpoint_sha', '') or '')
+                                      or (_mx.sha256_of(self.args.checkpoint)
+                                          if self.args.checkpoint else "")),
+                "eval": "lp", "num_classes": num_classes, "seed": self.args.seed,
+                "zero_leads": self.zero_leads,
+                "code_sha": "see git",
+            }
+            if int(getattr(self.args, 'extended_metrics', 0)):
+                metrics.update(_mx.compute_all(y, y_one_hot_))
+                print("Extended metrics: macro_f1=%.4f ece=%.4f brier=%.4f"
+                      % (metrics["macro_f1"], metrics["ece"], metrics["brier_multiclass"]))
+            _sp_dir = str(getattr(self.args, 'save_predictions', '') or '')
+            if _sp_dir:
+                _mx.save_eval_artifacts(_sp_dir, y, y_, y_one_hot_, _meta)
+                print("Per-record predictions saved to", _sp_dir)
+
         with open(self.args.feat_dir / "metrics.json", "w") as f:
             json.dump(metrics, f, indent=1)
 

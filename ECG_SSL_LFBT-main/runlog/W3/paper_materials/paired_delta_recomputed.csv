@@ -1,0 +1,7 @@
+eval,downstream,pair,d_s0,d_s2,d_s4,mean_pt,sign,all_same_direction,perm_p_1sided_exact,ci95_seed_level_t,n_seeds,source_file,source_git_sha
+lp,cpsc,C2-C1,+2.35,+3.10,+1.46,+2.30,+++,yes,0.125,"[+0.26,+4.34]",3,runlog/W2/confirm_results.csv;runlog/W1/c3_evals.csv,edd9aec
+lp,chapman,C2-C1,-0.02,+0.00,-0.07,-0.03,-0-,no,1.000,"[-0.12,+0.06]",3,runlog/W2/confirm_results.csv;runlog/W1/c3_evals.csv,edd9aec
+lp,ptbxl,C2-C1,-0.10,+1.06,-0.34,+0.21,-+-,no,0.500,"[-1.65,+2.07]",3,runlog/W2/confirm_results.csv;runlog/W1/c3_evals.csv,edd9aec
+ft10,ptbxl,C2-C1,+0.19,+1.38,+0.39,+0.65,+++,yes,0.125,"[-0.93,+2.24]",3,runlog/W2/confirm_results.csv;runlog/W1/c3_evals.csv,edd9aec
+lp,ptbxl,C1-B0,-6.03,-7.32,-4.24,-5.86,---,yes,1.000,"[-9.71,-2.02]",3,runlog/W2/confirm_results.csv;runlog/W1/c3_evals.csv,edd9aec
+ft10,ptbxl,C1-B0,-0.92,-2.28,-1.89,-1.70,---,yes,1.000,"[-3.44,+0.04]",3,runlog/W2/confirm_results.csv;runlog/W1/c3_evals.csv,edd9aec

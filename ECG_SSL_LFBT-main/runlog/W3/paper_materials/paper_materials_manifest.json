@@ -1,0 +1,44 @@
+{
+ "task": "B-1 paper materials recompute",
+ "host": "B(DESKTOP-0PBLCND)",
+ "generated": "edd9aecf73521d9a9e2214f2cb8afd72c39ca898",
+ "inputs": {
+  "runlog/W2/confirm_results.csv": {
+   "blob_sha12": "6b2ad985b37c",
+   "role": "W2 确认矩阵账本(28行)"
+  },
+  "runlog/W1/c3_evals.csv": {
+   "blob_sha12": "6c08b0ae8eeb",
+   "role": "W1 单种子参考读数"
+  },
+  "runlog/W2/missing_lead_c2.csv": {
+   "blob_sha12": "c8c2e7aecc64",
+   "role": "缺导 3seed×37条件"
+  },
+  "runlog/W2/freeze_manifest_v2.json": {
+   "blob_sha12": "9055a5e0db9f",
+   "role": "冻结清单(checkpoint SHA/参数)"
+  },
+  "runlog/W3/failed_directions_index.csv": {
+   "blob_sha12": "63ec41c19bd7",
+   "role": "B-0 失败方向索引"
+  },
+  "head_git_sha": "edd9aecf73521d9a9e2214f2cb8afd72c39ca898"
+ },
+ "methods": {
+  "mean_sd": "seed-level; sd ddof=1, n=1 时 sd=0",
+  "perm_p": "精确符号翻转置换检验, 单侧, n=3 -> 最小 p=1/8=0.125",
+  "ci95": "seed-level t 区间 mean±t(0.975,df=2)*sd/sqrt(3); 非记录级区间",
+  "missing_lead": "drop = cond_auprc - full_auprc (pt), 按 seed 内配对"
+ },
+ "outputs": [
+  "README.md",
+  "failed_directions_table.csv",
+  "main_table_recomputed.csv",
+  "missing_lead_heatmap_data.csv",
+  "missing_lead_summary.csv",
+  "paired_delta_recomputed.csv",
+  "seed_sign_table.csv"
+ ],
+ "statistics_limitation": "W2 无逐记录预测概率, 本目录全部统计为 seed-level; 禁止表述为 patient-level bootstrap 或 '统计显著'"
+}
