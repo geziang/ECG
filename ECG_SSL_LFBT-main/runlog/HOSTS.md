@@ -32,8 +32,8 @@
 | A-1 TRC 插入位置最小消融 | A / Win4090 | ⏸ 待教授确认 | `runlog/W3/trc_insertion/` | 仅 smoke→seed0；不升 seed2/4 |
 | A-2 冻结模型退化评估 | A / Win4090 | 📋 已下发（待 A 回写认领） | `runlog/W3/robustness_*.csv` | 先 smoke；不重训，只复用冻结 checkpoint |
 | A-3 FT20/FT40 标签效率 | A / Win4090 | 💤 可选 | `runlog/W3/label_efficiency.csv` | 需保持既定协议，否则延期 |
-| B-0 冻结材料审计 | B / DESKTOP-0PBLCND | 🏃主机B(09-22 20:40) | `runlog/W3/freeze_audit_hostB.json`、协议说明 | 不改 W2 文件；SHA/行数不符即停 |
-| B-1 统计与图表复算代码 | B / DESKTOP-0PBLCND | 📋 已下发（B-0 后续） | `runlog/W3/paper_materials/` | 只做 seed-level 描述性统计 |
+| B-0 冻结材料审计 | B / DESKTOP-0PBLCND | ✅ 已完成（7793950，ALL PASS） | `runlog/W3/freeze_audit_hostB.json`、`protocol_audit.md`、`failed_directions_index.csv` | 不改 W2 文件；SHA/行数不符即停 |
+| B-1 统计与图表复算代码 | B / DESKTOP-0PBLCND | 🏃主机B(09-22 20:58) | `runlog/W3/paper_materials/` | 只做 seed-level 描述性统计 |
 | B-2 指标/预测保存扩展 | B / DESKTOP-0PBLCND | 📋 已下发（B-0 后续） | `runlog/W3/metrics_schema/` | 先 smoke 与单测，不自动重评 test |
 | B-3 NFH 97 条剔除明细 | B / DESKTOP-0PBLCND | ⏳ 待资料 | `runlog/W3/nfh_exclusion_reconciliation.csv` | 无原始明细不得估算 |
 
@@ -145,3 +145,5 @@
 > 主机A A-0 完成 ✅(09-22 19:50,登记补录 19:58):runlog/W3/freeze_audit.json——11/11 checkpoint SHA 独立重算一致;账本 28 行 0 重复键,git_sha 统一 fb08bc5;seed 符号 CPSC+++/FT10+++;三 manifest 在册;limitation 已注明(无逐记录概率,不得声称 patient-level bootstrap)。基线 cbe70f3。A-1 仍待教授确认。(注:✅行曾因 shell cwd 残留误写入嵌套空目录 ECG_SSL_LFBT-main/ECG_SSL_LFBT-main/,已清理并补录至此;freeze_audit.json 本体路径无误)
 
 > 主机B W3 认领(09-22 20:40):已 pull 至 f10e6fa(含 93f0379 基线)拿到《下一阶段双机任务书-2026-09-22》。**B-0 冻结材料审计** 🏃主机B(09-22 20:40);B-1/B-2 排队跟进,B-3 的 97 条明细本机 W1 制品 `runlog/W1/nfh_manifest.json` 在册、审计后一并交付。W2 结果文件只读;纯 CPU 不占车道。
+
+> 主机B B-0 完成 ✅(09-22 20:58,交付 7793950):freeze_audit_hostB.json **ALL PASS**——21 文件存在/SHA256 在册且 git 工作区=HEAD(W2 只读验证);账本 28 行 0 重复键 git_sha 统一 fb08bc5;ckpt 前缀 28/28 匹配 manifest 全长 SHA;main_table 13 格+paired_delta 6 行独立复算全一致(精确符号翻转 p=0.125 下限、seed-level t(2) CI 复算吻合);W1 c3_evals 与 W2 账本 seed0 读数 7/7 逐位一致;与 A 机 freeze_audit.json 16 位前缀交叉核对一致。protocol_audit.md(11 协议项+8 限制,含置零≠错位、NFH 无患者ID、跨机绝对值不可比);failed_directions_index.csv 54 行(A33/B14/族7,含来源账本与 host 列,双机 Δ 各对本机锚点不拼表)。**B-1** 🏃主机B(09-22 20:58) 接续。(主机B, 09-22 20:58)
