@@ -19,4 +19,5 @@
 - [失败方向索引](../../ECG_SSL_LFBT-main/runlog/W3/failed_directions_index.csv)。
 - [A-2 鲁棒性说明](../../ECG_SSL_LFBT-main/runlog/W3/robustness_README.md)及 `robustness_b0/c1/c2.csv`。
 
-最新提交：`ff1f037`。
+最新主线提交：`044820b`。
+
