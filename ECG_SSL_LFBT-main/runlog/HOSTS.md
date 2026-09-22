@@ -131,3 +131,4 @@
 > 工程事件落账:p102首次尝试40min瞬态崩溃(WDDM显存竞争, b1击杀过渡期), runner自动重试成功; b1弃跑见上。csv已随本提交入库; 代码见 7f421ab 及此前5个提交。(主机B, 09-21 21:50)
 
 > 主机A W3 认领(09-22 19:45):已 pull 至 cbe70f3(含 2c31a2b 基线)拿到《下一阶段双机任务书》。**A-0 冻结复核** 🏃主机A(09-22 19:45);A-1 待教授确认不启动(分支 codex/trc-insertion-ablation@aec79b9 已核验存在);A-2/A-3 第三阶段按需。W2 结果文件只读。
+> 主机A A-0 完成 ✅(09-22 19:50,登记补录 19:58):runlog/W3/freeze_audit.json——11/11 checkpoint SHA 独立重算一致;账本 28 行 0 重复键,git_sha 统一 fb08bc5;seed 符号 CPSC+++/FT10+++;三 manifest 在册;limitation 已注明(无逐记录概率,不得声称 patient-level bootstrap)。基线 cbe70f3。A-1 仍待教授确认。(注:✅行曾因 shell cwd 残留误写入嵌套空目录 ECG_SSL_LFBT-main/ECG_SSL_LFBT-main/,已清理并补录至此;freeze_audit.json 本体路径无误)
