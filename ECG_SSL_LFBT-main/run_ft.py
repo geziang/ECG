@@ -34,6 +34,14 @@ parser.add_argument('--seed', default=0, type=int, metavar='N', help='random see
 parser.add_argument('--trc', default=0, type=int, help='TRC/GRN1D: 与预训练一致')
 parser.add_argument('--blur-pool', default=0, type=int, help='H2: 与预训练一致')
 parser.add_argument('--pool-power', default=0.0, type=float, help='T3: 与预训练一致')
+# ===== W3 B-2 评估扩展(主机B, 默认全关 -> W2 行为与 metrics.json 内容不变) =====
+parser.add_argument('--extended-metrics', default=0, type=int,
+                    help='B-2: 1=metrics.json 附加 per-class AP/Macro-F1/Sens/Spec/ECE/Brier')
+parser.add_argument('--save-predictions', default='', type=str,
+                    help='B-2: 逐记录 y_true/y_pred/y_prob 落盘目录(必须位于 runlog/W3/ 下; 空=不保存)')
+parser.add_argument('--protocol-id', default='', type=str, help='B-2: 协议标识元数据')
+parser.add_argument('--data-manifest-sha', default='', type=str, help='B-2: 数据 manifest SHA256 元数据')
+parser.add_argument('--checkpoint-sha', default='', type=str, help='B-2: checkpoint SHA256 元数据(留空且有 checkpoint 时自动计算)')
 
 
 class FineTuning(object):
@@ -106,6 +114,7 @@ class FineTuning(object):
         auprc = average_precision_score(y_true_s, y_pred_s)
         conf_mat = confusion_matrix(y_true, y_pred)
         self.last_metrics = (auroc, auprc, conf_mat)
+        self.last_pred = (y_true, y_pred, y_pred_s)  # W3 B-2: 暂存逐记录, 供可选扩展使用
         print("Test Performance -----------------------------------------")
         print("AUROC: ", auroc)
         print("AUPRC: ", auprc)
@@ -135,6 +144,31 @@ class FineTuning(object):
         metrics = dict(auroc=float(auroc), auprc=float(auprc), confusion_matrix=conf_mat.tolist(),
                        fraction=self.args.fraction, seed=self.args.seed,
                        checkpoint=str(self.args.checkpoint) if self.args.checkpoint else "random-init")
+
+        # ===== W3 B-2 扩展(默认关闭: 不加参数时 metrics.json 与 W2 逐字节一致) =====
+        if int(getattr(self.args, 'extended_metrics', 0)) or str(getattr(self.args, 'save_predictions', '') or ''):
+            import metrics_ext as _mx
+            _y_true, _y_pred, _y_prob = self.last_pred
+            _meta = {
+                "protocol_id": str(getattr(self.args, 'protocol_id', '') or ''),
+                "data_manifest_sha": str(getattr(self.args, 'data_manifest_sha', '') or ''),
+                "checkpoint": str(self.args.checkpoint) if self.args.checkpoint else "random-init",
+                "checkpoint_sha256": (str(getattr(self.args, 'checkpoint_sha', '') or '')
+                                      or (_mx.sha256_of(self.args.checkpoint)
+                                          if self.args.checkpoint else "")),
+                "eval": "ft", "fraction": self.args.fraction,
+                "num_classes": int(_y_prob.shape[1]), "seed": self.args.seed,
+                "code_sha": "see git",
+            }
+            if int(getattr(self.args, 'extended_metrics', 0)):
+                metrics.update(_mx.compute_all(_y_true, _y_prob))
+                print("Extended metrics: macro_f1=%.4f ece=%.4f brier=%.4f"
+                      % (metrics["macro_f1"], metrics["ece"], metrics["brier_multiclass"]))
+            _sp_dir = str(getattr(self.args, 'save_predictions', '') or '')
+            if _sp_dir:
+                _mx.save_eval_artifacts(_sp_dir, _y_true, _y_pred, _y_prob, _meta)
+                print("Per-record predictions saved to", _sp_dir)
+
         with open(self.args.model_dir / "metrics.json", "w") as f:
             json.dump(metrics, f, indent=1)
 
