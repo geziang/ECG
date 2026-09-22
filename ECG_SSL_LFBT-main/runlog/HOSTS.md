@@ -4,9 +4,9 @@
 >
 > **认领方式**:把对应任务行的状态改为 `🏃<主机名>(开始时间)` 并 commit+push;完成后改为 ✅,并把结果行写入本主机结果文件(§五-3)。
 > **更新纪律**:任务状态每次变化(领取/完成/失败)立即 push;长任务不必频繁汇报,但必须写明预计完成时间。
-> 文档路径:`runlog/HOSTS.md`;最后更新:**2026-09-17 20:55,主机A(Win4090)恢复运行并完成 A-P2 开关实现**。
+> 文档路径:`runlog/HOSTS.md`;最后更新:**2026-09-22 20:05,W3 第二批任务已下发**。
 >
-> **主机A当前状态:🏃 已恢复(20:21)**——laneC=`arb3_base`、laneD=`d7_rec01` 预训练中;`psfull_arb3` 待独占槽位(e006 类实测峰值 ~13G,准入已改独占);laneE 全队列待槽位;FT10×B0 锚点与 H5 特征重抽在 2.5G 轻闸门排队。20:24 曾因准入正则漏计 ar/e006 入口导致 psfull+arb3 并发打爆显存(149MiB 空闲),已根治(正则补漏+e006 独占+run_pt_ar/run_e006 补 6500/12000MiB 自闸门)。
+> **主机A当前状态:🟢 空闲（旧任务已全部完成）**——W3 新批次 A-2 已下发，等待主机 A `git pull --ff-only origin main` 后回写认领；旧 §二/§三 队列仅作历史记录，不得启动。
 >
 > **本轮再分配三原则(2026-09-17 晚,用户指令)**:①台账只按实际情况分配任务,**实现细节(开关/脚本/单测)由各主机自理**;②**总目标 = 尽快拿到至少一个过 3-seed 门的涨点、出成果**,判决线优先于扫描线;③已判死/无判值任务一律清除,机时不许再花。
 >
@@ -18,8 +18,8 @@
 
 | 主机 | 硬件 | 关键环境 | 当前状态 |
 |---|---|---|---|
-| **主机A = `Win4090`**(F:\新实验) | RTX 4090 24G / 32 逻辑核 / 128G RAM,双车道 | Win10,Python 3.10.11,torch 2.0.0+cu118,conda env `DL` | 🏃 三车道+轻任务(20:21 恢复;显存 ~21.5G 含 mimic) |
-| **主机B = `DESKTOP-0PBLCND`**(E:\GZA) | RTX 3080 10G / 16 逻辑核 / 64G RAM,**单车道** | Win10,Python 3.11.9,torch 2.5.1+cu121;数据已校验(含 5 个损坏 .mat 修复);推送走 `ECG-push-tmp` | 🟢 W1任务书执行完毕·机器空闲(7跑1弃全负, 09-21 21:39 队列清空; 终报见文末) |
+| **主机A = `Win4090`**(F:\新实验) | RTX 4090 24G / 32 逻辑核 / 128G RAM,双车道 | Win10,Python 3.10.11,torch 2.0.0+cu118,conda env `DL` | 🟢 空闲；W3 A-2 已下发，待认领 |
+| **主机B = `DESKTOP-0PBLCND`**(E:\GZA) | RTX 3080 10G / 16 逻辑核 / 64G RAM,**单车道** | Win10,Python 3.11.9,torch 2.5.1+cu121;数据已校验(含 5 个损坏 .mat 修复);推送走 `ECG-push-tmp` | 🟢 空闲；W3 B-0→B-1→B-2 已下发，待认领 |
 | 主机C | (待登记) | (待登记) | 🆓 | 
 
 ## 一-A、W2 冻结后的新任务总览（2026-09-22，优先级高于下方历史队列）
@@ -28,20 +28,31 @@
 
 | 任务 | 主机 | 当前状态 | 交付物 | 停止线 |
 |---|---|---|---|---|
-| A-0 冻结哈希与协议复核 | A / Win4090 | 📋 待认领 | `runlog/W3/freeze_audit.json` | 任一 SHA/manifest 不一致即停 |
+| A-0 冻结哈希与协议复核 | A / Win4090 | ✅ 已完成（93f0379） | `runlog/W3/freeze_audit.json` | 11/11 SHA 一致；账本 28 行且无重复 |
 | A-1 TRC 插入位置最小消融 | A / Win4090 | ⏸ 待教授确认 | `runlog/W3/trc_insertion/` | 仅 smoke→seed0；不升 seed2/4 |
-| A-2 冻结模型退化评估 | A / Win4090 | 📋 待认领 | `runlog/W3/robustness_*.csv` | 不重训，只复用冻结 checkpoint |
+| A-2 冻结模型退化评估 | A / Win4090 | 📋 已下发（待 A 回写认领） | `runlog/W3/robustness_*.csv` | 先 smoke；不重训，只复用冻结 checkpoint |
 | A-3 FT20/FT40 标签效率 | A / Win4090 | 💤 可选 | `runlog/W3/label_efficiency.csv` | 需保持既定协议，否则延期 |
-| B-0 冻结材料审计 | B / DESKTOP-0PBLCND | 📋 待认领 | `runlog/W3/freeze_audit_hostB.json`、协议说明 | 不改 W2 文件 |
-| B-1 统计与图表复算代码 | B / DESKTOP-0PBLCND | 📋 待认领 | `runlog/W3/paper_materials/` | 只做 seed-level 描述性统计 |
-| B-2 指标/预测保存扩展 | B / DESKTOP-0PBLCND | 📋 待认领 | `runlog/W3/metrics_schema/` | 先 smoke 与单测，不自动重评 test |
+| B-0 冻结材料审计 | B / DESKTOP-0PBLCND | 📋 已下发（待 B 回写认领） | `runlog/W3/freeze_audit_hostB.json`、协议说明 | 不改 W2 文件；SHA/行数不符即停 |
+| B-1 统计与图表复算代码 | B / DESKTOP-0PBLCND | 📋 已下发（B-0 后续） | `runlog/W3/paper_materials/` | 只做 seed-level 描述性统计 |
+| B-2 指标/预测保存扩展 | B / DESKTOP-0PBLCND | 📋 已下发（B-0 后续） | `runlog/W3/metrics_schema/` | 先 smoke 与单测，不自动重评 test |
 | B-3 NFH 97 条剔除明细 | B / DESKTOP-0PBLCND | ⏳ 待资料 | `runlog/W3/nfh_exclusion_reconciliation.csv` | 无原始明细不得估算 |
 
 认领纪律：先 `git pull --ff-only origin main`，再把本表对应行改为 `🏃<主机>(时间)` 并 push；完成后改 `✅`，附结果路径、代码 SHA、数据/ checkpoint SHA。任何未登记的 GPU 训练均视为禁止。
 
+### W3 第二批重新分配（2026-09-22 20:05）
+
+两台机器旧任务均已完成并空闲；办公机无法直接 SSH，本批次通过本台账下发。A/B 开工前必须执行 `git pull --ff-only origin main`，确认基线为 `93f0379`，再把对应行从“📋已下发”改为“🏃主机名(时间)”并 push。
+
+- **A / Win4090 — A-2 主任务**：只读取 W2 冻结的 B0/C1/C2 encoder 和同一 test split，先做 clean smoke，再做 adjacent lead-swap、连续导联质量衰减、baseline wander、肌电、50/60 Hz 工频（SNR `0/5/10/20 dB`）。固定 clean 线性头，不重训 encoder/分类器，不选择 test 方向；输出 `runlog/W3/robustness_*.csv`，记录模型、seed、扰动、强度、AUROC/AUPRC、clean 相对掉幅及代码/数据/checkpoint SHA。任何 checkpoint/manifest/架构不匹配或 clean smoke 与冻结读数不一致，立即停并写失败记录。
+- **A / Win4090 — A-1**：继续暂停，只有教授明确要求才运行旁路 `off/pre_gap/post_gap` smoke；不得启动长训，post-GAP 不得继承 C2 权重冒充公平结果。
+- **B / DESKTOP-0PBLCND — B-0→B-1→B-2**：B-0 先生成 `freeze_audit_hostB.json`、`protocol_audit.md`、`failed_directions_index.csv`；B-0 通过后 B-1 复算主表、paired delta、mean±SD、seed 符号表、缺导汇总和失败索引到 `runlog/W3/paper_materials/`，不得覆盖 W2；随后 B-2 只做指标 schema/逐记录预测保存的 smoke 与单测，输出 per-class AP、Macro-F1、Sensitivity/Specificity、混淆矩阵、ECE/Brier 和 SHA 元数据接口，禁止自动重评 test。
+- **B-3**：NFH 97 条剔除明细仍待原始记录；没有记录名和排除阶段时只写“待交付”，不得估算。
+
+本批次禁止恢复 D1L、ACL、LGA、Attention、Mixer、JEPA、VICReg、EMA、Sinc、MixUp、HRV、CCM、导联相关矩阵新损失、12 导联恢复、多模态睡眠或任何新预训练扫描。所有新文件只写 `runlog/W3/`，W2 文件只读。
+
 新主机入场四步:①按 §五-6 准备并校验数据;②**先跑本机 B0 锚点**(§五-1 红线);③在上表登记硬件与环境;④按 §四 开展创新方法并在登记表挂号。
 
-## 二、主机A:正在执行(⛔ 其他主机禁止启动)
+## 二、历史队列（已封存，不得启动）
 
 | 任务 | 类型 | 启动 | 预计完成 | 接力来源 |
 |---|---|---|---|---|
