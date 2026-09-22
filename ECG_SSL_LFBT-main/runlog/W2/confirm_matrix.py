@@ -34,9 +34,20 @@ def pt_done(ckdir):
 def ckpt_meta(ckdir):
     try:
         cfg = json.loads((ckdir / "config.json").read_text(encoding="utf-8"))
-        return cfg.get("git_sha", "?"), cfg.get("checkpoint_sha256", "?")
+        sha = cfg.get("git_sha") or _git_sha()
+        return sha, cfg.get("checkpoint_sha256", "?")
     except Exception:
-        return "?", "?"
+        return _git_sha(), "?"
+
+
+def _git_sha():
+    """config.json 无 git_sha 时的兜底: 取当前仓库 HEAD(2026-09-22 补,此前账本行为回填)。"""
+    try:
+        r = subprocess.run(["git", "rev-parse", "--short", "HEAD"],
+                           capture_output=True, text=True, cwd=str(ROOT))
+        return r.stdout.strip() or "?"
+    except Exception:
+        return "?"
 
 
 def row_done(ckpt, seed, eval_t, ds):
