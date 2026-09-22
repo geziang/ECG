@@ -59,7 +59,7 @@
 
 - **筛选矩阵收官**: t3_pow3 3-seed 全负关线(−0.40/−0.10/−0.27pt);A-P2 三线(h2/t3/h1)全部关闭,矩阵 36 数据行,仅剩 b0fast 在跑(其 sinc_M 秒败 bug 已修: fast 路径 __init__ 提前 return 漏初始化);
 - **双 bug 已修并提交**: ①t3 LP 崩溃真根因=run_lp 用 children()[:-1] 绕过 forward 取特征,T3 时 model 末尾无池化 -> PowerPool1d 挂入 model 末尾修复(键集不变,旧 checkpoint 直接加载);②b0fast sinc_M;
-- **W1 任务书已开工(07-下周科研与代码任务书-2026-09-19.md)**: T1 D1L-fix 完成(τ 入对角/PSD/闭合基线逐位一致,分支 w1-code-tasks);T2 ACL 四区完成(Eq10/11 单测全过,同分支);T4 NFH 预处理完成(34,905/34,905,零排除,manifest 在 runlog/W1/);
+- **W1 任务书已开工(报告归档/历史文档/07-下周科研与代码任务书-2026-09-19.md)**: T1 D1L-fix 完成(τ 入对角/PSD/闭合基线逐位一致,分支 w1-code-tasks);T2 ACL 四区完成(Eq10/11 单测全过,同分支);T4 NFH 预处理完成(34,905/34,905,零排除,manifest 在 runlog/W1/);
 - **C1 NFH B0' 手动链在跑**(worktree 运行隔离,100ep matched-updates≈27.3k 步,PT 完自动接 PTB-XL LP 并落 csv);A1/A2/A3 已入 pipeline_queue.yaml,**须待 b0fast 结束、w1-code-tasks 合并 main 后方可由车道执行**(当前 main 的 --d1l 仍是旧错误语义);
 - 主机A红线上新增: ECG_SSL_LFBT-wt1 为 worktree 目录(C1 链运行中,勿动);C1 运行不阻塞 main 树合并,main 树 run_pt 存活时仍禁止合并。
 

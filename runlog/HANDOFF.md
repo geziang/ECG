@@ -40,7 +40,7 @@ LFBT(多导联心电自监督)基线改进:**B0 锚点 LP AUPRC 0.7177 是一切
 | 车道实时日志 | `runlog/M/lane{C,F,G}.out.log`、`runlog/S1/overnight_summary.md` |
 | 任务台账(多主机) | `runlog/HOSTS.md`(§三=主机A任务,§四=主机B,§五=红线) |
 | 队列定义 | `runlog/M/pipeline_queue.yaml` |
-| 完整实验报告(总分总+公式) | 仓库根 `LFBT基线改进实验报告-2026-09-17-完善版.md` |
+| 完整实验报告(总分总+公式) | `报告归档/历史文档/LFBT基线改进实验报告-2026-09-17-完善版.md` |
 | 流水线代码 | `pipeline_runner.py`(闸门/准入/防饿死),入口 `--lane <字母>` |
 
 ## 六、接手后第一句话该做什么
