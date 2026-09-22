@@ -19,7 +19,7 @@
 | 主机 | 硬件 | 关键环境 | 当前状态 |
 |---|---|---|---|
 | **主机A = `Win4090`**(F:\新实验) | RTX 4090 24G / 32 逻辑核 / 128G RAM,双车道 | Win10,Python 3.10.11,torch 2.0.0+cu118,conda env `DL` | 🏃 三车道+轻任务(20:21 恢复;显存 ~21.5G 含 mimic) |
-| **主机B = `DESKTOP-0PBLCND`**(E:\GZA) | RTX 3080 10G / 16 逻辑核 / 64G RAM,**单车道** | Win10,Python 3.11.9,torch 2.5.1+cu121;数据已校验(含 5 个损坏 .mat 修复);推送走 `ECG-push-tmp` | 🏃 W1任务书执行中(A1/A4/B1/B2/B3 队列,09-20 晚启动;T1/T2/T3 已实现,14项单测全过) |
+| **主机B = `DESKTOP-0PBLCND`**(E:\GZA) | RTX 3080 10G / 16 逻辑核 / 64G RAM,**单车道** | Win10,Python 3.11.9,torch 2.5.1+cu121;数据已校验(含 5 个损坏 .mat 修复);推送走 `ECG-push-tmp` | 🟢 W1任务书执行完毕·机器空闲(7跑1弃全负, 09-21 21:39 队列清空; 终报见文末) |
 | 主机C | (待登记) | (待登记) | 🆓 |
 
 新主机入场四步:①按 §五-6 准备并校验数据;②**先跑本机 B0 锚点**(§五-1 红线);③在上表登记硬件与环境;④按 §四 开展创新方法并在登记表挂号。
@@ -80,9 +80,9 @@
 | C1 Sinc 带通前端 | 主机B | 第一层换参数化带通组(--sinc-frontend 16) | ✅ 判负 s0 Δ-0.0271(bands.json已存) | matrix_results_hostB.csv |
 | C3 准周期 MixUp | 主机B | FFT相位对齐后小比例混合(--mixup-prob/--mixup-align) | ✅ 判负 s0: 对齐Δ-0.0169 / 普通Δ-0.0144 双负(配对结论: 对齐无增益, MixUp轴含对齐一并关闭) | matrix_results_hostB.csv |
 | H4 HRV 借口 | 主机B | gqrs R峰->HRV四统计回归辅助头(--hrv-weight) | ✅ 判负 s0 Δ-0.0026(0.1权重下HRV辅助头无增益; 期间R5自愈1次=hrv_head按mask索引, a78e7de) | matrix_results_hostB.csv |
-| A1 D1L-fix 翻案(W1 T1) | 主机B | τ 移到 cross-corr 对角目标, off-diag 恒0; PSD 校验+target_matrix.npy 工件 | 🏃 队列中(09-20) | matrix_results_hostB.csv |
-| A4 ACL 随机分组 NEG(W1 T2) | 主机B | T2 ACL 完整实现(四区+独立projector+Eq10/11), A4=随机分区×3(101/102/103) | 🏃 队列中(09-20) | matrix_results_hostB.csv |
-| B1/B2/B3 重建线(W1 T3) | 主机B | 旧D7归档 / 多段20%两视图 / CCM周期内20%不跨R峰(gqrs缓存) | 🏃 队列中(09-20) | matrix_results_hostB.csv |
+| A1 D1L-fix 翻案(W1 T1) | 主机B | τ 移到 cross-corr 对角目标, off-diag 恒0; PSD 校验+target_matrix.npy 工件 | ✅ 判负 s0 Δ-0.0758(τ对角修正版破坏性强于旧bug; NEG打乱-0.0689≈真实→先验无效, 结构化目标线关闭) | matrix_results_hostB.csv |
+| A4 ACL 随机分组 NEG(W1 T2) | 主机B | T2 ACL 完整实现(四区+独立projector+Eq10/11), A4=随机分区×3(101/102/103) | ✅ 判负三分区全负: p101 -0.0072/p102 -0.0049/p103 -0.0069(符号一致; ACL加性随机分区无增益, 待与主机A A3解剖分区跨机符号对照) | matrix_results_hostB.csv |
+| B1/B2/B3 重建线(W1 T3) | 主机B | 旧D7归档 / 多段20%两视图 / CCM周期内20%不跨R峰(gqrs缓存) | ✅ B3判负-0.0091 / B2噪声-0.0017(周期遮挡劣于多段遮挡, 重建支路中性; B1旧D7弃跑=旧路径未提速~23h, 归档价值低) | matrix_results_hostB.csv |
 
 ## 五、多主机方法学红线(必读,违反=数据作废)
 
@@ -107,3 +107,8 @@
 > 主机B 第二批终报(09-18 19:28):C3配对(对齐-0.0169/普通-0.0144)与 H4(-0.0026)均判负,§四任务书清零;两批六探针Δ全负,均"不动最优"。matrix_results_hostB.csv 与 hostB_auto_report.md 已随本提交入库。机器空闲待分配。
 
 > 主机B W1 启动(09-20 21:30):已 pull 85804dd 拿到《07-下周任务书》,按主机B分工实现 T1(D1L-fix: τ 对角目标/PSD/工件)、T2(models/acl_region.py 四区+独立projector+Eq.10/11, A4 随机分区×3)、T3(data_utils/ccm.py 多段+CCM 两视图独立 mask+masked MSE+梯度比诊断, R峰 gqrs 离线缓存 prep_rpeaks.py)、T0(config 增 git_sha/host/dataset_hash/preprocess_version);tests/test_w1.py **14/14 全过**(含默认关==B0 逐位一致、τ=1 闭合==B0、CCM 不跨 R 峰)。队列 pipeline_queue_hostB.yaml: a1_d1lfix→b3_ccm→a4_rand_p101→b2_multiseg→a1_neg→b1_d7_arch→a4_p102→a4_p103(单车道,每 run ~3.2h,预计 24h 完成前 7 项)。**NFH/Chapman 数据已在本机 E:\GZA\ECG_data**(ningbo 34,905 / chapman 10,247),runlog/prepare_nfh.py 审计+转换脚本已备好(纯 CPU 不占车道),主机A 可直接取用省掉下载与预处理;CPSC2018(icbeb) 本机缺失,待下载补周五跨库评估。
+
+> 主机B W1 终报(09-21 21:50):队列 7 跑 1 弃**全部判负**,无一达 3-seed 门(≥+0.005)。终表(vs 锚点 0.7158):
+> a1_d1lfix -0.0758❌ | a1_d1lfix_neg -0.0689❌ | b3_ccm -0.0091❌ | a4_rand p101/p102/p103 = -0.0072❌/-0.0049≈/-0.0069❌(三分区符号一致) | b2_multiseg -0.0017≈噪声; b1_d7 弃跑(旧路径未提速 ~23h, 归档审计价值低, 工程决策让位)。
+> **机制结论**:① D1L 翻案实验证伪——修正版(τ对角)比旧bug(-0.006)伤害更大, 且打乱先验(-0.0689)≈真实先验(-0.0758)→伤害源于"多数导联对被强制去相关至0"的机制本身, 非先验对错, 结构化跨导目标线关闭; ② B线——多段遮挡(-0.0017)≈中性而周期遮挡(-0.0091)更差→"周期相位保真"假设帮倒忙, 重建支路本身无增益(η=0.1); ③ ACL加性随机分区三分区一致微负→与LGA负结果同向, 待主机A A3(解剖分区)跨机符号对照, 若同为负则ACL加性形式在本基座关闭。"不动最优(B0)"结论进一步加固(累计13个负探针)。
+> 工程事件落账:p102首次尝试40min瞬态崩溃(WDDM显存竞争, b1击杀过渡期), runner自动重试成功; b1弃跑见上。csv已随本提交入库; 代码见 7f421ab 及此前5个提交。(主机B, 09-21 21:50)
