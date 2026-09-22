@@ -132,3 +132,7 @@
 
 > 主机A W3 认领(09-22 19:45):已 pull 至 cbe70f3(含 2c31a2b 基线)拿到《下一阶段双机任务书》。**A-0 冻结复核** 🏃主机A(09-22 19:45);A-1 待教授确认不启动(分支 codex/trc-insertion-ablation@aec79b9 已核验存在);A-2/A-3 第三阶段按需。W2 结果文件只读。
 > 主机A A-0 完成 ✅(09-22 19:50,登记补录 19:58):runlog/W3/freeze_audit.json——11/11 checkpoint SHA 独立重算一致;账本 28 行 0 重复键,git_sha 统一 fb08bc5;seed 符号 CPSC+++/FT10+++;三 manifest 在册;limitation 已注明(无逐记录概率,不得声称 patient-level bootstrap)。基线 cbe70f3。A-1 仍待教授确认。(注:✅行曾因 shell cwd 残留误写入嵌套空目录 ECG_SSL_LFBT-main/ECG_SSL_LFBT-main/,已清理并补录至此;freeze_audit.json 本体路径无误)
+
+> 主机A W3 认领 A-2(09-22 21:40):**A-2 冻结 checkpoint 输入退化评估** 🏃主机A(09-22 21:40)。范围=冻结 B0/C1/C2 + W2 已存 LP/FT10 头,test-time 扰动(baseline wander/EMG/工频50/60Hz @SNR 0/5/10/20dB + 连续质量衰减两轴 + adjacent lead-swap),零重训零新损失;clean 读数须先逐位复现 W2 账本再开扰动。结果 → runlog/W3/robustness_{b0,c1,c2}.csv。A-1 仍待教授确认不动。
+
+> 主机A A-2 完成 ✅(09-22 21:00):runlog/W3/robustness_{b0,c1,c2}.csv(704 行零重复)+robustness_README.md(预注册口径+结果摘要)。clean 复现门 22/22 过(AUROC 4 位一致,AUPRC 3 处 ±0.0001 浮点漂移);零重训零新损失,仅复用冻结 encoder+已存 LP/FT10 头。要点:①NFH 预训练比 B0 抗输入退化,工频最优(ptbxl/LP pl50@20dB:B0 −11.0 vs C1 −5.5/C2 −6.7);②TRC 不改变鲁棒性(C2−C1 差异 ±1.5pt 内方向混合)=C2 没拿鲁棒性换增益;③导联错位敏感度集中 II↔III 与 V1–V3,V4–V6 相邻互换近无损。代码 run_robustness.py(随本提交);评估 git_sha d9490c8。事件:首跑 --stage clean 未隔离扰动落盘致 CSV 重复,已修复清盘重跑,现版本唯一。A-1 仍待教授确认。
