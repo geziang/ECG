@@ -22,7 +22,8 @@
 - [B-2 指标扩展](../../ECG_SSL_LFBT-main/runlog/W3/metrics_schema/SCHEMA.md)：单测 18/18，smoke 通过，默认路径保持兼容。
 - [B-3 NFH 明细](../../ECG_SSL_LFBT-main/runlog/W3/nfh_exclusion_reconciliation.csv)：97/97 条剔除记录确定性复得。
 
-最新主线提交：`5cc2b26`；A-2、B-0、B-1、B-2、B-3 均已有 Git 交付记录。
+最新主线提交：`e21ee51`；A-2、B-0、B-1、B-2、B-3 均已有 Git 交付记录。
+
 
 
 
