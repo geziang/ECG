@@ -19,7 +19,7 @@
 | 主机 | 硬件 | 关键环境 | 当前状态 |
 |---|---|---|---|
 | **主机A = `Win4090`**(F:\新实验) | RTX 4090 24G / 32 逻辑核 / 128G RAM,双车道 | Win10,Python 3.10.11,torch 2.0.0+cu118,conda env `DL` | 🟢 空闲；W3 A-2 已下发，待认领 |
-| **主机B = `DESKTOP-0PBLCND`**(E:\GZA) | RTX 3080 10G / 16 逻辑核 / 64G RAM,**单车道** | Win10,Python 3.11.9,torch 2.5.1+cu121;数据已校验(含 5 个损坏 .mat 修复);推送走 `ECG-push-tmp` | 🟢 空闲；W3 B-0→B-1→B-2 已下发，待认领 |
+| **主机B = `DESKTOP-0PBLCND`**(E:\GZA) | RTX 3080 10G / 16 逻辑核 / 64G RAM,**单车道** | Win10,Python 3.11.9,torch 2.5.1+cu121;数据已校验(含 5 个损坏 .mat 修复);推送走 `ECG-push-tmp` | 🔨 W3 B-0 进行中(09-22 20:40 认领,B-0→B-1→B-2 顺序执行) |
 | 主机C | (待登记) | (待登记) | 🆓 | 
 
 ## 一-A、W2 冻结后的新任务总览（2026-09-22，优先级高于下方历史队列）
@@ -32,7 +32,7 @@
 | A-1 TRC 插入位置最小消融 | A / Win4090 | ⏸ 待教授确认 | `runlog/W3/trc_insertion/` | 仅 smoke→seed0；不升 seed2/4 |
 | A-2 冻结模型退化评估 | A / Win4090 | 📋 已下发（待 A 回写认领） | `runlog/W3/robustness_*.csv` | 先 smoke；不重训，只复用冻结 checkpoint |
 | A-3 FT20/FT40 标签效率 | A / Win4090 | 💤 可选 | `runlog/W3/label_efficiency.csv` | 需保持既定协议，否则延期 |
-| B-0 冻结材料审计 | B / DESKTOP-0PBLCND | 📋 已下发（待 B 回写认领） | `runlog/W3/freeze_audit_hostB.json`、协议说明 | 不改 W2 文件；SHA/行数不符即停 |
+| B-0 冻结材料审计 | B / DESKTOP-0PBLCND | 🏃主机B(09-22 20:40) | `runlog/W3/freeze_audit_hostB.json`、协议说明 | 不改 W2 文件；SHA/行数不符即停 |
 | B-1 统计与图表复算代码 | B / DESKTOP-0PBLCND | 📋 已下发（B-0 后续） | `runlog/W3/paper_materials/` | 只做 seed-level 描述性统计 |
 | B-2 指标/预测保存扩展 | B / DESKTOP-0PBLCND | 📋 已下发（B-0 后续） | `runlog/W3/metrics_schema/` | 先 smoke 与单测，不自动重评 test |
 | B-3 NFH 97 条剔除明细 | B / DESKTOP-0PBLCND | ⏳ 待资料 | `runlog/W3/nfh_exclusion_reconciliation.csv` | 无原始明细不得估算 |
@@ -143,3 +143,5 @@
 
 > 主机A W3 认领(09-22 19:45):已 pull 至 cbe70f3(含 2c31a2b 基线)拿到《下一阶段双机任务书》。**A-0 冻结复核** 🏃主机A(09-22 19:45);A-1 待教授确认不启动(分支 codex/trc-insertion-ablation@aec79b9 已核验存在);A-2/A-3 第三阶段按需。W2 结果文件只读。
 > 主机A A-0 完成 ✅(09-22 19:50,登记补录 19:58):runlog/W3/freeze_audit.json——11/11 checkpoint SHA 独立重算一致;账本 28 行 0 重复键,git_sha 统一 fb08bc5;seed 符号 CPSC+++/FT10+++;三 manifest 在册;limitation 已注明(无逐记录概率,不得声称 patient-level bootstrap)。基线 cbe70f3。A-1 仍待教授确认。(注:✅行曾因 shell cwd 残留误写入嵌套空目录 ECG_SSL_LFBT-main/ECG_SSL_LFBT-main/,已清理并补录至此;freeze_audit.json 本体路径无误)
+
+> 主机B W3 认领(09-22 20:40):已 pull 至 f10e6fa(含 93f0379 基线)拿到《下一阶段双机任务书-2026-09-22》。**B-0 冻结材料审计** 🏃主机B(09-22 20:40);B-1/B-2 排队跟进,B-3 的 97 条明细本机 W1 制品 `runlog/W1/nfh_manifest.json` 在册、审计后一并交付。W2 结果文件只读;纯 CPU 不占车道。
