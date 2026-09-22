@@ -43,9 +43,9 @@
 
 两台机器旧任务均已完成并空闲；办公机无法直接 SSH，本批次通过本台账下发。A/B 开工前必须执行 `git pull --ff-only origin main`，确认基线为 `93f0379`，再把对应行从“📋已下发”改为“🏃主机名(时间)”并 push。
 
-- **A / Win4090 — A-2 主任务**：只读取 W2 冻结的 B0/C1/C2 encoder 和同一 test split，先做 clean smoke，再做 adjacent lead-swap、连续导联质量衰减、baseline wander、肌电、50/60 Hz 工频（SNR `0/5/10/20 dB`）。固定 clean 线性头，不重训 encoder/分类器，不选择 test 方向；输出 `runlog/W3/robustness_*.csv`，记录模型、seed、扰动、强度、AUROC/AUPRC、clean 相对掉幅及代码/数据/checkpoint SHA。任何 checkpoint/manifest/架构不匹配或 clean smoke 与冻结读数不一致，立即停并写失败记录。
+- **A / Win4090 — A-2 主任务**：由 A 机代理实现 `tools/robustness_eval.py` 及最小单测；只读取 W2 冻结的 B0/C1/C2 encoder 和同一 test split，先做 clean smoke，再做 adjacent lead-swap、连续导联质量衰减、baseline wander、肌电、50/60 Hz 工频（SNR `0/5/10/20 dB`）。固定 clean 线性头，不重训 encoder/分类器，不选择 test 方向；输出 `runlog/W3/robustness_*.csv`，记录模型、seed、扰动、强度、AUROC/AUPRC、clean 相对掉幅及代码/数据/checkpoint SHA。任何 checkpoint/manifest/架构不匹配或 clean smoke 与冻结读数不一致，立即停并写失败记录。
 - **A / Win4090 — A-1**：继续暂停，只有教授明确要求才运行旁路 `off/pre_gap/post_gap` smoke；不得启动长训，post-GAP 不得继承 C2 权重冒充公平结果。
-- **B / DESKTOP-0PBLCND — B-0→B-1→B-2**：B-0 先生成 `freeze_audit_hostB.json`、`protocol_audit.md`、`failed_directions_index.csv`；B-0 通过后 B-1 复算主表、paired delta、mean±SD、seed 符号表、缺导汇总和失败索引到 `runlog/W3/paper_materials/`，不得覆盖 W2；随后 B-2 只做指标 schema/逐记录预测保存的 smoke 与单测，输出 per-class AP、Macro-F1、Sensitivity/Specificity、混淆矩阵、ECE/Brier 和 SHA 元数据接口，禁止自动重评 test。
+- **B / DESKTOP-0PBLCND — B-0→B-1→B-2**：由 B 机代理实现审计与复算脚本。B-0 先生成 `freeze_audit_hostB.json`、`protocol_audit.md`、`failed_directions_index.csv`；B-0 通过后 B-1 复算主表、paired delta、mean±SD、seed 符号表、缺导汇总和失败索引到 `runlog/W3/paper_materials/`，不得覆盖 W2；随后 B-2 只做指标 schema/逐记录预测保存的 smoke 与单测，输出 per-class AP、Macro-F1、Sensitivity/Specificity、混淆矩阵、ECE/Brier 和 SHA 元数据接口，禁止自动重评 test。
 - **B-3**：NFH 97 条剔除明细仍待原始记录；没有记录名和排除阶段时只写“待交付”，不得估算。
 
 本批次禁止恢复 D1L、ACL、LGA、Attention、Mixer、JEPA、VICReg、EMA、Sinc、MixUp、HRV、CCM、导联相关矩阵新损失、12 导联恢复、多模态睡眠或任何新预训练扫描。所有新文件只写 `runlog/W3/`，W2 文件只读。
