@@ -1,0 +1,798 @@
+{
+ "task": "B-0 freeze material audit (git-side, CPU-only, read-only)",
+ "host": "B(DESKTOP-0PBLCND)",
+ "date": "2026-09-22",
+ "audit_head_git_sha": "3e58eb18f5bc8296d5e6dda7e2fafd194c4ee969",
+ "runs_code_sha_declared": "fb08bc5",
+ "files": {
+  "runlog/W2/confirm_matrix.py": {
+   "exists": true,
+   "bytes": 7182,
+   "sha256": "3a71f77312bcc88ae2ed182a846b13670265086982131a48e4b638d6b8224c8c"
+  },
+  "runlog/W2/confirm_results.csv": {
+   "exists": true,
+   "bytes": 1826,
+   "sha256": "e728178c5b7412ed02b36c4225cdba70f6a90077b4a723126c6d4d5dd25da19c"
+  },
+  "runlog/W2/freeze_manifest_v2.json": {
+   "exists": true,
+   "bytes": 2802,
+   "sha256": "7a1697c0be4779fe9b5ef0ddd11f1aee6a809f97d3ce9a0735e4b3da8b0e265e"
+  },
+  "runlog/W2/missing_lead_c2.csv": {
+   "exists": true,
+   "bytes": 2657,
+   "sha256": "40166d85cdb4fa5056cc6b980f54f4c860e27ff98b3a679cd300e2efa25eb4ca"
+  },
+  "runlog/W2/missing_lead_c2_sweep.py": {
+   "exists": true,
+   "bytes": 3012,
+   "sha256": "71c7bf554dafbe23852b232fadd32bf91a0cdbc71d003eab937fd20906675409"
+  },
+  "runlog/W2/nfh_manifest_reconciliation.md": {
+   "exists": true,
+   "bytes": 2487,
+   "sha256": "bf6d1f5bb80d976de224a2c66e4b983a05f353320e19be5692f6d0bb5844b516"
+  },
+  "runlog/W2/stats/main_table.csv": {
+   "exists": true,
+   "bytes": 629,
+   "sha256": "366fa1c4647c21dfb49a049ac1106fccce1c348b91515feb4feac2693e632620"
+  },
+  "runlog/W2/stats/paired_delta.csv": {
+   "exists": true,
+   "bytes": 449,
+   "sha256": "de20caec3ae7ed3c1dde025e08fbc6f6694082e0666436b390498acecd0c84d7"
+  },
+  "runlog/W2/paper/missing_lead_heatmap.png": {
+   "exists": true,
+   "bytes": 319852,
+   "sha256": "8fc5afe59ce9bda699ca6288b5df54469fb4c6f9fe5a79ed3d534ccdf94a9da2"
+  },
+  "runlog/W2/paper/pipeline_c1c2.png": {
+   "exists": true,
+   "bytes": 307045,
+   "sha256": "f686f9179993aeedecafa18a1a854eb761bdb71eb9beb6e3edbb2799aead9f19"
+  },
+  "runlog/W3/freeze_audit.json": {
+   "exists": true,
+   "bytes": 2781,
+   "sha256": "e27edf5d85c1bb18ecf5967cffad315220181beab276ee5ceee13cd29a2657b5"
+  },
+  "runlog/W1/c3_evals.csv": {
+   "exists": true,
+   "bytes": 418,
+   "sha256": "1826b4ff109fc62fc86b1ed792af0c8130b3b122c12d061f22e5d42e6af5c58f"
+  },
+  "runlog/W1/freeze_manifest.json": {
+   "exists": true,
+   "bytes": 887,
+   "sha256": "93892ec618d2fcc753f3cf2a40026d213d105c06a2583e87baf35819f9c7e1ed"
+  },
+  "runlog/W1/nfh_manifest.json": {
+   "exists": true,
+   "bytes": 1101,
+   "sha256": "983291e6ce9e84d5b32e9652f3cd8433327d7b02d9a3171d7f8995a5061c4aeb"
+  },
+  "runlog/W1/cpsc_manifest.json": {
+   "exists": true,
+   "bytes": 967,
+   "sha256": "afb89d5778b7f60c16e835c4c0bfa1ef799bb6aef3413b7048106dfa4e13a50c"
+  },
+  "runlog/W1/chapman_manifest.json": {
+   "exists": true,
+   "bytes": 642,
+   "sha256": "4010ab740e12662ab225cd80b389a8f65fc3585fe5af2ab92ab81989ef8258e4"
+  },
+  "runlog/W1/nfh_sha256.txt": {
+   "exists": true,
+   "bytes": 2617875,
+   "sha256": "30325a61ab653a7579987ab610a34cc524c5626886d8307a7280a89ebfaafb9f"
+  },
+  "runlog/W1/missing_lead_curves.csv": {
+   "exists": true,
+   "bytes": 2371,
+   "sha256": "235a7ee3311cafe8c419704981b01e92171b0de13dee7507abba1f3e9ad2e9eb"
+  },
+  "runlog/M/matrix_results.csv": {
+   "exists": true,
+   "bytes": 3046,
+   "sha256": "8c0ade7ecf554804f9fd0aed38f96a7fe3b3d48471cbc29d60b0f59fdf990f43"
+  },
+  "runlog/M/matrix_results_hostB.csv": {
+   "exists": true,
+   "bytes": 1273,
+   "sha256": "283d61e122d1bece9b74b5bdd80dc51ac2f7493c21989b8311028402f4a27447"
+  }
+ },
+ "git_frozen_track": {
+  "runlog/W2/confirm_matrix.py": {
+   "tracked": false
+  },
+  "runlog/W2/confirm_results.csv": {
+   "tracked": false
+  },
+  "runlog/W2/freeze_manifest_v2.json": {
+   "tracked": false
+  },
+  "runlog/W2/missing_lead_c2.csv": {
+   "tracked": false
+  },
+  "runlog/W2/missing_lead_c2_sweep.py": {
+   "tracked": false
+  },
+  "runlog/W2/nfh_manifest_reconciliation.md": {
+   "tracked": false
+  },
+  "runlog/W2/stats/main_table.csv": {
+   "tracked": false
+  },
+  "runlog/W2/stats/paired_delta.csv": {
+   "tracked": false
+  },
+  "runlog/W2/paper/missing_lead_heatmap.png": {
+   "tracked": false
+  },
+  "runlog/W2/paper/pipeline_c1c2.png": {
+   "tracked": false
+  },
+  "runlog/W3/freeze_audit.json": {
+   "tracked": false
+  },
+  "runlog/W1/c3_evals.csv": {
+   "tracked": false
+  },
+  "runlog/W1/freeze_manifest.json": {
+   "tracked": false
+  },
+  "runlog/W1/nfh_manifest.json": {
+   "tracked": false
+  },
+  "runlog/W1/cpsc_manifest.json": {
+   "tracked": false
+  },
+  "runlog/W1/chapman_manifest.json": {
+   "tracked": false
+  },
+  "runlog/W1/nfh_sha256.txt": {
+   "tracked": false
+  },
+  "runlog/W1/missing_lead_curves.csv": {
+   "tracked": false
+  },
+  "runlog/M/matrix_results.csv": {
+   "tracked": false
+  },
+  "runlog/M/matrix_results_hostB.csv": {
+   "tracked": false
+  }
+ },
+ "ledger": {
+  "path": "runlog/W2/confirm_results.csv",
+  "rows": 28,
+  "rows_expect_28": {
+   "ok": true,
+   "detail": "got 28"
+  },
+  "dup_keys": [],
+  "dup_keys_zero": {
+   "ok": true,
+   "detail": "[]"
+  },
+  "git_sha_values": [
+   "fb08bc5"
+  ],
+  "git_sha_uniform_fb08bc5": {
+   "ok": true,
+   "detail": "['fb08bc5'] vs fb08bc5"
+  },
+  "ts_monotonic": {
+   "ok": true,
+   "detail": "ts not monotonic"
+  },
+  "checkpoint_sha_prefix_all_match": {
+   "ok": true,
+   "detail": ""
+  }
+ },
+ "checkpoint_prefix_vs_manifest": {
+  "b0_s2_ft10_ptbxl": {
+   "ledger_prefix": "f39059a4430c",
+   "manifest": "b0_seed2",
+   "match": true
+  },
+  "b0_s4_ft10_ptbxl": {
+   "ledger_prefix": "ba4f2d3c99af",
+   "manifest": "b0_seed4",
+   "match": true
+  },
+  "b0_s2_lp_ptbxl": {
+   "ledger_prefix": "f39059a4430c",
+   "manifest": "b0_seed2",
+   "match": true
+  },
+  "b0_s4_lp_ptbxl": {
+   "ledger_prefix": "ba4f2d3c99af",
+   "manifest": "b0_seed4",
+   "match": true
+  },
+  "c2_s0_lp_cpsc": {
+   "ledger_prefix": "af242a89c340",
+   "manifest": "c2_seed0",
+   "match": true
+  },
+  "c1_s0_lp_cpsc": {
+   "ledger_prefix": "de0c28eedb30",
+   "manifest": "c1_seed0",
+   "match": true
+  },
+  "c1_s2_lp_cpsc": {
+   "ledger_prefix": "26ebf0e26e5a",
+   "manifest": "c1_seed2",
+   "match": true
+  },
+  "c2_s2_lp_cpsc": {
+   "ledger_prefix": "d3f8979f70cd",
+   "manifest": "c2_seed2",
+   "match": true
+  },
+  "c1_s4_lp_cpsc": {
+   "ledger_prefix": "e599dbcdb693",
+   "manifest": "c1_seed4",
+   "match": true
+  },
+  "c2_s4_lp_cpsc": {
+   "ledger_prefix": "5979f2301720",
+   "manifest": "c2_seed4",
+   "match": true
+  },
+  "c1_s0_ft10_ptbxl": {
+   "ledger_prefix": "de0c28eedb30",
+   "manifest": "c1_seed0",
+   "match": true
+  },
+  "c2_s0_ft10_ptbxl": {
+   "ledger_prefix": "af242a89c340",
+   "manifest": "c2_seed0",
+   "match": true
+  },
+  "c1_s2_ft10_ptbxl": {
+   "ledger_prefix": "26ebf0e26e5a",
+   "manifest": "c1_seed2",
+   "match": true
+  },
+  "c2_s2_ft10_ptbxl": {
+   "ledger_prefix": "d3f8979f70cd",
+   "manifest": "c2_seed2",
+   "match": true
+  },
+  "c1_s4_ft10_ptbxl": {
+   "ledger_prefix": "e599dbcdb693",
+   "manifest": "c1_seed4",
+   "match": true
+  },
+  "c2_s4_ft10_ptbxl": {
+   "ledger_prefix": "5979f2301720",
+   "manifest": "c2_seed4",
+   "match": true
+  },
+  "c2_s0_lp_ptbxl": {
+   "ledger_prefix": "af242a89c340",
+   "manifest": "c2_seed0",
+   "match": true
+  },
+  "c1_s0_lp_ptbxl": {
+   "ledger_prefix": "de0c28eedb30",
+   "manifest": "c1_seed0",
+   "match": true
+  },
+  "c1_s2_lp_ptbxl": {
+   "ledger_prefix": "26ebf0e26e5a",
+   "manifest": "c1_seed2",
+   "match": true
+  },
+  "c2_s2_lp_ptbxl": {
+   "ledger_prefix": "d3f8979f70cd",
+   "manifest": "c2_seed2",
+   "match": true
+  },
+  "c1_s4_lp_ptbxl": {
+   "ledger_prefix": "e599dbcdb693",
+   "manifest": "c1_seed4",
+   "match": true
+  },
+  "c2_s4_lp_ptbxl": {
+   "ledger_prefix": "5979f2301720",
+   "manifest": "c2_seed4",
+   "match": true
+  },
+  "c2_s0_lp_chapman": {
+   "ledger_prefix": "af242a89c340",
+   "manifest": "c2_seed0",
+   "match": true
+  },
+  "c1_s0_lp_chapman": {
+   "ledger_prefix": "de0c28eedb30",
+   "manifest": "c1_seed0",
+   "match": true
+  },
+  "c2_s2_lp_chapman": {
+   "ledger_prefix": "d3f8979f70cd",
+   "manifest": "c2_seed2",
+   "match": true
+  },
+  "c1_s2_lp_chapman": {
+   "ledger_prefix": "26ebf0e26e5a",
+   "manifest": "c1_seed2",
+   "match": true
+  },
+  "c1_s4_lp_chapman": {
+   "ledger_prefix": "e599dbcdb693",
+   "manifest": "c1_seed4",
+   "match": true
+  },
+  "c2_s4_lp_chapman": {
+   "ledger_prefix": "5979f2301720",
+   "manifest": "c2_seed4",
+   "match": true
+  }
+ },
+ "manifest_internal": {
+  "c2_seed0_sha_equals_w1_c2_nfh_seed0": {
+   "ok": true,
+   "detail": ""
+  },
+  "trc_1024_over_635304_pct": 0.1612,
+  "trc_share_pct_claim_0.161": {
+   "ok": true,
+   "detail": ""
+  },
+  "trc_param_count_128x8": {
+   "ok": true,
+   "detail": ""
+  },
+  "w1_anchor_shas_in_v2": {
+   "b0_anchor(W1)": {
+    "ok": true,
+    "detail": ""
+   },
+   "c1_nfh_seed0(W1)": {
+    "ok": true,
+    "detail": ""
+   },
+   "c2_nfh_seed0(W1)": {
+    "ok": true,
+    "detail": ""
+   }
+  },
+  "note_checkpoints_params_total_zero": "manifest checkpoints.*.params_total=0 为登记缺口(参数量在 params 块: c2_total=635304/c1_total=634280); 不影响 SHA 一致性判定"
+ },
+ "w1_w2_bit_identical_reads": {
+  "c1_lp_ptbxl_s0": {
+   "w2_ledger": "0.6574",
+   "w1_c3_evals": "0.6574",
+   "bit_identical": true
+  },
+  "c1_lp_cpsc_s0": {
+   "w2_ledger": "0.7857",
+   "w1_c3_evals": "0.7857",
+   "bit_identical": true
+  },
+  "c1_lp_chapman_s0": {
+   "w2_ledger": "0.9891",
+   "w1_c3_evals": "0.9891",
+   "bit_identical": true
+  },
+  "c2_lp_ptbxl_s0": {
+   "w2_ledger": "0.6564",
+   "w1_c3_evals": "0.6564",
+   "bit_identical": true
+  },
+  "c2_lp_cpsc_s0": {
+   "w2_ledger": "0.8092",
+   "w1_c3_evals": "0.8092",
+   "bit_identical": true
+  },
+  "c2_lp_chapman_s0": {
+   "w2_ledger": "0.9889",
+   "w1_c3_evals": "0.9889",
+   "bit_identical": true
+  },
+  "c1_ft10_ptbxl_s0": {
+   "w2_ledger": "0.6341",
+   "w1_c3_evals": "0.6341",
+   "bit_identical": true
+  }
+ },
+ "stats_recompute": {
+  "main_table": {
+   "rows": [
+    {
+     "cell": "lp/cpsc/b0",
+     "recomputed": {
+      "n": 1,
+      "mean": 0.8105,
+      "sd": 0.0,
+      "per_seed": "0.8105"
+     },
+     "frozen": {
+      "n": 1,
+      "mean": 0.8105,
+      "sd": 0.0,
+      "per_seed": "0.8105"
+     },
+     "match": true
+    },
+    {
+     "cell": "lp/cpsc/c1",
+     "recomputed": {
+      "n": 3,
+      "mean": 0.7823,
+      "sd": 0.0102,
+      "per_seed": "0.7857/0.7708/0.7904"
+     },
+     "frozen": {
+      "n": 3,
+      "mean": 0.7823,
+      "sd": 0.0102,
+      "per_seed": "0.7857/0.7708/0.7904"
+     },
+     "match": true
+    },
+    {
+     "cell": "lp/cpsc/c2",
+     "recomputed": {
+      "n": 3,
+      "mean": 0.8053,
+      "sd": 0.0037,
+      "per_seed": "0.8092/0.8018/0.8050"
+     },
+     "frozen": {
+      "n": 3,
+      "mean": 0.8053,
+      "sd": 0.0037,
+      "per_seed": "0.8092/0.8018/0.8050"
+     },
+     "match": true
+    },
+    {
+     "cell": "lp/chapman/b0",
+     "recomputed": {
+      "n": 1,
+      "mean": 0.9796,
+      "sd": 0.0,
+      "per_seed": "0.9796"
+     },
+     "frozen": {
+      "n": 1,
+      "mean": 0.9796,
+      "sd": 0.0,
+      "per_seed": "0.9796"
+     },
+     "match": true
+    },
+    {
+     "cell": "lp/chapman/c1",
+     "recomputed": {
+      "n": 3,
+      "mean": 0.9889,
+      "sd": 0.0002,
+      "per_seed": "0.9891/0.9888/0.9888"
+     },
+     "frozen": {
+      "n": 3,
+      "mean": 0.9889,
+      "sd": 0.0002,
+      "per_seed": "0.9891/0.9888/0.9888"
+     },
+     "match": true
+    },
+    {
+     "cell": "lp/chapman/c2",
+     "recomputed": {
+      "n": 3,
+      "mean": 0.9886,
+      "sd": 0.0004,
+      "per_seed": "0.9889/0.9888/0.9881"
+     },
+     "frozen": {
+      "n": 3,
+      "mean": 0.9886,
+      "sd": 0.0004,
+      "per_seed": "0.9889/0.9888/0.9881"
+     },
+     "match": true
+    },
+    {
+     "cell": "lp/ptbxl/b0",
+     "recomputed": {
+      "n": 3,
+      "mean": 0.7119,
+      "sd": 0.0073,
+      "per_seed": "0.7177/0.7144/0.7037"
+     },
+     "frozen": {
+      "n": 3,
+      "mean": 0.7119,
+      "sd": 0.0073,
+      "per_seed": "0.7177/0.7144/0.7037"
+     },
+     "match": true
+    },
+    {
+     "cell": "lp/ptbxl/c1",
+     "recomputed": {
+      "n": 3,
+      "mean": 0.6533,
+      "sd": 0.0107,
+      "per_seed": "0.6574/0.6412/0.6613"
+     },
+     "frozen": {
+      "n": 3,
+      "mean": 0.6533,
+      "sd": 0.0107,
+      "per_seed": "0.6574/0.6412/0.6613"
+     },
+     "match": true
+    },
+    {
+     "cell": "lp/ptbxl/c2",
+     "recomputed": {
+      "n": 3,
+      "mean": 0.6554,
+      "sd": 0.0032,
+      "per_seed": "0.6564/0.6518/0.6579"
+     },
+     "frozen": {
+      "n": 3,
+      "mean": 0.6554,
+      "sd": 0.0032,
+      "per_seed": "0.6564/0.6518/0.6579"
+     },
+     "match": true
+    },
+    {
+     "cell": "ft10/ptbxl/b0",
+     "recomputed": {
+      "n": 3,
+      "mean": 0.6449,
+      "sd": 0.0022,
+      "per_seed": "0.6433/0.6474/0.6440"
+     },
+     "frozen": {
+      "n": 3,
+      "mean": 0.6449,
+      "sd": 0.0022,
+      "per_seed": "0.6433/0.6474/0.6440"
+     },
+     "match": true
+    },
+    {
+     "cell": "ft10/ptbxl/c1",
+     "recomputed": {
+      "n": 3,
+      "mean": 0.6279,
+      "sd": 0.0053,
+      "per_seed": "0.6341/0.6246/0.6251"
+     },
+     "frozen": {
+      "n": 3,
+      "mean": 0.6279,
+      "sd": 0.0053,
+      "per_seed": "0.6341/0.6246/0.6251"
+     },
+     "match": true
+    },
+    {
+     "cell": "ft10/ptbxl/c2",
+     "recomputed": {
+      "n": 3,
+      "mean": 0.6345,
+      "sd": 0.0049,
+      "per_seed": "0.6360/0.6384/0.6290"
+     },
+     "frozen": {
+      "n": 3,
+      "mean": 0.6345,
+      "sd": 0.0049,
+      "per_seed": "0.6360/0.6384/0.6290"
+     },
+     "match": true
+    }
+   ],
+   "all_match": true
+  },
+  "paired_delta": {
+   "rows": [
+    {
+     "pair": "lp/cpsc/C2-C1",
+     "recomputed": {
+      "d_s0": "+2.35",
+      "d_s2": "+3.10",
+      "d_s4": "+1.46",
+      "mean_pt": "+2.30",
+      "sign": "+++",
+      "perm_p": "0.125",
+      "ci_lo": "+0.26",
+      "ci_hi": "+4.34"
+     },
+     "frozen": {
+      "d_s0": "+2.35",
+      "d_s2": "+3.10",
+      "d_s4": "+1.46",
+      "mean_pt": "+2.30",
+      "sign": "+++",
+      "perm_p": "0.125"
+     },
+     "match": true
+    },
+    {
+     "pair": "lp/chapman/C2-C1",
+     "recomputed": {
+      "d_s0": "-0.02",
+      "d_s2": "+0.00",
+      "d_s4": "-0.07",
+      "mean_pt": "-0.03",
+      "sign": "-0-",
+      "perm_p": "1.000",
+      "ci_lo": "-0.12",
+      "ci_hi": "+0.06"
+     },
+     "frozen": {
+      "d_s0": "-0.02",
+      "d_s2": "+0.00",
+      "d_s4": "-0.07",
+      "mean_pt": "-0.03",
+      "sign": "-0-",
+      "perm_p": "1.000"
+     },
+     "match": true
+    },
+    {
+     "pair": "lp/ptbxl/C2-C1",
+     "recomputed": {
+      "d_s0": "-0.10",
+      "d_s2": "+1.06",
+      "d_s4": "-0.34",
+      "mean_pt": "+0.21",
+      "sign": "-+-",
+      "perm_p": "0.500",
+      "ci_lo": "-1.65",
+      "ci_hi": "+2.07"
+     },
+     "frozen": {
+      "d_s0": "-0.10",
+      "d_s2": "+1.06",
+      "d_s4": "-0.34",
+      "mean_pt": "+0.21",
+      "sign": "-+-",
+      "perm_p": "0.500"
+     },
+     "match": true
+    },
+    {
+     "pair": "lp/ptbxl/C1-B0",
+     "recomputed": {
+      "d_s0": "-6.03",
+      "d_s2": "-7.32",
+      "d_s4": "-4.24",
+      "mean_pt": "-5.86",
+      "sign": "---",
+      "perm_p": "1.000",
+      "ci_lo": "-9.71",
+      "ci_hi": "-2.02"
+     },
+     "frozen": {
+      "d_s0": "-6.03",
+      "d_s2": "-7.32",
+      "d_s4": "-4.24",
+      "mean_pt": "-5.86",
+      "sign": "---",
+      "perm_p": "1.000"
+     },
+     "match": true
+    },
+    {
+     "pair": "ft10/ptbxl/C2-C1",
+     "recomputed": {
+      "d_s0": "+0.19",
+      "d_s2": "+1.38",
+      "d_s4": "+0.39",
+      "mean_pt": "+0.65",
+      "sign": "+++",
+      "perm_p": "0.125",
+      "ci_lo": "-0.93",
+      "ci_hi": "+2.24"
+     },
+     "frozen": {
+      "d_s0": "+0.19",
+      "d_s2": "+1.38",
+      "d_s4": "+0.39",
+      "mean_pt": "+0.65",
+      "sign": "+++",
+      "perm_p": "0.125"
+     },
+     "match": true
+    },
+    {
+     "pair": "ft10/ptbxl/C1-B0",
+     "recomputed": {
+      "d_s0": "-0.92",
+      "d_s2": "-2.28",
+      "d_s4": "-1.89",
+      "mean_pt": "-1.70",
+      "sign": "---",
+      "perm_p": "1.000",
+      "ci_lo": "-3.44",
+      "ci_hi": "+0.04"
+     },
+     "frozen": {
+      "d_s0": "-0.92",
+      "d_s2": "-2.28",
+      "d_s4": "-1.89",
+      "mean_pt": "-1.70",
+      "sign": "---",
+      "perm_p": "1.000"
+     },
+     "match": true
+    }
+   ],
+   "all_match": true
+  },
+  "headline": {
+   "cpsc_lp_c2_minus_c1_mean_pt": "+2.30",
+   "cpsc_lp_sign": "+++",
+   "ft10_ptbxl_c2_minus_c1_mean_pt": "+0.65",
+   "ft10_sign": "+++",
+   "perm_p_method": "exact sign-flip permutation, one-sided, n=3 (2^-3=0.125 floor)",
+   "ci_method": "t(0.975,df=2)=4.3027 * sd(ddof=1)/sqrt(3)"
+  }
+ },
+ "cross_check_hostA_freeze_audit": {
+  "a_all_match": true,
+  "a_ledger_rows": 28,
+  "a_dup_keys": 0,
+  "prefix16_are_prefix_of_manifest": {
+   "b0_anchor(W1)": true,
+   "c1_nfh_seed0(W1)": true,
+   "c2_nfh_seed0(W1)": true,
+   "c1_seed0": true,
+   "c1_seed2": true,
+   "c1_seed4": true,
+   "c2_seed0": true,
+   "c2_seed2": true,
+   "c2_seed4": true,
+   "b0_seed2": true,
+   "b0_seed4": true
+  },
+  "signs_agree_with_B_recompute": {
+   "ok": true,
+   "detail": ""
+  }
+ },
+ "data_manifests_and_missing_lead": {
+  "nfh_manifest_n_ok": 34905,
+  "nfh_manifest_preprocess_version": "nfh-v1",
+  "missing_lead_c2_rows": 111,
+  "missing_lead_c2_rows_expect_111": {
+   "ok": true,
+   "detail": "got 111"
+  },
+  "missing_lead_full_matches_ledger_s0124": {
+   "ok": true,
+   "detail": ""
+  },
+  "cpsc_manifest_exists": true,
+  "chapman_manifest_exists": true
+ },
+ "all_pass": true,
+ "failures": [],
+ "limitations": [
+  "B 侧无 checkpoint 本体(在主机A), SHA 复核采用 git 冻结材料内一致性+前缀匹配;字节级独立重算以主机A freeze_audit.json(11/11)为准",
+  "W2 未保存逐记录预测概率 -> 仅 seed-level 描述统计+精确置换, 不得声称 patient-level bootstrap",
+  "b0 的 CPSC/Chapman 为 W1 单seed参考列(n_seeds=1, 无 SD)",
+  "绝对 AUPRC 跨机不可比(历史差 0.8~1.0pt); 跨机只比方向与符号",
+  "NFH 无患者ID(记录内容 SHA 查重替代); CPSC/Chapman record-level split"
+ ]
+}
