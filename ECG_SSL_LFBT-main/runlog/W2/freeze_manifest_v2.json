@@ -1,0 +1,91 @@
+{
+ "date": "2026-09-22",
+ "code_sha_at_runs": "fb08bc5",
+ "note": "W2 确认矩阵 8 checkpoint + W1 历史锚点; 账本=runlog/W2/confirm_results.csv(git_sha 回填 fb08bc5)",
+ "checkpoints": {
+  "b0_anchor(W1)": {
+   "sha256": "026033d532d4e42a1b53ca9c4d2e95f9c09b2daaaab5c9041c9d474a1356cdad",
+   "bytes": 2967917,
+   "params_total": 0,
+   "params_trc_like": 0
+  },
+  "c1_nfh_seed0(W1)": {
+   "sha256": "237f0607f62df54879977a6a2967c617628a4357eabdf74b50543faeb3b694e2",
+   "bytes": 2964866,
+   "params_total": 0,
+   "params_trc_like": 0
+  },
+  "c2_nfh_seed0(W1)": {
+   "sha256": "af242a89c340969fd57e70349e4b88e4bf6725c5586f5c12d62a96a199ed9524",
+   "bytes": 2978082,
+   "params_total": 0,
+   "params_trc_like": 0
+  },
+  "c1_seed0": {
+   "sha256": "de0c28eedb30841492c36644ad1d06e11aab7bb02bbb5b42ff5d18524a5bc177",
+   "bytes": 2964930,
+   "params_total": 0,
+   "params_trc_like": 0
+  },
+  "c1_seed2": {
+   "sha256": "26ebf0e26e5abee04f4064182d79e449e3c849693979162577171717cb2b7787",
+   "bytes": 2964930,
+   "params_total": 0,
+   "params_trc_like": 0
+  },
+  "c1_seed4": {
+   "sha256": "e599dbcdb69372186c3b49b0d0ced3389e2c909a458d86a8413a58524e31715e",
+   "bytes": 2964930,
+   "params_total": 0,
+   "params_trc_like": 0
+  },
+  "c2_seed0": {
+   "sha256": "af242a89c340969fd57e70349e4b88e4bf6725c5586f5c12d62a96a199ed9524",
+   "bytes": 2978082,
+   "params_total": 0,
+   "params_trc_like": 0
+  },
+  "c2_seed2": {
+   "sha256": "d3f8979f70cdce3da7eefa320f72d98ba5a975a5ea4141605fbf52ce34de5666",
+   "bytes": 2978082,
+   "params_total": 0,
+   "params_trc_like": 0
+  },
+  "c2_seed4": {
+   "sha256": "5979f230172000c51b9de93fc6d96d675c844841610f0b71cbb0c8e0147c982d",
+   "bytes": 2978082,
+   "params_total": 0,
+   "params_trc_like": 0
+  },
+  "b0_seed2": {
+   "sha256": "f39059a4430c2e7aa8963ca3c75b608120452f517622862fb3a73a7dc95d26a4",
+   "bytes": 2964930,
+   "params_total": 0,
+   "params_trc_like": 0
+  },
+  "b0_seed4": {
+   "sha256": "ba4f2d3c99aff6b5889dae4ebdd1103b8949e2d1f8fcadd28d0a5df8b91c0daa",
+   "bytes": 2964930,
+   "params_total": 0,
+   "params_trc_like": 0
+  }
+ },
+ "params": {
+  "c2_total": 635304,
+  "c2_trc_like": 0,
+  "c2_trc_share_pct": 0.0,
+  "c1_total": 634280,
+  "note": "TRC=GRN1D 零初始化, 128参数/导联×8=1024, 占比<0.01%",
+  "trc_key_sample": [
+   "backbone_state_dict_list[0].model.5.gamma",
+   "backbone_state_dict_list[0].model.5.beta",
+   "backbone_state_dict_list[1].model.5.gamma"
+  ],
+  "trc_total": 1024,
+  "trc_share_pct": 0.161
+ },
+ "audit_notes": [
+  "c2_seed0(confirm) 与 W1 c2_nfh_trc_seed0 SHA256 逐位一致 -> 同代码路径端到端确定性",
+  "c1_seed0 与 W1 c1 权重字节哈希不同(W1 跑在旧代码)但 LP 读数 0.8907/0.6574 逐位一致"
+ ]
+}
