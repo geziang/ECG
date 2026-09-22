@@ -33,8 +33,8 @@
 | A-2 冻结模型退化评估 | A / Win4090 | 📋 已下发（待 A 回写认领） | `runlog/W3/robustness_*.csv` | 先 smoke；不重训，只复用冻结 checkpoint |
 | A-3 FT20/FT40 标签效率 | A / Win4090 | 💤 可选 | `runlog/W3/label_efficiency.csv` | 需保持既定协议，否则延期 |
 | B-0 冻结材料审计 | B / DESKTOP-0PBLCND | ✅ 已完成（7793950，ALL PASS） | `runlog/W3/freeze_audit_hostB.json`、`protocol_audit.md`、`failed_directions_index.csv` | 不改 W2 文件；SHA/行数不符即停 |
-| B-1 统计与图表复算代码 | B / DESKTOP-0PBLCND | 🏃主机B(09-22 20:58) | `runlog/W3/paper_materials/` | 只做 seed-level 描述性统计 |
-| B-2 指标/预测保存扩展 | B / DESKTOP-0PBLCND | 📋 已下发（B-0 后续） | `runlog/W3/metrics_schema/` | 先 smoke 与单测，不自动重评 test |
+| B-1 统计与图表复算代码 | B / DESKTOP-0PBLCND | ✅ 已完成（见 B-2 前提交） | `runlog/W3/paper_materials/`(8文件) | 只做 seed-level 描述性统计 |
+| B-2 指标/预测保存扩展 | B / DESKTOP-0PBLCND | 🏃主机B(09-22 21:15) | `runlog/W3/metrics_schema/` | 先 smoke 与单测，不自动重评 test |
 | B-3 NFH 97 条剔除明细 | B / DESKTOP-0PBLCND | ⏳ 待资料 | `runlog/W3/nfh_exclusion_reconciliation.csv` | 无原始明细不得估算 |
 
 认领纪律：先 `git pull --ff-only origin main`，再把本表对应行改为 `🏃<主机>(时间)` 并 push；完成后改 `✅`，附结果路径、代码 SHA、数据/ checkpoint SHA。任何未登记的 GPU 训练均视为禁止。

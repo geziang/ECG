@@ -1,0 +1,11 @@
+scope,n_conditions,mean_drop_pt,min,max,source_file,source_git_sha
+single_lead_miss(mean over 8 leads x 3 seeds),24,-0.59,-1.83,+0.41,runlog/W2/missing_lead_c2.csv,edd9aec
+double_lead_miss(mean over 28 pairs x 3 seeds),84,-1.41,-4.68,+0.36,runlog/W2/missing_lead_c2.csv,edd9aec
+single_miss_lead0,3,-0.72,-1.14,-0.26,runlog/W2/missing_lead_c2.csv,edd9aec
+single_miss_lead1,3,-1.28,-1.83,-0.99,runlog/W2/missing_lead_c2.csv,edd9aec
+single_miss_lead2,3,-1.00,-1.38,-0.43,runlog/W2/missing_lead_c2.csv,edd9aec
+single_miss_lead3,3,-1.29,-1.61,-0.91,runlog/W2/missing_lead_c2.csv,edd9aec
+single_miss_lead4,3,-0.32,-0.75,+0.04,runlog/W2/missing_lead_c2.csv,edd9aec
+single_miss_lead5,3,-0.05,-0.15,+0.00,runlog/W2/missing_lead_c2.csv,edd9aec
+single_miss_lead6,3,+0.06,-0.37,+0.41,runlog/W2/missing_lead_c2.csv,edd9aec
+single_miss_lead7,3,-0.13,-0.57,+0.22,runlog/W2/missing_lead_c2.csv,edd9aec
