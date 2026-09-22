@@ -19,7 +19,7 @@
 | 主机 | 硬件 | 关键环境 | 当前状态 |
 |---|---|---|---|
 | **主机A = `Win4090`**(F:\新实验) | RTX 4090 24G / 32 逻辑核 / 128G RAM,双车道 | Win10,Python 3.10.11,torch 2.0.0+cu118,conda env `DL` | 🟢 空闲；W3 A-2 已下发，待认领 |
-| **主机B = `DESKTOP-0PBLCND`**(E:\GZA) | RTX 3080 10G / 16 逻辑核 / 64G RAM,**单车道** | Win10,Python 3.11.9,torch 2.5.1+cu121;数据已校验(含 5 个损坏 .mat 修复);推送走 `ECG-push-tmp` | 🔨 W3 B-0 进行中(09-22 20:40 认领,B-0→B-1→B-2 顺序执行) |
+| **主机B = `DESKTOP-0PBLCND`**(E:\GZA) | RTX 3080 10G / 16 逻辑核 / 64G RAM,**单车道** | Win10,Python 3.11.9,torch 2.5.1+cu121;数据已校验(含 5 个损坏 .mat 修复);推送走 `ECG-push-tmp` | 🟢 空闲（W3 B-0/B-1/B-2/B-3 全部完成, 09-22 22:15） |
 | 主机C | (待登记) | (待登记) | 🆓 | 
 
 ## 一-A、W2 冻结后的新任务总览（2026-09-22，优先级高于下方历史队列）
@@ -33,9 +33,9 @@
 | A-2 冻结模型退化评估 | A / Win4090 | 📋 已下发（待 A 回写认领） | `runlog/W3/robustness_*.csv` | 先 smoke；不重训，只复用冻结 checkpoint |
 | A-3 FT20/FT40 标签效率 | A / Win4090 | 💤 可选 | `runlog/W3/label_efficiency.csv` | 需保持既定协议，否则延期 |
 | B-0 冻结材料审计 | B / DESKTOP-0PBLCND | ✅ 已完成（7793950，ALL PASS） | `runlog/W3/freeze_audit_hostB.json`、`protocol_audit.md`、`failed_directions_index.csv` | 不改 W2 文件；SHA/行数不符即停 |
-| B-1 统计与图表复算代码 | B / DESKTOP-0PBLCND | ✅ 已完成（见 B-2 前提交） | `runlog/W3/paper_materials/`(8文件) | 只做 seed-level 描述性统计 |
-| B-2 指标/预测保存扩展 | B / DESKTOP-0PBLCND | 🏃主机B(09-22 21:15) | `runlog/W3/metrics_schema/` | 先 smoke 与单测，不自动重评 test |
-| B-3 NFH 97 条剔除明细 | B / DESKTOP-0PBLCND | ⏳ 待资料 | `runlog/W3/nfh_exclusion_reconciliation.csv` | 无原始明细不得估算 |
+| B-1 统计与图表复算代码 | B / DESKTOP-0PBLCND | ✅ 已完成（见 B-2 前一提交） | `runlog/W3/paper_materials/`(8文件) | 只做 seed-level 描述性统计 |
+| B-2 指标/预测保存扩展 | B / DESKTOP-0PBLCND | ✅ 已完成（单测18/18+SMOKE PASS） | `runlog/W3/metrics_schema/`、`metrics_ext.py` | 先 smoke 与单测，不自动重评 test |
+| B-3 NFH 97 条剔除明细 | B / DESKTOP-0PBLCND | ✅ 已交付（97/97 确定性复得） | `runlog/W3/nfh_exclusion_reconciliation.csv`、`nfh_sensitivity_note.md` | 无原始明细不得估算 |
 
 认领纪律：先 `git pull --ff-only origin main`，再把本表对应行改为 `🏃<主机>(时间)` 并 push；完成后改 `✅`，附结果路径、代码 SHA、数据/ checkpoint SHA。任何未登记的 GPU 训练均视为禁止。
 
@@ -151,3 +151,9 @@
 > 主机A W3 认领 A-2(09-22 20:40):**A-2 冻结 checkpoint 输入退化评估** 🏃主机A(09-22 20:40)。范围=冻结 B0/C1/C2 + W2 已存 LP/FT10 头,test-time 扰动(baseline wander/EMG/工频50/60Hz @SNR 0/5/10/20dB + 连续质量衰减两轴 + adjacent lead-swap),零重训零新损失;clean 读数须先逐位复现 W2 账本再开扰动。结果 → runlog/W3/robustness_{b0,c1,c2}.csv。A-1 仍待教授确认不动。
 
 > 主机A A-2 完成 ✅(09-22 21:00):runlog/W3/robustness_{b0,c1,c2}.csv(704 行零重复)+robustness_README.md(预注册口径+结果摘要)。clean 复现门 22/22 过(AUROC 4 位一致,AUPRC 3 处 ±0.0001 浮点漂移);零重训零新损失,仅复用冻结 encoder+已存 LP/FT10 头。要点:①NFH 预训练比 B0 抗输入退化,工频最优(ptbxl/LP pl50@20dB:B0 −11.0 vs C1 −5.5/C2 −6.7);②TRC 不改变鲁棒性(C2−C1 差异 ±1.5pt 内方向混合)=C2 没拿鲁棒性换增益;③导联错位敏感度集中 II↔III 与 V1–V3,V4–V6 相邻互换近无损。代码 run_robustness.py(随本提交);评估 git_sha d9490c8。事件:首跑 --stage clean 未隔离扰动落盘致 CSV 重复,已修复清盘重跑,现版本唯一。A-1 仍待教授确认。
+
+> 主机B W3 B-1/B-2/B-3 终报 ✅(09-22 22:15):
+> **B-1** build_paper_materials.py → runlog/W3/paper_materials/ 8文件:主表/配对delta/符号表/缺导汇总/缺导8×8热图长表/失败方向表 全部独立复算, 自检 vs W2 冻结 stats **ALL MATCH**(逐key比对);headline CPSC LP +2.30+++ / FT10 +0.65+++ / 缺导单-0.59双-1.41pt 与冻结一致;全表附 source_file/source_git_sha, manifest 含输入 blob 溯源;统计口径=seed-level(置换p下限0.125)。
+> **B-2** metrics_ext.py + run_lp/run_ft 集成(新开关 --extended-metrics/--save-predictions/--protocol-id/--data-manifest-sha/--checkpoint-sha **默认全关**, 不加参数 metrics.json 与 W2 逐字节一致): per-class AP/Macro-F1/Sens/Spec/混淆矩阵/ECE/Brier/校准分桶; 逐记录 y_true/y_pred/y_prob 仅允许 runlog/W3/(W2 路径硬拒+protocol_id 必填); 单测 **18/18**(手工验算+sklearn交叉+守卫+默认关闭), smoke **SMOKE PASS**(macro_ap/macro_f1 与 sklearn 双一致); schema 见 runlog/W3/metrics_schema/SCHEMA.md。未重评任何真实 test。
+> **B-3** NFH 97 条明细交付:nfh_scan_hostB.py 以与 W1 prepare_nfh.py 逐字相同的检测路径(wfdb p_signal 8导, 重采样前)全量重扫 E 盘副本——**97/97 确定性复得**(ok=34808/raw=34905 三项全对上), nfh_exclusion_reconciliation.csv 含逐条 NaN/Inf 计数与导联; 画像=全 NaN 无 Inf(4091点,1~422/条), 全胸导(V6=48/V5=23为主), 重采样后仍非有限→**原始文件内容非重采样边缘**; 判定=分歧收敛到两侧副本不同, 请 A 侧对 97 条 .mat 字节比对定案(名单=CSV record 列); 敏感性: 剔除占比 0.278%, 主结果维持 A 口径不动。nfh_sensitivity_note.md 一页说明+nfh_manifest_hostB_w3.json(含全名单)。
+> 主机B 本批次任务全部完成, 机器空闲待分配。(主机B, 09-22 22:15)
