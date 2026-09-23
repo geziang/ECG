@@ -16,3 +16,5 @@
 09-23 11:45 | A-6 ✅ 完结: s3 三行齐(0.8845/0.8797/0.8689, mean 0.8777; 监督全量 vs C2-FT10 0.861x 符合"监督参照≥C2"预期); A-5 启动: clocs 5ep smoke 过(loss 1.78→0.53 单调, temporal/spatial 分项合理), laneB(seed2)全链已启动。当前三车道: SimCLR seed4 PT + A-8b 重放 + CLOCS seed2 PT。CLOCS laneA 待 SimCLR laneA 空位接力。
 
 09-23 12:0x | A-8b ✅ 收口: 复现门(W2账本对象)20/20 全绿逐位(d=+0.0000, c1/c2×18+b0 ptbxl s2/s4); W1 参考行 3 组(b0_cpsc/chapman_seed0 亦逐位, b0_ptbxl_seed0 d=+0.0010 已定性为 W1 时代代码固有差); SKIP+NOREF 4 组=A-7 新行。REPLAY DONE。B-4 统计输入(runlog/W4/predictions/ 全网格逐记录预测)已齐, B 机可开算。
+
+09-23 13:00 | 轻量校对(上次记录12:0x<90min): 全部健康。SimCLR seed4 PT ✅100ep+下游推进中(cpsc LP 已入账 0.9379, ft10 epoch 58/100 mtime 新鲜); CLOCS seed2 PT epoch 63/100 活跃。账本 16/27 行(b0×4+s3×3+simclr×9)。GPU 9.0G/29%(epoch 交界瞬时)。无重启动作。
