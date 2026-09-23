@@ -18,3 +18,5 @@
 09-23 12:0x | A-8b ✅ 收口: 复现门(W2账本对象)20/20 全绿逐位(d=+0.0000, c1/c2×18+b0 ptbxl s2/s4); W1 参考行 3 组(b0_cpsc/chapman_seed0 亦逐位, b0_ptbxl_seed0 d=+0.0010 已定性为 W1 时代代码固有差); SKIP+NOREF 4 组=A-7 新行。REPLAY DONE。B-4 统计输入(runlog/W4/predictions/ 全网格逐记录预测)已齐, B 机可开算。
 
 09-23 13:00 | 轻量校对(上次记录12:0x<90min): 全部健康。SimCLR seed4 PT ✅100ep+下游推进中(cpsc LP 已入账 0.9379, ft10 epoch 58/100 mtime 新鲜); CLOCS seed2 PT epoch 63/100 活跃。账本 16/27 行(b0×4+s3×3+simclr×9)。GPU 9.0G/29%(epoch 交界瞬时)。无重启动作。
+
+09-23 13:18 | A-4 ✅ 完结: SimCLR 12/12 行齐(3 seeds×4下游, 种子一致性±0.0005)。mean: cpsc 0.9377 / ft10 0.8500 / ptbxl lp 0.8791 / chapman 0.9876 — 全面低于 C2(−0.7~−2.1pt), 符合文献预期(SimCLR<ECG专用), 无基线反超, §1.5 条款未触发。CLOCS laneA(seed0→seed4)已接力空车道。当前两车道: clocs s2(ep63+) + clocs s0(启动)。
