@@ -1,0 +1,192 @@
+{
+ "metadata": {
+  "protocol_id": "w4-simclr-baseline",
+  "data_manifest_sha": "",
+  "checkpoint": "F:\\新实验\\ECG_SSL_LFBT-main\\checkpoint\\confirm\\simclr_seed2\\encoder_group.pth",
+  "checkpoint_sha256": "e4b431ba5c601bd52de3ad0e9b70d003d6840b5b8ce81409b50cae2b44d8b677",
+  "eval": "ft",
+  "fraction": 0.1,
+  "num_classes": 5,
+  "seed": 2,
+  "code_sha": "see git"
+ },
+ "confusion_matrix": [
+  [
+   125,
+   0,
+   9,
+   85,
+   10
+  ],
+  [
+   3,
+   0,
+   2,
+   44,
+   7
+  ],
+  [
+   16,
+   0,
+   131,
+   86,
+   23
+  ],
+  [
+   22,
+   0,
+   23,
+   870,
+   37
+  ],
+  [
+   5,
+   0,
+   10,
+   78,
+   153
+  ]
+ ],
+ "ap_class_0": 0.6920483962409403,
+ "ap_class_1": 0.07169907865711722,
+ "ap_class_2": 0.6910915721899838,
+ "ap_class_3": 0.8714473356687751,
+ "ap_class_4": 0.70208188896159,
+ "macro_ap": 0.6056736543436811,
+ "class_0_precision": 0.7309941520467836,
+ "class_1_precision": NaN,
+ "class_2_precision": 0.7485714285714286,
+ "class_3_precision": 0.7480653482373173,
+ "class_4_precision": 0.6652173913043479,
+ "class_0_sensitivity": 0.5458515283842795,
+ "class_1_sensitivity": 0.0,
+ "class_2_sensitivity": 0.51171875,
+ "class_3_sensitivity": 0.9138655462184874,
+ "class_4_sensitivity": 0.6219512195121951,
+ "class_0_specificity": 0.9695364238410596,
+ "class_1_specificity": 1.0,
+ "class_2_specificity": 0.9703304113283884,
+ "class_3_specificity": 0.627700127064803,
+ "class_4_specificity": 0.9484259879437374,
+ "class_0_f1": 0.625,
+ "class_1_f1": NaN,
+ "class_2_f1": 0.6078886310904872,
+ "class_3_f1": 0.8226950354609929,
+ "class_4_f1": 0.6428571428571429,
+ "macro_f1": 0.6746102023521557,
+ "macro_sensitivity": 0.5186774088229924,
+ "macro_specificity": 0.9031985900355977,
+ "accuracy": 0.7354801610120759,
+ "ece": 0.03772233571383787,
+ "mce": 0.10616244375705719,
+ "n_bins": 15,
+ "brier_multiclass": 0.07768229474041344,
+ "brier_formula": "mean_over_samples( mean_over_classes (p_c - y_c)^2 )",
+ "reliability_table": [
+  {
+   "bin": 0,
+   "range": "[0.000,0.067)",
+   "n": 0,
+   "avg_conf": null,
+   "avg_acc": null
+  },
+  {
+   "bin": 1,
+   "range": "[0.067,0.133)",
+   "n": 0,
+   "avg_conf": null,
+   "avg_acc": null
+  },
+  {
+   "bin": 2,
+   "range": "[0.133,0.200)",
+   "n": 0,
+   "avg_conf": null,
+   "avg_acc": null
+  },
+  {
+   "bin": 3,
+   "range": "[0.200,0.267)",
+   "n": 0,
+   "avg_conf": null,
+   "avg_acc": null
+  },
+  {
+   "bin": 4,
+   "range": "[0.267,0.333)",
+   "n": 10,
+   "avg_conf": 0.3061624437570572,
+   "avg_acc": 0.2
+  },
+  {
+   "bin": 5,
+   "range": "[0.333,0.400)",
+   "n": 46,
+   "avg_conf": 0.3722678260958713,
+   "avg_acc": 0.41304347826086957
+  },
+  {
+   "bin": 6,
+   "range": "[0.400,0.467)",
+   "n": 79,
+   "avg_conf": 0.43658489818814433,
+   "avg_acc": 0.5063291139240507
+  },
+  {
+   "bin": 7,
+   "range": "[0.467,0.533)",
+   "n": 133,
+   "avg_conf": 0.5022879191359183,
+   "avg_acc": 0.47368421052631576
+  },
+  {
+   "bin": 8,
+   "range": "[0.533,0.600)",
+   "n": 129,
+   "avg_conf": 0.5679848439009615,
+   "avg_acc": 0.5426356589147286
+  },
+  {
+   "bin": 9,
+   "range": "[0.600,0.667)",
+   "n": 130,
+   "avg_conf": 0.6382514770214375,
+   "avg_acc": 0.6538461538461539
+  },
+  {
+   "bin": 10,
+   "range": "[0.667,0.733)",
+   "n": 136,
+   "avg_conf": 0.7001250272288042,
+   "avg_acc": 0.6397058823529411
+  },
+  {
+   "bin": 11,
+   "range": "[0.733,0.800)",
+   "n": 144,
+   "avg_conf": 0.7660547590090169,
+   "avg_acc": 0.7222222222222222
+  },
+  {
+   "bin": 12,
+   "range": "[0.800,0.867)",
+   "n": 265,
+   "avg_conf": 0.8351383267708544,
+   "avg_acc": 0.8075471698113208
+  },
+  {
+   "bin": 13,
+   "range": "[0.867,0.933)",
+   "n": 333,
+   "avg_conf": 0.9013643375746123,
+   "avg_acc": 0.8468468468468469
+  },
+  {
+   "bin": 14,
+   "range": "[0.933,1.000)",
+   "n": 334,
+   "avg_conf": 0.9612440964775885,
+   "avg_acc": 0.937125748502994
+  }
+ ]
+}
