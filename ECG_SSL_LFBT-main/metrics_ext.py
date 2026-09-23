@@ -132,11 +132,16 @@ def sha256_of(path):
 
 
 def _assert_w3_dir(out_dir: Path):
+    """逐记录预测落盘守卫(任务书 B-2; W4 A-8 扩展)。
+
+    允许 runlog/W3/ 与 runlog/W4/ 之下; runlog/W2/ 硬拒(冻结只读);
+    其余路径拒绝。不传 --save-predictions 时本函数不会被调用(默认关闭不变)。
+    """
     s = str(out_dir.resolve()).replace("\\", "/").lower()
     if "/runlog/w2/" in s:
         raise ValueError(f"W2 目录只读, 拒绝写入: {out_dir}")
-    if "/runlog/w3/" not in s:
-        raise ValueError(f"逐记录预测只允许写 runlog/W3/ 之下, 收到: {out_dir}")
+    if "/runlog/w3/" not in s and "/runlog/w4/" not in s:
+        raise ValueError(f"逐记录预测只允许写 runlog/W3/ 或 runlog/W4/ 之下, 收到: {out_dir}")
 
 
 def save_eval_artifacts(out_dir, y_true, y_pred, prob, metadata, n_bins=15):

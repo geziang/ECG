@@ -1,0 +1,5 @@
+ts,ckpt,seed,eval,downstream,auroc,auprc,git_sha,checkpoint_sha256,method_family,hparams_ref
+2026-09-23 08:52,b0,2,lp,cpsc,0.9564,0.7940,2468a14,f39059a4430c2e7aa8963ca3c75b608120452f517622862fb3a73a7dc95d26a4,bt_ssl(baseline),C1-equivalent(W2协议)
+2026-09-23 08:52,b0,4,lp,cpsc,0.9605,0.8088,2468a14,ba4f2d3c99aff6b5889dae4ebdd1103b8949e2d1f8fcadd28d0a5df8b91c0daa,bt_ssl(baseline),C1-equivalent(W2协议)
+2026-09-23 08:54,b0,2,lp,chapman,0.9925,0.9774,2468a14,f39059a4430c2e7aa8963ca3c75b608120452f517622862fb3a73a7dc95d26a4,bt_ssl(baseline),C1-equivalent(W2协议)
+2026-09-23 08:54,b0,4,lp,chapman,0.9939,0.9816,2468a14,ba4f2d3c99aff6b5889dae4ebdd1103b8949e2d1f8fcadd28d0a5df8b91c0daa,bt_ssl(baseline),C1-equivalent(W2协议)

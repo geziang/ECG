@@ -126,6 +126,22 @@ class TestSaveArtifacts(unittest.TestCase):
             mx.save_eval_artifacts(ROOT / "results" / "x", [0], [0], [[1.0]],
                                    {"protocol_id": "t"})
 
+    def test_guard_allows_w4_and_still_rejects_w2(self):
+        """W4 A-8 扩展: 允许 runlog/W4/ 之下; W2 硬拒与仓库外拒绝不变。"""
+        w4 = ROOT / "runlog" / "W4" / "metrics_schema" / "_selftest_tmp"
+        try:
+            mx.save_eval_artifacts(w4, [0], [0], [[1.0]], {"protocol_id": "t"})
+            self.assertTrue((w4 / "metrics_ext.json").exists())
+        finally:
+            if w4.exists():
+                shutil.rmtree(w4)
+        with self.assertRaises(ValueError):
+            mx.save_eval_artifacts(ROOT / "runlog" / "W2" / "x", [0], [0], [[1.0]],
+                                   {"protocol_id": "t"})
+        with self.assertRaises(ValueError):
+            mx.save_eval_artifacts(ROOT / "results" / "x", [0], [0], [[1.0]],
+                                   {"protocol_id": "t"})
+
     def test_guard_requires_protocol_id(self):
         with self.assertRaises(ValueError):
             mx.save_eval_artifacts(self.TMP, [0], [0], [[1.0]], {})

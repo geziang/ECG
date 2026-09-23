@@ -1,0 +1,12 @@
+item,simclr_vs_c1,note
+loss_mode,simclr (NT-Xent),C1=bt(Barlow Twins); 唯一核心差异
+temperature,0.5,SimCLR 发表默认(Chen et al. 2020); 禁调参(任务书§1.4)
+正对定义,同记录同导联两视图,与 C1 的同导联视图对齐; NT-Xent 负对=批内其余 2N-2 视图
+跨导联项,无(loss_t=0),BT 的 loss_r/loss_t(γ=0.8)结构不适用于 NT-Xent; 逐导联独立 SimCLR
+输出白化BN,不适用(bn_group 绕过),SimCLR 以 L2 归一化+温度实现尺度不变; projector 内部 BN 保持
+projector,2048-2048-2048(与 C1 相同),projector_norm=batchnorm
+aug_params,0.5,1.0,0.0,0.5(与 C1 相同),RRC-TimeOut 两视图
+backbone,VGG16(alpha=0.125, 逐导联, sinc_frontend=0, trc=0),与 C1 完全相同
+optimizer,Adam lr=0.001(与 C1 相同),batch 128 / workers 4 / epochs 100(NFH)
+预训练数据,data/pt_pretrain_nfh,与 C1 相同
+超参搜索,无,全部采用发表默认或 C1 等价配置(任务书§1.4 公平性条款)

@@ -41,8 +41,11 @@ parser.add_argument('--seed', default=0, type=int, metavar='N', help='random see
 parser.add_argument('--checkpoint-dir', default='./checkpoint/', type=Path,
                     metavar='DIR', help='path to checkpoint directory')
 # ===== S1/D9: VICReg 化开关 (默认全关 == B0) =====
-parser.add_argument('--loss-mode', default='bt', choices=['bt', 'vicreg'],
-                    help='目标函数: bt=原版 Barlow Twins (B0), vicreg=D9 三项化')
+parser.add_argument('--loss-mode', default='bt', choices=['bt', 'vicreg', 'simclr'],
+                    help='目标函数: bt=原版 Barlow Twins (B0), vicreg=D9 三项化, '
+                         'simclr=W4 A-4 外部基线 S1(NT-Xent)')
+parser.add_argument('--simclr-temp', default=0.5, type=float,
+                    help='S1: NT-Xent 温度(SimCLR 发表默认 0.5, 禁调参)')
 parser.add_argument('--vicreg-sim', default=25.0, type=float, help='VICReg invariance(MSE) 系数')
 parser.add_argument('--vicreg-var', default=25.0, type=float, help='VICReg variance hinge 系数')
 parser.add_argument('--vicreg-cov', default=1.0, type=float, help='VICReg covariance 系数')
@@ -340,6 +343,21 @@ class LeadFusionBT(object):
                 + self.args.vicreg_var * var
                 + self.args.vicreg_cov * cov)
 
+    def _nt_xent(self, zi, zj):
+        """S1 (W4 A-4): 标准 SimCLR NT-Xent (Chen et al. 2020, Algorithm 1)。
+
+        zi/zj = 同 batch 两视图的 projector 原始输出 (N, d); 正对=同索引配对,
+        负对=批内其余 2N-2 视图; L2 归一化 + 温度缩放 + 对角掩码 + 交叉熵。
+        """
+        N = zi.shape[0]
+        z = torch.cat([zi, zj], dim=0)
+        z = nn.functional.normalize(z, dim=1)
+        sim = z @ z.T / self.args.simclr_temp
+        sim.fill_diagonal_(float('-inf'))
+        targets = torch.arange(2 * N, device=z.device)
+        targets = (targets + N) % (2 * N)
+        return nn.functional.cross_entropy(sim, targets)
+
     def forward(self, y1, y2, y_pair=None, pair_mask=None,
                 hrv_target=None, hrv_valid=None, rec=None):
         self.last_extra = {}
@@ -367,6 +385,17 @@ class LeadFusionBT(object):
             loss_t = loss_t / (self.args.num_leads * (self.args.num_leads - 1))
             loss = self.args.gamma * loss_r + (1 - self.args.gamma) * loss_t
             return loss, loss_r, loss_t
+        if self.args.loss_mode == 'simclr':
+            # S1 (W4 A-4): 逐导联独立 SimCLR——正对=同记录同导联两视图, 负对=批内
+            # 其余 2N-2 视图; 与 C1 的结构/增强/优化器完全同构(见 baseline_hparams.csv)。
+            # NT-Xent 以 L2 归一化+温度实现尺度不变, BT 特有的输出白化 BN 不适用
+            # (与 vicreg 分支同模式绕过 bn_group); 跨导联项不适用于 NT-Xent(loss_t=0)。
+            loss_r = 0
+            for i in range(self.args.num_leads):
+                loss_r = loss_r + self._nt_xent(z1_list[i], z2_list[i])
+            loss_r = loss_r / self.args.num_leads
+            loss_t = torch.zeros_like(loss_r)
+            return loss_r, loss_r, loss_t
         z1b = self._bn_embed(z1_list) if self.fast else None
         z2b = self._bn_embed(z2_list) if self.fast else None
         loss_r = 0

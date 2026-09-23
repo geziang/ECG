@@ -45,3 +45,11 @@ ECG_SSL_LFBT-wt1/
 
 # ===== 安全扫描产物 =====
 .mimosa/
+
+# ===== W4 LP 重放特征中间产物(大 npy, 不入 git; 预测 y_*.py 入 git) =====
+ECG_SSL_LFBT-main/runlog/W4/feat/
+ECG_SSL_LFBT-main/runlog/W4/smoke/
+ECG_SSL_LFBT-main/runlog/W4/ft/
+ECG_SSL_LFBT-main/runlog/W4/logs/
+# W4 逐记录预测(y_true/y_pred/y_prob)是 B-4 配对统计的必需输入, 显式放行:
+!ECG_SSL_LFBT-main/runlog/W4/predictions/**/*.npy
