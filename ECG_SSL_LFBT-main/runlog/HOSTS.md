@@ -83,6 +83,9 @@
 > **② 冒烟首跑实测失败并拦截（与 B 机独立结论互证）**：W2 冻结 `encoder_group.pth` 的 `backbone_state_dict` 字段是完整 VGG16 模块对象列表（run_pt 双格式保存所致），裸 `weights_only=True` 默认白名单拒绝自定义类。修复（非绕过）：`utils/checkpoint.py` 模块级 `torch.serialization.add_safe_globals` 注册冻结物实际引用的全部全局类——对 b0/c1/c2 全系 encoder_group.pth 做 pickle opcode 静态扫描得 15 项 GLOBAL（证据 `runlog/W4/diag_ckpt_globals2.py`），白名单=VGG16/GRN1D + Sequential/Conv1d/BatchNorm1d/ReLU/MaxPool1d/AdaptiveAvgPool1d/Identity/Linear + set/frozenset，仍保持 `weights_only=True` 受限加载；三入口（run_lp/run_pt/run_ft）裸 torch.load 统一改走 `load_torch_checkpoint`。修复后冒烟通过：c2_seed0 @ PTB LP 1ep（feat-dir=`runlog/W4/smoke/c2s0_gate/`，AUROC 0.7959 仅验加载管线非账本数）。全单测 6 文件 5 绿 + 1 设计内失效。
 > **主机B pull 本提交后重跑安全门即可过**（test_repro P1 与加载冒烟均已被修复覆盖；B 机无冻结三件套，冒烟按 B 侧同构等价物执行即可）。
 
+> **✅ 安全门 B 侧复验——主机B（09-23 08:5x，2468a14）**：按上条指引执行，**全部通过**——①加载冒烟（B 侧同构等价物）：`checkpoint/M/c3_align_mix02_seed0/encoder_group.pth` 经 `load_torch_checkpoint` 加载成功，双格式键齐备（torch 2.5.1+cu121）；②单测 6/7 绿：test_w1 14/14、test_d9_switch、test_metrics_ext 18/18、test_safe_load 3/3、test_repro 8/8（P0-P1 全过；B 侧需先给 `data/ptbxl`、`ptb-xl/` 建 junction 指向 ECG-main 数据，A 机完整数据树下无此环境差异）、test_paired_stats 21/21（B-4 新增）；test_ap2_switches 维持双方一致定性=设计内失效。**A-4~A-8 阻塞正式解除（双机互证）**。
+> B-4/B-5 先行件已入库（7f6e34a）：`runlog/W4/stats/paired_stats.py` + `stats_methods.md` + `tests/test_paired_stats.py`（DeLong per-class + paired bootstrap on macro-AUROC、多 seed 同步重采样、合成 E2E 演练通过；A-8 predictions 落盘后重跑 CLI 即出正式 `paired_stats.csv`）+ `baseline_impl_audit.md`（SimCLR/CLOCS 官方参照逐条核对完毕；⚠️ 两个待下发方/A 机注意点：①S2 CLOCS 官方 backbone=3×Conv1D+2FC 与"同 backbone 家族"措辞的张力，底稿建议损失/正对按官方、backbone 保持 C1 并入 baseline_hparams.csv；②S1 τ=0.5 对应官方 repo CIFAR 口径（ImageNet 主结果为 0.1），hparams_ref 需记出处）。
+
 ## 二、历史队列（已封存，不得启动）
 
 | 任务 | 类型 | 启动 | 预计完成 | 接力来源 |
