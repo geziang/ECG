@@ -60,13 +60,15 @@
 
 | 任务 | 主机 | 当前状态 | 交付物 | 停止线 |
 |---|---|---|---|---|
-| A-4 SimCLR 基线(主基线) | A / Win4090 | 🏃Win4090(09-23 08:28) | `runlog/W4/baseline_results.csv` | 实现+单测>1.5天→降级 |
-| A-5 CLOCS 基线(ECG中档,风险项) | A / Win4090 | 🏃Win4090(09-23 08:28) | 同上 | 适配>2天→降级PCLR或关闭 |
-| A-6 监督直训参照 | A / Win4090 | 🏃Win4090(09-23 08:28) | 同上 | — |
-| A-7 B0 跨库补seed(纯评估) | A / Win4090 | 🏃Win4090(09-23 08:28) | 同上 | SHA不符即停 |
-| A-8 预测重放+守卫扩展 | A / Win4090 | 🏃Win4090(09-23 08:28) | `runlog/W4/predictions/` | 复现门超差即停 |
-| B-4 配对统计与基线总表 | B / DESKTOP-0PBLCND | 🏃 DESKTOP-0PBLCND(09-23 08:26) 统计管线先行，待 A-8 predictions | `runlog/W4/stats/`、`paper_materials_v2/` | 只做 record-level 统计 |
-| B-5 基线实现审计 | B / DESKTOP-0PBLCND | 🏃 DESKTOP-0PBLCND(09-23 08:26) 官方参照底稿先行，待 A-4/A-5 实现 | `runlog/W4/baseline_impl_audit.md` | 实现偏差→停止入表 |
+| A-4 SimCLR 基线(主基线) | A / Win4090 | ✅ 已完成(09-23 13:18) | `runlog/W4/baseline_results.csv` simclr×12; 单测4/4+HEAD逐位一致; mean: cpsc 0.9377/ft10 0.8500/ptbxl 0.8791/chapman 0.9876, 全面低于C2(−0.7~−2.1pt) | 实现+单测>1.5天→降级 |
+| A-5 CLOCS 基线(ECG中档,风险项) | A / Win4090 | ✅ 已完成(09-23 18:02, 未触发降级) | 同上 clocs×12; 单测3/3(分母含自身解析例正门); mean: cpsc 0.9477/ft10 0.8542/ptbxl 0.8690/chapman 0.9960, 介于SimCLR与C2之间(ptbxl lp 低于SimCLR如实入表) | 适配>2天→降级PCLR或关闭 |
+| A-6 监督直训参照 | A / Win4090 | ✅ 已完成(09-23 11:38) | 同上 s3×3; mean 0.8777(全量监督 > C2-FT10 0.8597, 标签效率叙事素材) | — |
+| A-7 B0 跨库补seed(纯评估) | A / Win4090 | ✅ 已完成(09-23 08:52) | 同上 b0×4; SHA与freeze_manifest_v2一致; 定案: CPSC B0 0.9592 vs C2 0.9584 统计不可分(逐seed 2正1负), Chapman C2胜3/3(+0.31pt) | SHA不符即停 |
+| A-8 预测重放+守卫扩展 | A / Win4090 | ✅ 已完成(09-23 12:05) | `runlog/W4/predictions/` 全网格逐记录; 复现门**W2对象20/20逐位d=+0.0000**; W1参考行3组已定性(b0@ptbxl d=+0.0010=W1时代代码固有差, c2探针对W2逐位佐证); 守卫扩展单测全绿 | 复现门超差即停 |
+| B-4 配对统计与基线总表 | B / DESKTOP-0PBLCND | 🏃 DESKTOP-0PBLCND(09-23 08:26) **A-8 predictions 已齐(12:05), 可开算** | `runlog/W4/stats/`、`paper_materials_v2/` | 只做 record-level 统计 |
+| B-5 基线实现审计 | B / DESKTOP-0PBLCND | 🏃 DESKTOP-0PBLCND(09-23 08:26) **S1/S2/S3 实现已全落地, §5 可回填**(单测/hparams 在库) | `runlog/W4/baseline_impl_audit.md` | 实现偏差→停止入表 |
+
+> **A 机终报(09-23 18:0x)**: A-4~A-8 全部 ✅, 31/31 行账本(simclr×12+clocs×12+s3×3+b0×4), 汇总=`runlog/W4/summary_w4_baselines.md`(主表/结论/门禁留痕/时间线)。核心: ①文献预期排序验证(C2>CLOCS>SimCLR 于 cpsc/ft10/chapman 3/3 同向; ptbxl lp CLOCS 0.8690<SimCLR 0.8791 反序, 如实入表); ②无外部基线反超C2(§1.5 未触发); ③监督参照定位成立; ④复现门20/20逐位。比任务书1-1.5天预算提前(当天18:02收口)。附: 首pull安全门拦截的 weights_only 回归当天修复(2468a14), B 机已复验。
 
 认领纪律不变：`git pull --ff-only origin main` → 本表改 `🏃主机名(时间)` 并 push → 完成改 `✅` 附结果路径/SHA。执行顺序：A-7→A-6 先出数，A-4 smoke→3seeds，A-5 风险靠后，B-4/B-5 收尾。
 
