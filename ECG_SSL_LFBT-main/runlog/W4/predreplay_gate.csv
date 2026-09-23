@@ -1,0 +1,8 @@
+ts,status,tag,detail
+09-23 11:16,GATE_FAIL,b0_ptbxl_seed0,auroc 0.9126 vs 0.9116 (d=+0.0010); auprc 0.7173 vs 0.7177 (d=-0.0004); ref=W1
+09-23 11:20,SKIP+REF,b0_ptbxl_seed0,"auroc 0.9126 vs 0.9116 (d=+0.0010); auprc 0.7173 vs 0.7177 (d=-0.0004); ref=W1 [W1参考行, 不拦截]"
+09-23 11:22,PASS,b0_ptbxl_seed2,auroc 0.9152 vs 0.9152 (d=+0.0000); auprc 0.7144 vs 0.7144 (d=+0.0000); ref=W2
+09-23 11:23,PASS,b0_ptbxl_seed4,auroc 0.9135 vs 0.9135 (d=+0.0000); auprc 0.7037 vs 0.7037 (d=+0.0000); ref=W2
+09-23 11:24,REF,b0_cpsc_seed0,"auroc 0.9608 vs 0.9608 (d=+0.0000); auprc 0.8105 vs 0.8105 (d=-0.0000); ref=W1 [W1参考行, 不拦截]"
+09-23 11:24,SKIP+NOREF,b0_cpsc_seed2,auroc=0.9564 auprc=0.7940 (无账本行)
+09-23 11:24,SKIP+NOREF,b0_cpsc_seed4,auroc=0.9605 auprc=0.8088 (无账本行)
