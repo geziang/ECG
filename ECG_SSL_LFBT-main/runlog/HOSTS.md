@@ -4,7 +4,9 @@
 >
 > **认领方式**:把对应任务行的状态改为 `🏃<主机名>(开始时间)` 并 commit+push;完成后改为 ✅,并把结果行写入本主机结果文件(§五-3)。
 > **更新纪律**:任务状态每次变化(领取/完成/失败)立即 push;长任务不必频繁汇报,但必须写明预计完成时间。
-> 文档路径:`runlog/HOSTS.md`;最后更新:**2026-09-22 20:05,W3 第二批任务已下发**。
+> 文档路径:`runlog/HOSTS.md`;最后更新:**2026-09-23,W4 外部基线批次已下发**。
+>
+> **协调方式(2026-09-23 起):全仓协作只走 `origin/main`(任务书 + 本台账),不使用 SSH 跨机操作。**
 >
 > **主机A当前状态:🟢 空闲（旧任务已全部完成）**——W3 新批次 A-2 已下发，等待主机 A `git pull --ff-only origin main` 后回写认领；旧 §二/§三 队列仅作历史记录，不得启动。
 >
@@ -51,6 +53,24 @@
 本批次禁止恢复 D1L、ACL、LGA、Attention、Mixer、JEPA、VICReg、EMA、Sinc、MixUp、HRV、CCM、导联相关矩阵新损失、12 导联恢复、多模态睡眠或任何新预训练扫描。所有新文件只写 `runlog/W3/`，W2 文件只读。
 
 新主机入场四步:①按 §五-6 准备并校验数据;②**先跑本机 B0 锚点**(§五-1 红线);③在上表登记硬件与环境;④按 §四 开展创新方法并在登记表挂号。
+
+## 一-B、W4 外部基线与统计补强批次（2026-09-23 下发，当前活跃批次）
+
+> W3 已收口（A-0/A-2/B-0~B-3 ✅，A-1 取消）。W4 唯一任务入口是《[W4-外部基线与统计补强任务书-2026-09-23.md](../../报告归档/未完成报告/W4-外部基线与统计补强任务书-2026-09-23.md)》，结果统一写 `runlog/W4/`。目标=补齐外部基线表（SimCLR/CLOCS/监督直训）+ 逐记录配对统计；**不改方法、不调参、不动 W2/W3 冻结文件**。基线好于 C2 时如实入表。
+
+| 任务 | 主机 | 当前状态 | 交付物 | 停止线 |
+|---|---|---|---|---|
+| A-4 SimCLR 基线(主基线) | A / Win4090 | 📋 已下发 | `runlog/W4/baseline_results.csv` | 实现+单测>1.5天→降级 |
+| A-5 CLOCS 基线(ECG中档,风险项) | A / Win4090 | 📋 已下发 | 同上 | 适配>2天→降级PCLR或关闭 |
+| A-6 监督直训参照 | A / Win4090 | 📋 已下发 | 同上 | — |
+| A-7 B0 跨库补seed(纯评估) | A / Win4090 | 📋 已下发 | 同上 | SHA不符即停 |
+| A-8 预测重放+守卫扩展 | A / Win4090 | 📋 已下发 | `runlog/W4/predictions/` | 复现门超差即停 |
+| B-4 配对统计与基线总表 | B / DESKTOP-0PBLCND | 📋 已下发 | `runlog/W4/stats/`、`paper_materials_v2/` | 只做 record-level 统计 |
+| B-5 基线实现审计 | B / DESKTOP-0PBLCND | 📋 已下发 | `runlog/W4/baseline_impl_audit.md` | 实现偏差→停止入表 |
+
+认领纪律不变：`git pull --ff-only origin main` → 本表改 `🏃主机名(时间)` 并 push → 完成改 `✅` 附结果路径/SHA。执行顺序：A-7→A-6 先出数，A-4 smoke→3seeds，A-5 风险靠后，B-4/B-5 收尾。
+
+> **首 pull 安全门（2026-09-23 安全加固随本批次先行合入）**：加固内容=checkpoint 加载统一 `weights_only=True`（`utils/checkpoint.py` 及各入口）+ 输出路径守卫 `utils/pathguard.py`（`open_out`/`open_out_file` 替代直接 `open(用户路径)`）。两机首次 `git pull` 后、启动任何 W4 训练前，必须：① 跑 `tests/` 全部单测（test_w1/test_ap2_switches/test_d9_switch/test_metrics_ext/test_repro）全绿；② 用 `run_lp.py --checkpoint checkpoint/confirm/c2_seed0/encoder_group.pth --data-dir data/ptbxl --num-classes 5 ...` 做一次小规模加载冒烟（`--epochs 1` 或早停均可），确认 `weights_only=True` 能正常加载 W2 冻结 checkpoint。任一步失败 → 停止并回写本台账，不得绕过。
 
 ## 二、历史队列（已封存，不得启动）
 

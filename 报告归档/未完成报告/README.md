@@ -1,6 +1,6 @@
 # 未完成报告
 
-当前没有待归档的报告文档。未闭合事项以下列清单为准，唯一任务台账仍是 [HOSTS.md](../../ECG_SSL_LFBT-main/runlog/HOSTS.md)。
+当前活跃批次：**[W4-外部基线与统计补强任务书-2026-09-23.md](W4-外部基线与统计补强任务书-2026-09-23.md)**（SimCLR/CLOCS/监督参照 + 逐记录配对统计）。唯一任务台账仍是 [HOSTS.md](../../ECG_SSL_LFBT-main/runlog/HOSTS.md)。
 
 ## 尚未闭合事项（backlog 清单）
 
