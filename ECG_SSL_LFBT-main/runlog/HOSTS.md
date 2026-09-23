@@ -20,7 +20,7 @@
 
 | 主机 | 硬件 | 关键环境 | 当前状态 |
 |---|---|---|---|
-| **主机A = `Win4090`**(F:\新实验) | RTX 4090 24G / 32 逻辑核 / 128G RAM,双车道 | Win10,Python 3.10.11,torch 2.0.0+cu118,conda env `DL` | 🟢 空闲；W3 A-2 已下发，待认领 |
+| **主机A = `Win4090`**(F:\新实验) | RTX 4090 24G / 32 逻辑核 / 128G RAM,双车道 | Win10,Python 3.10.11, torch 2.5.1+cu121(09-23实测更正,原登记2.0.0已过时),conda env `DL` | 🏃 W4 A-4~A-8 已认领(09-23 08:28) |
 | **主机B = `DESKTOP-0PBLCND`**(E:\GZA) | RTX 3080 10G / 16 逻辑核 / 64G RAM,**单车道** | Win10,Python 3.11.9,torch 2.5.1+cu121;数据已校验(含 5 个损坏 .mat 修复);推送走 `ECG-push-tmp` | 🟢 空闲（W3 B-0/B-1/B-2/B-3 全部完成, 09-22 22:15） |
 | 主机C | (待登记) | (待登记) | 🆓 | 
 
@@ -60,11 +60,11 @@
 
 | 任务 | 主机 | 当前状态 | 交付物 | 停止线 |
 |---|---|---|---|---|
-| A-4 SimCLR 基线(主基线) | A / Win4090 | 📋 已下发 | `runlog/W4/baseline_results.csv` | 实现+单测>1.5天→降级 |
-| A-5 CLOCS 基线(ECG中档,风险项) | A / Win4090 | 📋 已下发 | 同上 | 适配>2天→降级PCLR或关闭 |
-| A-6 监督直训参照 | A / Win4090 | 📋 已下发 | 同上 | — |
-| A-7 B0 跨库补seed(纯评估) | A / Win4090 | 📋 已下发 | 同上 | SHA不符即停 |
-| A-8 预测重放+守卫扩展 | A / Win4090 | 📋 已下发 | `runlog/W4/predictions/` | 复现门超差即停 |
+| A-4 SimCLR 基线(主基线) | A / Win4090 | 🏃Win4090(09-23 08:28) | `runlog/W4/baseline_results.csv` | 实现+单测>1.5天→降级 |
+| A-5 CLOCS 基线(ECG中档,风险项) | A / Win4090 | 🏃Win4090(09-23 08:28) | 同上 | 适配>2天→降级PCLR或关闭 |
+| A-6 监督直训参照 | A / Win4090 | 🏃Win4090(09-23 08:28) | 同上 | — |
+| A-7 B0 跨库补seed(纯评估) | A / Win4090 | 🏃Win4090(09-23 08:28) | 同上 | SHA不符即停 |
+| A-8 预测重放+守卫扩展 | A / Win4090 | 🏃Win4090(09-23 08:28) | `runlog/W4/predictions/` | 复现门超差即停 |
 | B-4 配对统计与基线总表 | B / DESKTOP-0PBLCND | 🏃 DESKTOP-0PBLCND(09-23 08:26) 统计管线先行，待 A-8 predictions | `runlog/W4/stats/`、`paper_materials_v2/` | 只做 record-level 统计 |
 | B-5 基线实现审计 | B / DESKTOP-0PBLCND | 🏃 DESKTOP-0PBLCND(09-23 08:26) 官方参照底稿先行，待 A-4/A-5 实现 | `runlog/W4/baseline_impl_audit.md` | 实现偏差→停止入表 |
 
@@ -75,8 +75,13 @@
 > **🛑 安全门执行结果——主机B（09-23 08:26，ba37cac）**：
 > **① 单测 3/5 绿，2 红但均非加固回归的独立原因**：test_w1 14/14 ✅；test_d9_switch ✅；test_metrics_ext 18/18 ✅；test_ap2_switches ❌（前提过期：其参照断言"HEAD 不含 blur_pool 开关"，而开关实现已于 54d8873 合入 HEAD，`git show 87dfb7a:...vgg_1d.py | grep -c blur_pool` = 4 证明加固前即必失败，属 A-P2 时期一次性测试过期，需下发方更新参照基线）；test_repro ❌ P1 子项（与下条②同根因：测试 fixture 保存完整模块对象后 `weights_only=True` 读取抛 `UnpicklingError: Unsupported global: models.vgg_1d.VGG16`；P0 子项在 push-tmp 侧 junction data 后通过）。
 > **② 加载冒烟 ❌（根因=a61f578 加固引入的生产路径回归，阻塞 A-4~A-8 全部 GPU 任务）**：B 机无 `checkpoint/confirm/c2_seed0` 本地副本（冻结三件套在 A 机），以本机同构 `checkpoint/M/c3_align_mix02_seed0/encoder_group.pth`（W1 同一代码路径产出、双格式同构）等价冒烟：`torch.load(..., weights_only=True)` → `UnpicklingError: Unsupported global: models.vgg_1d.VGG16`。根因链：`run_pt.py` L762-764 保存 `{'backbone_state_dict': model.backbone_group(完整模块对象), 'backbone_state_dict_list': [state_dict]}` 双格式 → 全部历史 checkpoint（含 W2 冻结件）与 W4 未来 checkpoint 均含完整模块对象 → 加固后 `run_lp.py:65` / `run_ft.py` 同路径 `weights_only=True` 整文件反序列化必炸。
-> **修复建议（待下发方裁决，B 机不擅自改生产加载路径）**：方案A（两机兼容，推荐）= 加载处 `try weights_only=True` → `except UnpicklingError` 回退 `weights_only=False` 并打印"本地自产受信 checkpoint"警告，收敛到 `utils/checkpoint.py:load_torch_checkpoint` 单点实现；方案B = torch≥2.1 用 `torch.serialization.add_safe_globals([VGG16,...])` 白名单（B 机 2.5.1 可用；**A 机 2.0.0 是否有该 API 需实测**，公开文档口径为 2.1+ 引入）；方案C（治本，可与 A/B 并行）= `run_pt.py` 此后只存 state_dict 不存模块对象，历史文件仍需 A 兜底。⚠️ 在裁决合入前，A 机勿启动 A-4~A-8（启动也会在第一次 `--checkpoint` 加载即崩）。
+> **修复建议（09-23 08:28 主机A已裁决落地：采用方案B，见下方主机A回写；"⚠️ A 机勿启动 A-4~A-8"警告解除）**：方案A（两机兼容）= 加载处 `try weights_only=True` → `except UnpicklingError` 回退 `weights_only=False` 并打印"本地自产受信 checkpoint"警告，收敛到 `utils/checkpoint.py:load_torch_checkpoint` 单点实现；方案B = torch≥2.1 用 `torch.serialization.add_safe_globals([VGG16,...])` 白名单（B 机 2.5.1 可用；A 机台账登记 2.0.0，实际 DL env 已是 2.5.1，API 可用）；方案C（治本，可与 A/B 并行）= `run_pt.py` 此后只存 state_dict 不存模块对象，历史文件仍需白名单兜底——留作后续课题（改保存格式会变更 checkpoint 字节与 SHA 对账口径）。
 > B-4/B-5 为 CPU 任务、不触碰 checkpoint 加载路径，不受本阻塞影响，按上述认领先行。
+
+> **✅ 安全门执行结果+修复裁决落地——主机A/Win4090（09-23 08:28，两步均过；方案B已实现并随本提交合入）**：
+> **① 单测**：test_w1/test_d9_switch/test_metrics_ext/test_repro 全绿（test_repro P1 子项裸 `torch.load` 已同步改走 `load_torch_checkpoint`）；test_ap2_switches ❌ 与 B 机判定一致=设计内失效非回归（参照基线 54d8873 于 09-17 合入后任何干净 checkout 必断言"参照失效"，早于 W2 冻结 2c31a2b），已记录不改测试，待下发方日后更新参照基线。新增 `tests/test_safe_load.py` 3/3（模块对象往返 / 冻结物实测缺文件 skip / 未注册自定义类仍被拒——反门保证白名单不是 weights_only=False 后门）。
+> **② 冒烟首跑实测失败并拦截（与 B 机独立结论互证）**：W2 冻结 `encoder_group.pth` 的 `backbone_state_dict` 字段是完整 VGG16 模块对象列表（run_pt 双格式保存所致），裸 `weights_only=True` 默认白名单拒绝自定义类。修复（非绕过）：`utils/checkpoint.py` 模块级 `torch.serialization.add_safe_globals` 注册冻结物实际引用的全部全局类——对 b0/c1/c2 全系 encoder_group.pth 做 pickle opcode 静态扫描得 15 项 GLOBAL（证据 `runlog/W4/diag_ckpt_globals2.py`），白名单=VGG16/GRN1D + Sequential/Conv1d/BatchNorm1d/ReLU/MaxPool1d/AdaptiveAvgPool1d/Identity/Linear + set/frozenset，仍保持 `weights_only=True` 受限加载；三入口（run_lp/run_pt/run_ft）裸 torch.load 统一改走 `load_torch_checkpoint`。修复后冒烟通过：c2_seed0 @ PTB LP 1ep（feat-dir=`runlog/W4/smoke/c2s0_gate/`，AUROC 0.7959 仅验加载管线非账本数）。全单测 6 文件 5 绿 + 1 设计内失效。
+> **主机B pull 本提交后重跑安全门即可过**（test_repro P1 与加载冒烟均已被修复覆盖；B 机无冻结三件套，冒烟按 B 侧同构等价物执行即可）。
 
 ## 二、历史队列（已封存，不得启动）
 

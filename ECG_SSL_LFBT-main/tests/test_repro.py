@@ -36,7 +36,8 @@ def test_checkpoint_dual_format():
     sd = {k: v for k, v in enc.state_dict().items()}
     torch.save({'backbone_state_dict': [enc], 'backbone_state_dict_list': [sd]},
                "data/_ckpt_test.pth")
-    ckpt = torch.load("data/_ckpt_test.pth", map_location="cpu", weights_only=True)
+    from utils.checkpoint import load_torch_checkpoint  # import 即注册 safe-globals 白名单
+    ckpt = load_torch_checkpoint("data/_ckpt_test.pth", map_location="cpu")
     check("P1 dual keys present",
           'backbone_state_dict' in ckpt and 'backbone_state_dict_list' in ckpt)
     enc2 = VGG16(ch_in=1, alpha=0.125)  # 带 fc=Linear(64,1000), 与 run_lp 加载路径一致

@@ -62,7 +62,8 @@ class LinearProbing(object):
         self.encoder_list = list()
         load_params = None
         if args.checkpoint is not None:
-            load_params = torch.load(args.checkpoint, map_location=self.device, weights_only=True)
+            from utils.checkpoint import load_torch_checkpoint
+            load_params = load_torch_checkpoint(args.checkpoint, map_location=self.device)
         lead_names = ["ii", "iii", "v1", "v2", "v3", "v4", "v5", "v6"]
         for i in range(args.num_leads):
             encoder = VGG16(ch_in=1, alpha=0.125,

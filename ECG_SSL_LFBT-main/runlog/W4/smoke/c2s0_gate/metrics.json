@@ -1,0 +1,7 @@
+{
+ "auroc": 0.7958666804273931,
+ "auprc": 0.49197221899170235,
+ "checkpoint": "checkpoint\\confirm\\c2_seed0\\encoder_group.pth",
+ "num_classes": 5,
+ "seed": 0
+}

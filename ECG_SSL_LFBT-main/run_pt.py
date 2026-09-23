@@ -616,7 +616,8 @@ def main_worker(gpu, args):
     start_epoch = 0
     state_path = args.checkpoint_dir / 'train_state.pth'
     if getattr(args, 'resume', False) and state_path.exists():
-        st = torch.load(state_path, map_location='cpu', weights_only=True)
+        from utils.checkpoint import load_torch_checkpoint
+        st = load_torch_checkpoint(state_path, map_location='cpu')
         for _name, _sd in st['model'].items():
             _mod = getattr(model, _name)
             if isinstance(_mod, list):

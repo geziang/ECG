@@ -140,7 +140,8 @@ class FineTuning(object):
                 print("Save checkpoint with minimum val_loss (%f)." % v_loss)
                 torch.save(self.model.state_dict(), best_path)
         # 用 map_location 加载, 兼容 CPU/不同 GPU (指南 §5 P1)
-        self.model.load_state_dict(torch.load(best_path, map_location=self.device, weights_only=True))
+        from utils.checkpoint import load_torch_checkpoint
+        self.model.load_state_dict(load_torch_checkpoint(best_path, map_location=self.device))
         self.test(test_loader)
         auroc, auprc, conf_mat = self.last_metrics
         metrics = dict(auroc=float(auroc), auprc=float(auprc), confusion_matrix=conf_mat.tolist(),
