@@ -2,6 +2,8 @@ import sys, torch, numpy as np, os, time
 sys.path.insert(0, r'D:\LBTF\ECG_SSL_LFBT-main')
 
 from pathlib import Path
+
+from utils.pathguard import open_out
 import torch.nn as nn
 from tqdm import tqdm
 from sklearn.metrics import confusion_matrix, roc_auc_score, average_precision_score
@@ -9,7 +11,7 @@ from data_utils.cls_datasets import get_data_loaders
 from models.mbn import MultiBranchNet
 
 # Logging
-log_file = open(r'D:\LBTF\ECG_SSL_LFBT-main\ft_run_log.txt', 'w', buffering=1)
+log_file = open_out(Path(__file__).resolve().parent, 'ft_run_log.txt', buffering=1)
 def log(msg):
     print(msg)
     log_file.write(msg + '\n')

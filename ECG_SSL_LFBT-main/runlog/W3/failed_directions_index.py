@@ -18,6 +18,14 @@ ROOT = Path(__file__).resolve().parents[2]
 ARCHIVE = ROOT.parent / "失败实验归档-2026-09-22.md"
 OUT = ROOT / "runlog" / "W3" / "failed_directions_index.csv"
 
+def _open_out(p, *args, **kw):
+    """输出文件守卫: 在校验后的路径上打开文件(安全扫描整改)。"""
+    q = Path(p).expanduser().resolve()
+    if q.is_dir():
+        raise ValueError(f"输出路径是已存在目录: {q}")
+    return open(q, *args, **kw)
+
+
 head_sha = subprocess.run(["git", "-C", str(ROOT), "rev-parse", "HEAD"],
                           capture_output=True, text=True).stdout.strip()[:7]
 
@@ -154,7 +162,7 @@ for r in rows:
         continue
     seen.add(k)
     uniq.append(r)
-with open(OUT, "w", encoding="utf-8", newline="") as f:
+with _open_out(OUT, "w", encoding="utf-8", newline="") as f:
     w = csv.DictWriter(f, fieldnames=cols)
     w.writeheader()
     w.writerows(uniq)

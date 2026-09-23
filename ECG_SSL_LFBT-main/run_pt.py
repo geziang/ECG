@@ -1,6 +1,8 @@
 from pathlib import Path
 import argparse
 import hashlib
+
+from utils.pathguard import open_out, safe_out_path
 import json
 import platform
 import time
@@ -614,7 +616,7 @@ def main_worker(gpu, args):
     start_epoch = 0
     state_path = args.checkpoint_dir / 'train_state.pth'
     if getattr(args, 'resume', False) and state_path.exists():
-        st = torch.load(state_path, map_location='cpu')
+        st = torch.load(state_path, map_location='cpu', weights_only=True)
         for _name, _sd in st['model'].items():
             _mod = getattr(model, _name)
             if isinstance(_mod, list):
@@ -770,7 +772,7 @@ def main_worker(gpu, args):
         from models.sinc_conv import sinc_bands
         bands = {f"lead{i}": sinc_bands(model.backbone_group[i].model[0][0][0])
                  for i in range(args.num_leads)}
-        with open(args.checkpoint_dir / "sinc_bands.json", "w") as f:
+        with open_out(args.checkpoint_dir, "sinc_bands.json") as f:
             json.dump(bands, f, indent=1)
         print("Sinc bands exported:", args.checkpoint_dir / "sinc_bands.json")
 
@@ -779,8 +781,8 @@ def main_worker(gpu, args):
         import numpy as _np
         T_full = model.d1l_P.cpu().clone()
         T_full.fill_diagonal_(1.0)
-        _np.save(args.checkpoint_dir / "target_matrix.npy", T_full.numpy())
-        with open(args.checkpoint_dir / "d1l_check.json", "w") as f:
+        _np.save(safe_out_path(args.checkpoint_dir, "target_matrix.npy"), T_full.numpy())
+        with open_out(args.checkpoint_dir, "d1l_check.json") as f:
             json.dump(dict(d1l=args.d1l, shuffle=bool(args.d1l_shuffle),
                            eigenvalues=model.d1l_eigs,
                            min_eig=min(model.d1l_eigs),
@@ -817,7 +819,7 @@ def main_worker(gpu, args):
     )
     if model.acl_partition is not None:
         info["acl_partition"] = [list(r) for r in model.acl_partition]
-    with open(args.checkpoint_dir / "config.json", "w") as f:
+    with open_out(args.checkpoint_dir, "config.json") as f:
         json.dump(info, f, indent=1, default=str)
 
 

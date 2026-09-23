@@ -17,6 +17,14 @@ ROOT = Path(__file__).resolve().parents[2]
 PY = os.environ.get("DL_PY", r"C:\Users\admin\.conda\envs\DL\python.exe")
 OUT = ROOT / "runlog/W2/missing_lead_c2.csv"
 LOG = ROOT / "runlog/W2/missing_lead_c2.log"
+
+def _open_out(p, *args, **kw):
+    """输出文件守卫: 在校验后的路径上打开文件(安全扫描整改)。"""
+    q = Path(p).expanduser().resolve()
+    if q.is_dir():
+        raise ValueError(f"输出路径是已存在目录: {q}")
+    return open(q, *args, **kw)
+
 SEEDS = (0, 2, 4)
 CONDS = [("full", "")] + [(f"miss{i}", str(i)) for i in range(8)] + \
         [(f"miss{i}{j}", f"{i},{j}") for i, j in itertools.combinations(range(8), 2)]
@@ -39,7 +47,7 @@ def done_rows():
 def main():
     done = done_rows()
     if not OUT.exists():
-        with open(OUT, "w", newline="", encoding="utf-8") as f:
+        with _open_out(OUT, "w", newline="", encoding="utf-8") as f:
             csv.writer(f).writerow(["seed", "cond", "auroc", "auprc"])
     total = len(SEEDS) * len(CONDS)
     n = 0

@@ -26,6 +26,8 @@
 import argparse
 import collections
 import json
+
+from utils.pathguard import open_out
 import random
 import re
 import time
@@ -152,7 +154,7 @@ def build(root_glob, cmap, priority, classes, name, args):
         "wall_time_s": round(time.time() - t0, 1),
     }
     Path(args.manifest_dir).mkdir(parents=True, exist_ok=True)
-    with open(Path(args.manifest_dir) / f"{name}_manifest.json", "w", encoding="utf-8") as fp:
+    with open_out(args.manifest_dir, f"{name}_manifest.json", encoding="utf-8") as fp:
         json.dump(manifest, fp, ensure_ascii=False, indent=1)
     print(f"[{name}] ok={stats['ok']} excl_unmapped={excl_unmapped} "
           f"other={dict((k,v) for k,v in stats.items() if k!='ok')} 用时{manifest['wall_time_s']}s")

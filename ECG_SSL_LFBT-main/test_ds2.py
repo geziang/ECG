@@ -1,8 +1,9 @@
 import sys, os
-sys.path.insert(0, r'D:\LBTF\ECG_SSL_LFBT-main')
+_ROOT = os.path.dirname(os.path.abspath(__file__))
+sys.path.insert(0, _ROOT)
 
-log_path = r'D:\LBTF\ECG_SSL_LFBT-main\test_result.txt'
-with open(log_path, 'w') as f:
+from utils.pathguard import open_out
+with open_out(_ROOT, 'test_result.txt') as f:
     f.write("Starting...\n")
     try:
         f.write("Importing torchvision...\n")

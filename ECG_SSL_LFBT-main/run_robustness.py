@@ -165,7 +165,7 @@ def load_test(ds, limit=None):
 
 def build_lp_encoders(kind, seed):
     ckdir = ROOT / f"checkpoint/confirm/{kind}_seed{seed}"
-    load_params = torch.load(ckdir / "encoder_group.pth", map_location="cuda")
+    load_params = torch.load(ckdir / "encoder_group.pth", map_location="cuda", weights_only=True)
     encs = []
     for i in range(8):
         enc = VGG16(ch_in=1, alpha=0.125, blur_pool=0, pool_power=0.0, trc=TRC_OF[kind])
@@ -202,7 +202,7 @@ def eval_ft_probs(model, x_t):
 
 def build_ft(kind, seed, nc):
     model = MultiBranchNet(nc, trc=TRC_OF[kind]).cuda().eval()
-    sd = torch.load(ROOT / f"ft_models/confirm/{kind}_seed{seed}/ft_best_ckpt.pth", map_location="cuda")
+    sd = torch.load(ROOT / f"ft_models/confirm/{kind}_seed{seed}/ft_best_ckpt.pth", map_location="cuda", weights_only=True)
     model.load_state_dict(sd)  # strict=True: 全模型 state_dict, 错配硬拒
     return model
 
@@ -274,7 +274,7 @@ def main():
                 head = LinearClassifier(feat_dim=512, num_classes=nc).cuda().eval()
                 head.load_state_dict(torch.load(
                     ROOT / f"results/confirm/{kind}_{ds}_seed{seed}/classifier_best_ckpt.pth",
-                    map_location="cuda"))
+                    map_location="cuda", weights_only=True))
                 models[(kind, seed)] = (encs, head)
             else:
                 models[(kind, seed)] = build_ft(kind, seed, nc)

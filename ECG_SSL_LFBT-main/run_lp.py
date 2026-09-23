@@ -1,6 +1,8 @@
 from pathlib import Path
 import argparse
 import json
+
+from utils.pathguard import open_out
 import torch
 import torch.utils.data as data
 import torch.nn as nn
@@ -60,7 +62,7 @@ class LinearProbing(object):
         self.encoder_list = list()
         load_params = None
         if args.checkpoint is not None:
-            load_params = torch.load(args.checkpoint, map_location=self.device)
+            load_params = torch.load(args.checkpoint, map_location=self.device, weights_only=True)
         lead_names = ["ii", "iii", "v1", "v2", "v3", "v4", "v5", "v6"]
         for i in range(args.num_leads):
             encoder = VGG16(ch_in=1, alpha=0.125,
@@ -227,7 +229,7 @@ class LinearProbing(object):
                     min_val_loss = val_loss
                     torch.save(classifier.state_dict(), feat_path / "classifier_best_ckpt.pth")
 
-        classifier.load_state_dict(torch.load(feat_path / "classifier_best_ckpt.pth"))
+        classifier.load_state_dict(torch.load(feat_path / "classifier_best_ckpt.pth", weights_only=True))
         classifier.eval()
 
         test_loader = data.DataLoader(
@@ -288,7 +290,7 @@ class LinearProbing(object):
                 _mx.save_eval_artifacts(_sp_dir, y, y_, y_one_hot_, _meta)
                 print("Per-record predictions saved to", _sp_dir)
 
-        with open(self.args.feat_dir / "metrics.json", "w") as f:
+        with open_out(self.args.feat_dir, "metrics.json") as f:
             json.dump(metrics, f, indent=1)
 
     def run(self):

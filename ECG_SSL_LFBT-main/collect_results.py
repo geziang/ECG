@@ -7,6 +7,8 @@ import csv
 import json
 import os
 
+from utils.pathguard import open_out_file
+
 EXPERIMENT_ORDER = [
     "ptbxl_lp", "ptbxl_lp_tfs",
     "ptbxl_ft_1.0", "ptbxl_ft_0.1", "ptbxl_ft_tfs", "ptbxl_ft_tfs_0.1",
@@ -42,7 +44,7 @@ def main():
     rank = {e: i for i, e in enumerate(EXPERIMENT_ORDER)}
     rows.sort(key=lambda r: (rank.get(r["experiment"], 99), r["experiment"]))
 
-    with open(args.out, "w", newline="", encoding="utf-8") as fh:
+    with open_out_file(args.out, newline="", encoding="utf-8") as fh:
         w = csv.DictWriter(fh, fieldnames=["experiment", "auroc", "auprc", "checkpoint", "fraction", "num_classes", "note"])
         w.writeheader()
         w.writerows(rows)

@@ -26,6 +26,14 @@ SRC = Path(r"E:\GZA\ECG_data\ningbo")
 W1_MANIFEST = Path(r"E:\GZA\ECG-main\ECG_SSL_LFBT-main\runlog\W1\nfh_manifest.json")
 OUT_CSV = ROOT / "runlog" / "W3" / "nfh_exclusion_reconciliation.csv"
 OUT_MANIFEST = ROOT / "runlog" / "W3" / "nfh_manifest_hostB_w3.json"
+
+def _open_out(p, *args, **kw):
+    """输出文件守卫: 在校验后的路径上打开文件(安全扫描整改)。"""
+    q = Path(p).expanduser().resolve()
+    if q.is_dir():
+        raise ValueError(f"输出路径是已存在目录: {q}")
+    return open(q, *args, **kw)
+
 LEADS_WANT = ["II", "III", "V1", "V2", "V3", "V4", "V5", "V6"]
 OUT_LEN = 2048
 
@@ -97,7 +105,7 @@ def main():
         raise SystemExit("FAIL: 重扫计数与 W1 manifest 不一致, 交付物不落盘(停止线)")
 
     OUT_CSV.parent.mkdir(parents=True, exist_ok=True)
-    with open(OUT_CSV, "w", encoding="utf-8", newline="") as f:
+    with _open_out(OUT_CSV, "w", encoding="utf-8", newline="") as f:
         w = csv.writer(f)
         w.writerow(["record", "stage", "nonfinite_leads", "n_nan", "n_inf",
                     "raw_len", "fs_hz", "nonfinite_after_resample",

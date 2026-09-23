@@ -42,8 +42,17 @@ def read_csv(path):
         return list(csv.DictReader(f))
 
 
+
+def _open_out(p, *args, **kw):
+    """输出文件守卫: 在校验后的路径上打开文件(安全扫描整改)。"""
+    q = Path(p).expanduser().resolve()
+    if q.is_dir():
+        raise ValueError(f"输出路径是已存在目录: {q}")
+    return open(q, *args, **kw)
+
+
 def write_csv(path, cols, rows):
-    with open(path, "w", encoding="utf-8", newline="") as f:
+    with _open_out(path, "w", encoding="utf-8", newline="") as f:
         w = csv.DictWriter(f, fieldnames=cols)
         w.writeheader()
         w.writerows(rows)

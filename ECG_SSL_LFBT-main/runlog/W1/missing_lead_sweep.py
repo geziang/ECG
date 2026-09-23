@@ -21,6 +21,14 @@ CONDS = [("full", "")] + [(f"miss{i}", str(i)) for i in range(8)] + \
         [(f"miss{i}{j}", f"{i},{j}") for i, j in itertools.combinations(range(8), 2)]
 OUT = ROOT / "runlog/W1/missing_lead_curves.csv"
 
+def _open_out(p, *args, **kw):
+    """输出文件守卫: 在校验后的路径上打开文件(安全扫描整改)。"""
+    q = Path(p).expanduser().resolve()
+    if q.is_dir():
+        raise ValueError(f"输出路径是已存在目录: {q}")
+    return open(q, *args, **kw)
+
+
 
 def done_rows():
     if not OUT.exists():
@@ -32,7 +40,7 @@ def done_rows():
 def main():
     done = done_rows()
     if not OUT.exists():
-        with open(OUT, "w", newline="", encoding="utf-8") as f:
+        with _open_out(OUT, "w", newline="", encoding="utf-8") as f:
             csv.writer(f).writerow(["ckpt", "cond", "auroc", "auprc"])
     total = len(CKPTS) * len(CONDS)
     for n, ((ck, ckpt), (cname, leads)) in enumerate(

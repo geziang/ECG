@@ -2,6 +2,8 @@ import sys, torch, numpy as np, os
 sys.path.insert(0, r'D:\LBTF\ECG_SSL_LFBT-main')
 
 from pathlib import Path
+
+from utils.pathguard import open_out
 import torch.utils.data as data
 import torch.nn as nn
 from tqdm import tqdm
@@ -12,7 +14,7 @@ from data_utils.cls_datasets import LinearClsDataset
 from models.vgg_1d import VGG16
 
 # Logging
-log_file = open(r'D:\LBTF\ECG_SSL_LFBT-main\lp_run_log.txt', 'w', buffering=1)
+log_file = open_out(Path(__file__).resolve().parent, 'lp_run_log.txt', buffering=1)
 def log(msg):
     print(msg)
     log_file.write(msg + '\n')
@@ -34,7 +36,7 @@ log(f'checkpoint: {checkpoint}')
 log(f'num_classes: {num_classes}')
 
 # Load encoder
-load_params = torch.load(checkpoint, map_location=device)
+load_params = torch.load(checkpoint, map_location=device, weights_only=True)
 encoder_list = []
 lead_names = ["ii", "iii", "v1", "v2", "v3", "v4", "v5", "v6"]
 for i in range(num_leads):
@@ -115,7 +117,7 @@ for ep in range(epoch):
     if ep % 10 == 0:
         log(f"Epoch {ep}: val_loss={val_loss:.4f}")
 
-classifier.load_state_dict(torch.load(feat_dir / "classifier_best_ckpt.pth"))
+classifier.load_state_dict(torch.load(feat_dir / "classifier_best_ckpt.pth", weights_only=True))
 classifier.eval()
 
 # Test

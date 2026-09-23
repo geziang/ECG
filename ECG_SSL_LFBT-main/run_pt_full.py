@@ -3,6 +3,8 @@ import sys, time, torch
 sys.path.insert(0, r'D:\LBTF\ECG_SSL_LFBT-main')
 
 from pathlib import Path
+
+from utils.pathguard import open_out
 from torch import nn, optim
 import torchvision.transforms as transforms
 from data_utils.data_folder import ECGDatasetFolder
@@ -10,8 +12,7 @@ from data_utils.multi_view_data_injector import MultiViewDataInjector
 from data_utils.augmentations import RandomResizeCropTimeOut, ToTensor
 from models.vgg_1d import VGG16
 
-log_path = r'D:\LBTF\ECG_SSL_LFBT-main\pt_full_log.txt'
-log_file = open(log_path, 'w', buffering=1)
+log_file = open_out(Path(__file__).resolve().parent, 'pt_full_log.txt', buffering=1)
 
 def log(msg):
     print(msg)

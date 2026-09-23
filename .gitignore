@@ -42,3 +42,6 @@ Thumbs.db
 .idea/
 .vscode/
 ECG_SSL_LFBT-wt1/
+
+# ===== 安全扫描产物 =====
+.mimosa/

@@ -25,7 +25,7 @@ from data_utils.seed_utils import set_seed
 
 
 def build_encoders(checkpoint, sinc_m, device):
-    load_params = torch.load(checkpoint, map_location=device)
+    load_params = torch.load(checkpoint, map_location=device, weights_only=True)
     encoders = []
     for i in range(8):
         enc = VGG16(ch_in=1, alpha=0.125)

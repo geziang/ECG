@@ -2,6 +2,8 @@ import time
 from pathlib import Path
 import argparse
 import json
+
+from utils.pathguard import open_out
 import numpy as np
 import torch
 import torch.nn as nn
@@ -138,7 +140,7 @@ class FineTuning(object):
                 print("Save checkpoint with minimum val_loss (%f)." % v_loss)
                 torch.save(self.model.state_dict(), best_path)
         # 用 map_location 加载, 兼容 CPU/不同 GPU (指南 §5 P1)
-        self.model.load_state_dict(torch.load(best_path, map_location=self.device))
+        self.model.load_state_dict(torch.load(best_path, map_location=self.device, weights_only=True))
         self.test(test_loader)
         auroc, auprc, conf_mat = self.last_metrics
         metrics = dict(auroc=float(auroc), auprc=float(auprc), confusion_matrix=conf_mat.tolist(),
@@ -169,7 +171,7 @@ class FineTuning(object):
                 _mx.save_eval_artifacts(_sp_dir, _y_true, _y_pred, _y_prob, _meta)
                 print("Per-record predictions saved to", _sp_dir)
 
-        with open(self.args.model_dir / "metrics.json", "w") as f:
+        with open_out(self.args.model_dir, "metrics.json") as f:
             json.dump(metrics, f, indent=1)
 
 

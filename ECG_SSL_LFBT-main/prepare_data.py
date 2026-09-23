@@ -18,6 +18,8 @@
 import argparse
 import ast
 import hashlib
+
+from utils.pathguard import open_out, safe_out_path
 import json
 import os
 import re
@@ -218,8 +220,8 @@ def main():
         "val": [9], "test": [10]},
         records=manifest_records,
     )
-    manifest_path = os.path.join(args.out_root, "manifest.json")
-    with open(manifest_path, "w", encoding="utf-8") as f:
+    manifest_path = safe_out_path(args.out_root, "manifest.json")
+    with open_out(args.out_root, "manifest.json", encoding="utf-8") as f:
         json.dump(manifest, f, ensure_ascii=False, indent=1)
 
     # 汇总

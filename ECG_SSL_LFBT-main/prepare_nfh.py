@@ -35,6 +35,8 @@ import time
 from multiprocessing import Pool
 from pathlib import Path
 
+from utils.pathguard import open_out
+
 import numpy as np
 import scipy.io
 import scipy.signal
@@ -141,9 +143,9 @@ def main():
         },
         "wall_time_s": round(time.time() - t0, 1),
     }
-    with open(Path(args.manifest_dir) / "nfh_manifest.json", "w", encoding="utf-8") as f:
+    with open_out(args.manifest_dir, "nfh_manifest.json", encoding="utf-8") as f:
         json.dump(manifest, f, ensure_ascii=False, indent=1)
-    with open(Path(args.manifest_dir) / "nfh_sha256.txt", "w") as f:
+    with open_out(args.manifest_dir, "nfh_sha256.txt") as f:
         for rel, sha in sha_list:
             f.write(f"{sha}  {rel}\n")
 
