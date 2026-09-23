@@ -24,3 +24,5 @@
 09-23 14:20 | CLOCS laneB ✅ seed2 全链 4 行入账: cpsc 0.9475 / ft10 0.8570 / ptbxl lp 0.8666 / chapman 0.9961 — 整体介于 SimCLR 与 C2 之间符合文献'中档代表'定位(chapman 0.9961 已贴近 C2 0.9963; ptbxl lp 0.8666 低于 SimCLR 属如实入表反序点, 不隐藏)。clocs 4/12 行, laneA seed0 PT ep54/100 继续中。账本 20 行。
 
 09-23 15:00 | 轻量校对: 全健康。CLOCS laneA seed0 PT ep93/100(mtime 秒级), 即将转下游; clocs 4/12 行。账本 23/27(b0×4+clocs×4+s3×3+simclr×12全齐)。GPU 6.5G/54%。14:2x-15:00 推送断网 3 连败(30422bb 积压本地), 本轮重试。
+
+09-23 17:00 | 全巡: 全健康。CLOCS seed0 全链✅4行入账(cpsc 0.9463/ft10 0.8541/ptbxl lp 0.8681/chapman 0.9958); seed4 PT ep74/100(最后一链)。账本 27/31 行, 只差 clocs seed4 下游4行。GPU 6.5G/58% 单车道。seed0/seed2 同下游一致性±0.003内。预计~18:15 全部收口。无重启动作。
