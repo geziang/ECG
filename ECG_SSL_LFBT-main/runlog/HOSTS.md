@@ -65,12 +65,18 @@
 | A-6 监督直训参照 | A / Win4090 | 📋 已下发 | 同上 | — |
 | A-7 B0 跨库补seed(纯评估) | A / Win4090 | 📋 已下发 | 同上 | SHA不符即停 |
 | A-8 预测重放+守卫扩展 | A / Win4090 | 📋 已下发 | `runlog/W4/predictions/` | 复现门超差即停 |
-| B-4 配对统计与基线总表 | B / DESKTOP-0PBLCND | 📋 已下发 | `runlog/W4/stats/`、`paper_materials_v2/` | 只做 record-level 统计 |
-| B-5 基线实现审计 | B / DESKTOP-0PBLCND | 📋 已下发 | `runlog/W4/baseline_impl_audit.md` | 实现偏差→停止入表 |
+| B-4 配对统计与基线总表 | B / DESKTOP-0PBLCND | 🏃 DESKTOP-0PBLCND(09-23 08:26) 统计管线先行，待 A-8 predictions | `runlog/W4/stats/`、`paper_materials_v2/` | 只做 record-level 统计 |
+| B-5 基线实现审计 | B / DESKTOP-0PBLCND | 🏃 DESKTOP-0PBLCND(09-23 08:26) 官方参照底稿先行，待 A-4/A-5 实现 | `runlog/W4/baseline_impl_audit.md` | 实现偏差→停止入表 |
 
 认领纪律不变：`git pull --ff-only origin main` → 本表改 `🏃主机名(时间)` 并 push → 完成改 `✅` 附结果路径/SHA。执行顺序：A-7→A-6 先出数，A-4 smoke→3seeds，A-5 风险靠后，B-4/B-5 收尾。
 
 > **首 pull 安全门（2026-09-23 安全加固随本批次先行合入）**：加固内容=checkpoint 加载统一 `weights_only=True`（`utils/checkpoint.py` 及各入口）+ 输出路径守卫 `utils/pathguard.py`（`open_out`/`open_out_file` 替代直接 `open(用户路径)`）。两机首次 `git pull` 后、启动任何 W4 训练前，必须：① 跑 `tests/` 全部单测（test_w1/test_ap2_switches/test_d9_switch/test_metrics_ext/test_repro）全绿；② 用 `run_lp.py --checkpoint checkpoint/confirm/c2_seed0/encoder_group.pth --data-dir data/ptbxl --num-classes 5 ...` 做一次小规模加载冒烟（`--epochs 1` 或早停均可），确认 `weights_only=True` 能正常加载 W2 冻结 checkpoint。任一步失败 → 停止并回写本台账，不得绕过。
+
+> **🛑 安全门执行结果——主机B（09-23 08:26，ba37cac）**：
+> **① 单测 3/5 绿，2 红但均非加固回归的独立原因**：test_w1 14/14 ✅；test_d9_switch ✅；test_metrics_ext 18/18 ✅；test_ap2_switches ❌（前提过期：其参照断言"HEAD 不含 blur_pool 开关"，而开关实现已于 54d8873 合入 HEAD，`git show 87dfb7a:...vgg_1d.py | grep -c blur_pool` = 4 证明加固前即必失败，属 A-P2 时期一次性测试过期，需下发方更新参照基线）；test_repro ❌ P1 子项（与下条②同根因：测试 fixture 保存完整模块对象后 `weights_only=True` 读取抛 `UnpicklingError: Unsupported global: models.vgg_1d.VGG16`；P0 子项在 push-tmp 侧 junction data 后通过）。
+> **② 加载冒烟 ❌（根因=a61f578 加固引入的生产路径回归，阻塞 A-4~A-8 全部 GPU 任务）**：B 机无 `checkpoint/confirm/c2_seed0` 本地副本（冻结三件套在 A 机），以本机同构 `checkpoint/M/c3_align_mix02_seed0/encoder_group.pth`（W1 同一代码路径产出、双格式同构）等价冒烟：`torch.load(..., weights_only=True)` → `UnpicklingError: Unsupported global: models.vgg_1d.VGG16`。根因链：`run_pt.py` L762-764 保存 `{'backbone_state_dict': model.backbone_group(完整模块对象), 'backbone_state_dict_list': [state_dict]}` 双格式 → 全部历史 checkpoint（含 W2 冻结件）与 W4 未来 checkpoint 均含完整模块对象 → 加固后 `run_lp.py:65` / `run_ft.py` 同路径 `weights_only=True` 整文件反序列化必炸。
+> **修复建议（待下发方裁决，B 机不擅自改生产加载路径）**：方案A（两机兼容，推荐）= 加载处 `try weights_only=True` → `except UnpicklingError` 回退 `weights_only=False` 并打印"本地自产受信 checkpoint"警告，收敛到 `utils/checkpoint.py:load_torch_checkpoint` 单点实现；方案B = torch≥2.1 用 `torch.serialization.add_safe_globals([VGG16,...])` 白名单（B 机 2.5.1 可用；**A 机 2.0.0 是否有该 API 需实测**，公开文档口径为 2.1+ 引入）；方案C（治本，可与 A/B 并行）= `run_pt.py` 此后只存 state_dict 不存模块对象，历史文件仍需 A 兜底。⚠️ 在裁决合入前，A 机勿启动 A-4~A-8（启动也会在第一次 `--checkpoint` 加载即崩）。
+> B-4/B-5 为 CPU 任务、不触碰 checkpoint 加载路径，不受本阻塞影响，按上述认领先行。
 
 ## 二、历史队列（已封存，不得启动）
 
