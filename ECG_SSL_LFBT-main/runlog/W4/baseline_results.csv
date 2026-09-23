@@ -3,3 +3,7 @@ ts,ckpt,seed,eval,downstream,auroc,auprc,git_sha,checkpoint_sha256,method_family
 2026-09-23 08:52,b0,4,lp,cpsc,0.9605,0.8088,2468a14,ba4f2d3c99aff6b5889dae4ebdd1103b8949e2d1f8fcadd28d0a5df8b91c0daa,bt_ssl(baseline),C1-equivalent(W2协议)
 2026-09-23 08:54,b0,2,lp,chapman,0.9925,0.9774,2468a14,f39059a4430c2e7aa8963ca3c75b608120452f517622862fb3a73a7dc95d26a4,bt_ssl(baseline),C1-equivalent(W2协议)
 2026-09-23 08:54,b0,4,lp,chapman,0.9939,0.9816,2468a14,ba4f2d3c99aff6b5889dae4ebdd1103b8949e2d1f8fcadd28d0a5df8b91c0daa,bt_ssl(baseline),C1-equivalent(W2协议)
+2026-09-23 09:37,s3,0,ft100,ptbxl,0.8845,0.6570,2468a14,random-init-TFS,supervised_direct,run_ft默认超参(任务书A-6: lr1e-4/100ep/bs128/全量)
+2026-09-23 10:34,simclr,0,lp,cpsc,0.9380,0.7358,c4251f3,cc28ed3a955490014cb582c9fb75193140b9ca5d083e3f783963b76c80d2f103,contrastive_ssl,simclr-vs-c1(见runlog/W4/baseline_hparams.csv)
+2026-09-23 10:34,simclr,2,lp,cpsc,0.9371,0.7324,c4251f3,e4b431ba5c601bd52de3ad0e9b70d003d6840b5b8ce81409b50cae2b44d8b677,contrastive_ssl,simclr-vs-c1(见runlog/W4/baseline_hparams.csv)
+2026-09-23 10:38,s3,2,ft100,ptbxl,0.8797,0.6617,2468a14,random-init-TFS,supervised_direct,run_ft默认超参(任务书A-6: lr1e-4/100ep/bs128/全量)
