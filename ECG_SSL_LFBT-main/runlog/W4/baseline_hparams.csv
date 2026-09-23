@@ -1,6 +1,6 @@
 item,simclr_vs_c1,note
 loss_mode,simclr (NT-Xent),C1=bt(Barlow Twins); 唯一核心差异
-temperature,0.5,SimCLR 发表默认(Chen et al. 2020); 禁调参(任务书§1.4)
+temperature,0.5,SimCLR 官方 repo CIFAR 口径默认(论文 ImageNet 主结果为 0.1); 任务书§A-4 明令 0.5; 禁调参(§1.4)
 正对定义,同记录同导联两视图,与 C1 的同导联视图对齐; NT-Xent 负对=批内其余 2N-2 视图
 跨导联项,无(loss_t=0),BT 的 loss_r/loss_t(γ=0.8)结构不适用于 NT-Xent; 逐导联独立 SimCLR
 输出白化BN,不适用(bn_group 绕过),SimCLR 以 L2 归一化+温度实现尺度不变; projector 内部 BN 保持
@@ -10,3 +10,14 @@ backbone,VGG16(alpha=0.125, 逐导联, sinc_frontend=0, trc=0),与 C1 完全相�
 optimizer,Adam lr=0.001(与 C1 相同),batch 128 / workers 4 / epochs 100(NFH)
 预训练数据,data/pt_pretrain_nfh,与 C1 相同
 超参搜索,无,全部采用发表默认或 C1 等价配置(任务书§1.4 公平性条款)
+item,clocs_vs_c1,note
+loss_mode,clocs(多正对NT-Xent变体),C1=bt; 官方=obtain_contrastive_loss(danikiyasseh/CLOCS)
+temperature,0.1,官方 prepare_miscellaneous.py 默认(论文§5.5); 与S1的0.5不同
+分母口径,含正对自身(整行/列和),官方diag项分母=Σ_j e^{s(i,j)}含j=i; 与SimCLR排除自身相反(审计关键点②)
+temporal正对,同导联两时间窗(z1[i],z2[i]),CMSC语义; 两窗=C1的RRC两视图(增强按公平条款用C1的, 非CLOCS官方spectrogram掩码)
+spatial正对,同窗跨导联(z1[i],z1[j])/(z2[i],z2[j]) i<j,CMLC语义逐导联化(官方为导联子集级)
+off-diag项(同患者跨实例),省略,本仓NFH管线无患者ID; 官方代码在无pid时loss_terms=2即纯diag双向——行为与官方'无pid'路径一致
+损失组合,Σ对/(2×n_pairs),官方loss=Σ/(loss_terms×ncombinations)等价; loss_terms=2
+表示层级,projector输出L2归一化,官方无独立projector(编码器末层=embedding); 本仓以C1等价projector输出对齐(公平条款)
+backbone,VGG16逐导联(=C1),官方=3×Conv1D+2FC; 裁定:backbone保持C1以维持'同backbone家族'可比性(B-5底稿建议), 差异本条记录
+优化器,Adam lr=0.001(与C1相同),官方lr=1e-4 batch256; 公平条款裁定用C1口径

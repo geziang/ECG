@@ -41,11 +41,13 @@ parser.add_argument('--seed', default=0, type=int, metavar='N', help='random see
 parser.add_argument('--checkpoint-dir', default='./checkpoint/', type=Path,
                     metavar='DIR', help='path to checkpoint directory')
 # ===== S1/D9: VICReg 化开关 (默认全关 == B0) =====
-parser.add_argument('--loss-mode', default='bt', choices=['bt', 'vicreg', 'simclr'],
+parser.add_argument('--loss-mode', default='bt', choices=['bt', 'vicreg', 'simclr', 'clocs'],
                     help='目标函数: bt=原版 Barlow Twins (B0), vicreg=D9 三项化, '
-                         'simclr=W4 A-4 外部基线 S1(NT-Xent)')
+                         'simclr=W4 A-4 外部基线 S1(NT-Xent), clocs=W4 A-5 外部基线 S2')
 parser.add_argument('--simclr-temp', default=0.5, type=float,
                     help='S1: NT-Xent 温度(SimCLR 发表默认 0.5, 禁调参)')
+parser.add_argument('--clocs-temp', default=0.1, type=float,
+                    help='S2: CLOCS 温度(官方 obtain_contrastive_loss 默认 0.1, 禁调参)')
 parser.add_argument('--vicreg-sim', default=25.0, type=float, help='VICReg invariance(MSE) 系数')
 parser.add_argument('--vicreg-var', default=25.0, type=float, help='VICReg variance hinge 系数')
 parser.add_argument('--vicreg-cov', default=1.0, type=float, help='VICReg covariance 系数')
@@ -358,6 +360,23 @@ class LeadFusionBT(object):
         targets = (targets + N) % (2 * N)
         return nn.functional.cross_entropy(sim, targets)
 
+    def _clocs_diag_loss(self, za, zb):
+        """S2 (W4 A-5): CLOCS 官方 obtain_contrastive_loss 的 diag 双向项。
+
+        官方口径(danikiyasseh/CLOCS prepare_miscellaneous.py): s=cos/τ, τ=0.1;
+        loss_term1/2 = -mean(log(diag/整行和)), -mean(log(diag/整列和))——
+        **分母含正对自身(与 SimCLR 排除自身相反, 审计关键点②)**。
+        官方在无患者 id 时 loss_terms=2 即纯本函数; 本仓 NFH 管线无 pid,
+        off-diag(同患者跨实例)项不适用=官方"无 pid"自然路径。
+        """
+        za_n = za / za.norm(dim=1, keepdim=True)
+        zb_n = zb / zb.norm(dim=1, keepdim=True)
+        e = torch.exp(za_n @ zb_n.T / self.args.clocs_temp)
+        diag = torch.diagonal(e)
+        t1 = -torch.mean(torch.log(diag / e.sum(dim=1)))
+        t2 = -torch.mean(torch.log(diag / e.sum(dim=0)))
+        return t1 + t2
+
     def forward(self, y1, y2, y_pair=None, pair_mask=None,
                 hrv_target=None, hrv_valid=None, rec=None):
         self.last_extra = {}
@@ -396,6 +415,26 @@ class LeadFusionBT(object):
             loss_r = loss_r / self.args.num_leads
             loss_t = torch.zeros_like(loss_r)
             return loss_r, loss_r, loss_t
+        if self.args.loss_mode == 'clocs':
+            # S2 (W4 A-5): 逐导联框架下的 CLOCS 正对映射——temporal(CMSC 语义)=
+            # 同导联两时间窗 (z1[i], z2[i]); spatial(CMLC 语义)=同窗跨导联
+            # (z1[i], z1[j]) 与 (z2[i], z2[j]), i<j。每对算官方 diag 双向损失,
+            # 按官方归一化 loss=Σ/(2×n_pairs)(loss_terms=2 × ncombinations)。
+            # projector 输出直接 L2 归一化(官方无独立 projector, 以编码器输出
+            # embedding 参算; 本仓以 C1 等价 projector 输出对齐, 差异入 hparams)。
+            L = self.args.num_leads
+            temporal, spatial = 0.0, 0.0
+            for i in range(L):
+                temporal = temporal + self._clocs_diag_loss(z1_list[i], z2_list[i])
+            for i in range(L):
+                for j in range(i + 1, L):
+                    spatial = spatial + self._clocs_diag_loss(z1_list[i], z1_list[j])
+                    spatial = spatial + self._clocs_diag_loss(z2_list[i], z2_list[j])
+            n_pairs = L + 2 * (L * (L - 1) // 2)
+            loss = (temporal + spatial) / (2 * n_pairs)
+            loss_r = temporal / (2 * L)
+            loss_t = spatial / (2 * (n_pairs - L)) if n_pairs > L else torch.zeros_like(loss)
+            return loss, loss_r, loss_t
         z1b = self._bn_embed(z1_list) if self.fast else None
         z2b = self._bn_embed(z2_list) if self.fast else None
         loss_r = 0
