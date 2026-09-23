@@ -6,3 +6,24 @@ ts,status,tag,detail
 09-23 11:24,REF,b0_cpsc_seed0,"auroc 0.9608 vs 0.9608 (d=+0.0000); auprc 0.8105 vs 0.8105 (d=-0.0000); ref=W1 [W1参考行, 不拦截]"
 09-23 11:24,SKIP+NOREF,b0_cpsc_seed2,auroc=0.9564 auprc=0.7940 (无账本行)
 09-23 11:24,SKIP+NOREF,b0_cpsc_seed4,auroc=0.9605 auprc=0.8088 (无账本行)
+09-23 11:25,REF,b0_chapman_seed0,"auroc 0.9932 vs 0.9932 (d=+0.0000); auprc 0.9796 vs 0.9796 (d=+0.0000); ref=W1 [W1参考行, 不拦截]"
+09-23 11:25,SKIP+NOREF,b0_chapman_seed2,auroc=0.9925 auprc=0.9774 (无账本行)
+09-23 11:25,SKIP+NOREF,b0_chapman_seed4,auroc=0.9939 auprc=0.9816 (无账本行)
+09-23 11:27,PASS,c1_ptbxl_seed0,auroc 0.8907 vs 0.8907 (d=+0.0000); auprc 0.6574 vs 0.6574 (d=-0.0000); ref=W2
+09-23 11:28,PASS,c1_ptbxl_seed2,auroc 0.8795 vs 0.8795 (d=+0.0000); auprc 0.6412 vs 0.6412 (d=+0.0000); ref=W2
+09-23 11:30,PASS,c1_ptbxl_seed4,auroc 0.8842 vs 0.8842 (d=+0.0000); auprc 0.6613 vs 0.6613 (d=+0.0000); ref=W2
+09-23 11:31,PASS,c1_cpsc_seed0,auroc 0.9538 vs 0.9538 (d=+0.0000); auprc 0.7857 vs 0.7857 (d=-0.0000); ref=W2
+09-23 11:32,PASS,c1_cpsc_seed2,auroc 0.9512 vs 0.9512 (d=+0.0000); auprc 0.7708 vs 0.7708 (d=-0.0000); ref=W2
+09-23 11:33,PASS,c1_cpsc_seed4,auroc 0.9554 vs 0.9554 (d=+0.0000); auprc 0.7904 vs 0.7904 (d=-0.0000); ref=W2
+09-23 11:34,PASS,c1_chapman_seed0,auroc 0.9964 vs 0.9964 (d=+0.0000); auprc 0.9891 vs 0.9891 (d=-0.0000); ref=W2
+09-23 11:35,PASS,c1_chapman_seed2,auroc 0.9964 vs 0.9964 (d=+0.0000); auprc 0.9888 vs 0.9888 (d=+0.0000); ref=W2
+09-23 11:37,PASS,c1_chapman_seed4,auroc 0.9965 vs 0.9965 (d=+0.0000); auprc 0.9888 vs 0.9888 (d=+0.0000); ref=W2
+09-23 11:38,PASS,c2_ptbxl_seed0,auroc 0.8860 vs 0.8860 (d=+0.0000); auprc 0.6564 vs 0.6564 (d=-0.0000); ref=W2
+09-23 11:40,PASS,c2_ptbxl_seed2,auroc 0.8845 vs 0.8845 (d=+0.0000); auprc 0.6518 vs 0.6518 (d=-0.0000); ref=W2
+09-23 11:41,PASS,c2_ptbxl_seed4,auroc 0.8876 vs 0.8876 (d=+0.0000); auprc 0.6579 vs 0.6579 (d=-0.0000); ref=W2
+09-23 11:42,PASS,c2_cpsc_seed0,auroc 0.9586 vs 0.9586 (d=+0.0000); auprc 0.8092 vs 0.8092 (d=-0.0000); ref=W2
+09-23 11:44,PASS,c2_cpsc_seed2,auroc 0.9586 vs 0.9586 (d=+0.0000); auprc 0.8018 vs 0.8018 (d=-0.0000); ref=W2
+09-23 11:45,PASS,c2_cpsc_seed4,auroc 0.9580 vs 0.9580 (d=+0.0000); auprc 0.8050 vs 0.8050 (d=-0.0000); ref=W2
+09-23 11:46,PASS,c2_chapman_seed0,auroc 0.9966 vs 0.9966 (d=+0.0000); auprc 0.9889 vs 0.9889 (d=-0.0000); ref=W2
+09-23 11:47,PASS,c2_chapman_seed2,auroc 0.9964 vs 0.9964 (d=+0.0000); auprc 0.9888 vs 0.9888 (d=-0.0000); ref=W2
+09-23 11:48,PASS,c2_chapman_seed4,auroc 0.9960 vs 0.9960 (d=+0.0000); auprc 0.9881 vs 0.9881 (d=-0.0000); ref=W2

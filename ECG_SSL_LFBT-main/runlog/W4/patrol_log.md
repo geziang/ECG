@@ -14,3 +14,5 @@
 09-23 11:25 | A-8b 事故与处置: 首启失败(脚本 KeyError: W1 账本无 seed 列)修复; 二启在 b0_ptbxl_seed0 触发 GATE_FAIL(d=+0.0010 vs W1 账本) — 定性: 任务书复现门对象=W2 账本, c2_ptbxl_seed0 探针对 W2 逐位一致(0.8860/0.6564)证明管线确定性完好, W1 行属 09-21 时代代码固有差, 已降为参考行(记录不拦截, 依据写入脚本 docstring)。三启运行中: b0_ptbxl_seed2/4 对 W2 PASS d=+0.0000 逐位, b0_cpsc_seed0 对 W1 REF d=+0.0000。
 
 09-23 11:45 | A-6 ✅ 完结: s3 三行齐(0.8845/0.8797/0.8689, mean 0.8777; 监督全量 vs C2-FT10 0.861x 符合"监督参照≥C2"预期); A-5 启动: clocs 5ep smoke 过(loss 1.78→0.53 单调, temporal/spatial 分项合理), laneB(seed2)全链已启动。当前三车道: SimCLR seed4 PT + A-8b 重放 + CLOCS seed2 PT。CLOCS laneA 待 SimCLR laneA 空位接力。
+
+09-23 12:0x | A-8b ✅ 收口: 复现门(W2账本对象)20/20 全绿逐位(d=+0.0000, c1/c2×18+b0 ptbxl s2/s4); W1 参考行 3 组(b0_cpsc/chapman_seed0 亦逐位, b0_ptbxl_seed0 d=+0.0010 已定性为 W1 时代代码固有差); SKIP+NOREF 4 组=A-7 新行。REPLAY DONE。B-4 统计输入(runlog/W4/predictions/ 全网格逐记录预测)已齐, B 机可开算。
