@@ -12,3 +12,5 @@
 09-23 11:15 | 增量: laneB(seed2)全链完成 exit 0(laneB ALL DONE 11:12); seed0 下游同窗完成 — SimCLR 8/12 行入账(cpsc 0.9380/0.9371, ft10 0.8502/0.8528, ptbxl LP 0.8791/0.8782, chapman 0.9880/0.9871); laneA 转 seed4 PT; A-8b 重放已启动(主会话计划内, laneB 空位)
 
 09-23 11:25 | A-8b 事故与处置: 首启失败(脚本 KeyError: W1 账本无 seed 列)修复; 二启在 b0_ptbxl_seed0 触发 GATE_FAIL(d=+0.0010 vs W1 账本) — 定性: 任务书复现门对象=W2 账本, c2_ptbxl_seed0 探针对 W2 逐位一致(0.8860/0.6564)证明管线确定性完好, W1 行属 09-21 时代代码固有差, 已降为参考行(记录不拦截, 依据写入脚本 docstring)。三启运行中: b0_ptbxl_seed2/4 对 W2 PASS d=+0.0000 逐位, b0_cpsc_seed0 对 W1 REF d=+0.0000。
+
+09-23 11:45 | A-6 ✅ 完结: s3 三行齐(0.8845/0.8797/0.8689, mean 0.8777; 监督全量 vs C2-FT10 0.861x 符合"监督参照≥C2"预期); A-5 启动: clocs 5ep smoke 过(loss 1.78→0.53 单调, temporal/spatial 分项合理), laneB(seed2)全链已启动。当前三车道: SimCLR seed4 PT + A-8b 重放 + CLOCS seed2 PT。CLOCS laneA 待 SimCLR laneA 空位接力。

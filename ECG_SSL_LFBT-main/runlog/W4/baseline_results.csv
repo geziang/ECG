@@ -13,3 +13,4 @@ ts,ckpt,seed,eval,downstream,auroc,auprc,git_sha,checkpoint_sha256,method_family
 2026-09-23 11:11,simclr,2,lp,ptbxl,0.8782,0.6390,78bc258,e4b431ba5c601bd52de3ad0e9b70d003d6840b5b8ce81409b50cae2b44d8b677,contrastive_ssl,simclr-vs-c1(见runlog/W4/baseline_hparams.csv)
 2026-09-23 11:12,simclr,0,lp,chapman,0.9880,0.9634,78bc258,cc28ed3a955490014cb582c9fb75193140b9ca5d083e3f783963b76c80d2f103,contrastive_ssl,simclr-vs-c1(见runlog/W4/baseline_hparams.csv)
 2026-09-23 11:12,simclr,2,lp,chapman,0.9871,0.9609,78bc258,e4b431ba5c601bd52de3ad0e9b70d003d6840b5b8ce81409b50cae2b44d8b677,contrastive_ssl,simclr-vs-c1(见runlog/W4/baseline_hparams.csv)
+2026-09-23 11:38,s3,4,ft100,ptbxl,0.8689,0.6305,2468a14,random-init-TFS,supervised_direct,run_ft默认超参(任务书A-6: lr1e-4/100ep/bs128/全量)
