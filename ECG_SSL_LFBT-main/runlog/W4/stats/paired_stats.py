@@ -201,12 +201,46 @@ def delong_paired_class(y_true, prob_a, prob_b, c):
 
 
 # ---------------------------------------------------------------- paired bootstrap(主检验)
-def paired_bootstrap_macro(y_true, prob_a, prob_b, n_boot=N_BOOT, rng=None):
+def _auroc_rows(y_bin_mat, scores_mat):
+    """向量化逐行 AUROC: y_bin_mat (B, n) 0/1, scores_mat (B, n) -> (B,)。
+
+    rankdata 沿 axis=1 平均秩处理 ties, Mann-Whitney 公式与 _binary_auroc
+    单样本口径一致; 标签与得分必须同为重采样后的行(乘掩码支持逐行不同标签)。
+    """
+    from scipy.stats import rankdata
+    y_bin_mat = y_bin_mat.astype(float)
+    ranks = rankdata(scores_mat, axis=1)
+    n_pos = y_bin_mat.sum(axis=1)
+    n_neg = (1.0 - y_bin_mat).sum(axis=1)
+    ok = (n_pos > 0) & (n_neg > 0)
+    r_pos = (ranks * y_bin_mat).sum(axis=1)
+    out = np.full(scores_mat.shape[0], np.nan)
+    out[ok] = ((r_pos - n_pos * (n_pos + 1) / 2.0) / (n_pos * n_neg))[ok]
+    return out
+
+
+def _macro_auroc_boot(y_true, prob_mat, idx):
+    """重采样行集上的 macro AUROC。
+
+    idx (B, n) 重采样索引同时作用于标签与得分; prob_mat 为重采样后得分
+    (B, n, C) = prob[idx]; y_true (n,) 原始标签。返回 (B,)。
+    """
+    n_classes = prob_mat.shape[2]
+    one_hot = np.eye(n_classes)[y_true]          # (n, C)
+    per = np.stack([_auroc_rows(one_hot[:, c][idx], prob_mat[:, :, c])
+                    for c in range(n_classes)], axis=1)
+    return np.nanmean(per, axis=1)
+
+
+def paired_bootstrap_macro(y_true, prob_a, prob_b, n_boot=N_BOOT, rng=None,
+                           block=1000):
     """记录级配对 bootstrap on macro-AUROC 差。
 
-    重采样记录索引, 同一索引同时作用于 A/B(配对), delta 分布给双侧 p 与 95% CI。
-    多 seed 合并模式: 传入 list[prob_a]/list[prob_b], 同一 bootstrap 索引
-    同步作用于全部 seed, delta_boot = mean_over_seeds(delta_seed)。
+    重采样记录索引, 同一索引同时作用于标签/方法A/方法B(配对), delta 分布给
+    双侧 p 与 95% CI。多 seed 合并模式: 传入 list[prob_a]/list[prob_b], 同一
+    bootstrap 索引同步作用于全部 seed, delta_boot = mean_over_seeds。
+    实现: 按块生成索引矩阵 (block, n) 后向量化(scipy rankdata 沿批次轴,
+    Mann-Whitney 平均秩口径与 _binary_auroc 逐次循环一致)。
     """
     rng = rng or np.random.default_rng(RNG_SEED)
     probs_a = prob_a if isinstance(prob_a, list) else [prob_a]
@@ -216,12 +250,16 @@ def paired_bootstrap_macro(y_true, prob_a, prob_b, n_boot=N_BOOT, rng=None):
             for pa, pb in zip(probs_a, probs_b)]
     delta_obs = float(np.mean(base))
     deltas = np.empty(n_boot)
-    for b in range(n_boot):
-        idx = rng.integers(0, n, size=n)
-        yt = y_true[idx]
-        d = [macro_auroc(yt, pa[idx])[0] - macro_auroc(yt, pb[idx])[0]
-             for pa, pb in zip(probs_a, probs_b)]
-        deltas[b] = np.mean(d)
+    done = 0
+    while done < n_boot:
+        b = min(block, n_boot - done)
+        idx = rng.integers(0, n, size=(b, n))
+        d = np.zeros(b)
+        for pa, pb in zip(probs_a, probs_b):
+            d += _macro_auroc_boot(y_true, pa[idx], idx) \
+                - _macro_auroc_boot(y_true, pb[idx], idx)
+        deltas[done:done + b] = d / len(probs_a)
+        done += b
     p = 2.0 * min((deltas <= 0).mean(), (deltas >= 0).mean())
     lo, hi = np.percentile(deltas, [2.5, 97.5])
     return delta_obs, float(min(max(p, 0.0), 1.0)), float(lo), float(hi)

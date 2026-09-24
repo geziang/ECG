@@ -1,0 +1,12 @@
+﻿eval,downstream,ckpt,method_family,hparams_ref,n_seeds,mean_auroc,sd_auroc,mean_auprc,per_seed_auroc,seeds,mean_pm_sd,checkpoint_sha256,source_file,source_git_sha
+lp,chapman,b0,bt_ssl(baseline),C1-equivalent(W2协议),2,0.9932,0.0010,0.9795,0.9925/0.9939,2/4,0.9932±0.0010,f39059a4430c2e7a...,runlog/W4/baseline_results.csv,2468a14
+lp,cpsc,b0,bt_ssl(baseline),C1-equivalent(W2协议),2,0.9585,0.0029,0.8014,0.9564/0.9605,2/4,0.9585±0.0029,f39059a4430c2e7a...,runlog/W4/baseline_results.csv,2468a14
+ft10,ptbxl,clocs,clocs_ssl(multi-positive),clocs-vs-c1(见runlog/W4/baseline_hparams.csv),3,0.8542,0.0028,0.6253,0.8541/0.8570/0.8514,0/2/4,0.8542±0.0028,c1f139d98059812a...,runlog/W4/baseline_results.csv,2468a14
+lp,chapman,clocs,clocs_ssl(multi-positive),clocs-vs-c1(见runlog/W4/baseline_hparams.csv),3,0.9960,0.0002,0.9879,0.9958/0.9961/0.9962,0/2/4,0.9960±0.0002,c1f139d98059812a...,runlog/W4/baseline_results.csv,2468a14
+lp,cpsc,clocs,clocs_ssl(multi-positive),clocs-vs-c1(见runlog/W4/baseline_hparams.csv),3,0.9477,0.0015,0.7649,0.9463/0.9475/0.9492,0/2/4,0.9477±0.0015,c1f139d98059812a...,runlog/W4/baseline_results.csv,2468a14
+lp,ptbxl,clocs,clocs_ssl(multi-positive),clocs-vs-c1(见runlog/W4/baseline_hparams.csv),3,0.8690,0.0029,0.6279,0.8681/0.8666/0.8722,0/2/4,0.8690±0.0029,c1f139d98059812a...,runlog/W4/baseline_results.csv,2468a14
+ft100,ptbxl,s3,supervised_direct,run_ft默认超参(任务书A-6: lr1e-4/100ep/bs128/全量),3,0.8777,0.0080,0.6497,0.8845/0.8797/0.8689,0/2/4,0.8777±0.0080,random-init-TFS...,runlog/W4/baseline_results.csv,2468a14
+ft10,ptbxl,simclr,contrastive_ssl,simclr-vs-c1(见runlog/W4/baseline_hparams.csv),3,0.8500,0.0029,0.6085,0.8502/0.8528/0.8471,0/2/4,0.8500±0.0029,cc28ed3a95549001...,runlog/W4/baseline_results.csv,2468a14
+lp,chapman,simclr,contrastive_ssl,simclr-vs-c1(见runlog/W4/baseline_hparams.csv),3,0.9876,0.0005,0.9621,0.9880/0.9871/0.9877,0/2/4,0.9876±0.0005,cc28ed3a95549001...,runlog/W4/baseline_results.csv,2468a14
+lp,cpsc,simclr,contrastive_ssl,simclr-vs-c1(见runlog/W4/baseline_hparams.csv),3,0.9377,0.0005,0.7355,0.9380/0.9371/0.9379,0/2/4,0.9377±0.0005,cc28ed3a95549001...,runlog/W4/baseline_results.csv,2468a14
+lp,ptbxl,simclr,contrastive_ssl,simclr-vs-c1(见runlog/W4/baseline_hparams.csv),3,0.8791,0.0009,0.6440,0.8791/0.8782/0.8799,0/2/4,0.8791±0.0009,cc28ed3a95549001...,runlog/W4/baseline_results.csv,2468a14

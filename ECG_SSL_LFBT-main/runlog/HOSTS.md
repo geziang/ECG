@@ -65,8 +65,10 @@
 | A-6 监督直训参照 | A / Win4090 | ✅ 已完成(09-23 11:38) | 同上 s3×3; mean 0.8777(全量监督 > C2-FT10 0.8597, 标签效率叙事素材) | — |
 | A-7 B0 跨库补seed(纯评估) | A / Win4090 | ✅ 已完成(09-23 08:52) | 同上 b0×4; SHA与freeze_manifest_v2一致; 定案: CPSC B0 0.9592 vs C2 0.9584 统计不可分(逐seed 2正1负), Chapman C2胜3/3(+0.31pt) | SHA不符即停 |
 | A-8 预测重放+守卫扩展 | A / Win4090 | ✅ 已完成(09-23 12:05) | `runlog/W4/predictions/` 全网格逐记录; 复现门**W2对象20/20逐位d=+0.0000**; W1参考行3组已定性(b0@ptbxl d=+0.0010=W1时代代码固有差, c2探针对W2逐位佐证); 守卫扩展单测全绿 | 复现门超差即停 |
-| B-4 配对统计与基线总表 | B / DESKTOP-0PBLCND | 🏃 DESKTOP-0PBLCND(09-23 08:26) **A-8 predictions 已齐(12:05), 可开算** | `runlog/W4/stats/`、`paper_materials_v2/` | 只做 record-level 统计 |
-| B-5 基线实现审计 | B / DESKTOP-0PBLCND | 🏃 DESKTOP-0PBLCND(09-23 08:26) **S1/S2/S3 实现已全落地, §5 可回填**(单测/hparams 在库) | `runlog/W4/baseline_impl_audit.md` | 实现偏差→停止入表 |
+| B-4 配对统计与基线总表 | B / DESKTOP-0PBLCND | ✅ 已完成(09-24) paired_stats.csv 12行全网格 + paper_materials_v2 3表(全溯源列); 单测22项全绿 | `runlog/W4/stats/paired_stats.csv`、`runlog/W4/paper_materials_v2/` | 只做 record-level 统计 |
+| B-5 基线实现审计 | B / DESKTOP-0PBLCND | ✅ 已完成(09-24) S1/S2/S3 与官方口径逐条一致, 零偏差放行(§5 终态) | `runlog/W4/baseline_impl_audit.md` | 实现偏差→停止入表 |
+
+> **W4 批次全任务收官（09-24，主机B 回填）**：A-4~A-8 + B-4/B-5 全 ✅。B-4 统计要点（record-level paired bootstrap on macro-AUROC, 10000 次×3seeds 同步）：①C2>C1 仅 cpsc 显著（Δ+0.50pt p<0.0001，AUROC 口径），ptbxl/chapman 不显著；②C1 对 SimCLR 2/3 下游显著优（ptbxl p=0.25 不显著）、对 CLOCS 2/3 显著优（chapman p=0.28 不显著）——"无外部基线反超 C2"在逐记录检验下保持；③C2−B0 三库分化正式定案：ptbxl B0 显著优（−2.77pt p<0.0001，血缘效应）、cpsc 统计不可分（"追平"成立 p=0.52）、chapman C2 显著优（+0.31pt p<0.0001）；④全表 record-level，不得声称 patient-level。任务书 §6/§8 已回填 B 侧终态。
 
 > **A 机终报(09-23 18:0x)**: A-4~A-8 全部 ✅, 31/31 行账本(simclr×12+clocs×12+s3×3+b0×4), 汇总=`runlog/W4/summary_w4_baselines.md`(主表/结论/门禁留痕/时间线)。核心: ①文献预期排序验证(C2>CLOCS>SimCLR 于 cpsc/ft10/chapman 3/3 同向; ptbxl lp CLOCS 0.8690<SimCLR 0.8791 反序, 如实入表); ②无外部基线反超C2(§1.5 未触发); ③监督参照定位成立; ④复现门20/20逐位。比任务书1-1.5天预算提前(当天18:02收口)。附: 首pull安全门拦截的 weights_only 回归当天修复(2468a14), B 机已复验。
 

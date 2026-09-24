@@ -1,0 +1,13 @@
+﻿dataset,method_a,method_b,seeds,n_records,auroc_macro_a,auroc_macro_b,delta_macro,boot_p,boot_ci95_low,boot_ci95_high,delong_p_min(seed0),delong_p_median(seed0),n_boot,n_classes,level,note
+ptbxl,c1,c2,0;2;4,1739,0.884797,0.88604,-0.001243,0.4842,-0.004811,0.002319,0.23445,0.34559,10000,5,record,record-level; 多seed=bootstrap同步重采样均值
+cpsc,c1,c2,0;2;4,2004,0.953452,0.958425,-0.004972,0.0,-0.006607,-0.00344,0.00057,0.29082,10000,9,record,record-level; 多seed=bootstrap同步重采样均值
+chapman,c1,c2,0;2;4,2047,0.996427,0.996345,8.1e-05,0.4934,-0.000144,0.000313,0.0,0.58068,10000,4,record,record-level; 多seed=bootstrap同步重采样均值
+ptbxl,c1,simclr,0;2;4,1739,0.884797,0.879056,0.005741,0.2472,-0.003906,0.015354,0.00718,0.13001,10000,5,record,record-level; 多seed=bootstrap同步重采样均值
+cpsc,c1,simclr,0;2;4,2004,0.953452,0.93767,0.015782,0.0,0.010775,0.020893,0.0,0.03278,10000,9,record,record-level; 多seed=bootstrap同步重采样均值
+chapman,c1,simclr,0;2;4,2047,0.996427,0.987596,0.008831,0.0,0.006779,0.011089,0.0,0.00043,10000,4,record,record-level; 多seed=bootstrap同步重采样均值
+ptbxl,c1,clocs,0;2;4,1739,0.884797,0.868943,0.015854,0.0,0.008688,0.023478,0.0,0.00117,10000,5,record,record-level; 多seed=bootstrap同步重采样均值
+cpsc,c1,clocs,0;2;4,2004,0.953452,0.947654,0.005798,0.0,0.003087,0.008637,0.0,0.01977,10000,9,record,record-level; 多seed=bootstrap同步重采样均值
+chapman,c1,clocs,0;2;4,2047,0.996427,0.996026,0.0004,0.275,-0.000267,0.001186,0.0592,0.07111,10000,4,record,record-level; 多seed=bootstrap同步重采样均值
+ptbxl,c2,b0,0;2;4,1739,0.88604,0.913763,-0.027722,0.0,-0.035707,-0.020117,3e-05,0.01785,10000,5,record,record-level; 多seed=bootstrap同步重采样均值
+cpsc,c2,b0,0;2;4,2004,0.958425,0.959262,-0.000838,0.5158,-0.003397,0.001605,0.00164,0.32814,10000,9,record,record-level; 多seed=bootstrap同步重采样均值
+chapman,c2,b0,0;2;4,2047,0.996345,0.993223,0.003122,0.0,0.002053,0.004273,0.0,0.02832,10000,4,record,record-level; 多seed=bootstrap同步重采样均值

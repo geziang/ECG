@@ -44,16 +44,21 @@
 seeds {0,2,4}；若 `--fraction 1.0` 不受校验支持 → 改全量 train split 等价实现并记录差异。
 审计点：命令行与条款逐条比对 + "省略 --checkpoint 时确实走随机初始化"的代码路径确认。
 
-## 5. A-4/A-5/A-6 实现核对栏（待主机A落地后由 B 机回填）
+## 5. A-4/A-5/A-6 实现核对栏（2026-09-24 主机B 回填终态）
+
+核对基准：实现入库 f5c23c9（S1/S2/S3+A-8a）/ c4251f3（S3 幂等补丁）；账本 git_sha=2468a14。
 
 | 基线 | 实现提交 SHA | 单测结果 | 逐条核对结论 | 偏差与处置 |
 |---|---|---|---|---|
-| S1 SimCLR | 待填 | 待填 | 待填 | 待填 |
-| S2 CLOCS | 待填 | 待填 | 待填 | 待填 |
-| S3 监督直训 | 待填 | 待填 | 待填 | 待填 |
+| S1 SimCLR | f5c23c9（run_pt.py `--loss-mode simclr`） | `tests/test_simclr_loss.py` 4/4 ✅ + `verify_bt_head_bitwise.py` 默认 bt 与 HEAD 逐位一致 ✅ | **全部一致**：①NT-Xent=论文 Eq.1/Algorithm 1（L2 归一化→cos/τ→对角掩码排除自身→交叉熵，双向）✓（审计关键点①通过）；②τ=0.5（`--simclr-temp` 默认，hparams_ref 已记 CIFAR 口径出处）✓；③正对=同记录同导联两视图、负对=批内 2N−2 ✓；④backbone/projector(2048×3)/增强(RRC-TO 0.5,1.0,0.0,0.5)/优化器/batch128 全部与 C1 同构（§A-4"唯一差异=目标函数"达成）；⑤BT 跨导联 loss_t 置 0（NT-Xent 结构性不适用，已记录） | 无偏差入表 |
+| S2 CLOCS | f5c23c9（run_pt.py `--loss-mode clocs` + run_clocs_matrix.py） | A 侧单测 3/3（台账）✅ | **全部一致**：①官方口径=danikiyasseh/CLOCS `obtain_contrastive_loss`（与本底稿 §3 权威出处一致；任务书原写 tomato1min/clocs 的差异已由 A 机按论文地址采用）✓；②τ=0.1 ✓；③diag 双向项 `−mean(log(diag/整行和))` × 2，**分母含正对自身**（审计关键点②通过，与 S1 相反且不共享分母逻辑）✓；④temporal 正对=同导联两时间窗（CMSC 语义）、spatial 正对=同窗跨导联 i<j（CMLC 语义逐导联化）✓；⑤off-diag（同患者跨实例）：本仓 NFH 无 pid → 官方"无 pid"路径 loss_terms=2（底稿遗留审计点已由实现方 docstring 说明）✓；⑥损失归一化 Σ/(2×n_pairs) 与官方 loss_terms×ncombinations 等价 ✓；⑦**backbone 裁定=保持 C1 同构**（官方 3×Conv1D+2FC 差异逐条记录于 baseline_hparams.csv）——与本底稿建议一致，公平条款优先 | 表示层级差异（官方编码器末层 vs 本仓 projector 输出）已入 baseline_hparams.csv；增强按公平条款用 C1 的 RRC（非官方 spectrogram 掩码）已记录 |
+| S3 监督直训 | f5c23c9 + c4251f3（run_s3_supervised.py） | 幂等+账本回读 ✅（s3×3 行入账） | **一致**：TFS 随机初始化（省略 --checkpoint 路径）、PTB 五类全量（fraction 1.0 等价）、seeds {0,2,4}、从第一次起带预测落盘 ✓ | 无偏差入表 |
 
-## 6. 阻塞说明
+**B-5 结论：三个基线实现与官方论文/仓库口径及任务书条款逐条一致，未发现实现偏差，全部放行入表。**
+（对照材料：`runlog/W4/baseline_hparams.csv` 差异逐条 12+12 项完整；`predreplay_gate.csv` W2 对象 20/20 逐位。）
 
-A-4~A-8 当前被安全加固回归阻塞（checkpoint `weights_only=True` 无法加载含完整模块对象
-的历史/新产双格式 checkpoint，详见 HOSTS.md 09-23 08:26 回写）——待修复裁决合入后
-主机A方可开工，本底稿先行不受影响。
+## 6. 阻塞说明（已解除）
+
+A-4~A-8 曾被安全加固回归阻塞（详见 HOSTS.md 09-23 08:26/08:28 回写），已于当天由
+主机A 修复（2468a14 safe-globals 白名单）并经 B 机复验解除；批次于 09-23 18:02
+31/31 行收口。本节为过程留痕。

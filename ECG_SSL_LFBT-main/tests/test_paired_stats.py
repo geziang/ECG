@@ -149,12 +149,27 @@ def test_pair_alignment_guard():
     check("pair alignment same ok", True)
 
 
+def test_vectorized_boot_equivalence():
+    # 向量化 _macro_auroc_boot 必须与逐次 macro_auroc 在相同重采样索引上逐位一致
+    rng = np.random.default_rng(6)
+    n = 200
+    y = rng.integers(0, 5, size=n)
+    oh = np.eye(5)[y]
+    pa = oh * 0.6 + 0.4 * rng.random((n, 5))
+    pa /= pa.sum(axis=1, keepdims=True)
+    idx = np.random.default_rng(42).integers(0, n, size=(8, n))
+    vec = ps._macro_auroc_boot(y, pa[idx], idx)
+    loop = np.array([ps.macro_auroc(y[idx[i]], pa[idx[i]])[0] for i in range(8)])
+    check("vectorized boot == loop (bitwise)", np.allclose(vec, loop, atol=1e-12))
+
+
 if __name__ == "__main__":
     test_binary_auroc()
     test_macro_auroc()
     test_delong_components_consistency()
     test_delong_paired_bounds()
     test_paired_bootstrap_bounds()
+    test_vectorized_boot_equivalence()
     test_load_and_discover()
     test_pair_alignment_guard()
     if FAILS:

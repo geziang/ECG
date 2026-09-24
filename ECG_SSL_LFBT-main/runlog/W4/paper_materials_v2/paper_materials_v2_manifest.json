@@ -1,0 +1,16 @@
+{
+ "built_at": "2026-09-24 10:11",
+ "built_by": "B-4b (hostB DESKTOP-0PBLCND)",
+ "inputs": {
+  "baseline_rows": 11,
+  "baseline_source_git_sha": "2468a14",
+  "stats_present": true,
+  "stats_source_git_sha": "d500ce7"
+ },
+ "outputs": [
+  "baseline_table_v2.csv",
+  "main_table_merged_v2.csv",
+  "paired_stats_v2.csv"
+ ],
+ "note": "全部数字附 source_file/source_git_sha; record-level 统计不得声称 patient-level(任务书 B-4)"
+}
