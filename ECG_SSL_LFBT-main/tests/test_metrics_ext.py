@@ -142,6 +142,22 @@ class TestSaveArtifacts(unittest.TestCase):
             mx.save_eval_artifacts(ROOT / "results" / "x", [0], [0], [[1.0]],
                                    {"protocol_id": "t"})
 
+    def test_guard_allows_w5_and_still_rejects_w2(self):
+        """W5 A-2 扩展(CPSC重评估): 允许 runlog/W5/ 之下; W2 硬拒与仓库外拒绝不变。"""
+        w5 = ROOT / "runlog" / "W5" / "metrics_schema" / "_selftest_tmp"
+        try:
+            mx.save_eval_artifacts(w5, [0], [0], [[1.0]], {"protocol_id": "t"})
+            self.assertTrue((w5 / "metrics_ext.json").exists())
+        finally:
+            if w5.exists():
+                shutil.rmtree(w5)
+        with self.assertRaises(ValueError):
+            mx.save_eval_artifacts(ROOT / "runlog" / "W2" / "x", [0], [0], [[1.0]],
+                                   {"protocol_id": "t"})
+        with self.assertRaises(ValueError):
+            mx.save_eval_artifacts(ROOT / "results" / "x", [0], [0], [[1.0]],
+                                   {"protocol_id": "t"})
+
     def test_guard_requires_protocol_id(self):
         with self.assertRaises(ValueError):
             mx.save_eval_artifacts(self.TMP, [0], [0], [[1.0]], {})

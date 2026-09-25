@@ -53,3 +53,9 @@ ECG_SSL_LFBT-main/runlog/W4/ft/
 ECG_SSL_LFBT-main/runlog/W4/logs/
 # W4 逐记录预测(y_true/y_pred/y_prob)是 B-4 配对统计的必需输入, 显式放行:
 !ECG_SSL_LFBT-main/runlog/W4/predictions/**/*.npy
+
+# ===== W5 CPSC 重评估(同 W4 惯例: 大 npy 特征/日志不入 git; 逐记录预测入 git) =====
+ECG_SSL_LFBT-main/runlog/W5/feat/
+ECG_SSL_LFBT-main/runlog/W5/logs/
+# W5 逐记录预测是 B 机 CPSC 统计行重算的必需输入, 显式放行:
+!ECG_SSL_LFBT-main/runlog/W5/predictions/**/*.npy

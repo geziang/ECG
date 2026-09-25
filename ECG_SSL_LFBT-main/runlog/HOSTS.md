@@ -4,11 +4,11 @@
 >
 > **认领方式**:把对应任务行的状态改为 `🏃<主机名>(开始时间)` 并 commit+push;完成后改为 ✅,并把结果行写入本主机结果文件(§五-3)。
 > **更新纪律**:任务状态每次变化(领取/完成/失败)立即 push;长任务不必频繁汇报,但必须写明预计完成时间。
-> 文档路径:`runlog/HOSTS.md`;最后更新:**2026-09-23,W4 外部基线批次已下发**。
+> 文档路径:`runlog/HOSTS.md`;最后更新:**2026-09-25,W5A CPSC 清查与重评估批次(主机A)已完成**。
 >
 > **协调方式(2026-09-23 起):全仓协作只走 `origin/main`(任务书 + 本台账),不使用 SSH 跨机操作。**
 >
-> **主机A当前状态:🟢 空闲（旧任务已全部完成）**——W3 新批次 A-2 已下发，等待主机 A `git pull --ff-only origin main` 后回写认领；旧 §二/§三 队列仅作历史记录，不得启动。
+> **主机A当前状态:🟢 空闲（W5 A-1/A-2 已于 09-25 10:39 完成，见 §一-C）**；旧 §二/§三 队列仅作历史记录，不得启动。
 >
 > **本轮再分配三原则(2026-09-17 晚,用户指令)**:①台账只按实际情况分配任务,**实现细节(开关/脚本/单测)由各主机自理**;②**总目标 = 尽快拿到至少一个过 3-seed 门的涨点、出成果**,判决线优先于扫描线;③已判死/无判值任务一律清除,机时不许再花。
 >
@@ -20,7 +20,7 @@
 
 | 主机 | 硬件 | 关键环境 | 当前状态 |
 |---|---|---|---|
-| **主机A = `Win4090`**(F:\新实验) | RTX 4090 24G / 32 逻辑核 / 128G RAM,双车道 | Win10,Python 3.10.11, torch 2.5.1+cu121(09-23实测更正,原登记2.0.0已过时),conda env `DL` | 🏃 W4 A-4~A-8 已认领(09-23 08:28) |
+| **主机A = `Win4090`**(F:\新实验) | RTX 4090 24G / 32 逻辑核 / 128G RAM,双车道 | Win10,Python 3.10.11, torch 2.5.1+cu121(09-23实测更正,原登记2.0.0已过时),conda env `DL` | ✅ W5 A-1/A-2 完成(09-25 10:39),🟢 空闲 |
 | **主机B = `DESKTOP-0PBLCND`**(E:\GZA) | RTX 3080 10G / 16 逻辑核 / 64G RAM,**单车道** | Win10,Python 3.11.9,torch 2.5.1+cu121;数据已校验(含 5 个损坏 .mat 修复);推送走 `ECG-push-tmp` | 🟢 空闲（W3 B-0/B-1/B-2/B-3 全部完成, 09-22 22:15） |
 | 主机C | (待登记) | (待登记) | 🆓 | 
 
@@ -89,6 +89,20 @@
 
 > **✅ 安全门 B 侧复验——主机B（09-23 08:5x，2468a14）**：按上条指引执行，**全部通过**——①加载冒烟（B 侧同构等价物）：`checkpoint/M/c3_align_mix02_seed0/encoder_group.pth` 经 `load_torch_checkpoint` 加载成功，双格式键齐备（torch 2.5.1+cu121）；②单测 6/7 绿：test_w1 14/14、test_d9_switch、test_metrics_ext 18/18、test_safe_load 3/3、test_repro 8/8（P0-P1 全过；B 侧需先给 `data/ptbxl`、`ptb-xl/` 建 junction 指向 ECG-main 数据，A 机完整数据树下无此环境差异）、test_paired_stats 21/21（B-4 新增）；test_ap2_switches 维持双方一致定性=设计内失效。**A-4~A-8 阻塞正式解除（双机互证）**。
 > B-4/B-5 先行件已入库（7f6e34a）：`runlog/W4/stats/paired_stats.py` + `stats_methods.md` + `tests/test_paired_stats.py`（DeLong per-class + paired bootstrap on macro-AUROC、多 seed 同步重采样、合成 E2E 演练通过；A-8 predictions 落盘后重跑 CLI 即出正式 `paired_stats.csv`）+ `baseline_impl_audit.md`（SimCLR/CLOCS 官方参照逐条核对完毕；⚠️ 两个待下发方/A 机注意点：①S2 CLOCS 官方 backbone=3×Conv1D+2FC 与"同 backbone 家族"措辞的张力，底稿建议损失/正对按官方、backbone 保持 C1 并入 baseline_hparams.csv；②S1 τ=0.5 对应官方 repo CIFAR 口径（ImageNet 主结果为 0.1），hparams_ref 需记出处）。
+
+## 一-C、W5A CPSC 清查与重评估批次（2026-09-25，主机A 执行并完成）
+
+> 背景：外部审计预测 `data/cpsc/test` 存在新旧两批预处理残留。任务入口=《W5A-主机A-CPSC清查与重评估任务书-2026-09-24.md》（因 GitHub 瞬态断网未能 pull 全文，按消息版任务书判定表/命令模板执行，红线全文遵守）。结果统一写 `runlog/W5/`；W2/W3/W4 冻结账本只读未动；PTB/Chapman/缺导/S3 未重跑。
+
+| 任务 | 主机 | 当前状态 | 交付物 | 停止线 |
+|---|---|---|---|---|
+| A-1 CPSC test 残留审计 | A / Win4090 | ✅ 已完成(09-25 10:1x) | `runlog/W5/cpsc_audit.md`（四命令完整输出） | 判"残留"=总数≈2004 且重复stem/两批时间戳；=1385 无重复则停上推 |
+| A-2 数据重建+15 跑 LP 重评估 | A / Win4090 | ✅ 已完成(09-25 10:39) | `runlog/W5/cpsc_manifest.json`、`lp_results.csv`(15行)、`predictions/`(15套, protocol_id=w5-cpscredo)、`ckpt_sha_check.json`(15/15) | SHA 不符即停；新 test ≠1385 即停 |
+
+> **A-1 判定=残留**：test=2004（精确命中）+ 跨类重复 stem 2 个（A0308/A2877 同落 PVC 与 RBBB，04:50/04:55 两波写入）→ 6 类共多 619 文件（1385+619=2004 对账吻合）。机制=prepare 脚本只增写不清目录，09-21 04 时新旧标签映射两跑并集（详见 audit §5）。
+> **A-2 结果（新干净 test=1385, train=4809, val=683, dup=0；与 W1 manifest 逐类一致）**：AUROC mean±SD（seeds 0/2/4）= b0 **0.9506±0.0006** / c2 **0.9474±0.0022** / c1 **0.9463±0.0016** / clocs **0.9418±0.0016** / simclr **0.9150±0.0012**（AUPRC 与逐 seed 值见 `cpsc_audit.md` §7）。旧 CPSC 数字出自 2004 并集 test，与新数不可比；冻结账本原样保留。
+> **📢 知会 B 机：CPSC 统计行（paired_stats / paper_materials_v2 中 cpsc 各行）全部待重算**，输入=`runlog/W5/predictions/`；PTB/Chapman 行不受影响。门判定（3-seed 门/配对统计）归 B 机重算后回填，A 机未做任何门声明。
+> 附带仓库代码变更（已记录于 audit §8）：`metrics_ext.py` 预测落盘白名单 W3/W4→+W5（W2 硬拒不变），`tests/test_metrics_ext.py` +1 镜像用例，20/20 绿。
 
 ## 二、历史队列（已封存，不得启动）
 
