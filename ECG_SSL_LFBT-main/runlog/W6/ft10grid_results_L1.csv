@@ -1,0 +1,3 @@
+ts,ckpt,seed,eval,downstream,fraction,auroc,auprc,git_sha,checkpoint_sha256,protocol_id,method_family,hparams_ref
+2026-10-03 22:31,b0,0,ft10,cpsc,0.1,0.9189,0.6891,a3a5188,026033d532d4e42a1b53ca9c4d2e95f9c09b2daaaab5c9041c9d474a1356cdad,w6-ft10grid,bt_ssl(baseline),"W6 Stage3: W2 FT10 冻结协议换数据集, 见 runlog/W6/run_ft10grid_lane.py"
+2026-10-03 23:00,b0,2,ft10,cpsc,0.1,0.9187,0.6847,15596fd,f39059a4430c2e7aa8963ca3c75b608120452f517622862fb3a73a7dc95d26a4,w6-ft10grid,bt_ssl(baseline),"W6 Stage3: W2 FT10 冻结协议换数据集, 见 runlog/W6/run_ft10grid_lane.py"
