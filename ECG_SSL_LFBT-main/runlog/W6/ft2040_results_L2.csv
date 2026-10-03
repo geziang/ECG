@@ -1,0 +1,2 @@
+ts,ckpt,seed,eval,downstream,fraction,auroc,auprc,git_sha,checkpoint_sha256,protocol_id,method_family,hparams_ref
+2026-10-03 14:58,c2,0,ft20,ptbxl,0.2,0.8795,0.6539,f50897d,af242a89c340969fd57e70349e4b88e4bf6725c5586f5c12d62a96a199ed9524,w6-ft2040,bt_ssl,"W6 Stage1: W2 FT10 冻结协议仅改标注比例, 见 runlog/W6/run_ft2040_lane.py"
