@@ -1,2 +1,4 @@
 ts,ckpt,seed,eval,downstream,fraction,auroc,auprc,git_sha,checkpoint_sha256,protocol_id,method_family,hparams_ref
 2026-10-03 14:47,b0,0,ft20,ptbxl,0.2,0.8995,0.6698,f50897d,026033d532d4e42a1b53ca9c4d2e95f9c09b2daaaab5c9041c9d474a1356cdad,w6-ft2040,bt_ssl(baseline),"W6 Stage1: W2 FT10 冻结协议仅改标注比例, 见 runlog/W6/run_ft2040_lane.py"
+2026-10-03 15:22,b0,2,ft20,ptbxl,0.2,0.8915,0.6634,1bec73a,f39059a4430c2e7aa8963ca3c75b608120452f517622862fb3a73a7dc95d26a4,w6-ft2040,bt_ssl(baseline),"W6 Stage1: W2 FT10 冻结协议仅改标注比例, 见 runlog/W6/run_ft2040_lane.py"
+2026-10-03 15:56,b0,4,ft20,ptbxl,0.2,0.8891,0.6641,1bec73a,ba4f2d3c99aff6b5889dae4ebdd1103b8949e2d1f8fcadd28d0a5df8b91c0daa,w6-ft2040,bt_ssl(baseline),"W6 Stage1: W2 FT10 冻结协议仅改标注比例, 见 runlog/W6/run_ft2040_lane.py"
