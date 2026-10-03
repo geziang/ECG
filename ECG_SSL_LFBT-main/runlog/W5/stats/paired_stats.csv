@@ -1,0 +1,5 @@
+﻿dataset,method_a,method_b,seeds,n_records,auroc_macro_a,auroc_macro_b,delta_macro,boot_p,boot_ci95_low,boot_ci95_high,delong_p_min(seed0),delong_p_median(seed0),n_boot,n_classes,level,note
+cpsc,c1,c2,0;2;4,1385,0.946326,0.947355,-0.001029,0.187,-0.002581,0.000484,0.00681,0.51306,10000,9,record,record-level; 多seed=bootstrap同步重采样均值
+cpsc,c1,simclr,0;2;4,1385,0.946326,0.915004,0.031322,0.0,0.023599,0.03934,0.0,0.00706,10000,9,record,record-level; 多seed=bootstrap同步重采样均值
+cpsc,c1,clocs,0;2;4,1385,0.946326,0.941815,0.004511,0.0046,0.001476,0.007582,0.00018,0.11747,10000,9,record,record-level; 多seed=bootstrap同步重采样均值
+cpsc,c2,b0,0;2;4,1385,0.947355,0.950619,-0.003264,0.0682,-0.007076,0.000263,0.0058,0.2686,10000,9,record,record-level; 多seed=bootstrap同步重采样均值

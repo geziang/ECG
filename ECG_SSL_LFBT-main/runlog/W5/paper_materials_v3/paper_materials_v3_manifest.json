@@ -1,0 +1,19 @@
+{
+ "built_at": "2026-10-03 14:28",
+ "built_by": "W6 Stage0 B-3 (hostA Win4090)",
+ "inputs": {
+  "v2_dir": "runlog/W4/paper_materials_v2 (read-only)",
+  "w3_dir": "runlog/W3/paper_materials (read-only)",
+  "w5_ledger": "runlog/W5/lp_results.csv (git_sha 32ec160)",
+  "w5_stats": "runlog/W5/stats/paired_stats.csv"
+ },
+ "outputs": [
+  "main_table_merged_v3.csv",
+  "paired_stats_v3.csv",
+  "paired_delta_v3.csv",
+  "seed_sign_v3.csv"
+ ],
+ "w5_ledger_git_sha": "32ec160",
+ "build_git_sha": "9d7342c",
+ "note": "CPSC 行=修正分区(1385), 与 W2/W4 污染分区行不可比; record-level"
+}

@@ -110,10 +110,12 @@
 
 | 任务 | 主机 | 当前状态 | 交付物 | 停止线 |
 |---|---|---|---|---|
-| Stage 0 CPSC 修正分区官方统计(原W5B B-1~B-4) | A-L{cpu} | 🏃主机A(10-03 14:06) | `runlog/W5/stats/`、`runlog/W5/paper_materials_v3/`、`stats_methods_w5.md` | 方向/显著性翻转或 delta差>0.1pt→停上推,照跳Stage 1 |
-| Stage 1 前半 FT20/40: b0/c1×{20,40}×s{0,2,4} | A-L1 | 📋 排队(待白名单+车道脚本就绪,10-03 内起跑) | `runlog/W6/ft2040_results_L1.csv`+predictions | 协议超参不动;test每格只评一次 |
-| Stage 1 后半+1b: c2×{20,40}×s{0,2,4} + simclr/clocs×FT20×s{0,2,4} | A-L2 | 📋 排队(L1 起跑+标定后错峰≥10min 起跑) | `runlog/W6/ft2040_results_L2.csv`+predictions | 同上 |
+| Stage 0 CPSC 修正分区官方统计(原W5B B-1~B-4) | A-L{cpu} | ✅ 已完成(10-03 14:4x) | `runlog/W5/stats/`、`runlog/W5/paper_materials_v3/`、`stats_methods_w5.md` | 方向/显著性翻转或 delta差>0.1pt→停上推,照跳Stage 1 |
+| Stage 1 前半 FT20/40: b0/c1×{20,40}×s{0,2,4} | A-L1 | 🏃主机A(10-03 14:13:58) | `runlog/W6/ft2040_results_L1.csv`+predictions | 协议超参不动;test每格只评一次 |
+| Stage 1 后半+1b: c2×{20,40}×s{0,2,4} + simclr/clocs×FT20×s{0,2,4} | A-L2 | 🏃主机A(10-03 14:24:03, 首发14:19错峰不足已停发纠正见events.md) | `runlog/W6/ft2040_results_L2.csv`+predictions | 同上 |
 | Stage 2 LCM / Stage 3 FT10网格 / Stage 4 双视角 / Stage 5 种子扩展 / Stage 6 NSTDB / Stage 7 多标签 | A | 💤 按任务书《多车道排程》依次推进 | 见任务书各节 | 见任务书各节 |
+
+> **Stage 0 收口回填（主机A，10-03 14:4x，W6 Stage0-L{cpu}）**：**B-1** 官方配对统计四对全部完成（`runlog/W5/stats/paired_stats.csv`，RNG 20260923/10k/record-level），**三项自查门全过**——①schema 同 W4、n=1385、9 类、record；②两侧 macro-AUROC 与 lp_results.csv 四位小数一致 8/8；③与办公机临时数(RNG 20260925)对照 delta 差≤0.002pt、CI 端点差≤0.03pt、p 差≤0.0014 全同侧，**预授权停机线（方向/显著性翻转）未触发**。要点读数：C1vsC2 −0.103pt p=0.187（不显著）；C1vsSimCLR +3.132pt；C1vsCLOCS +0.451pt p=0.0046；C2vsB0 −0.326pt p=0.068。**B-2** 种子级差独立复算与任务书参照数**逐位一致**（C2−C1 AUPRC +0.70/+0.59/+1.20 mean+0.83, 3/3⊕, t-CI [+0.02,+1.64] 贴边含零外；C2−B0 1/3 非同向）。**B-3** `runlog/W5/paper_materials_v3/` 四表+README（PTB/Chapman 行原样、CPSC 行全换新、W3 污染分区 cpsc 行不入 v3 只留冻结件）。**B-4** `runlog/W5/stats/stats_methods_w5.md`。事件一条：任务书原样命令默认 pairs 会 skip simclr/clocs 两对，按 W4 官方先例显式 `--pairs` 传参，**代码零改动**（`runlog/W6/events.md`）。**知会办公机：论文四处 provisional 可换正式数**（主文 Table 6 注/§4.2/§4.4/摘要-讨论-结论 + 支撑论文 §4.6 record-level 表述）。代码 SHA：本提交；统计代码=W4 审计版零改动。
 
 ## 二、历史队列（已封存，不得启动）
 
