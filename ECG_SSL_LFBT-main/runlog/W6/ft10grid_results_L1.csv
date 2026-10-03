@@ -13,3 +13,5 @@ ts,ckpt,seed,eval,downstream,fraction,auroc,auprc,git_sha,checkpoint_sha256,prot
 2026-10-04 04:05,b0,4,ft10,chapman,0.1,0.9901,0.9707,5997e77,ba4f2d3c99aff6b5889dae4ebdd1103b8949e2d1f8fcadd28d0a5df8b91c0daa,w6-ft10grid,bt_ssl(baseline),"W6 Stage3: W2 FT10 冻结协议换数据集, 见 runlog/W6/run_ft10grid_lane.py"
 2026-10-04 04:35,c1,0,ft10,chapman,0.1,0.9905,0.9715,7eac172,de0c28eedb30841492c36644ad1d06e11aab7bb02bbb5b42ff5d18524a5bc177,w6-ft10grid,bt_ssl,"W6 Stage3: W2 FT10 冻结协议换数据集, 见 runlog/W6/run_ft10grid_lane.py"
 2026-10-04 05:06,c1,2,ft10,chapman,0.1,0.9906,0.9703,7eac172,26ebf0e26e5abee04f4064182d79e449e3c849693979162577171717cb2b7787,w6-ft10grid,bt_ssl,"W6 Stage3: W2 FT10 冻结协议换数据集, 见 runlog/W6/run_ft10grid_lane.py"
+2026-10-04 05:36,c1,4,ft10,chapman,0.1,0.9913,0.9749,f5ab9e3,e599dbcdb69372186c3b49b0d0ced3389e2c909a458d86a8413a58524e31715e,w6-ft10grid,bt_ssl,"W6 Stage3: W2 FT10 冻结协议换数据集, 见 runlog/W6/run_ft10grid_lane.py"
+2026-10-04 06:07,c2,0,ft10,chapman,0.1,0.9898,0.9690,f5ab9e3,af242a89c340969fd57e70349e4b88e4bf6725c5586f5c12d62a96a199ed9524,w6-ft10grid,bt_ssl,"W6 Stage3: W2 FT10 冻结协议换数据集, 见 runlog/W6/run_ft10grid_lane.py"
