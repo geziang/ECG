@@ -16,6 +16,8 @@ import time
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
+sys.path.insert(0, str(ROOT))
+from utils.pathguard import open_out
 PY = r"C:/Users/admin/.conda/envs/DL/python.exe"
 OUT = ROOT / "runlog/W5/lp_results.csv"
 LOGD = ROOT / "runlog/W5/logs"
@@ -75,7 +77,7 @@ def run_one(kind, seed):
     if row_done(kind, seed) and (ROOT / PRED / tag / "y_prob.npy").exists():
         log(f"{tag}: 已有账+预测, 跳过")
         return True
-    with open(LOGD / f"{tag}.log", "w", encoding="utf-8") as f:
+    with open_out(LOGD, f"{tag}.log", encoding="utf-8") as f:
         rc = subprocess.run(
             [PY, "-u", "run_lp.py", "--data-dir", "data/cpsc", "--num-classes", "9",
              "--checkpoint", f"{ck}/encoder_group.pth", "--feat-dir", str(feat),

@@ -211,3 +211,10 @@
 > **B-2** metrics_ext.py + run_lp/run_ft 集成(新开关 --extended-metrics/--save-predictions/--protocol-id/--data-manifest-sha/--checkpoint-sha **默认全关**, 不加参数 metrics.json 与 W2 逐字节一致): per-class AP/Macro-F1/Sens/Spec/混淆矩阵/ECE/Brier/校准分桶; 逐记录 y_true/y_pred/y_prob 仅允许 runlog/W3/(W2 路径硬拒+protocol_id 必填); 单测 **18/18**(手工验算+sklearn交叉+守卫+默认关闭), smoke **SMOKE PASS**(macro_ap/macro_f1 与 sklearn 双一致); schema 见 runlog/W3/metrics_schema/SCHEMA.md。未重评任何真实 test。
 > **B-3** NFH 97 条明细交付:nfh_scan_hostB.py 以与 W1 prepare_nfh.py 逐字相同的检测路径(wfdb p_signal 8导, 重采样前)全量重扫 E 盘副本——**97/97 确定性复得**(ok=34808/raw=34905 三项全对上), nfh_exclusion_reconciliation.csv 含逐条 NaN/Inf 计数与导联; 画像=全 NaN 无 Inf(4091点,1~422/条), 全胸导(V6=48/V5=23为主), 重采样后仍非有限→**原始文件内容非重采样边缘**; 判定=分歧收敛到两侧副本不同, 请 A 侧对 97 条 .mat 字节比对定案(名单=CSV record 列); 敏感性: 剔除占比 0.278%, 主结果维持 A 口径不动。nfh_sensitivity_note.md 一页说明+nfh_manifest_hostB_w3.json(含全名单)。
 > 主机B 本批次任务全部完成, 机器空闲待分配。(主机B, 09-22 22:15)
+
+> **📢 办公机通告(2026-10-03):主机B退役,W6 批次下发,主机A独跑串行。**
+> ① 用户决策(10-03):主机B(DESKTOP-0PBLCND)退役,全部计算归主机A;实验依次串行 24h 不停,每阶段完成即 commit+push,分叉点按任务书预授权规则自动走,不等办公机复核。
+> ② 新任务书已入库:`报告归档/未完成报告/W6-主机A独跑串行批次任务书-2026-10-03.md`(Stage 0=原W5B移交A机 CPSC官方统计 → 1=FT20/40 → 2=LCM导联矩阵软匹配pilot → 3=三域FT10网格补全 → 4=整段-心拍双视角+RR头 → 5=种子扩展n=5 → 6=NSTDB真实噪声 → 7=CPSC多标签;含各阶段预授权分支与红线)。原 W5B 任务书废止存档。
+> ③ 主机A请 `git pull --ff-only` 后按 Stage 0 开工;开工时在本表追加认领行(格式照旧,注明"W6 Stage N")。
+> ④ 办公机异步复核各阶段产物并更新主文 provisional 数/台账;W5 系列 W5/W5A/W5B 三份任务书本次补录入库(此前仅本地存在,未进过 origin)。(办公机, 2026-10-03)
+

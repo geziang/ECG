@@ -15,6 +15,8 @@ import time
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
+sys.path.insert(0, str(ROOT))
+from utils.pathguard import open_out
 PY = sys.executable
 OUT = ROOT / "runlog/W4/baseline_results.csv"
 LOGD = ROOT / "runlog/W4/logs"
@@ -61,7 +63,7 @@ def run_pt(seed):
         log(f"{tag}: 已完成, 跳过")
         return True
     ckdir.mkdir(parents=True, exist_ok=True)
-    with open(LOGD / f"simclr_pt_seed{seed}.log", "w", encoding="utf-8") as f:
+    with open_out(LOGD, f"simclr_pt_seed{seed}.log", encoding="utf-8") as f:
         rc = subprocess.run(
             [PY, "-u", "run_pt.py", "--data-dir", "data/pt_pretrain_nfh",
              "--epochs", "100", "--batch-size", "128", "--workers", "4",
@@ -77,7 +79,7 @@ def run_lp(ds, nc, seed):
     ckdir = ROOT / f"checkpoint/confirm/simclr_seed{seed}"
     tag = f"simclr_{ds}_seed{seed}"
     feat = ROOT / f"runlog/W4/feat/{tag}"
-    with open(LOGD / f"{tag}.log", "w", encoding="utf-8") as f:
+    with open_out(LOGD, f"{tag}.log", encoding="utf-8") as f:
         rc = subprocess.run(
             [PY, "-u", "run_lp.py", "--data-dir", f"data/{ds}", "--num-classes", str(nc),
              "--checkpoint", str(ckdir / "encoder_group.pth"), "--feat-dir", str(feat),
@@ -95,7 +97,7 @@ def run_ft10(seed):
     ckdir = ROOT / f"checkpoint/confirm/simclr_seed{seed}"
     tag = f"simclr_ft10_ptbxl_seed{seed}"
     mdir = ROOT / f"runlog/W4/ft/{tag}"
-    with open(LOGD / f"{tag}.log", "w", encoding="utf-8") as f:
+    with open_out(LOGD, f"{tag}.log", encoding="utf-8") as f:
         rc = subprocess.run(
             [PY, "-u", "run_ft.py", "--data-dir", "data/ptbxl", "--num-classes", "5",
              "--fraction", "0.1", "--checkpoint", str(ckdir / "encoder_group.pth"),

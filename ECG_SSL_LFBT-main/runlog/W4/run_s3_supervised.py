@@ -7,6 +7,8 @@ from datetime import datetime
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
+sys.path.insert(0, str(ROOT))
+from utils.pathguard import open_out
 PY = sys.executable
 ROWS = "runlog/W4/baseline_results.csv"
 CODE_SHA = subprocess.run(["git", "-C", str(ROOT), "rev-parse", "--short", "HEAD"],
@@ -40,7 +42,7 @@ for seed in (0, 2, 4):
            "--save-predictions", f"runlog/W4/predictions/s3_ptbxl_seed{seed}",
            "--protocol-id", "w4-s3-supervised"]
     print(f"[{datetime.now():%H:%M:%S}] {tag} start", flush=True)
-    with open(log, "w", encoding="utf-8") as f:
+    with open_out(ROOT / "runlog/W4/logs", f"{tag}.log", encoding="utf-8") as f:
         rc = subprocess.run(cmd, stdout=f, stderr=subprocess.STDOUT, cwd=ROOT).returncode
     if rc != 0:
         print(f"[{datetime.now():%H:%M:%S}] {tag} FAIL rc={rc} -> {log}", flush=True)
