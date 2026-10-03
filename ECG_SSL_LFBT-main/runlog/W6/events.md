@@ -16,3 +16,7 @@
 - 依据: W4 官方产物 `runlog/W4/stats/paired_stats.csv` 中 method_b 即为 simclr/clocs, 证明 W4 当次为显式 `--pairs c1:c2 c1:simclr c1:clocs c2:b0` 传参。
 - 处置: 停残跑(仅完成 c1:c2 一对), 以显式 --pairs 重启; **代码一行未改**, 四对齐全, 与任务书"默认四对"语义一致。
 - 顺手清理: 09-25 遗留 4 个 python 陈尸进程(W5A dataloader worker, 0 CPU 不占卡)已按重启恢复手册清除。
+
+## 2026-10-03 19:2x · GitHub 定向阻断持续（运维）
+- 用户 19:2x 通报"网络已恢复"(办公机侧); A 机实测: DNS 解析正常(20.205.243.166), physionet/baidu 均 200, 唯 github.com 443 连接超时 → 属 GitHub 定向阻断而非本机断网, 与 W4 时代小时级瞬态同款。
+- 积压 commit 2 条(巡检#1/#2)+本条, 留本地待窗口自动补推; 车道运行不受影响(训练全部本地)。
