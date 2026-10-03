@@ -138,8 +138,18 @@ class TestSaveArtifacts(unittest.TestCase):
         with self.assertRaises(ValueError):
             mx.save_eval_artifacts(ROOT / "runlog" / "W2" / "x", [0], [0], [[1.0]],
                                    {"protocol_id": "t"})
+
+    def test_guard_allows_w6_and_still_rejects_w2(self):
+        """W6 Stage1 扩展(FT20/40 标签效率): 允许 runlog/W6/ 之下; W2 硬拒与仓库外拒绝不变。"""
+        w6 = ROOT / "runlog" / "W6" / "metrics_schema" / "_selftest_tmp"
+        try:
+            mx.save_eval_artifacts(w6, [0], [0], [[1.0]], {"protocol_id": "t"})
+            self.assertTrue((w6 / "metrics_ext.json").exists())
+        finally:
+            if w6.exists():
+                shutil.rmtree(w6)
         with self.assertRaises(ValueError):
-            mx.save_eval_artifacts(ROOT / "results" / "x", [0], [0], [[1.0]],
+            mx.save_eval_artifacts(ROOT / "runlog" / "W2" / "x", [0], [0], [[1.0]],
                                    {"protocol_id": "t"})
 
     def test_guard_allows_w5_and_still_rejects_w2(self):
