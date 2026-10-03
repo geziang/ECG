@@ -8,3 +8,6 @@ ts,ckpt,seed,eval,downstream,fraction,auroc,auprc,git_sha,checkpoint_sha256,prot
 2026-10-03 18:10,b0,0,ft40,ptbxl,0.4,0.9084,0.6908,ba35d45,026033d532d4e42a1b53ca9c4d2e95f9c09b2daaaab5c9041c9d474a1356cdad,w6-ft2040,bt_ssl(baseline),"W6 Stage1: W2 FT10 冻结协议仅改标注比例, 见 runlog/W6/run_ft2040_lane.py"
 2026-10-03 18:44,b0,2,ft40,ptbxl,0.4,0.8998,0.6854,ba35d45,f39059a4430c2e7aa8963ca3c75b608120452f517622862fb3a73a7dc95d26a4,w6-ft2040,bt_ssl(baseline),"W6 Stage1: W2 FT10 冻结协议仅改标注比例, 见 runlog/W6/run_ft2040_lane.py"
 2026-10-03 19:19,b0,4,ft40,ptbxl,0.4,0.8978,0.6770,ba35d45,ba4f2d3c99aff6b5889dae4ebdd1103b8949e2d1f8fcadd28d0a5df8b91c0daa,w6-ft2040,bt_ssl(baseline),"W6 Stage1: W2 FT10 冻结协议仅改标注比例, 见 runlog/W6/run_ft2040_lane.py"
+2026-10-03 19:53,c1,0,ft40,ptbxl,0.4,0.8842,0.6659,ea259c4,de0c28eedb30841492c36644ad1d06e11aab7bb02bbb5b42ff5d18524a5bc177,w6-ft2040,bt_ssl,"W6 Stage1: W2 FT10 冻结协议仅改标注比例, 见 runlog/W6/run_ft2040_lane.py"
+2026-10-03 20:28,c1,2,ft40,ptbxl,0.4,0.8888,0.6771,ea259c4,26ebf0e26e5abee04f4064182d79e449e3c849693979162577171717cb2b7787,w6-ft2040,bt_ssl,"W6 Stage1: W2 FT10 冻结协议仅改标注比例, 见 runlog/W6/run_ft2040_lane.py"
+2026-10-03 21:02,c1,4,ft40,ptbxl,0.4,0.8846,0.6635,ea259c4,e599dbcdb69372186c3b49b0d0ced3389e2c909a458d86a8413a58524e31715e,w6-ft2040,bt_ssl,"W6 Stage1: W2 FT10 冻结协议仅改标注比例, 见 runlog/W6/run_ft2040_lane.py"
