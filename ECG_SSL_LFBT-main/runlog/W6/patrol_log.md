@@ -17,3 +17,4 @@
 2026-10-04 07:24 | L1=Stage3收口18/18零失败→接力Stage5起跑(b0s1 PT训练中) | L2=待LCM | csv ft10grid 18/18 seedext 0/16 | GPU 7448 | Stage5接力+Stage3收口回填
 2026-10-04 08:23 | L1=Stage5健康(链1/4: b0s1 PT ep95/200,~37s/ep) | L2=待LCM | csv seedext 0/16 | GPU 7462 | 无动作; 网络间歇
   ↳ push 失败(代理SSL瞬态), commit 留本地待下窗口补推
+2026-10-04 09:23 | L1=Stage5健康(链1/4: b0s1 PT ep191/200将转LP+FT10) | L2=待LCM | csv seedext 0/16 | GPU 7452 | 无动作; 网络恢复连带补推#15积压
