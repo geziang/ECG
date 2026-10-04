@@ -15,3 +15,5 @@
 2026-10-04 05:23 | L1=Stage3健康(14/18,c1chapman两种子0.9905/0.9906≈b0,在跑c1 s4) | L2=待LCM | csv ft10grid 14/18 | GPU 3152 | 无动作
 2026-10-04 06:23 | L1=Stage3健康(16/18,c1chapman齐mean0.9908微高b0,c2chapman首种子0.9898,在跑c2 s2) | L2=待LCM | csv ft10grid 16/18 | GPU 3154 | 无动作
 2026-10-04 07:24 | L1=Stage3收口18/18零失败→接力Stage5起跑(b0s1 PT训练中) | L2=待LCM | csv ft10grid 18/18 seedext 0/16 | GPU 7448 | Stage5接力+Stage3收口回填
+2026-10-04 08:23 | L1=Stage5健康(链1/4: b0s1 PT ep95/200,~37s/ep) | L2=待LCM | csv seedext 0/16 | GPU 7462 | 无动作; 网络间歇
+  ↳ push 失败(代理SSL瞬态), commit 留本地待下窗口补推
