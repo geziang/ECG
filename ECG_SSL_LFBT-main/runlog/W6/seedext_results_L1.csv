@@ -7,3 +7,7 @@ ts,ckpt,seed,eval,downstream,auroc,auprc,git_sha,checkpoint_sha256,protocol_id,h
 2026-10-04 11:45,b0,3,lp,cpsc,0.9501,0.7686,1d30c6c,c54238531da66e297270a5aec95dca8d69d57e807699580ad54276adc22a7fc2,w6-seedext,"W6 Stage5: W2 全链冻结协议 seed{1,3} 扩展, 见 runlog/W6/run_seedext_lane.py"
 2026-10-04 11:45,b0,3,lp,chapman,0.9933,0.9795,1d30c6c,c54238531da66e297270a5aec95dca8d69d57e807699580ad54276adc22a7fc2,w6-seedext,"W6 Stage5: W2 全链冻结协议 seed{1,3} 扩展, 见 runlog/W6/run_seedext_lane.py"
 2026-10-04 12:15,b0,3,ft10,ptbxl,0.8704,0.6316,1d30c6c,c54238531da66e297270a5aec95dca8d69d57e807699580ad54276adc22a7fc2,w6-seedext,"W6 Stage5: W2 全链冻结协议 seed{1,3} 扩展, 见 runlog/W6/run_seedext_lane.py"
+2026-10-04 13:28,c1,1,lp,ptbxl,0.8877,0.6585,deae243,b2d4824a092865930fe6329d2e6fb5380641cc9a20719fc1bfc5830e62107e7c,w6-seedext,"W6 Stage5: W2 全链冻结协议 seed{1,3} 扩展, 见 runlog/W6/run_seedext_lane.py"
+2026-10-04 13:29,c1,1,lp,cpsc,0.9453,0.7606,deae243,b2d4824a092865930fe6329d2e6fb5380641cc9a20719fc1bfc5830e62107e7c,w6-seedext,"W6 Stage5: W2 全链冻结协议 seed{1,3} 扩展, 见 runlog/W6/run_seedext_lane.py"
+2026-10-04 13:29,c1,1,lp,chapman,0.9958,0.9869,deae243,b2d4824a092865930fe6329d2e6fb5380641cc9a20719fc1bfc5830e62107e7c,w6-seedext,"W6 Stage5: W2 全链冻结协议 seed{1,3} 扩展, 见 runlog/W6/run_seedext_lane.py"
+2026-10-04 13:59,c1,1,ft10,ptbxl,0.8601,0.6399,deae243,b2d4824a092865930fe6329d2e6fb5380641cc9a20719fc1bfc5830e62107e7c,w6-seedext,"W6 Stage5: W2 全链冻结协议 seed{1,3} 扩展, 见 runlog/W6/run_seedext_lane.py"
