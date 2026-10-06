@@ -6,13 +6,13 @@
 > 最终交付：全部完成后写 `runlog/W6/W6_最终报告.md`（10-08 用户回看入口）。
 
 ## Q1 · LCM seed0 门判定 + 可能的 seeds{2,4}【当 lane_L2_lcm_runner.log 出现"LCM seed0 链结束"且 lcm_results.csv 有 seed=0 的 4 行后可执行】
-- [ ] Q1a 读 lcm_results.csv 的 (lcm, 0, lp, cpsc) auroc，算 Δ = auroc − 0.9455（C1 seed0 cpsc LP 参照，源 runlog/W5/lp_results.csv）。
-- [ ] Q1b 判定与动作（任务书 Stage2 预授权）：
+- [x] Q1a 读 lcm_results.csv 的 (lcm, 0, lp, cpsc) auroc，算 Δ = auroc − 0.9455（C1 seed0 cpsc LP 参照，源 runlog/W5/lp_results.csv）。
+- [x] Q1b 判定与动作（任务书 Stage2 预授权）：
   - Δ ≥ +0.0030 → 过门：detached 启动 `runlog\W6\run_lcm_chain.py 0.05 2`（日志 lane_L2_lcm_s2_runner.log），其"链结束"后再启动 seed 4（lane_L2_lcm_s4_runner.log）；events 记录门判定与 Δ。
   - Δ < +0.0010 → **判负关线**：events + HOSTS Stage2 行改 ✅判负(含 Δ 与四行读数)，入失败方向表叙事（与 D1L 的机制区别一并写：保持实测结构亦无增益 → 跨导结构先验线彻底关闭）。
   - 灰区（+0.0010~+0.0030）→ 不加跑，events 记"灰区裁决归办公机"，HOSTS 行改 ✅灰区。
 - [ ] Q1c 若加了 seeds：三种子齐后算 cpsc LP 三种子 mean 与逐种子 Δ（对 C1 同种子 0.9455/0.9453/0.9481），按 3-seed 门（mean ≥+0.5pt 且 3/3 同向）判终，events+HOSTS 回填，**判负即关线不翻案**。
-- [ ] Q1d 无论正负，LCM 收口后 HOSTS"待开发"行去掉 Stage 2。
+- [x] Q1d 无论正负，LCM 收口后 HOSTS"待开发"行去掉 Stage 2。
 
 ## Q2 · Stage 4 双视角一致性 + RR 头（开题关键问题(1)本体，LCM 收口后开工）【需要多轮】
 设计规格（照此实现，机制上与判负 CCM 的区别=双视角表征一致性、不做重建）：
@@ -42,3 +42,4 @@
 ## 完成状态记录（执行轮次在此追加）
 - 10-06 12:xx 值班轮：队列建立。
 - 10-06 12:26 值班轮：Q3a 完成——run_robustness_nstdb.py 编译+smoke(96样本)全通; 组合表 ptbxl8/cpsc9(W5A头)/chapman6; clean 参照分域(W2/W5)。
+- 10-06 13:23 值班轮：Q1 完成——Δ=−0.12pt 判负关线(未触发加种子, Q1c 不适用), events+HOSTS 已回填。
