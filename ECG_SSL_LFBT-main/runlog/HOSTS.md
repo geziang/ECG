@@ -116,7 +116,8 @@
 | Stage 3 FT10网格 {b0,c1,c2}×s{0,2,4}×{cpsc,chapman} | A-L1 | ✅ 已完成(10-04 07:08, 18/18零失败)→🏃 Stage5前半(10-04 07:23 巡检接力) | `runlog/W6/ft10grid_results_L1.csv`+predictions; Stage5=`runlog/W6/seedext_results_L1.csv` | 同Stage1红线 |
 | Stage 5 前半种子扩展: b0/c1×s{1,3}四链 | A-L1 | ✅ 已完成(10-04 15:43, 16/16零失败) | `runlog/W6/seedext_results_L1.csv`+predictions | 同Stage1红线; 预注册门与W2结论不动 |
 | Stage 5 后半种子扩展: c2×s{1,3}两链 | A-L2 | ✅ 已完成(10-05 19:37, 8/8零失败)——**Stage5 全收口, 三方法 5 种子账本齐** | `runlog/W6/seedext_results_L2.csv`+predictions | 同Stage1红线; 预注册门与W2结论不动 |
-| Stage 2 LCM / Stage 4 双视角 / Stage 6 NSTDB / Stage 7 多标签 | A | 💤 主会话开发中(LCM 实现最先); L1 空闲可插 | 见任务书各节 | 见任务书各节 |
+| Stage 2 LCM seed0 全链(λ=0.05) | A-L2 | 🏃主机A(10-06 10:58, 主会话启动; 实现单测13/13+回归全绿) | `runlog/W6/lcm_results.csv`+predictions; smoke诊断入events | 预授权门: Δ≥+0.3pt加seeds{2,4}, <+0.1pt关线, 灰区照走Stage3 |
+| Stage 4 双视角 / Stage 6 NSTDB / Stage 7 多标签 | A | 💤 主会话开发队列(LCM 判定后接力 Stage4; Stage6/7 可插 L1) | 见任务书各节 | 见任务书各节 |
 
 > **Stage 0 收口回填（主机A，10-03 14:4x，W6 Stage0-L{cpu}）**：**B-1** 官方配对统计四对全部完成（`runlog/W5/stats/paired_stats.csv`，RNG 20260923/10k/record-level），**三项自查门全过**——①schema 同 W4、n=1385、9 类、record；②两侧 macro-AUROC 与 lp_results.csv 四位小数一致 8/8；③与办公机临时数(RNG 20260925)对照 delta 差≤0.002pt、CI 端点差≤0.03pt、p 差≤0.0014 全同侧，**预授权停机线（方向/显著性翻转）未触发**。要点读数：C1vsC2 −0.103pt p=0.187（不显著）；C1vsSimCLR +3.132pt；C1vsCLOCS +0.451pt p=0.0046；C2vsB0 −0.326pt p=0.068。**B-2** 种子级差独立复算与任务书参照数**逐位一致**（C2−C1 AUPRC +0.70/+0.59/+1.20 mean+0.83, 3/3⊕, t-CI [+0.02,+1.64] 贴边含零外；C2−B0 1/3 非同向）。**B-3** `runlog/W5/paper_materials_v3/` 四表+README（PTB/Chapman 行原样、CPSC 行全换新、W3 污染分区 cpsc 行不入 v3 只留冻结件）。**B-4** `runlog/W5/stats/stats_methods_w5.md`。事件一条：任务书原样命令默认 pairs 会 skip simclr/clocs 两对，按 W4 官方先例显式 `--pairs` 传参，**代码零改动**（`runlog/W6/events.md`）。**知会办公机：论文四处 provisional 可换正式数**（主文 Table 6 注/§4.2/§4.4/摘要-讨论-结论 + 支撑论文 §4.6 record-level 表述）。代码 SHA：本提交；统计代码=W4 审计版零改动。
 
