@@ -83,3 +83,4 @@
 2026-10-06 18:25 | L2=DV seed0链ep61+/100 | L1=空闲 | csv lcm 4/4 dv 0/4 robustness 276行 | GPU 8072 | 执行Q3d
 2026-10-06 19:36 | L2=DV收口灰区(+0.27pt)心拍线关闭 | L1=空闲 | csv lcm 4/4 dv 4/4 | GPU ~3.2G(FT10尾) | 执行Q2d+Q2e
 2026-10-06 20:41 | L1/L2=空闲 | csv multilabel 9/9 | GPU ~0.7G | 执行Q4a/Q4b/Q4c(Stage7全收口)
+2026-10-06 21:05 | 双车道空闲 | 全部csv齐 | GPU ~0.7G | Q5全清W6收官(主会话)

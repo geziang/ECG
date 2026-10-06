@@ -95,3 +95,9 @@
 - **真值口径(限制如实入账)**: A 机无 CPSC 原始多标签引用(W5A 重建后 .hea 未留存)——BCE 头在主类 one-hot 真值上训练评估, 连续 macro-AUROC/AUPRC(one-vs-rest) + val 选 per-class 阈值 test 只评一次。
 - **9/9 零失败**(每组合~15s): macro-AUROC 均值 b0 0.8586 / c2 0.8560 / c1 0.8322; macro-F1 b0 0.507 / c2 0.522 / c1 0.488; c2 AUPRC 0.525 最高。排序 b0>c2>c1 与单标签 LP 格局同向; 绝对值与单标签主表不可比(分列不混写)。
 - 产物: runlog/W6/multilabel_results.csv + runlog/W6/multilabel/{kind}_s{seed}/(阈值与明细, protocol_id=w6-multilabel)。开发修 3 处: load_split 返回数、encoder 特判调用点(shell 转义致补丁静默失败两次, 最终以 Edit 工具落位)、spec 宏平均补算。
+
+## 2026-10-06 21:0x · Q5 全清, W6 收官（主会话）
+- Q5a/Q5b 配对差复算: Stage1 C1−B0 血缘效应 FT20/40 全 3/3⊕(−1.6pt); Stage3 C2−B0 cpsc +0.34/chapman +0.14 均 3/3⊕。
+- Q5c 5-seed 汇总: 三方法 LP 三域全 5 种子齐(明细见 seed5_summary.csv)。
+- Q5d 最终报告 runlog/W6/W6_最终报告.md 入库(用户 10-08 回看入口)。
+- **W6 全部队列完成, 91 作业零失败**; 值班 cron 转为纯值守(空闲确认+补推), 不再有队列步骤。

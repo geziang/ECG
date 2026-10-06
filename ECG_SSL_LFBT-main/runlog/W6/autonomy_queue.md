@@ -34,10 +34,10 @@
 - [x] Q4c HOSTS 回填 ✅。
 
 ## Q5 · 收口算术与总报告
-- [ ] Q5a Stage1 配对差复算：ft2040_results.csv 里 C2−C1 与 C1−B0 每档（ft20/ft40）逐种子差+mean（AUROC 与 AUPRC），写 runlog/W6/stage1_paired_delta.md。
-- [ ] Q5b Stage3 配对差复算：ft10grid 同款（cpsc/chapman × C2−C1/C2−B0/C1−B0），写 runlog/W6/stage3_paired_delta.md。
-- [ ] Q5c 5-seed 汇总：三方法×5种子×{lp三域,ft10} mean±SD 与符号一致性 → runlog/W6/seed5_summary.csv（办公机换主表用）。
-- [ ] Q5d **W6_最终报告.md**：各阶段结果/门判定走了哪条预授权分支/禁语合规自查/遗留事项（office 侧待办）。HOSTS §一-D 总回填。
+- [x] Q5a Stage1 配对差复算：ft2040_results.csv 里 C2−C1 与 C1−B0 每档（ft20/ft40）逐种子差+mean（AUROC 与 AUPRC），写 runlog/W6/stage1_paired_delta.md。
+- [x] Q5b Stage3 配对差复算：ft10grid 同款（cpsc/chapman × C2−C1/C2−B0/C1−B0），写 runlog/W6/stage3_paired_delta.md。
+- [x] Q5c 5-seed 汇总：三方法×5种子×{lp三域,ft10} mean±SD 与符号一致性 → runlog/W6/seed5_summary.csv（办公机换主表用）。
+- [x] Q5d **W6_最终报告.md**：各阶段结果/门判定走了哪条预授权分支/禁语合规自查/遗留事项（office 侧待办）。HOSTS §一-D 总回填。
 
 ## 完成状态记录（执行轮次在此追加）
 - 10-06 12:xx 值班轮：队列建立。
@@ -49,3 +49,4 @@
 - 10-06 18:25 值班轮：Q3d 完成——stage6_summary.md 入库(NFH抗退化/TRC中性两条W3结论在真实噪声下保持; 噪声类型敏感性域间差异如实记录)。
 - 10-06 19:35 值班轮：Q2d/Q2e 完成——DV seed0 cpsc LP 0.9482(Δ=+0.27pt)落灰区不加种子, 心拍线关闭, 研究内容(2)证据链完整(负+灰区)。Q2 全清。
 - 10-06 20:41 值班轮：Q4 全清——多标签 9/9 出数(b0 0.8586>c2 0.8560>c1 0.8322, 与单标签格局同向, 分列), one-hot 真值限制入账。W6 八阶段全部完成, 余 Q5 收口件。
+- 10-06 21:0x 主会话轮：Q5 全清——三笔配对差复算+5seed汇总+W6_最终报告.md 完成。**队列全清, W6 收官**。
