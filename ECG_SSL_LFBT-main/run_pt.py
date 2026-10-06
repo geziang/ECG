@@ -62,6 +62,12 @@ parser.add_argument('--lcm-weight', default=0.0, type=float,
                     help='W6 Stage2 LCM: 导联相关矩阵软匹配权重(0=关闭,逐位等于C1); '
                          '目标=每样本8x8导联Pearson(实测相关结构), 表征=导联分支特征余弦Gram, '
                          '两视图平均的Frobenius^2; 与D1L机制相反(D1L证伪的是强制去相关硬目标)')
+parser.add_argument('--dualview-weight', default=0.0, type=float,
+                    help='W6 Stage4: 整段-心拍双视角一致性权重(0=关闭,逐位等于C1); '
+                         '心拍视图=R峰中心窗逐导联平均(共享per-lead backbone), BT式on-diag一致')
+parser.add_argument('--rr-weight', default=0.0, type=float,
+                    help='W6 Stage4: RR统计(mean/SDNN/RMSSD)回归头权重(0=关闭); '
+                         'lead-II分支特征->3统计量, 全库z-score目标(H4口径)')
 parser.add_argument('--fast-backbone', action='store_true',
                     help='M0 提速: 分组卷积合并 8 导联主干+投影头(数值等价 rel<1e-6);默认关闭=原路径')
 # ===== M 矩阵候选开关 (N4/D1L) =====
@@ -246,6 +252,12 @@ class LeadFusionBT(object):
             assert not self.fast, "H4 暂不支持 fast 路径"
             self.hrv_head = nn.Sequential(          # 64 = int(512*alpha), alpha=0.125
                 nn.Linear(64, 32), nn.ReLU(), nn.Linear(32, 4)).to(self.device)
+        # W6 Stage4: RR 回归头(lead-II 64 维分支特征 -> 3 统计量; 仅慢路径)
+        self.rr_head = None
+        if getattr(args, 'rr_weight', 0.0) > 0:
+            assert not self.fast, "Stage4 RR 头暂不支持 fast 路径"
+            self.rr_head = nn.Sequential(
+                nn.Linear(64, 32), nn.ReLU(), nn.Linear(32, 3)).to(self.device)
         # D7: 并联重建支路(仅慢路径; 共享 backbone, 池化前特征接轻量解码器)
         # W1 T3: multiseg/ccm 复用同一解码器池(masked MSE 见 _masked_recon_loss)
         self.rec_style = getattr(args, 'rec_style', 'none')
@@ -331,6 +343,27 @@ class LeadFusionBT(object):
         zb = self.bn_all(z.reshape(z.shape[0], -1)).reshape_as(z)
         return [zb[:, i, :] for i in range(self.args.num_leads)]
 
+    def _embed_beat(self, beat):
+        """W6 Stage4: 心拍视图过共享 per-lead backbone+projector -> z 列表。"""
+        z_list = list()
+        for i in range(self.args.num_leads):
+            z_list.append(self.projector_group[i](self.backbone_group[i](beat[:, [i], :])))
+        return z_list
+
+    def _dv_consistency(self, z_list, zb_list, m):
+        """W6 Stage4: 整段 vs 心拍视图的 BT 式 on-diag 一致性(同导联相关逼近1)。
+
+        m=有效样本掩码(峰数>=3); 无效样本整行剔除。逐对重算 BN(保持 B0 语义)。
+        """
+        tot = 0
+        for i in range(self.args.num_leads):
+            c1 = self.bn_group[i](z_list[i][m])
+            c2 = self.bn_group[i](zb_list[i][m])
+            c = c1.T @ c2
+            c.div_(int(m.sum()))
+            tot = tot + torch.diagonal(c).add_(-1).pow_(2).sum()
+        return tot / self.args.num_leads
+
     @staticmethod
     def _lcm_pearson(y):
         """W6 Stage2: (B, L, T) -> 每样本 LxL 导联 Pearson(时间轴, 总体口径)。"""
@@ -408,10 +441,12 @@ class LeadFusionBT(object):
         return t1 + t2
 
     def forward(self, y1, y2, y_pair=None, pair_mask=None,
-                hrv_target=None, hrv_valid=None, rec=None):
+                hrv_target=None, hrv_valid=None, rec=None, dv=None):
         self.last_extra = {}
         if self.acl_nets is not None or rec is not None \
-                or getattr(self.args, 'lcm_weight', 0.0) > 0:
+                or getattr(self.args, 'lcm_weight', 0.0) > 0 \
+                or getattr(self.args, 'dualview_weight', 0.0) > 0 \
+                or getattr(self.args, 'rr_weight', 0.0) > 0:
             z1_list, f1_list, fm1_list = self._embed_full(y1)
             z2_list, f2_list, fm2_list = self._embed_full(y2)
         else:
@@ -563,6 +598,24 @@ class LeadFusionBT(object):
             loss = loss + self.args.lcm_weight * lcm
             loss_r = loss_r + self.args.lcm_weight * lcm
             self.last_extra['loss_lcm'] = lcm.item()
+        if dv is not None and (getattr(self.args, 'dualview_weight', 0.0) > 0
+                               or getattr(self.args, 'rr_weight', 0.0) > 0):
+            # W6 Stage4: 双视角一致性(共享 backbone, 机制区别于判负 CCM 的遮挡重建)
+            beat, rr3, dvalid = dv
+            m = dvalid > 0.5
+            if bool(m.any()):
+                if getattr(self.args, 'dualview_weight', 0.0) > 0:
+                    zb_list = self._embed_beat(beat)
+                    dv_l = (self._dv_consistency(z1_list, zb_list, m)
+                            + self._dv_consistency(z2_list, zb_list, m)) / 2
+                    loss = loss + self.args.dualview_weight * dv_l
+                    loss_r = loss_r + self.args.dualview_weight * dv_l
+                    self.last_extra['loss_dv'] = dv_l.item()
+                if getattr(self.args, 'rr_weight', 0.0) > 0 and self.rr_head is not None:
+                    l4 = nn.functional.mse_loss(self.rr_head(f1_list[0][m]), rr3[m])
+                    loss = loss + self.args.rr_weight * l4
+                    loss_r = loss_r + self.args.rr_weight * l4
+                    self.last_extra['loss_rr'] = l4.item()
         if self.sinc_M > 0:
             # C1 频带正则: 带宽压在 [1,15]Hz, 防退化全带=普通卷积(主机B)
             from models.sinc_conv import sinc_band_penalty
@@ -641,6 +694,12 @@ def main_worker(gpu, args):
                 else:
                     param_weights.append(param)
 
+        if getattr(model, 'rr_head', None) is not None:
+            for param in model.rr_head.parameters():
+                if param.ndim == 1:
+                    param_biases.append(param)
+                else:
+                    param_weights.append(param)
         if getattr(model, 'hrv_head', None) is not None:
             for param in model.hrv_head.parameters():
                 if param.ndim == 1:
@@ -699,6 +758,12 @@ def main_worker(gpu, args):
         from data_utils.c3_mixup import MixUpDataset
         dataset = MixUpDataset(args.data_dir, t, t2,
                                prob=args.mixup_prob, align=bool(args.mixup_align))
+    elif getattr(args, 'dualview_weight', 0.0) > 0 or getattr(args, 'rr_weight', 0.0) > 0:
+        from data_utils.dv_dataset import DVDataset
+        rpeak_npz = Path(args.rpeak_npz)
+        if not rpeak_npz.exists():
+            raise FileNotFoundError('Stage4 双视角需 R 峰缓存(先跑 runlog/prep_rpeaks.py)')
+        dataset = DVDataset(args.data_dir, t, t2, rpeak_npz)
     elif getattr(args, 'hrv_weight', 0.0) > 0:
         from data_utils.h4_dataset import HRVDataset
         hrv_npz = Path('data/pt_hrv.npz')
@@ -752,16 +817,22 @@ def main_worker(gpu, args):
             y2 = views[1].to(model.device, non_blocking=True)
             y_pair = pair_mask = hrv_t = hrv_v = None
             rec_info = None
+            dv_info = None
             if len(views) == 4:
                 # T3 B2/B3: (masked1, masked2, orig1, orig2) + (mask1, mask2)
                 rec_info = (views[2].to(model.device, non_blocking=True),
                             views[3].to(model.device, non_blocking=True),
                             flag[0].to(model.device, non_blocking=True),
                             flag[1].to(model.device, non_blocking=True))
-            elif isinstance(flag, (tuple, list)):
+            elif isinstance(flag, (tuple, list)) and len(views) == 2:
                 # H4: flag = (targets(B,4), valid(B,))
                 hrv_t = flag[0].to(model.device, non_blocking=True)
                 hrv_v = flag[1].to(model.device, non_blocking=True)
+            elif isinstance(flag, (tuple, list)) and len(views) == 3:
+                # W6 Stage4: (v1,v2,beat) + (rr3(B,3), valid(B,))
+                dv_info = (views[2].to(model.device, non_blocking=True),
+                           flag[0].to(model.device, non_blocking=True),
+                           flag[1].to(model.device, non_blocking=True))
             elif len(views) == 3:
                 # H3 三元组: y_pair=同患者伙伴视图, flag=是否有效
                 y_pair = views[2].to(model.device, non_blocking=True)
@@ -769,7 +840,7 @@ def main_worker(gpu, args):
             optimizer.zero_grad()
             loss, loss_r, loss_t = model.forward(y1, y2, y_pair, pair_mask,
                                                  hrv_target=hrv_t, hrv_valid=hrv_v,
-                                                 rec=rec_info)
+                                                 rec=rec_info, dv=dv_info)
             grad_ratio = None
             if rec_info is not None and step % args.print_freq == 0 \
                     and getattr(model, '_diag_tensors', None) is not None:
@@ -828,7 +899,7 @@ def main_worker(gpu, args):
         if (epoch + 1) % 5 == 0 or epoch == args.epochs - 1:
             _snap = {}
             for _name in ('backbone_group', 'projector_group', 'bn_group', 'p_vgg', 'p_proj',
-                          'bn_all', 'acl_projectors', 'hrv_head', 'd7_decoders'):
+                          'bn_all', 'acl_projectors', 'rr_head', 'hrv_head', 'd7_decoders'):
                 _mod = getattr(model, _name, None)
                 if _mod is None or (isinstance(_mod, list) and len(_mod) == 0):
                     continue

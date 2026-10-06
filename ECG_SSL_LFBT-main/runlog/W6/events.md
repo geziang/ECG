@@ -70,3 +70,9 @@
 - R 峰缓存 data/pt_rpeaks.npz 在 A 机原缺(B 机产物未随库), 已用 runlog/prep_rpeaks.py 重建: **17,418/17,418 成功(100%), 240s**, 格式=npz{stem→int64 R峰索引@2048 坐标}, V5 优先/II 回退, 中位 12 峰/条——与 W1 stats 完全一致。
 - run_pt.py 已有 --rpeak-npz 读取管线(B3 CCM 遗产, data_utils/ccm.py:112), 双视角可复用。
 - 语料决策输入(留给 Q2b): 任务书"其余协议=C1"(NFH 100ep)与"R 峰缓存 17,418 条现成"(仅覆盖 ptbxl)内部矛盾——两案: ①NFH 补检测(~8min CPU, 按 240s/17.4k 推算)保持字面 C1 协议+0.9455 参照; ②ptbxl 语料锚 B0 谱系(200ep)+0.9506 参照(同语料纯方法对照)。倾向①(协议字面一致, 参照无混淆), 若 NFH 检测成功率显著低于 ptbxl 再落②并记录。
+
+## 2026-10-06 15:2x · Q2b/Q3b/Q3c 完成（值班#70）
+- **Q2b 双视角实现**: run_pt.py 加 --dualview-weight/--rr-weight(默认0=逐位等于C1); 心拍视图=R峰中心窗逐导联平均(data_utils/dv_dataset.py, W=205=中位RR×1.2, 峰<3样本剔除), 共享 per-lead backbone BT式on-diag一致性; RR头=lead-II 64维分支特征->{meanRR,SDNN,RMSSD}全库z-score(H4口径)。单测 test_w6_dv.py **13/13**, 回归 test_w1 14/14+test_w6_lcm+metrics_ext 全绿。修复2处: embed_full触发条件漏配(静默no-op, 已用assert补丁), rr_head入维64(fc后)非512。
+- **Q3b clean 门通过**: 23/23 逐位复现(ptbxl 8=W2参照, cpsc 9=W5参照, chapman 6=W2参照), 47s。
+- **Q3c 全网格完成**: 299 评估(3噪声×4SNR×23模型域) <1min GPU, 产物 runlog/W6/robustness_real_{b0,c1,c2}.csv。初步: chapman nstb_em@20 仅-0.02pt(高SNR近无损)。
+- **NFH R峰缓存**: 34,905条99.98%成功(7失败), 356s——Q2d 语料决策①(NFH+字面C1协议+0.9455参照)成立。

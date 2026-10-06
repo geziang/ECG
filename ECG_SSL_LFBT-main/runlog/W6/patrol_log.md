@@ -77,3 +77,4 @@
 2026-10-06 12:27 | L2=LCM seed0链PT100ep+LP三域已出(cpsc 0.9443)FT10在跑 | L1=Q3a脚本smoke通 | csv lcm 3/4 | GPU ~3.1G | 执行Q3a
 2026-10-06 13:24 | L2=LCM判负关线收口(4/4零失败,Δ=-0.12pt) | L1=空闲 | csv lcm 4/4 | GPU ~0.7G | 执行Q1(判负分支)
 2026-10-06 14:29 | L1/L2=空闲 | csv lcm 4/4 | GPU 692 | 执行Q2a(rpeaks缓存重建+侦察)
+2026-10-06 15:28 | L1=NSTDB全网格299评估完成 | L2=空闲 | csv lcm 4/4+robustness_real 299行 | GPU 723 | 执行Q2b+Q3b+Q3c
