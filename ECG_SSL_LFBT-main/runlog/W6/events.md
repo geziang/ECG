@@ -76,3 +76,8 @@
 - **Q3b clean 门通过**: 23/23 逐位复现(ptbxl 8=W2参照, cpsc 9=W5参照, chapman 6=W2参照), 47s。
 - **Q3c 全网格完成**: 299 评估(3噪声×4SNR×23模型域) <1min GPU, 产物 runlog/W6/robustness_real_{b0,c1,c2}.csv。初步: chapman nstb_em@20 仅-0.02pt(高SNR近无损)。
 - **NFH R峰缓存**: 34,905条99.98%成功(7失败), 356s——Q2d 语料决策①(NFH+字面C1协议+0.9455参照)成立。
+
+## 2026-10-06 16:3x · Q2c 双视角 smoke 完成（值班#71）
+- 5ep smoke(dualview 0.05/rr 0.1, NFH 语料+nfh rpeaks 99.98%): 零 NaN, loss 762→520 正常下降, loss_dv 250→165 自身收敛(一致性在学), loss_rr 0.79→0.62。
+- 量级诊断: loss_dv×0.05≈12.5 占总损失 ~1.9%(失衡, 非低权重; on-diag 为 64 维和结构所致); loss_rr×0.1≈0.08 占 0.01%(正常)。
+- **权重定档(按队列规格降一档, 不网格): dualview=0.01, rr=0.1** → dv 贡献 ~0.4% 属低权重档。

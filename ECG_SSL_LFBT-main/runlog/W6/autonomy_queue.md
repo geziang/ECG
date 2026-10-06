@@ -18,7 +18,7 @@
 设计规格（照此实现，机制上与判负 CCM 的区别=双视角表征一致性、不做重建）：
 - [x] Q2a 侦察：R 峰缓存位置与格式（W1 gqrs 离线缓存，见 runlog/W1/ 与 prep_rpeaks.py；核对 17,418 条覆盖 data/pt_pretrain_nfh 对应语料——注意 C1 语料是 NFH 34,905/34,808，若缓存只覆盖 ptbxl 17,418 则双视图用 ptbxl 语料预训练并在 events 记录该差异与理由）。
 - [x] Q2b 实现 `--dualview-weight`+`--rr-weight`（默认 0=逐位等于 C1，单测镜像 test_w6_lcm 模式）：心拍视图=每样本逐导联取 R 峰中心窗（窗长=中位 RR 的 1.2 倍，无 R 峰样本剔除该 batch 的该项），整段与心拍视图过**共享** per-lead backbone，BT 式一致性（同导联两视图 on-diag 相关逼近 1）；RR 头=lead-II 分支特征回归全库归一化 {mean RR, SDNN, RMSSD}（低权重 MSE，缺统计样本跳过）。单测：关态逐位一致 / 心拍窗提取对齐 / RR 目标归一。
-- [ ] Q2c smoke 5ep（权重取任务书"低权重"量级：dualview 0.05 / rr 0.1，若 loss 量级失衡可各降一档并记录，**不做网格**）→ 诊断 NaN/量级。
+- [x] Q2c smoke 5ep（权重取任务书"低权重"量级：dualview 0.05 / rr 0.1，若 loss 量级失衡可各降一档并记录，**不做网格**）→ 诊断 NaN/量级。
 - [ ] Q2d seed0 全链（仿 run_lcm_chain.py 写 run_dv_chain.py，protocol w6-dv，PT→三域LP→FT10），结束后按 Q1 同款门（C1 参照同上）自动判定与加种。
 - [ ] Q2e 收口：**无论正负心拍线就此关闭**（任务书 Stage4 第3条），events 写"研究内容(2) 证据链完整"结论行。
 
@@ -45,3 +45,4 @@
 - 10-06 13:23 值班轮：Q1 完成——Δ=−0.12pt 判负关线(未触发加种子, Q1c 不适用), events+HOSTS 已回填。
 - 10-06 14:28 值班轮：Q2a 完成——rpeaks 缓存重建 17,418/17,418(240s), run_pt 管线复用确认, 语料决策输入已入 events(倾向 NFH 补检测)。
 - 10-06 15:28 值班轮：Q2b(双视角实现+单测13/13+回归全绿)/Q3b(clean门23/23)/Q3c(299评估全跑完) 完成; NFH rpeaks缓存就绪99.98%。
+- 10-06 16:33 值班轮：Q2c 完成——smoke 零NaN, 权重定档 dualview=0.01(0.05档占1.9%失衡降一档)/rr=0.1。
