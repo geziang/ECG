@@ -28,7 +28,7 @@
 
 ## Q6 · 第二批预训练链（第一批 GPU 空档即排，Q1/Q2 不占 GPU 时可先发 E1）
 - [x] Q6a 全清: seed2 链 01:46 收官(4/4, cpsc Δ+0.26 同向); seed4 链 02:24:09 启动(修复 save-predictions 路径 W6→W7, seed2 预测4目录已迁回 W7); 待 seed4 完成后 Q6b 门判定（日志 lane_E1_dv_s2.log），链结束且 dv_results.csv 出现 seed=2 四行后跑 seed 4；**注意该脚本位置在 W6 目录但账本追加 dv_results.csv 属 W6 文件——先把脚本复制为 runlog/W7/run_e1_dv_chain.py 并把 OUT 改为 runlog/W7/e1_dv_results.csv 后再跑**（W6 冻结账本只读红线）。
-- [ ] Q6b E1 门判定（任务书预注册）：3 seeds(0,2,4) cpsc LP 对 C1 同种子配对 Δ；≥+0.30pt 且 3/3 同向=过确认线；∈[+0.10,+0.30) 且 3/3 同向=温和正；任一反向=关线复核入账。events+HOSTS 回填，seed0 参照=W6 dv 0.9482 与 C1 seed0 0.9455。
+- [x] Q6b E1 门判定(10-07 04:32 链收官, 05:23 轮正式落笔)：s0 +0.27 / s2 +0.26 / s4 +0.17, **3/3 同向, mean=+0.2333pt ∈[+0.10,+0.30) → 温和正结论**(未达+0.30确认线)。心拍线最终定格: 证据链 = CCM −0.91 / 多段 −0.17 / 双视角+RR头 seed0 +0.27 → 三种子复核 3/3 同向 mean+0.2333。判定=温和正, 线就此收束(不再加种子)。
 - [ ] Q6c E2a FT期TRC：实现 run_pt.py 侧 `--trc-ft-only` 或 run_ft.py 插零初始化 TRC（默认关逐位一致单测先行），冻结 encoder 只训 TRC+头；{c1,c2}×{ptbxl,cpsc}×FT10×seeds{0,2,4}，对照 LP 与 full-FT10（引用 W6 账本），门=vs LP 同向+≥+0.5pt，e2a_trcft.csv。
 - [ ] Q6d E2c TRC×B0：`run_pt.py --data-dir data/pt_pretrain --epochs 200 --trc 1` seed0 单链（对齐 B0 更新数），PTB/CPSC LP；判读正负都入账。
 
@@ -37,6 +37,7 @@
 
 ## 完成状态记录（执行轮次在此追加）
 - 10-06 22:5x 主会话轮：W7 开工——任务书/队列/events 建立，E4d 实现中。
+- 10-07 05:23 值班轮：E1 全清(Q6b 温和正结论落笔)+E4a 启动。
 - 10-07 02:24 值班轮：E1 接力完成(s2 收官+s4 启动); save-predictions 瑕疵修复。
 - 10-07 00:23 值班轮：Q3 全清(E4c 9/9+summary: 排序稳健/重划下 c2>c1 一致/绝对差属测试池差异); E1 s2 PT 46/100 健康推进, seed4 接力与 E4a 启动留给后续轮。
 - 10-06 23:5x 主会话轮：E4d 完成(63 目录对账全一致/反转节律依赖读数入 events)；E2d 完成(均值层否定+能量层缩偏支持)；E1 seed2 链 detached 运行中；值班 cron automation-499c4373 激活；E4c splits 建好+LP 车道运行中(e4c_lp_all2.log)；E4a 代码就绪待 GPU 空闲——**值班轮启动命令: nohup "C:/Users/admin/.conda/envs/DL/python.exe" -u runlog/W7/run_e4a_lpft.py > runlog/W7/logs/e4a_all.log 2>&1 &**(须 E1 链全部结束且 E4c 9 格齐后, 避免三重 GPU 争用; 跑完脚本自动出 e4a_summary.md)。
