@@ -58,6 +58,10 @@ parser.add_argument('--projector-norm', default='batchnorm', choices=['batchnorm
                     help='projector 隐层归一化: batchnorm=B0 原版, layernorm=D9 消融')
 parser.add_argument('--bt-var-hinge', default=0.0, type=float,
                     help='D9-lite: BT 目标之上对 projector 原始输出加 variance hinge 的权重 (0=关闭,逐位等于 B0)')
+parser.add_argument('--lcm-weight', default=0.0, type=float,
+                    help='W6 Stage2 LCM: 导联相关矩阵软匹配权重(0=关闭,逐位等于C1); '
+                         '目标=每样本8x8导联Pearson(实测相关结构), 表征=导联分支特征余弦Gram, '
+                         '两视图平均的Frobenius^2; 与D1L机制相反(D1L证伪的是强制去相关硬目标)')
 parser.add_argument('--fast-backbone', action='store_true',
                     help='M0 提速: 分组卷积合并 8 导联主干+投影头(数值等价 rel<1e-6);默认关闭=原路径')
 # ===== M 矩阵候选开关 (N4/D1L) =====
@@ -327,6 +331,32 @@ class LeadFusionBT(object):
         zb = self.bn_all(z.reshape(z.shape[0], -1)).reshape_as(z)
         return [zb[:, i, :] for i in range(self.args.num_leads)]
 
+    @staticmethod
+    def _lcm_pearson(y):
+        """W6 Stage2: (B, L, T) -> 每样本 LxL 导联 Pearson(时间轴, 总体口径)。"""
+        yc = y - y.mean(dim=2, keepdim=True)
+        s = yc.pow(2).sum(dim=2).sqrt()                      # (B, L)
+        num = torch.einsum('bit,bjt->bij', yc, yc)           # (B, L, L)
+        return num / (s[:, :, None] * s[:, None, :] + 1e-12)
+
+    def _lcm_loss(self, y, f_list):
+        """W6 Stage2: 单视图 LCM 项 = mean_B ||Gram(f) - Pearson(y)||_F^2。
+
+        y=(B,L,T) 原始视图; f_list=各导联分支特征 (B,d) 列表(投影前)。
+        缺导样本(任一导联能量为 0, 仅 lead-mask 增强会产生; C1 协议默认无)
+        整行剔除不进本批(任务书"缺导子矩阵重算不进本批"取剔除口径)。
+        有效样本 <2 时返回 0。
+        """
+        energy = y.abs().amax(dim=2)                          # (B, L)
+        valid = (energy > 0).all(dim=1)
+        if int(valid.sum()) < 2:
+            return y.new_zeros(())
+        target = self._lcm_pearson(y[valid])
+        f = torch.stack([t[valid] for t in f_list], dim=1)    # (Bv, L, d)
+        fn = nn.functional.normalize(f, dim=2)
+        gram = torch.einsum('bid,bjd->bij', fn, fn)
+        return (gram - target).pow(2).sum(dim=(1, 2)).mean()
+
     def _pair_loss(self, zi, zj):
         """D9: 单导联对的 VICReg 三项损失 (官方口径: MSE + std hinge + off-diag cov/d)。
 
@@ -380,7 +410,8 @@ class LeadFusionBT(object):
     def forward(self, y1, y2, y_pair=None, pair_mask=None,
                 hrv_target=None, hrv_valid=None, rec=None):
         self.last_extra = {}
-        if self.acl_nets is not None or rec is not None:
+        if self.acl_nets is not None or rec is not None \
+                or getattr(self.args, 'lcm_weight', 0.0) > 0:
             z1_list, f1_list, fm1_list = self._embed_full(y1)
             z2_list, f2_list, fm2_list = self._embed_full(y2)
         else:
@@ -524,6 +555,14 @@ class LeadFusionBT(object):
                 h3 = h3 / self.args.num_leads
                 loss = loss + self.args.h3_weight * h3
                 loss_r = loss_r + self.args.h3_weight * h3
+        if getattr(self.args, 'lcm_weight', 0.0) > 0:
+            # W6 Stage2 LCM: 导联相关矩阵软匹配——保持逐 batch 实测相关结构。
+            # 与已判负 D1L 的机制区别: D1L 证伪"强制跨导去相关至 0"(硬目标),
+            # LCM 只要求特征 Gram 跟随实测 Pearson 矩阵(软目标, 不规定数值)。
+            lcm = (self._lcm_loss(y1, f1_list) + self._lcm_loss(y2, f2_list)) / 2
+            loss = loss + self.args.lcm_weight * lcm
+            loss_r = loss_r + self.args.lcm_weight * lcm
+            self.last_extra['loss_lcm'] = lcm.item()
         if self.sinc_M > 0:
             # C1 频带正则: 带宽压在 [1,15]Hz, 防退化全带=普通卷积(主机B)
             from models.sinc_conv import sinc_band_penalty
