@@ -140,8 +140,8 @@ def _assert_w3_dir(out_dir: Path):
     s = str(out_dir.resolve()).replace("\\", "/").lower()
     if "/runlog/w2/" in s:
         raise ValueError(f"W2 目录只读, 拒绝写入: {out_dir}")
-    if not any(f"/runlog/w{n}/" in s for n in (3, 4, 5, 6)):
-        raise ValueError(f"逐记录预测只允许写 runlog/W3/ /W4/ /W5/ /W6/ 之下, 收到: {out_dir}")
+    if not any(f"/runlog/w{n}/" in s for n in (3, 4, 5, 6, 7)):
+        raise ValueError(f"逐记录预测只允许写 runlog/W3/ /W4/ /W5/ /W6/ /W7/ 之下, 收到: {out_dir}")
 
 
 def save_eval_artifacts(out_dir, y_true, y_pred, prob, metadata, n_bins=15):

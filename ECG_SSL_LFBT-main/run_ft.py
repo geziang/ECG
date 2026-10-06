@@ -44,6 +44,8 @@ parser.add_argument('--save-predictions', default='', type=str,
 parser.add_argument('--protocol-id', default='', type=str, help='B-2: 协议标识元数据')
 parser.add_argument('--data-manifest-sha', default='', type=str, help='B-2: 数据 manifest SHA256 元数据')
 parser.add_argument('--checkpoint-sha', default='', type=str, help='B-2: checkpoint SHA256 元数据(留空且有 checkpoint 时自动计算)')
+parser.add_argument('--head-init', default='', type=str,
+                    help='W7 E4a LP-FT: 用 LP 线性头权重初始化 FT 分类头(键映射 linear.*->fc.*); 默认空=基线行为不变')
 
 
 class FineTuning(object):
@@ -70,6 +72,12 @@ class FineTuning(object):
                                     blur_pool=int(args.blur_pool),
                                     pool_power=float(args.pool_power),
                                     trc=int(args.trc)).to(self.device)
+        if getattr(args, 'head_init', ''):
+            # W7 E4a LP-FT: LP 头(linear.*) -> FT 头(fc.*), 形状 (C, 512) 恒等映射
+            _sd = torch.load(args.head_init, map_location=self.device, weights_only=True)
+            _mapped = {k.split('.', 1)[1]: v for k, v in _sd.items()}
+            self.model.fc.load_state_dict(_mapped)
+            print(f"[head-init] LP head loaded from {args.head_init}")
         self.loss_fn = nn.CrossEntropyLoss().to(self.device)
 
     def train(self, data_loader, optimizer):
