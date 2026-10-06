@@ -107,7 +107,7 @@ def run_lp(ds, nc):
              "--checkpoint", str(ckpt), "--feat-dir", str(feat),
              "--seed", str(SEED), "--workers", "6", "--trc", "0",
              "--extended-metrics", "1",
-             "--save-predictions", f"runlog/W6/predictions/{tag}",
+             "--save-predictions", f"runlog/W7/predictions/{tag}",
              "--protocol-id", "w6-dv"],
             stdout=f, stderr=subprocess.STDOUT, cwd=str(ROOT)).returncode
     try:
@@ -136,7 +136,7 @@ def run_ft10():
              "--batch-size", "128", "--learning-rate", "0.0001",
              "--seed", str(SEED), "--trc", "0",
              "--extended-metrics", "1",
-             "--save-predictions", f"runlog/W6/predictions/{tag}",
+             "--save-predictions", f"runlog/W7/predictions/{tag}",
              "--protocol-id", "w6-dv"],
             stdout=f, stderr=subprocess.STDOUT, cwd=str(ROOT)).returncode
     try:

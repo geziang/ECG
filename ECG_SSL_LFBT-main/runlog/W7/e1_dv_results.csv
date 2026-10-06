@@ -2,3 +2,4 @@ ts,ckpt,seed,dv_weights,eval,downstream,auroc,auprc,git_sha,checkpoint_sha256,pr
 2026-10-07 01:14,dv,2,0.01/0.1,lp,ptbxl,0.8865,0.6528,fefb845,62c4209d1c8a319dfca9f6b6284a6a06850dc1953e6eff56c286075f3af793f1,w7-e1,"W7 E1: W6 Stage4 同款协议(dualview 0.01 + rr 0.1)灰区加种子, 见 run_pt.py --dualview-weight"
 2026-10-07 01:15,dv,2,0.01/0.1,lp,cpsc,0.9479,0.7709,fefb845,62c4209d1c8a319dfca9f6b6284a6a06850dc1953e6eff56c286075f3af793f1,w7-e1,"W7 E1: W6 Stage4 同款协议(dualview 0.01 + rr 0.1)灰区加种子, 见 run_pt.py --dualview-weight"
 2026-10-07 01:16,dv,2,0.01/0.1,lp,chapman,0.9960,0.9879,fefb845,62c4209d1c8a319dfca9f6b6284a6a06850dc1953e6eff56c286075f3af793f1,w7-e1,"W7 E1: W6 Stage4 同款协议(dualview 0.01 + rr 0.1)灰区加种子, 见 run_pt.py --dualview-weight"
+2026-10-07 01:46,dv,2,0.01/0.1,ft10,ptbxl,0.8560,0.6299,4e9e343,62c4209d1c8a319dfca9f6b6284a6a06850dc1953e6eff56c286075f3af793f1,w7-e1,"W7 E1: W6 Stage4 同款协议(dualview 0.01 + rr 0.1)灰区加种子, 见 run_pt.py --dualview-weight"
