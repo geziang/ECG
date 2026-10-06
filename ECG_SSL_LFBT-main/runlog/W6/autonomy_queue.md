@@ -16,7 +16,7 @@
 
 ## Q2 · Stage 4 双视角一致性 + RR 头（开题关键问题(1)本体，LCM 收口后开工）【需要多轮】
 设计规格（照此实现，机制上与判负 CCM 的区别=双视角表征一致性、不做重建）：
-- [ ] Q2a 侦察：R 峰缓存位置与格式（W1 gqrs 离线缓存，见 runlog/W1/ 与 prep_rpeaks.py；核对 17,418 条覆盖 data/pt_pretrain_nfh 对应语料——注意 C1 语料是 NFH 34,905/34,808，若缓存只覆盖 ptbxl 17,418 则双视图用 ptbxl 语料预训练并在 events 记录该差异与理由）。
+- [x] Q2a 侦察：R 峰缓存位置与格式（W1 gqrs 离线缓存，见 runlog/W1/ 与 prep_rpeaks.py；核对 17,418 条覆盖 data/pt_pretrain_nfh 对应语料——注意 C1 语料是 NFH 34,905/34,808，若缓存只覆盖 ptbxl 17,418 则双视图用 ptbxl 语料预训练并在 events 记录该差异与理由）。
 - [ ] Q2b 实现 `--dualview-weight`+`--rr-weight`（默认 0=逐位等于 C1，单测镜像 test_w6_lcm 模式）：心拍视图=每样本逐导联取 R 峰中心窗（窗长=中位 RR 的 1.2 倍，无 R 峰样本剔除该 batch 的该项），整段与心拍视图过**共享** per-lead backbone，BT 式一致性（同导联两视图 on-diag 相关逼近 1）；RR 头=lead-II 分支特征回归全库归一化 {mean RR, SDNN, RMSSD}（低权重 MSE，缺统计样本跳过）。单测：关态逐位一致 / 心拍窗提取对齐 / RR 目标归一。
 - [ ] Q2c smoke 5ep（权重取任务书"低权重"量级：dualview 0.05 / rr 0.1，若 loss 量级失衡可各降一档并记录，**不做网格**）→ 诊断 NaN/量级。
 - [ ] Q2d seed0 全链（仿 run_lcm_chain.py 写 run_dv_chain.py，protocol w6-dv，PT→三域LP→FT10），结束后按 Q1 同款门（C1 参照同上）自动判定与加种。
@@ -43,3 +43,4 @@
 - 10-06 12:xx 值班轮：队列建立。
 - 10-06 12:26 值班轮：Q3a 完成——run_robustness_nstdb.py 编译+smoke(96样本)全通; 组合表 ptbxl8/cpsc9(W5A头)/chapman6; clean 参照分域(W2/W5)。
 - 10-06 13:23 值班轮：Q1 完成——Δ=−0.12pt 判负关线(未触发加种子, Q1c 不适用), events+HOSTS 已回填。
+- 10-06 14:28 值班轮：Q2a 完成——rpeaks 缓存重建 17,418/17,418(240s), run_pt 管线复用确认, 语料决策输入已入 events(倾向 NFH 补检测)。
