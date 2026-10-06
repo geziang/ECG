@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """W6 Stage 2: LCM seed0 全链驱动 (PT + 三域 LP + PTB FT10), 协议 w6-lcm。
 
-用法: python runlog/W6/run_lcm_chain.py <lambda>   # 如 0.01 / 0.05, smoke 选定后禁回扫
+用法: python runlog/W6/run_lcm_chain.py <lambda> [seed]   # seed 默认 0; 过门加跑 2/4
 其余协议 = C1(无 TRC, NFH 100ep, bt, RRC-TO 默认), 仅加 --lcm-weight λ;
 任务书预授权: seed0 CPSC LP Δ≥+0.3pt 才加 seeds{2,4}, 判负即关线。
 
@@ -23,7 +23,8 @@ from utils.pathguard import open_out
 PY = sys.executable
 LOGD = ROOT / "runlog/W6/logs"
 LAM = sys.argv[1] if len(sys.argv) > 1 else ""
-CK = ROOT / f"checkpoint/w6_lcm/seed0"
+SEED = sys.argv[2] if len(sys.argv) > 2 else "0"
+CK = ROOT / f"checkpoint/w6_lcm/seed{SEED}"
 DOMAINS = [("ptbxl", 5), ("cpsc", 9), ("chapman", 4)]
 FAMILY = "bt_ssl+lcm"
 
@@ -53,7 +54,7 @@ def row_done(ev, ds):
         return False
     with open(OUT, encoding="utf-8") as f:
         for r in csv.DictReader(f):
-            if (r["ckpt"], r["eval"], r["downstream"]) == ("lcm", ev, ds):
+            if (r["ckpt"], r["seed"], r["eval"], r["downstream"]) == ("lcm", SEED, ev, ds):
                 return True
     return False
 
@@ -63,25 +64,25 @@ def record(ev, ds, auroc, auprc, cksha):
     with open(OUT, "a", newline="", encoding="utf-8") as f:
         w = csv.writer(f)
         if new:
-            w.writerow(["ts", "ckpt", "lcm_weight", "eval", "downstream", "auroc", "auprc",
+            w.writerow(["ts", "ckpt", "seed", "lcm_weight", "eval", "downstream", "auroc", "auprc",
                         "git_sha", "checkpoint_sha256", "protocol_id", "hparams_ref"])
-        w.writerow([time.strftime("%Y-%m-%d %H:%M"), "lcm", LAM, ev, ds,
+        w.writerow([time.strftime("%Y-%m-%d %H:%M"), "lcm", SEED, LAM, ev, ds,
                     f"{auroc:.4f}", f"{auprc:.4f}", git_sha(), cksha,
                     "w6-lcm", f"W6 Stage2: C1 协议 + lcm-weight {LAM}, 见 run_pt.py --lcm-weight"])
     log(f"  + lcm(λ={LAM}) {ev}/{ds}: {auroc:.4f}/{auprc:.4f}")
 
 
 def run_pt():
-    tag = f"lcm PT (λ={LAM})"
+    tag = f"lcm PT s{SEED} (λ={LAM})"
     if (CK / "encoder_group.pth").exists() and (CK / "config.json").exists():
         log(f"{tag}: 已完成, 跳过")
         return True
     CK.mkdir(parents=True, exist_ok=True)
-    with open_out(LOGD, f"lcm_pt_seed0.log", encoding="utf-8") as f:
+    with open_out(LOGD, f"lcm_pt_seed{SEED}.log", encoding="utf-8") as f:
         rc = subprocess.run(
             [PY, "-u", "run_pt.py", "--data-dir", "data/pt_pretrain_nfh",
              "--epochs", "100", "--batch-size", "128", "--workers", "4",
-             "--seed", "0", "--trc", "0", "--lcm-weight", LAM,
+             "--seed", str(SEED), "--trc", "0", "--lcm-weight", LAM,
              "--resume", "--checkpoint-dir", str(CK)],
             stdout=f, stderr=subprocess.STDOUT, cwd=str(ROOT)).returncode
     ok = rc == 0 and (CK / "encoder_group.pth").exists()
@@ -90,7 +91,7 @@ def run_pt():
 
 
 def run_lp(ds, nc):
-    tag = f"lcm_{ds}_lp_seed0"
+    tag = f"lcm_{ds}_lp_seed{SEED}"
     if row_done("lp", ds):
         log(f"{tag}: 已有账, 跳过")
         return True
@@ -102,7 +103,7 @@ def run_lp(ds, nc):
         rc = subprocess.run(
             [PY, "-u", "run_lp.py", "--data-dir", f"data/{ds}", "--num-classes", str(nc),
              "--checkpoint", str(ckpt), "--feat-dir", str(feat),
-             "--seed", "0", "--workers", "6", "--trc", "0",
+             "--seed", str(SEED), "--workers", "6", "--trc", "0",
              "--extended-metrics", "1",
              "--save-predictions", f"runlog/W6/predictions/{tag}",
              "--protocol-id", "w6-lcm"],
@@ -117,7 +118,7 @@ def run_lp(ds, nc):
 
 
 def run_ft10():
-    tag = "lcm_ptbxl_ft10_seed0"
+    tag = f"lcm_ptbxl_ft10_seed{SEED}"
     if row_done("ft10", "ptbxl"):
         log(f"{tag}: 已有账, 跳过")
         return True
@@ -131,7 +132,7 @@ def run_ft10():
              "--fraction", "0.1", "--checkpoint", str(ckpt),
              "--model-dir", str(mdir), "--workers", "4", "--epochs", "100",
              "--batch-size", "128", "--learning-rate", "0.0001",
-             "--seed", "0", "--trc", "0",
+             "--seed", str(SEED), "--trc", "0",
              "--extended-metrics", "1",
              "--save-predictions", f"runlog/W6/predictions/{tag}",
              "--protocol-id", "w6-lcm"],
@@ -146,17 +147,17 @@ def run_ft10():
 
 
 def main():
-    if LAM not in ("0.01", "0.05"):
-        sys.exit("用法: python runlog/W6/run_lcm_chain.py {0.01|0.05}  (smoke 阶段选定后禁回扫)")
+    if LAM not in ("0.01", "0.05") or SEED not in ("0", "2", "4"):
+        sys.exit("用法: python runlog/W6/run_lcm_chain.py {0.01|0.05} [0|2|4]")
     LOGD.mkdir(parents=True, exist_ok=True)
-    log(f"W6 Stage2 LCM seed0 全链启动, λ={LAM}, 解释器={PY}")
+    log(f"W6 Stage2 LCM seed{SEED} 全链启动, λ={LAM}, 解释器={PY}")
     if not run_pt():
         log("PT 失败, 链终止(事件已可从日志追溯)")
         return
     for ds, nc in DOMAINS:
         run_lp(ds, nc)
     run_ft10()
-    log("LCM seed0 链结束")
+    log(f"LCM seed{SEED} 链结束")
 
 
 if __name__ == "__main__":
