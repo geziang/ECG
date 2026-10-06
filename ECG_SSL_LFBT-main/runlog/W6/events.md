@@ -81,3 +81,7 @@
 - 5ep smoke(dualview 0.05/rr 0.1, NFH 语料+nfh rpeaks 99.98%): 零 NaN, loss 762→520 正常下降, loss_dv 250→165 自身收敛(一致性在学), loss_rr 0.79→0.62。
 - 量级诊断: loss_dv×0.05≈12.5 占总损失 ~1.9%(失衡, 非低权重; on-diag 为 64 维和结构所致); loss_rr×0.1≈0.08 占 0.01%(正常)。
 - **权重定档(按队列规格降一档, 不网格): dualview=0.01, rr=0.1** → dv 贡献 ~0.4% 属低权重档。
+
+## 2026-10-06 17:25 · Q2d 双视角 seed0 全链起跑（值班#72）
+- run_dv_chain.py 由 lcm 链变换生成(带断言零残留; 顺带修正了 lcm 链 feat 目录硬编码 seed0 的潜伏 bug——lcm 未跑过 s2/s4 故未发作, 已在 dv 链修正)。
+- seed0 全链 17:25:10 起跑: NFH 100ep + dualview 0.01 + rr 0.1 + rpeak-npz(nfh), Epoch2 loss 756 与 smoke 量级一致, GPU 8.1G(心拍视图增显存~0.7G, 预算内)。预计 ~19:30 出全账, 门判定同 Stage2 预授权三分支。
