@@ -1,0 +1,5 @@
+ts,ckpt,lcm_weight,eval,downstream,auroc,auprc,git_sha,checkpoint_sha256,protocol_id,hparams_ref
+2026-10-06 12:13,lcm,0.05,lp,ptbxl,0.8820,0.6496,a7852b4,66760903d0cc36bad13bef9be38ab604154c662a524dc8a8a9de89db7a3079e1,w6-lcm,"W6 Stage2: C1 协议 + lcm-weight 0.05, 见 run_pt.py --lcm-weight"
+2026-10-06 12:14,lcm,0.05,lp,cpsc,0.9443,0.7536,a7852b4,66760903d0cc36bad13bef9be38ab604154c662a524dc8a8a9de89db7a3079e1,w6-lcm,"W6 Stage2: C1 协议 + lcm-weight 0.05, 见 run_pt.py --lcm-weight"
+2026-10-06 12:15,lcm,0.05,lp,chapman,0.9964,0.9888,a7852b4,66760903d0cc36bad13bef9be38ab604154c662a524dc8a8a9de89db7a3079e1,w6-lcm,"W6 Stage2: C1 协议 + lcm-weight 0.05, 见 run_pt.py --lcm-weight"
+2026-10-06 12:45,lcm,0.05,ft10,ptbxl,0.8568,0.6342,8b392c5,66760903d0cc36bad13bef9be38ab604154c662a524dc8a8a9de89db7a3079e1,w6-lcm,"W6 Stage2: C1 协议 + lcm-weight 0.05, 见 run_pt.py --lcm-weight"
