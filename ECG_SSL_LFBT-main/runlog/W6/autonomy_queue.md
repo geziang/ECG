@@ -29,9 +29,9 @@
 - [x] Q3d 汇总：与 W3 合成噪声结论对照（NFH 抗退化/TRC 中性是否保持），写 runlog/W6/stage6_summary.md（禁语合规）。
 
 ## Q4 · Stage 7 CPSC 多标签（轻，Q3 后任意空档）
-- [ ] Q4a 侦察 utils/multilabel.py；写 run_multilabel_lane.py：冻结 encoder × {b0,c1,c2} × seeds{0,2,4} BCE LP 头（协议 w6-multilabel），指标=连续概率 macro-AUROC/AUPRC + val 阈值 per-class F1/Sens/Spec。
-- [ ] Q4b 跑 9 训练+评估（GPU ~2h），产物 runlog/W6/multilabel_results.csv；与单标签主表**分列**呈现。
-- [ ] Q4c HOSTS 回填 ✅。
+- [x] Q4a 侦察 utils/multilabel.py；写 run_multilabel_lane.py：冻结 encoder × {b0,c1,c2} × seeds{0,2,4} BCE LP 头（协议 w6-multilabel），指标=连续概率 macro-AUROC/AUPRC + val 阈值 per-class F1/Sens/Spec。
+- [x] Q4b 跑 9 训练+评估（GPU ~2h），产物 runlog/W6/multilabel_results.csv；与单标签主表**分列**呈现。
+- [x] Q4c HOSTS 回填 ✅。
 
 ## Q5 · 收口算术与总报告
 - [ ] Q5a Stage1 配对差复算：ft2040_results.csv 里 C2−C1 与 C1−B0 每档（ft20/ft40）逐种子差+mean（AUROC 与 AUPRC），写 runlog/W6/stage1_paired_delta.md。
@@ -48,3 +48,4 @@
 - 10-06 16:33 值班轮：Q2c 完成——smoke 零NaN, 权重定档 dualview=0.01(0.05档占1.9%失衡降一档)/rr=0.1。
 - 10-06 18:25 值班轮：Q3d 完成——stage6_summary.md 入库(NFH抗退化/TRC中性两条W3结论在真实噪声下保持; 噪声类型敏感性域间差异如实记录)。
 - 10-06 19:35 值班轮：Q2d/Q2e 完成——DV seed0 cpsc LP 0.9482(Δ=+0.27pt)落灰区不加种子, 心拍线关闭, 研究内容(2)证据链完整(负+灰区)。Q2 全清。
+- 10-06 20:41 值班轮：Q4 全清——多标签 9/9 出数(b0 0.8586>c2 0.8560>c1 0.8322, 与单标签格局同向, 分列), one-hot 真值限制入账。W6 八阶段全部完成, 余 Q5 收口件。
