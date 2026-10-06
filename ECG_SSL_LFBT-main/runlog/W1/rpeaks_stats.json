@@ -1,11 +1,11 @@
 {
- "total": 17418,
- "v5_detected": 17417,
- "ii_fallback": 1,
- "failed": 0,
- "success_rate": 1.0,
- "median_peaks": 12,
+ "total": 34905,
+ "v5_detected": 33794,
+ "ii_fallback": 1104,
+ "failed": 7,
+ "success_rate": 0.9998,
+ "median_peaks": 14,
  "min_peaks": 4,
  "max_peaks": 31,
- "wall_s": 301.0
+ "wall_s": 356.5
 }
