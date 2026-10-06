@@ -1,0 +1,10 @@
+k,model,eval,auroc,auprc,w2_seed0_auprc_ref,auprc_delta_vs_official,ckpt_sha,protocol_id
+1,b0,lp_patient_k,0.929,0.7387,0.7177,0.021,026033d532d4,w7-e4c-k1
+1,c1,lp_patient_k,0.9096,0.6809,0.6574,0.0235,de0c28eedb30,w7-e4c-k1
+1,c2,lp_patient_k,0.91,0.6869,0.6564,0.0305,af242a89c340,w7-e4c-k1
+2,b0,lp_patient_k,0.9303,0.7342,0.7177,0.0165,026033d532d4,w7-e4c-k2
+2,c1,lp_patient_k,0.9043,0.6836,0.6574,0.0262,de0c28eedb30,w7-e4c-k2
+2,c2,lp_patient_k,0.9078,0.6982,0.6564,0.0418,af242a89c340,w7-e4c-k2
+3,b0,lp_patient_k,0.9301,0.7428,0.7177,0.0251,026033d532d4,w7-e4c-k3
+3,c1,lp_patient_k,0.908,0.6871,0.6574,0.0297,de0c28eedb30,w7-e4c-k3
+3,c2,lp_patient_k,0.9089,0.6957,0.6564,0.0393,af242a89c340,w7-e4c-k3

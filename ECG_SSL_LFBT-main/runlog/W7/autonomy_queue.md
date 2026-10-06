@@ -14,8 +14,8 @@
 
 ## Q3 · E4c 患者级敏感性附录（PTB-XL）【需实现，规格如下】
 - [x] Q3a 实现 `runlog/W7/run_e4c_patient_lp.py`（主会话完成: manifest.json 含 patient_id, K=3 硬链接 splits 已建 70/10/20, LP 车道已启动 logs/e4c_lp_all2.log）：读 data/ptbxl 元数据 patient_id（侦察：ptbxl 原始 csv 在 data/ptbxl_* 或仓库何处，sample_XXXXX ↔ ecg_id 映射来自制备脚本——先 grep prepare 脚本确认）；按患者级分层重划 K=3 次（seed 101/102/103，train/val/test 比例对齐 70/10/20 患者比例），新 split 写 data/ptbxl_patient_k{i}/（软链或复制 .npy，磁盘不够则复制清单+DatasetFolder 子类按清单过滤）。
-- [ ] Q3b 跑 LP：{b0,c1,c2}×seed0×K=3 新 split LP（车道运行中, 值班轮查 runlog/W7/feat/e4c_*_k*/metrics.json 9 个齐后跑 --phase summary 出件）（run_lp.py --data-dir 指向新 split 根；checkpoint 用 W2 冻结 SHA 校验版；protocol_id=w7-e4c-k{i}），9 跑 GPU 各~2min；账本 e4c_patient_lp.csv（含原 split AUROC 对照行）。
-- [ ] Q3c 汇总 e4c_summary.md：患者级 vs record 级 AUROC 差（预期小幅波动），措辞"敏感性分析"不写成主表。
+- [x] Q3b 跑 LP：9/9 格完成(23:56), 账本 e4c_patient_lp.csv（run_lp.py --data-dir 指向新 split 根；checkpoint 用 W2 冻结 SHA 校验版；protocol_id=w7-e4c-k{i}），9 跑 GPU 各~2min；账本 e4c_patient_lp.csv（含原 split AUROC 对照行）。
+- [x] Q3c 汇总 e4c_summary.md 完成——排序 b0≫c2≥c1 三次重划全稳健; c2 三次一致小幅领先 c1(官方split两者打平); 绝对值 +1.7~+4.2pt 属重划测试池组成差异, 措辞=敏感性分析
 
 ## Q4 · E4b 质量门控推理【需实现，规格如下】
 - [ ] Q4a 实现 `runlog/W7/run_e4b_quality_gate.py`：质量分=每导联 5–40Hz 带内功率/(总功率+eps)（scipy butter 滤波实现，无新依赖）；阈值 τ 在各域 val 上扫 {0.3,0.4,0.5,0.6}（val 定档后 test 单发）；门控=低于 τ 的导联置零+valid_mask 摘除。
@@ -37,4 +37,5 @@
 
 ## 完成状态记录（执行轮次在此追加）
 - 10-06 22:5x 主会话轮：W7 开工——任务书/队列/events 建立，E4d 实现中。
+- 10-07 00:23 值班轮：Q3 全清(E4c 9/9+summary: 排序稳健/重划下 c2>c1 一致/绝对差属测试池差异); E1 s2 PT 46/100 健康推进, seed4 接力与 E4a 启动留给后续轮。
 - 10-06 23:5x 主会话轮：E4d 完成(63 目录对账全一致/反转节律依赖读数入 events)；E2d 完成(均值层否定+能量层缩偏支持)；E1 seed2 链 detached 运行中；值班 cron automation-499c4373 激活；E4c splits 建好+LP 车道运行中(e4c_lp_all2.log)；E4a 代码就绪待 GPU 空闲——**值班轮启动命令: nohup "C:/Users/admin/.conda/envs/DL/python.exe" -u runlog/W7/run_e4a_lpft.py > runlog/W7/logs/e4a_all.log 2>&1 &**(须 E1 链全部结束且 E4c 9 格齐后, 避免三重 GPU 争用; 跑完脚本自动出 e4a_summary.md)。
