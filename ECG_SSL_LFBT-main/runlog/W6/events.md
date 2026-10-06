@@ -101,3 +101,6 @@
 - Q5c 5-seed 汇总: 三方法 LP 三域全 5 种子齐(明细见 seed5_summary.csv)。
 - Q5d 最终报告 runlog/W6/W6_最终报告.md 入库(用户 10-08 回看入口)。
 - **W6 全部队列完成, 91 作业零失败**; 值班 cron 转为纯值守(空闲确认+补推), 不再有队列步骤。
+
+## 2026-10-06 22:4x · Stage3 FT10 record-level 配对检验补算（主会话, 用户问询触发）
+- 用 W4 审计版 paired_bootstrap_macro(多种子同步) 对 ft10grid 逐记录预测补算: cpsc C2−C1 +0.47pt p=0.0016 与 chapman C2−B0 +0.14pt p=0.0042 两格 CI 不含零; cpsc C2−B0 p=0.065 临界(对照 LP 段 p=0.52 大幅改善)。首次尝试口径有误(3seed均值误作单seed观测), 已废弃并重算。
