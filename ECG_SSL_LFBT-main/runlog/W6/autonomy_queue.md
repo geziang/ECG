@@ -26,7 +26,7 @@
 - [x] Q3a 侦察 W3 的 run_robustness.py 口径（预注册：冻结 encoder+已存 LP 头、逐位复现 clean 门、SNR 定义、加噪方式），写 runlog/W6/run_robustness_nstdb.py：噪声源=data/nstdb/{bw,ma,em}.dat（wfdb 读取，360Hz 重采样到目标 fs，随机段循环），逐导联加性、per-lead SNR {0,5,10,20}dB。
 - [x] Q3b clean 门：三域 LP clean 读数与 W3/W5 账本逐位一致后才开扰动（不一致→停，落事件）。
 - [x] Q3c 跑全网格：{b0,c1,c2}×seeds{0,2,4}×三域×3噪声×4SNR（=324 评估，GPU ~8h，L1 夜跑），产物 runlog/W6/robustness_real_{b0,c1,c2}.csv（schema 同 W3）。
-- [ ] Q3d 汇总：与 W3 合成噪声结论对照（NFH 抗退化/TRC 中性是否保持），写 runlog/W6/stage6_summary.md（禁语合规）。
+- [x] Q3d 汇总：与 W3 合成噪声结论对照（NFH 抗退化/TRC 中性是否保持），写 runlog/W6/stage6_summary.md（禁语合规）。
 
 ## Q4 · Stage 7 CPSC 多标签（轻，Q3 后任意空档）
 - [ ] Q4a 侦察 utils/multilabel.py；写 run_multilabel_lane.py：冻结 encoder × {b0,c1,c2} × seeds{0,2,4} BCE LP 头（协议 w6-multilabel），指标=连续概率 macro-AUROC/AUPRC + val 阈值 per-class F1/Sens/Spec。
@@ -46,3 +46,4 @@
 - 10-06 14:28 值班轮：Q2a 完成——rpeaks 缓存重建 17,418/17,418(240s), run_pt 管线复用确认, 语料决策输入已入 events(倾向 NFH 补检测)。
 - 10-06 15:28 值班轮：Q2b(双视角实现+单测13/13+回归全绿)/Q3b(clean门23/23)/Q3c(299评估全跑完) 完成; NFH rpeaks缓存就绪99.98%。
 - 10-06 16:33 值班轮：Q2c 完成——smoke 零NaN, 权重定档 dualview=0.01(0.05档占1.9%失衡降一档)/rr=0.1。
+- 10-06 18:25 值班轮：Q3d 完成——stage6_summary.md 入库(NFH抗退化/TRC中性两条W3结论在真实噪声下保持; 噪声类型敏感性域间差异如实记录)。

@@ -80,3 +80,4 @@
 2026-10-06 15:28 | L1=NSTDB全网格299评估完成 | L2=空闲 | csv lcm 4/4+robustness_real 299行 | GPU 723 | 执行Q2b+Q3b+Q3c
 2026-10-06 16:33 | L1=空闲(smoke毕) | L2=空闲 | csv lcm 4/4 | GPU ~0.7G | 执行Q2c(smoke零NaN,权重定档0.01/0.1)
 2026-10-06 17:27 | L2=DV seed0全链跑中(ep2/100) | L1=空闲 | csv lcm 4/4 dv 0/4 | GPU 8059 | 执行Q2d(启动)
+2026-10-06 18:25 | L2=DV seed0链ep61+/100 | L1=空闲 | csv lcm 4/4 dv 0/4 robustness 276行 | GPU 8072 | 执行Q3d
