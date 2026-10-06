@@ -23,7 +23,7 @@
 - [ ] Q2e 收口：**无论正负心拍线就此关闭**（任务书 Stage4 第3条），events 写"研究内容(2) 证据链完整"结论行。
 
 ## Q3 · Stage 6 NSTDB 真实噪声鲁棒性（可与 Q2 并行插 L1 空档）【多轮】
-- [ ] Q3a 侦察 W3 的 run_robustness.py 口径（预注册：冻结 encoder+已存 LP 头、逐位复现 clean 门、SNR 定义、加噪方式），写 runlog/W6/run_robustness_nstdb.py：噪声源=data/nstdb/{bw,ma,em}.dat（wfdb 读取，360Hz 重采样到目标 fs，随机段循环），逐导联加性、per-lead SNR {0,5,10,20}dB。
+- [x] Q3a 侦察 W3 的 run_robustness.py 口径（预注册：冻结 encoder+已存 LP 头、逐位复现 clean 门、SNR 定义、加噪方式），写 runlog/W6/run_robustness_nstdb.py：噪声源=data/nstdb/{bw,ma,em}.dat（wfdb 读取，360Hz 重采样到目标 fs，随机段循环），逐导联加性、per-lead SNR {0,5,10,20}dB。
 - [ ] Q3b clean 门：三域 LP clean 读数与 W3/W5 账本逐位一致后才开扰动（不一致→停，落事件）。
 - [ ] Q3c 跑全网格：{b0,c1,c2}×seeds{0,2,4}×三域×3噪声×4SNR（=324 评估，GPU ~8h，L1 夜跑），产物 runlog/W6/robustness_real_{b0,c1,c2}.csv（schema 同 W3）。
 - [ ] Q3d 汇总：与 W3 合成噪声结论对照（NFH 抗退化/TRC 中性是否保持），写 runlog/W6/stage6_summary.md（禁语合规）。
@@ -41,3 +41,4 @@
 
 ## 完成状态记录（执行轮次在此追加）
 - 10-06 12:xx 值班轮：队列建立。
+- 10-06 12:26 值班轮：Q3a 完成——run_robustness_nstdb.py 编译+smoke(96样本)全通; 组合表 ptbxl8/cpsc9(W5A头)/chapman6; clean 参照分域(W2/W5)。
