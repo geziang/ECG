@@ -19,8 +19,8 @@
 - [x] Q2a 侦察：R 峰缓存位置与格式（W1 gqrs 离线缓存，见 runlog/W1/ 与 prep_rpeaks.py；核对 17,418 条覆盖 data/pt_pretrain_nfh 对应语料——注意 C1 语料是 NFH 34,905/34,808，若缓存只覆盖 ptbxl 17,418 则双视图用 ptbxl 语料预训练并在 events 记录该差异与理由）。
 - [x] Q2b 实现 `--dualview-weight`+`--rr-weight`（默认 0=逐位等于 C1，单测镜像 test_w6_lcm 模式）：心拍视图=每样本逐导联取 R 峰中心窗（窗长=中位 RR 的 1.2 倍，无 R 峰样本剔除该 batch 的该项），整段与心拍视图过**共享** per-lead backbone，BT 式一致性（同导联两视图 on-diag 相关逼近 1）；RR 头=lead-II 分支特征回归全库归一化 {mean RR, SDNN, RMSSD}（低权重 MSE，缺统计样本跳过）。单测：关态逐位一致 / 心拍窗提取对齐 / RR 目标归一。
 - [x] Q2c smoke 5ep（权重取任务书"低权重"量级：dualview 0.05 / rr 0.1，若 loss 量级失衡可各降一档并记录，**不做网格**）→ 诊断 NaN/量级。
-- [ ] Q2d seed0 全链（仿 run_lcm_chain.py 写 run_dv_chain.py，protocol w6-dv，PT→三域LP→FT10），结束后按 Q1 同款门（C1 参照同上）自动判定与加种。
-- [ ] Q2e 收口：**无论正负心拍线就此关闭**（任务书 Stage4 第3条），events 写"研究内容(2) 证据链完整"结论行。
+- [x] Q2d seed0 全链（仿 run_lcm_chain.py 写 run_dv_chain.py，protocol w6-dv，PT→三域LP→FT10），结束后按 Q1 同款门（C1 参照同上）自动判定与加种。
+- [x] Q2e 收口：**无论正负心拍线就此关闭**（任务书 Stage4 第3条），events 写"研究内容(2) 证据链完整"结论行。
 
 ## Q3 · Stage 6 NSTDB 真实噪声鲁棒性（可与 Q2 并行插 L1 空档）【多轮】
 - [x] Q3a 侦察 W3 的 run_robustness.py 口径（预注册：冻结 encoder+已存 LP 头、逐位复现 clean 门、SNR 定义、加噪方式），写 runlog/W6/run_robustness_nstdb.py：噪声源=data/nstdb/{bw,ma,em}.dat（wfdb 读取，360Hz 重采样到目标 fs，随机段循环），逐导联加性、per-lead SNR {0,5,10,20}dB。
@@ -47,3 +47,4 @@
 - 10-06 15:28 值班轮：Q2b(双视角实现+单测13/13+回归全绿)/Q3b(clean门23/23)/Q3c(299评估全跑完) 完成; NFH rpeaks缓存就绪99.98%。
 - 10-06 16:33 值班轮：Q2c 完成——smoke 零NaN, 权重定档 dualview=0.01(0.05档占1.9%失衡降一档)/rr=0.1。
 - 10-06 18:25 值班轮：Q3d 完成——stage6_summary.md 入库(NFH抗退化/TRC中性两条W3结论在真实噪声下保持; 噪声类型敏感性域间差异如实记录)。
+- 10-06 19:35 值班轮：Q2d/Q2e 完成——DV seed0 cpsc LP 0.9482(Δ=+0.27pt)落灰区不加种子, 心拍线关闭, 研究内容(2)证据链完整(负+灰区)。Q2 全清。

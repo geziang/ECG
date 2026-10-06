@@ -1,0 +1,5 @@
+ts,ckpt,seed,dv_weights,eval,downstream,auroc,auprc,git_sha,checkpoint_sha256,protocol_id,hparams_ref
+2026-10-06 19:00,dv,0,0.01/0.1,lp,ptbxl,0.8862,0.6525,a6b3498,123c4018768a9549dff7c418ebf61c1e1b2bf858a06836c146c754b5cb6ef726,w6-dv,"W6 Stage4: C1 协议 + dualview 0.01 + rr 0.1, 见 run_pt.py --dualview-weight"
+2026-10-06 19:01,dv,0,0.01/0.1,lp,cpsc,0.9482,0.7680,a6b3498,123c4018768a9549dff7c418ebf61c1e1b2bf858a06836c146c754b5cb6ef726,w6-dv,"W6 Stage4: C1 协议 + dualview 0.01 + rr 0.1, 见 run_pt.py --dualview-weight"
+2026-10-06 19:02,dv,0,0.01/0.1,lp,chapman,0.9960,0.9875,a6b3498,123c4018768a9549dff7c418ebf61c1e1b2bf858a06836c146c754b5cb6ef726,w6-dv,"W6 Stage4: C1 协议 + dualview 0.01 + rr 0.1, 见 run_pt.py --dualview-weight"
+2026-10-06 19:32,dv,0,0.01/0.1,ft10,ptbxl,0.8590,0.6307,a6b3498,123c4018768a9549dff7c418ebf61c1e1b2bf858a06836c146c754b5cb6ef726,w6-dv,"W6 Stage4: C1 协议 + dualview 0.01 + rr 0.1, 见 run_pt.py --dualview-weight"

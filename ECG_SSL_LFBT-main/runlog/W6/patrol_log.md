@@ -81,3 +81,4 @@
 2026-10-06 16:33 | L1=空闲(smoke毕) | L2=空闲 | csv lcm 4/4 | GPU ~0.7G | 执行Q2c(smoke零NaN,权重定档0.01/0.1)
 2026-10-06 17:27 | L2=DV seed0全链跑中(ep2/100) | L1=空闲 | csv lcm 4/4 dv 0/4 | GPU 8059 | 执行Q2d(启动)
 2026-10-06 18:25 | L2=DV seed0链ep61+/100 | L1=空闲 | csv lcm 4/4 dv 0/4 robustness 276行 | GPU 8072 | 执行Q3d
+2026-10-06 19:36 | L2=DV收口灰区(+0.27pt)心拍线关闭 | L1=空闲 | csv lcm 4/4 dv 4/4 | GPU ~3.2G(FT10尾) | 执行Q2d+Q2e
