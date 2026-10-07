@@ -1,0 +1,3 @@
+ts,ckpt,seed,eval,downstream,auroc,auprc,git_sha,checkpoint_sha256,protocol_id,hparams_ref
+2026-10-07 12:00,b0trc,0,lp,ptbxl,0.9116,0.7134,e72c367,59abb09b55e19dff11c644785f4884ee459cf7273728de57bab1630f14cd02ea,w7-e2c,"B0 协议+trc1: data/pt_pretrain 200ep bs128, 见 run_pt.py --trc"
+2026-10-07 12:00,b0trc,0,lp,cpsc,0.9536,0.7835,e72c367,59abb09b55e19dff11c644785f4884ee459cf7273728de57bab1630f14cd02ea,w7-e2c,"B0 协议+trc1: data/pt_pretrain 200ep bs128, 见 run_pt.py --trc"
