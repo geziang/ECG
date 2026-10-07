@@ -1,0 +1,7 @@
+ts,ckpt,seed,eval,downstream,auroc,auprc,git_sha,checkpoint_sha256,protocol_id,hparams_ref
+2026-10-07 14:40,c1tapt,0,lp,cpsc,0.9466,0.7627,23e970e,9c2835d662161ca2ba00d87055600d0de3f9005396f8beb17c8b03d37b2123a4,w7-e3,"C1 + BT续训@cpsc_train 50ep lr1e-4, 见 run_pt.py --cont-lr"
+2026-10-07 14:41,c1tapt,0,lp,ptbxl,0.8816,0.6492,23e970e,9c2835d662161ca2ba00d87055600d0de3f9005396f8beb17c8b03d37b2123a4,w7-e3,"C1 + BT续训@cpsc_train 50ep lr1e-4, 见 run_pt.py --cont-lr"
+2026-10-07 14:57,c1tapt,2,lp,cpsc,0.9463,0.7670,23e970e,ca5ccb200afb4ee07956e80e4124af11e8ecd033ff567ff73dbb71e8d0eed8e6,w7-e3,"C1 + BT续训@cpsc_train 50ep lr1e-4, 见 run_pt.py --cont-lr"
+2026-10-07 14:58,c1tapt,2,lp,ptbxl,0.8774,0.6363,23e970e,ca5ccb200afb4ee07956e80e4124af11e8ecd033ff567ff73dbb71e8d0eed8e6,w7-e3,"C1 + BT续训@cpsc_train 50ep lr1e-4, 见 run_pt.py --cont-lr"
+2026-10-07 15:13,c1tapt,4,lp,cpsc,0.9490,0.7658,23e970e,77534b5418582d0a72bca61964989d7456254f6b7fede6b90b7d0e0432936cf1,w7-e3,"C1 + BT续训@cpsc_train 50ep lr1e-4, 见 run_pt.py --cont-lr"
+2026-10-07 15:14,c1tapt,4,lp,ptbxl,0.8807,0.6441,23e970e,77534b5418582d0a72bca61964989d7456254f6b7fede6b90b7d0e0432936cf1,w7-e3,"C1 + BT续训@cpsc_train 50ep lr1e-4, 见 run_pt.py --cont-lr"
