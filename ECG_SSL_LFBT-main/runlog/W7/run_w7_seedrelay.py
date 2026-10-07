@@ -45,11 +45,15 @@ if __name__ == "__main__":
     run(E2C, "--seed", "2", logfile="e2c_chain_s2.log")
     run(E2C, "--seed", "4", logfile="e2c_chain_s4.log")
     summ = OUTD / "e5_summary.md"
-    if summ.exists() and "✅过门" in summ.read_text(encoding="utf-8"):
-        log("E5 seed0 过门 → 补 E5 seed2/4(参照同种子)")
+    txt = summ.read_text(encoding="utf-8") if summ.exists() else ""
+    gate_pass = "✅过门" in txt
+    weak_pos = any("= +" in l for l in txt.splitlines() if "ΔAUROC 均值" in l)
+    if gate_pass or weak_pos:
+        why = "过门" if gate_pass else "弱正(噪声格均值>0; 用户 10-07 指令: 有涨点即补种子, 微弱正收益也是工作量)"
+        log(f"E5 seed0 {why} → 补 E5 seed2/4(参照同种子)")
         run(E5, "--seed", "2", logfile="e5_chain_s2.log")
         run(E5, "--seed", "4", logfile="e5_chain_s4.log")
     else:
-        verdict = summ.read_text(encoding="utf-8").strip().splitlines()[-1] if summ.exists() else "(无判定文件)"
-        log(f"E5 seed0 未过门或无判定({verdict}) → 按 Q7 预注册关线, 不补 E5 种子")
+        verdict = txt.strip().splitlines()[-1] if txt else "(无判定文件)"
+        log(f"E5 seed0 无任何涨点方向({verdict}) → 不补种子(全负无从升格)")
     log("SEEDRELAY_END — E2c 三种子判定读数归值班轮/主会话(门见队列 Q8d)")
