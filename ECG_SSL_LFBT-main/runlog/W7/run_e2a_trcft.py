@@ -56,7 +56,8 @@ ap.add_argument("--fraction", type=float, default=0.1)
 ap.add_argument("--epochs", type=int, default=100)
 ap.add_argument("--batch-size", type=int, default=128)
 ap.add_argument("--learning-rate", type=float, default=1e-4)
-ap.add_argument("--workers", type=int, default=4)
+ap.add_argument("--workers", type=int, default=0)
+ap.add_argument("--head-init", default="")
 A = ap.parse_args()
 set_seed(A.seed)
 dev = "cuda"
@@ -87,6 +88,10 @@ class Net(nn.Module):
         super().__init__()
         self.encs = encs
         self.fc = nn.Linear(512, A.num_classes).to(dev)
+        if A.head_init:
+            hsd = torch.load(A.head_init, map_location="cpu", weights_only=True)
+            self.fc.weight.data = hsd["linear.weight"].to(dev)
+            self.fc.bias.data = hsd["linear.bias"].to(dev)
     def forward(self, x):
         fs = [self.encs[j](x[:, [j], :]).squeeze(-1) for j in range(8)]
         return self.fc(torch.cat(fs, dim=1))
@@ -101,6 +106,8 @@ tr, va, te = get_data_loaders(A.data_dir, A.batch_size, A.workers, train_ratio=A
 best_val, best_state = float("inf"), None
 for ep in range(A.epochs):
     net.train()
+    for v in encs:  # 冻结骨干必须 eval: BN running stats 不得在 10% 子集上更新(12:56 发现的 bug, 已修)
+        v.eval()
     for x, y in tr:
         x, y = x.to(dev), y.to(dev)
         opt.zero_grad(); out = net(x); loss = loss_fn(out, y); loss.backward(); opt.step()
@@ -173,12 +180,18 @@ def run_one(kind, ds, seed, dry=False):
         log(f"{tag}: DRY ok")
         return True
     from utils.pathguard import open_out
+    hp = (ROOT / f"results/confirm/{kind}_{ds}_seed{seed}/classifier_best_ckpt.pth" if ds == "ptbxl"
+          else ROOT / f"runlog/W5/feat/{kind}_{ds}_seed{seed}/classifier_best_ckpt.pth")
+    if not hp.exists():
+        log(f"{tag}: LP 头缺失 {hp}")
+        return False
     with open_out(LOGD, f"{tag}.log", encoding="utf-8") as f:
         rc = subprocess.run(
             [PY, "-u", "-c", DRIVER.replace("%ROOT%", str(ROOT)),
              "--data-dir", f"data/{ds}", "--num-classes", str(JOB[ds]),
              "--checkpoint", str(ck), "--trc", str(TRC_OF[kind]),
-             "--seed", str(seed), "--model-dir", str(mdir)],
+             "--seed", str(seed), "--model-dir", str(mdir),
+             "--head-init", str(hp)],
             stdout=f, stderr=subprocess.STDOUT, cwd=str(ROOT)).returncode
     try:
         m = json.loads((mdir / "metrics.json").read_text(encoding="utf-8"))
