@@ -29,14 +29,17 @@
 ## Q6 · 第二批预训练链（第一批 GPU 空档即排，Q1/Q2 不占 GPU 时可先发 E1）
 - [x] Q6a 全清: seed2 链 01:46 收官(4/4, cpsc Δ+0.26 同向); seed4 链 02:24:09 启动(修复 save-predictions 路径 W6→W7, seed2 预测4目录已迁回 W7); 待 seed4 完成后 Q6b 门判定（日志 lane_E1_dv_s2.log），链结束且 dv_results.csv 出现 seed=2 四行后跑 seed 4；**注意该脚本位置在 W6 目录但账本追加 dv_results.csv 属 W6 文件——先把脚本复制为 runlog/W7/run_e1_dv_chain.py 并把 OUT 改为 runlog/W7/e1_dv_results.csv 后再跑**（W6 冻结账本只读红线）。
 - [x] Q6b E1 门判定(10-07 04:32 链收官, 05:23 轮正式落笔)：s0 +0.27 / s2 +0.26 / s4 +0.17, **3/3 同向, mean=+0.2333pt ∈[+0.10,+0.30) → 温和正结论**(未达+0.30确认线)。心拍线最终定格: 证据链 = CCM −0.91 / 多段 −0.17 / 双视角+RR头 seed0 +0.27 → 三种子复核 3/3 同向 mean+0.2333。判定=温和正, 线就此收束(不再加种子)。
-- [ ] Q6c E2a FT期TRC：**已实现**(10-07 11:2x 轮: runlog/W7/run_e2a_trcft.py, 内嵌 DRIVER 冻结骨干只训 TRC+头, c1=零初始化注入/c2=预训练 GRN 作适配器, 协议与 full-FT10 逐位同款, dry-run 通过)。**启动指令(须 E2c 链结束后)**: nohup "C:/Users/admin/.conda/envs/DL/python.exe" -u runlog/W7/run_e2a_trcft.py > runlog/W7/logs/e2a_all.log 2>&1 & —— 24 跑×~20-40min 预计 8-16h, 跑完自动出 e2a_summary.md(门=vs LP 3-seed 同向+mean≥+0.5pt, 引用 W5/W2/W6 参照不重跑)。
+- [x] Q6c E2a 收官(13:24, 三修后 v4 全 24 跑): **门判负(vs LP +0.01pt, 6/6 格全平)**——TRC 作纯 FT 期适配器(c1 注入/c2 解冻)对 LP 零增量; 但冻结族(LP/TRC-FT/LP-FT 全 ~0.945-0.95) >> naive-FT10(~0.92) 与 E4a 互证: 少标签下问题不是余量而是形变, TRC 的价值在预训练期联合塑造表征(E2c +0.60AUPRC), 不在事后适配。负果入账。
 - [x] Q6d E2c 收官(12:00)+判读(12:23 轮)：b0trc vs B0(s0) = ptbxl −0.43pt AUPRC(域内微损) / **cpsc +0.30pt AUROC +0.60pt AUPRC(过+0.5pt线, 主指标AUPRC)**——seed0 单链判读: **TRC 第三域增益不依赖外部语料, 域移大小才是活性成分**(NFH→cpsc 与 ptbxl→cpsc 两种语料下 TRC 都只在第三域起效)。单种子属性如实标注; 如需 3-seed 升格由后续任务书定。
 
 ## Q7 · 第三批（视门走，本轮只挂占位）
-- [ ] E3 续训链 / E5 噪声注入 / E2b 变体：规格见任务书第三批；E1/E2a/E2c 门判定出来后由主会话或值班轮按决策树填具体步骤。
+- [ ] E3 目标域 SSL 续训(第三批首线, GPU 空闲即开): 写 runlog/W7/run_e3_tapt_chain.py——C1 confirm/seed{0,2,4} checkpoint 各自在 data/cpsc/train 去标签语料上小 lr(lr=1e-4) 续 BT 预训练 50ep(步数≈4.8k/128×50≈1.9k), ckpt 落 checkpoint/w7_e3/c1_cpsc_s{S}; 之后 cpsc+ptbxl LP(trc=0), 账本 runlog/W7/e3_tapt_results.csv, protocol_id=w7-e3。**门(任务书预注册): cpsc LP 3-seed ≥+0.5pt vs C1 且 PTB 掉幅≤0.3pt**; 过门→加 Chapman 同构重复; 判负→与'混合语料 −3.07'合并写"语料先验注入方式边界"一节。
+- [ ] E5 噪声注入预训练(独立轨道, E3 后): NFH+NSTDB 增强混合预训练 1 链 seed0, clean 逐位门+噪声 ≥+0.5pt。
+- [ ] E2b TRC 变体消融(殿后, 低优先)。
 
 ## 完成状态记录（执行轮次在此追加）
 - 10-06 22:5x 主会话轮：W7 开工——任务书/队列/events 建立，E4d 实现中。
+- 10-07 13:3x 主会话轮：E2a 收官(判负: 纯适配器零增量, 与 E4a 冻结族互证); Q7 填入 E3 具体规格。
 - 10-07 12:23 值班轮：E2c 收官+判读(TRC×域移不依赖语料来源)+E2a 24 跑启动。
 - 10-07 11:23 值班轮：Q6c E2a 实现完成(待 E2c 链结束启动)。
 - 10-07 10:24 值班轮：E2c TRC×B0 链启动(第二批预训练线开工)。
