@@ -24,7 +24,7 @@
 
 ## Q5 · E4a LP-FT 机制实验（CPSC）【需实现，规格如下】
 - [x] Q5a 实现（主会话完成: run_ft.py 加 --head-init 默认关=基线不变, metrics_ext.py 预测白名单扩 W7, 单测 21/21; 驱动 runlog/W7/run_e4a_lpft.py 就绪）（run_lp 同款至收敛）→ 以该头初始化+encoder 全解冻跑 run_ft 同款 FT10；对象 {b0,c2}×seeds{0,2,4}（c1 作参考可选）；protocol_id=w7-e4a；full-FT/LP 读数直接引用 W6 Stage3/W5 账本不重跑。
-- [ ] Q5b 6 跑完出 e4a_lpft.csv + e4a_summary.md：三适配方式排序表（LP / full-FT / LP-FT），b0 血缘优势与 c2 反转在 LP-FT 下是否保持/消失；机制讨论对接 LP-FT 文献（Kumar 2022）。
+- [x] Q5b 6/6 完成(08:21)+终表: LP 0.9506/0.9473, naive-FT 0.9192/0.9226, LP-FT **0.9498/0.9431**(b0/c2)——LP-FT 3/3 保 b0>c2, **微调反转消失**; LPFT−FT 增益 b0+3.06pt>c2+2.05pt(naive-FT 对 b0 形变更大); 机制=反转系 naive-FT 形变产物, 对接 Kumar 2022。
 
 ## Q6 · 第二批预训练链（第一批 GPU 空档即排，Q1/Q2 不占 GPU 时可先发 E1）
 - [x] Q6a 全清: seed2 链 01:46 收官(4/4, cpsc Δ+0.26 同向); seed4 链 02:24:09 启动(修复 save-predictions 路径 W6→W7, seed2 预测4目录已迁回 W7); 待 seed4 完成后 Q6b 门判定（日志 lane_E1_dv_s2.log），链结束且 dv_results.csv 出现 seed=2 四行后跑 seed 4；**注意该脚本位置在 W6 目录但账本追加 dv_results.csv 属 W6 文件——先把脚本复制为 runlog/W7/run_e1_dv_chain.py 并把 OUT 改为 runlog/W7/e1_dv_results.csv 后再跑**（W6 冻结账本只读红线）。
@@ -37,6 +37,7 @@
 
 ## 完成状态记录（执行轮次在此追加）
 - 10-06 22:5x 主会话轮：W7 开工——任务书/队列/events 建立，E4d 实现中。
+- 10-07 08:23 值班轮：E4a 收线(6/6+终表, 反转消失判定落笔)。
 - 10-07 05:23 值班轮：E1 全清(Q6b 温和正结论落笔)+E4a 启动。
 - 10-07 02:24 值班轮：E1 接力完成(s2 收官+s4 启动); save-predictions 瑕疵修复。
 - 10-07 00:23 值班轮：Q3 全清(E4c 9/9+summary: 排序稳健/重划下 c2>c1 一致/绝对差属测试池差异); E1 s2 PT 46/100 健康推进, seed4 接力与 E4a 启动留给后续轮。
