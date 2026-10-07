@@ -20,7 +20,7 @@
 ## Q4 · E4b 质量门控推理【需实现，规格如下】
 - [x] Q4a 实现(09:2x 轮): runlog/W7/run_e4b_quality_gate.py——常量零导联特征预计算+τ 档特征替换; val 扫描已跑完
 - [x] Q4b **判负关线**(val 阶段 09:30): 三域无 τ 满足 clean≥−0.10pt 约束(cpsc τ=0.3 即 −1.20pt/chapman −0.20pt/ptbxl 亦负), 按'仍伤则关线'预注册分支执行; 质量分数(带内功率比)无法区分干净低幅与受扰导联。Q4c 不执行(test 零消耗)。
-- [ ] Q4c NSTDB 扰动评估：{b0,c1,c2}×seed0×三域×3噪声×SNR{0,5,10} 子集（复用 run_robustness_nstdb.py 机制改推理侧），对照"固定 mask"同格读数；噪声条件 3-domain 平均 ≥+0.5pt 判正，e4b_quality_gate.csv + e4b_summary.md。
+- [x] Q4c ~N/A~(E4b 在 val 阶段判负关线, 扰动评估永不执行——test 零消耗)
 
 ## Q5 · E4a LP-FT 机制实验（CPSC）【需实现，规格如下】
 - [x] Q5a 实现（主会话完成: run_ft.py 加 --head-init 默认关=基线不变, metrics_ext.py 预测白名单扩 W7, 单测 21/21; 驱动 runlog/W7/run_e4a_lpft.py 就绪）（run_lp 同款至收敛）→ 以该头初始化+encoder 全解冻跑 run_ft 同款 FT10；对象 {b0,c2}×seeds{0,2,4}（c1 作参考可选）；protocol_id=w7-e4a；full-FT/LP 读数直接引用 W6 Stage3/W5 账本不重跑。
@@ -33,8 +33,8 @@
 - [x] Q6d E2c 收官(12:00)+判读(12:23 轮)：b0trc vs B0(s0) = ptbxl −0.43pt AUPRC(域内微损) / **cpsc +0.30pt AUROC +0.60pt AUPRC(过+0.5pt线, 主指标AUPRC)**——seed0 单链判读: **TRC 第三域增益不依赖外部语料, 域移大小才是活性成分**(NFH→cpsc 与 ptbxl→cpsc 两种语料下 TRC 都只在第三域起效)。单种子属性如实标注; 如需 3-seed 升格由后续任务书定。
 
 ## Q7 · 第三批（视门走，本轮只挂占位）
-- [ ] E3 目标域 SSL 续训(第三批首线, GPU 空闲即开): 写 runlog/W7/run_e3_tapt_chain.py——C1 confirm/seed{0,2,4} checkpoint 各自在 data/cpsc/train 去标签语料上小 lr(lr=1e-4) 续 BT 预训练 50ep(步数≈4.8k/128×50≈1.9k), ckpt 落 checkpoint/w7_e3/c1_cpsc_s{S}; 之后 cpsc+ptbxl LP(trc=0), 账本 runlog/W7/e3_tapt_results.csv, protocol_id=w7-e3。**门(任务书预注册): cpsc LP 3-seed ≥+0.5pt vs C1 且 PTB 掉幅≤0.3pt**; 过门→加 Chapman 同构重复; 判负→与'混合语料 −3.07'合并写"语料先验注入方式边界"一节。
-- [ ] E5 噪声注入预训练(独立轨道, E3 后): NFH+NSTDB 增强混合预训练 1 链 seed0, clean 逐位门+噪声 ≥+0.5pt。
+- [x] E3 TAPT 收官(14:25 启动→15:14 出账→15:24 判定): cpsc +0.10pt 3/3 同向但远低 +0.5 门, ptbxl −0.49pt 破无伤 → 判负; 首版误用 W2 污染 cpsc 参照已勘误至 W5; 增益排序 TRC>DV>TAPT 入 events
+- [ ] E5 噪声注入预训练: **链 16:12 启动**(run_pt --nstdb-aug 0.5 默认关补丁 + run_e5_noiseaug_chain.py, NFH 100ep seed0), 预计 PT~18:05→LP→噪声格→自动判定(clean 无伤≤0.3pt 且 噪声均值≥+0.5pt); 值班轮 18:23/19:23 查 e5_summary.md。
 - [ ] E2b TRC 变体消融(殿后, 低优先)。
 
 ## 完成状态记录（执行轮次在此追加）
