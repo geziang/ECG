@@ -6,7 +6,9 @@
 噪声评估: {bw,ma,em}×SNR{0,5,10}×三域(make_perturbed_real 同 W6 确定性口径) 对照 W6 robustness_real_c1.csv
 seed0 同格; 门=clean 无伤 且 噪声格平均 ΔAUROC ≥+0.5pt(独立轨道, 判负即关不影响主线)。
 账本: runlog/W7/e5_noiseaug_results.csv + e5_summary.md; protocol_id=w7-e5。
-用法: python runlog/W7/run_e5_noiseaug_chain.py [--phase pt|all|eval]
+用法: python runlog/W7/run_e5_noiseaug_chain.py [--phase pt|all|eval] [--seed N]
+  (seed 默认 0; seed{2,4}=Q8d 条件补做——seed0 过门才执行; 参照按同种子: LP=W2/W5 同种子行, 噪声格=W6 robustness_real_c1 同种子格;
+   seed0 判定写 e5_summary.md, 其他种子写 e5_summary_seed{N}.md)
 """
 import argparse
 import csv
@@ -48,21 +50,21 @@ def sha256_of(p):
 
 
 def c1_refs():
-    """C1 seed0 三域 LP AUROC 参照 + W6 NSTDB 噪声格参照。"""
+    """C1 同种子三域 LP AUROC 参照 + W6 NSTDB 噪声格参照(同种子)。"""
     lp = {}
     with open(ROOT / "runlog/W2/confirm_results.csv", encoding="utf-8") as f:
         for r in csv.DictReader(f):
-            if r["ckpt"] == "c1" and r["seed"] == "0" and r["eval"] == "lp":
+            if r["ckpt"] == "c1" and r["seed"] == str(SEED) and r["eval"] == "lp":
                 if r["downstream"] != "cpsc":  # cpsc 用 W5 修正分区
                     lp[r["downstream"]] = float(r["auroc"])
     with open(ROOT / "runlog/W5/lp_results.csv", encoding="utf-8") as f:
         for r in csv.DictReader(f):
-            if r["ckpt"] == "c1" and r["seed"] == "0" and r["downstream"] == "cpsc":
+            if r["ckpt"] == "c1" and r["seed"] == str(SEED) and r["downstream"] == "cpsc":
                 lp["cpsc"] = float(r["auroc"])
     noise = {}
     with open(ROOT / "runlog/W6/robustness_real_c1.csv", encoding="utf-8") as f:
         for r in csv.DictReader(f):
-            if r["seed"] == "0":
+            if r["seed"] == str(SEED):
                 noise[(r["downstream"], r["noise"], r["intensity"])] = (float(r["auroc"]), float(r["auprc"]))
     return lp, noise
 
@@ -72,7 +74,7 @@ def row_done(ev, ds, extra=""):
         return False
     with open(OUT, encoding="utf-8") as f:
         for r in csv.DictReader(f):
-            if (r["eval"], r["downstream"], r.get("cond", ""), ) == (ev, ds, extra):
+            if (r["seed"], r["eval"], r["downstream"], r.get("cond", "")) == (str(SEED), ev, ds, extra):
                 return True
     return False
 
@@ -84,7 +86,7 @@ def record(ev, ds, cond, auroc, auprc, cksha):
         if new:
             w.writerow(["ts", "ckpt", "seed", "eval", "downstream", "cond", "auroc", "auprc",
                         "git_sha", "checkpoint_sha256", "protocol_id"])
-        w.writerow([time.strftime("%Y-%m-%d %H:%M"), "c1na", "0", ev, ds, cond,
+        w.writerow([time.strftime("%Y-%m-%d %H:%M"), "c1na", str(SEED), ev, ds, cond,
                     f"{auroc:.4f}", f"{auprc:.4f}", git_sha(), cksha, "w7-e5"])
     log(f"  + e5 {ev}/{ds}/{cond}: {auroc:.4f}/{auprc:.4f}")
 
@@ -94,11 +96,11 @@ def run_pt():
         log("e5 PT: 已完成, 跳过")
         return True
     CK.mkdir(parents=True, exist_ok=True)
-    with open_out(LOGD, "e5_pt_seed0.log", encoding="utf-8") as f:
+    with open_out(LOGD, f"e5_pt_seed{SEED}.log", encoding="utf-8") as f:
         rc = subprocess.run(
             [PY, "-u", "run_pt.py", "--data-dir", "data/pt_pretrain_nfh",
              "--epochs", "100", "--batch-size", "128", "--workers", "4",
-             "--seed", "0", "--trc", "0", "--nstdb-aug", "0.5",
+             "--seed", str(SEED), "--trc", "0", "--nstdb-aug", "0.5",
              "--resume", "--checkpoint-dir", str(CK)],
             stdout=f, stderr=subprocess.STDOUT, cwd=str(ROOT)).returncode
     ok = rc == 0 and (CK / "encoder_group.pth").exists()
@@ -111,13 +113,13 @@ def run_lp(ds, nc):
         log(f"e5 lp/{ds}: 已有账, 跳过")
         return True
     ckpt = CK / "encoder_group.pth"
-    tag = f"e5_c1na_{ds}_lp_seed0"
+    tag = f"e5_c1na_{ds}_lp_seed{SEED}"
     feat = OUTD / "feat" / tag
     with open_out(LOGD, f"{tag}.log", encoding="utf-8") as f:
         rc = subprocess.run(
             [PY, "-u", "run_lp.py", "--data-dir", f"data/{ds}", "--num-classes", str(nc),
              "--checkpoint", str(ckpt), "--feat-dir", str(feat),
-             "--seed", "0", "--workers", "6", "--trc", "0",
+             "--seed", str(SEED), "--workers", "6", "--trc", "0",
              "--extended-metrics", "1",
              "--save-predictions", str(OUTD / "predictions" / tag),
              "--protocol-id", "w7-e5"],
@@ -164,7 +166,7 @@ def noise_eval():
     rows = []
     for ds, nc in DOMAINS:
         head = LinearClassifier(feat_dim=512, num_classes=nc).to(dev)
-        head.load_state_dict(torch.load(OUTD / f"feat/e5_c1na_{ds}_lp_seed0/classifier_best_ckpt.pth",
+        head.load_state_dict(torch.load(OUTD / f"feat/e5_c1na_{ds}_lp_seed{SEED}/classifier_best_ckpt.pth",
                                         map_location=dev, weights_only=True))
         head.eval()
         x, y, _, _ = load_test(ds)
@@ -199,21 +201,25 @@ def noise_eval():
                    else "❌判负关线(独立轨道, 不影响主线)" + ("(clean 受损)" if not clean_all else "(噪声增益不足)"))
         lines += ["", f"- 噪声格({len(deltas)}格) ΔAUROC 均值 vs C1(W6 同格) = {m:+.2f}pt",
                   f"- 判定: {verdict}"]
-    (OUTD / "e5_summary.md").write_text("\n".join(lines) + "\n", encoding="utf-8")
-    log("e5 summary written")
+    sname = "e5_summary.md" if SEED == 0 else f"e5_summary_seed{SEED}.md"
+    (OUTD / sname).write_text("\n".join(lines) + "\n", encoding="utf-8")
+    log(f"e5 summary written: {sname}")
     return True
 
 
 if __name__ == "__main__":
     ap = argparse.ArgumentParser()
     ap.add_argument("--phase", default="all", choices=["pt", "all", "eval"])
-    a = ap.parse_args()
-    log("E5 噪声注入预训练链启动(NFH+nstdb_aug0.5, seed0)")
-    if a.phase in ("pt", "all") and run_pt():
-        if a.phase == "all":
+    ap.add_argument("--seed", type=int, default=0)
+    args = ap.parse_args()
+    SEED = args.seed
+    CK = ROOT / f"checkpoint/w7_e5/noiseaug_seed{SEED}"
+    log(f"E5 噪声注入预训练链启动(NFH+nstdb_aug0.5, seed={SEED})")
+    if args.phase in ("pt", "all") and run_pt():
+        if args.phase == "all":
             for ds, nc in DOMAINS:
                 run_lp(ds, nc)
             noise_eval()
-    elif a.phase == "eval":
+    elif args.phase == "eval":
         noise_eval()
     log("E5_CHAIN_END")

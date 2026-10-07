@@ -6,8 +6,9 @@
 参照: B0 = W2 ptbxl LP s0 (AUPRC 0.7177) / W5 cpsc LP s0 (AUROC 0.9506)。
 判读(队列 Q6d): 任一域 Δ≥+0.5pt 判正(TRC 不限于外部语料); 均平/负=强化"TRC×域移"核心论点, 如实入账。
 账本: runlog/W7/e2c_results.csv; checkpoint: checkpoint/w7_e2c/seed0(不入 git)。
-用法: python runlog/W7/run_e2c_chain.py
+用法: python runlog/W7/run_e2c_chain.py [--seed N]   (默认 0; seed{2,4}=W7 Q8d 种子补做, 判读门见队列)
 """
+import argparse
 import csv
 import hashlib
 import json
@@ -50,7 +51,7 @@ def row_done(ev, ds):
         return False
     with open(OUT, encoding="utf-8") as f:
         for r in csv.DictReader(f):
-            if (r["ckpt"], r["eval"], r["downstream"]) == ("b0trc", ev, ds):
+            if (r["ckpt"], r["seed"], r["eval"], r["downstream"]) == ("b0trc", str(SEED), ev, ds):
                 return True
     return False
 
@@ -62,7 +63,7 @@ def record(ev, ds, auroc, auprc, cksha):
         if new:
             w.writerow(["ts", "ckpt", "seed", "eval", "downstream", "auroc", "auprc",
                         "git_sha", "checkpoint_sha256", "protocol_id", "hparams_ref"])
-        w.writerow([time.strftime("%Y-%m-%d %H:%M"), "b0trc", "0", ev, ds,
+        w.writerow([time.strftime("%Y-%m-%d %H:%M"), "b0trc", str(SEED), ev, ds,
                     f"{auroc:.4f}", f"{auprc:.4f}", git_sha(), cksha,
                     "w7-e2c", "B0 协议+trc1: data/pt_pretrain 200ep bs128, 见 run_pt.py --trc"])
     log(f"  + e2c {ev}/{ds}: {auroc:.4f}/{auprc:.4f}")
@@ -73,11 +74,11 @@ def run_pt():
         log("b0trc PT: 已完成, 跳过")
         return True
     CK.mkdir(parents=True, exist_ok=True)
-    with open_out(LOGD, "e2c_pt_seed0.log", encoding="utf-8") as f:
+    with open_out(LOGD, f"e2c_pt_seed{SEED}.log", encoding="utf-8") as f:
         rc = subprocess.run(
             [PY, "-u", "run_pt.py", "--data-dir", "data/pt_pretrain",
              "--epochs", "200", "--batch-size", "128", "--workers", "4",
-             "--seed", "0", "--trc", "1",
+             "--seed", str(SEED), "--trc", "1",
              "--resume", "--checkpoint-dir", str(CK)],
             stdout=f, stderr=subprocess.STDOUT, cwd=str(ROOT)).returncode
     ok = rc == 0 and (CK / "encoder_group.pth").exists()
@@ -86,7 +87,7 @@ def run_pt():
 
 
 def run_lp(ds, nc):
-    tag = f"e2c_b0trc_{ds}_lp_seed0"
+    tag = f"e2c_b0trc_{ds}_lp_seed{SEED}"
     if row_done("lp", ds):
         log(f"{tag}: 已有账, 跳过")
         return True
@@ -96,7 +97,7 @@ def run_lp(ds, nc):
         rc = subprocess.run(
             [PY, "-u", "run_lp.py", "--data-dir", f"data/{ds}", "--num-classes", str(nc),
              "--checkpoint", str(ckpt), "--feat-dir", str(feat),
-             "--seed", "0", "--workers", "6", "--trc", "1",
+             "--seed", str(SEED), "--workers", "6", "--trc", "1",
              "--extended-metrics", "1",
              "--save-predictions", str(OUTD / "predictions" / tag),
              "--protocol-id", "w7-e2c"],
@@ -111,7 +112,11 @@ def run_lp(ds, nc):
 
 
 if __name__ == "__main__":
-    log("E2c TRC×B0 域内链启动")
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--seed", type=int, default=0)
+    SEED = ap.parse_args().seed
+    CK = ROOT / f"checkpoint/w7_e2c/seed{SEED}"
+    log(f"E2c TRC×B0 域内链启动(seed={SEED})")
     if run_pt():
         for ds, nc in DOMAINS:
             run_lp(ds, nc)
