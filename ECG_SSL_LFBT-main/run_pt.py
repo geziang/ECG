@@ -21,6 +21,8 @@ parser.add_argument('--data-dir', type=Path, required=True,
 parser.add_argument('--num-leads', default=8, type=int, metavar='N', help="the number of leads")
 parser.add_argument('--resume', action='store_true',
                     help='断点续训: checkpoint_dir/train_state.pth 存在时恢复 epoch/权重/优化器/RNG')
+parser.add_argument('--cont-lr', default=0.0, type=float,
+                    help='W7 E3 TAPT: >0 时在 resume 恢复优化器后覆盖 param_groups lr(续训小步长); 默认 0=不改任何行为')
 parser.add_argument('--workers', default=6, type=int, metavar='N',
                     help='number of data loader workers')
 parser.add_argument('--epochs', default=200, type=int, metavar='N',
@@ -798,6 +800,10 @@ def main_worker(gpu, args):
             else:
                 _mod.load_state_dict(_sd)
         optimizer.load_state_dict(st['optimizer'])
+        if float(getattr(args, 'cont_lr', 0.0) or 0.0) > 0:
+            for _g in optimizer.param_groups:
+                _g['lr'] = float(args.cont_lr)
+            print(f"[cont-lr] 续训步长覆盖为 {args.cont_lr}", flush=True)
         if ema_shadows is not None and st.get('ema_shadows') is not None:
             for s_old, s_new in zip(ema_shadows, st['ema_shadows']):
                 s_old.copy_(s_new)
