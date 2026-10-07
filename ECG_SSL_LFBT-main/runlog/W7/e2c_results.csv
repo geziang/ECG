@@ -3,3 +3,5 @@ ts,ckpt,seed,eval,downstream,auroc,auprc,git_sha,checkpoint_sha256,protocol_id,h
 2026-10-07 12:00,b0trc,0,lp,cpsc,0.9536,0.7835,e72c367,59abb09b55e19dff11c644785f4884ee459cf7273728de57bab1630f14cd02ea,w7-e2c,"B0 协议+trc1: data/pt_pretrain 200ep bs128, 见 run_pt.py --trc"
 2026-10-07 19:26,b0trc,2,lp,ptbxl,0.9130,0.7075,ae4e730,63a2901c7e033bc43b7368e6ea6c040b2608a8d7eb339d86d464122848824d22,w7-e2c,"B0 协议+trc1: data/pt_pretrain 200ep bs128, 见 run_pt.py --trc"
 2026-10-07 19:26,b0trc,2,lp,cpsc,0.9506,0.7778,ae4e730,63a2901c7e033bc43b7368e6ea6c040b2608a8d7eb339d86d464122848824d22,w7-e2c,"B0 协议+trc1: data/pt_pretrain 200ep bs128, 见 run_pt.py --trc"
+2026-10-07 21:37,b0trc,4,lp,ptbxl,0.9140,0.7122,25cd60f,e18644b62eaa00813baebed6356c23522a53c328e00889bba90ca57fe0086a44,w7-e2c,"B0 协议+trc1: data/pt_pretrain 200ep bs128, 见 run_pt.py --trc"
+2026-10-07 21:38,b0trc,4,lp,cpsc,0.9523,0.7835,25cd60f,e18644b62eaa00813baebed6356c23522a53c328e00889bba90ca57fe0086a44,w7-e2c,"B0 协议+trc1: data/pt_pretrain 200ep bs128, 见 run_pt.py --trc"

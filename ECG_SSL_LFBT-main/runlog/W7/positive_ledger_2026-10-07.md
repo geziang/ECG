@@ -22,6 +22,7 @@
 | 对比 | 设置 | 效应 | 一致性/检验 | 源 |
 |---|---|---|---|---|
 | C2−C1 | cpsc LP AUPRC | **+0.83pt** (+0.70/+0.59/+1.20) | 3/3 同向 | W5/seed_sign_v3.csv |
+| **b0trc−B0（E2c 升格）** | cpsc LP AUPRC | **+0.84pt** (+0.60/+0.70/+1.23) | **3/3 同向，预注册门（≥+0.5）过线，B1→A 档（10-07 21:38 出数）**；AUROC 副指标 +0.15pt 亦 3/3 正；ptbxl 域内 −0.09pt 近平非一致（观测项如实并列） | W7/e2c_results.csv |
 | C2−B0 | chapman LP AUROC | **+0.31pt** (0.9963 vs 0.9932) | 3/3 同向; boot p=0.0; DeLong p=0.0 | W4 终表+W5/paired_stats_v3 |
 | C2−B0 | chapman FT10 AUROC | +0.14pt | 3/3 同向（与 LP 同向） | W6/Stage3 |
 | C2−C1 | ptbxl FT10 AUPRC | +0.65pt (+0.19/+1.38/+0.39) | 3/3 同向 | W2/paired_delta + W6 复核 |
@@ -47,7 +48,7 @@
 
 ## B. 单种子过线正读数（须标"单种子"；均在补种子中）
 
-**B1. E2c TRC×B0（域移是活性成分）**：b0trc vs B0（seed0），cpsc LP **+0.30pt AUROC / +0.60pt AUPRC**（过预注册 +0.5pt 线，主指标 AUPRC）；ptbxl −0.43pt AUPRC 微损如实并列。TRC 第三域增益不依赖外部语料，获得第二种语料设置独立支持。源：W7/events 12:23。
+**B1. E2c TRC×B0（域移是活性成分）——已升 A 档（10-07 22:0x 三种子门判定）**：cpsc AUPRC 配对 Δ = +0.60/+0.70/+1.23（vs B0 同种子 W5 参照），3/3 同向 mean +0.84 ≥ 预注册 +0.5 线 → **确认级正向**。"TRC 第三域增益不依赖预训练语料"从单种子升为三种子证据。源：W7/e2c_results.csv。
 
 **B2. E5 噪声注入预训练（独立轨道，✅过门 17:46）**：c1na vs C1（seed0），clean 三域全无伤（ptbxl −0.24 / cpsc −0.10 / chapman −0.06pt，容差 −0.30 内）+ **噪声格 27 格 ΔAUROC 均值 +2.17pt**（vs C1 W6 同种子同格，门槛 +0.5）。预训练期噪声先验注入有效、事后门控无门（E4b 判负）——"先验必须预训练期联合优化"主论点第二正例。补种子已自动排队。源：W7/e5_summary.md + e5_noiseaug_results.csv。
 
