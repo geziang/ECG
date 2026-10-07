@@ -34,7 +34,7 @@
 
 ## Q7 · 第三批（视门走，本轮只挂占位）
 - [x] E3 TAPT 收官(14:25 启动→15:14 出账→15:24 判定): cpsc +0.10pt 3/3 同向但远低 +0.5 门, ptbxl −0.49pt 破无伤 → 判负; 首版误用 W2 污染 cpsc 参照已勘误至 W5; 增益排序 TRC>DV>TAPT 入 events
-- [ ] E5 噪声注入预训练: **链 16:12 启动**(run_pt --nstdb-aug 0.5 默认关补丁 + run_e5_noiseaug_chain.py, NFH 100ep seed0), 预计 PT~18:05→LP→噪声格→自动判定(clean 无伤≤0.3pt 且 噪声均值≥+0.5pt); 值班轮 18:23/19:23 查 e5_summary.md。
+- [x] E5 噪声注入预训练: **收官✅过门(17:46)**——clean 三域全无伤(ptbxl −0.24/cpsc −0.10/chapman −0.06, 容差−0.30 内) + 噪声格 27 格均值 **+2.17pt** vs C1(W6 同格)≥+0.5 门。**A 档级强正向(单种子, seed2/4 已由 seedrelay 自动排队)**。排障留痕: 原脚本两处潜在 bug 首次执行时现形——①c1_refs 读 W6 robustness_real_c1.csv 列名误(downstream/noise→实际 dataset/perturbation)致 KeyError; ②noise_eval feats() 返 CPU 张量喂 CUDA 头致 device mismatch; 两处已修(17:4x), --phase eval 重跑 20s 出判定, PT/LP 账目无损。科学读数: 噪声先验与 TRC 同构——**预训练期注入有效(+2.17pt), 事后无门(E4b 判负)**, "先验必须预训练期联合优化"主论点第二正例。
 - [x] E2b TRC 变体消融：**用户 10-07 17:4x 裁决砍掉**——纯素材性质、plateau 高危，GPU 让给 W8 外部基线；负果不入账本（从未启动）。
 - [x] E4e cognitive stress（开题承诺未做项）：**用户 10-07 裁决先做数据可得性调研（零 GPU）——调研已完成（17:5x 主会话）**：可得数据=SWELL-KW（25 人知识工作压力，Mobi 胸部多导联 ECG，4TU.ResearchData 公开）/WESAD（15 人，胸带 700Hz ECG+腕表单导联，奥格斯堡大学公开需注册）/Driver Stress（多导联，UBicom）；限制=样本 15-25 人（≪现下游集）、导联配置与 8 导联管线不对齐、标签为二分类压力/静息。**判读：可做"冻结表征小样本案例研究"级附录（患者级留出交叉验证定位），撑不起主实验章；是否值得花适配工时归 W8 任务书定，论文亦可作 future work 处理**。
 - [ ] E4f ECG-FM 参照：用户 10-07 裁决维持殿后不动。

@@ -65,7 +65,7 @@ def c1_refs():
     with open(ROOT / "runlog/W6/robustness_real_c1.csv", encoding="utf-8") as f:
         for r in csv.DictReader(f):
             if r["seed"] == str(SEED):
-                noise[(r["downstream"], r["noise"], r["intensity"])] = (float(r["auroc"]), float(r["auprc"]))
+                noise[(r["dataset"], r["perturbation"], r["intensity"])] = (float(r["auroc"]), float(r["auprc"]))
     return lp, noise
 
 
@@ -174,7 +174,7 @@ def noise_eval():
             for inten in ("0", "5", "10"):
                 xp = make_perturbed_real(x, ds, "nstb_" + name, inten)
                 with torch.no_grad():
-                    probs = F.softmax(head(feats(torch.from_numpy(np.ascontiguousarray(xp)).cuda())), dim=1).cpu().numpy()
+                    probs = F.softmax(head(feats(torch.from_numpy(np.ascontiguousarray(xp)).cuda()).to(dev)), dim=1).cpu().numpy()
                 au, ap_ = metrics_from_probs(y, probs, nc)
                 ref = noise_ref.get((ds, "nstb_" + name, inten))
                 rows.append((ds, f"nstb_{name}@{inten}", au, ap_, ref))
