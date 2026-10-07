@@ -39,12 +39,13 @@
 
 ## Q8 · 门规修订 v2 + 外部基线盘点【2026-10-07 16:2x 主会话，用户指令】
 - [x] Q8a 预注册修订落档 `gate_revision_2026-10-07.md`：确认线 +0.30→**+0.10**；3/3 同向且 mean>0 一律入正向收益表；无伤合取保留（破无伤方法级仍判负，第三域正读数可入表附代价）。追溯重标定（不重跑）：**E1 双视角+RR头 +0.233 升格确认级正向**；E3 TAPT cpsc +0.10（3/3）入正向积累表附 ptbxl −0.49 代价；E2c/E2a/E4b/LCM 措辞不变。建议项：正向表逐行配 paired bootstrap p（预测已落盘，B-4 管线现成）。
-- [ ] Q8b 外部基线增补（**已圈选 2026-10-07 17:3x 用户指令"外部基线再来几个"，按基座论文 LFBT 的对比清单评估**，W7 冻结后 W8 执行）：
-  - **第一批（加）**：①Random 随机初始化 LP（无 PT，9 格 ≈20min GPU，地板基线）；②SimCLR-Physio 噪声增强变体（复用 E5 的 --nstdb-aug 注入器 + simclr loss-mode，实现近零成本，GPU 半天）；③**DLC 导联密集对比（首选竞品，基座论文亲点最强对手；无公开代码，按 Information Sciences 2023 论文复现，实现 ~1 天+单测，GPU 半天）**；④TSR 时空反转（官方码 github.com/BobZwr/ReverseECG 可拉，实现半天，GPU 半天）。
-  - **第二批（可选，视论文篇幅）**：CPC（通用预测对比，公开实现多）；3KG（VCG 生理增强，代码声明在 bowang-lab，实现期核验确切仓库）。
+- [ ] Q8b 外部基线增补（**终版圈选 2026-10-07 17:4x 用户指令"只做筛选好复现的，不好复现的放弃"**，W7 冻结后 W8 执行）：
+  - **加（3 个，全部可稳复现）**：①Random 随机初始化 LP（无 PT，9 格 ≈20min GPU，地板基线；实现=随机初始化 encoder 存 ckpt 或 run_lp 加默认关 --random-init）；②SimCLR-Physio 噪声增强变体（复用 E5 --nstdb-aug 注入器+simclr loss-mode，实现近零成本，GPU 半天）；③TSR 时空反转（官方码 github.com/BobZwr/ReverseECG，源码逐条比对同 W4 CLOCS 流程，实现半天，GPU 半天）。
+  - **放弃（不好复现）**：DLC（无公开代码+Elsevier 闭源无 PDF，用户裁决放弃——注意论文写对比表时如实注明"未复现"即可，不引他人论文数字冒充自测）；3KG（bowang-lab 确切仓库未核验+VCG 重建工程量）；CPC（通用对比线已有 SimCLR 代表，边际价值低）。
   - 已覆盖无需加：TFS=S3 监督直训、SimCLR 标准=S1、CMSC/CLOCS=S2。
-  - 同构条款同 W4：与 C1 同 backbone/优化器/协议，差异仅目标函数/方法自带增强（增强即方法本体者随方法走，逐条入 baseline_hparams.csv）；每方法 12 跑=3域 LP×3seeds+FT10×3。
-  - **资源待用户（非必需，有更稳）**：DLC 论文 PDF（Elsevier 闭源，复现全靠论文细节）；3KG 确切仓库链接。TSR/CPC/Random/SimCLR-Physio 无需任何下载。
+  - 增补后外部覆盖：通用对比(SimCLR)/噪声增强对比(SimCLR-Physio)/ECG 专用(CLOCS、TSR)/地板(Random)/天花板(S3)。
+  - 同构条款同 W4：与 C1 同 backbone/优化器/协议，差异仅目标函数/方法自带增强，逐条入 baseline_hparams.csv；每方法 12 跑=3域 LP×3seeds+FT10×3，默认超参零调参。
+  - **资源需求：清零**（TSR 官方码可自拉，其余全部仓库内现成件）。
 - [x] Q8c 全批次正向清查完成（用户指令"小正向也算正向"）：`positive_ledger_2026-10-07.md` 落档——A 确认级 5 组（外部基线全不反超/TRC 第三域 AUPRC+0.83·chapman+0.31·FT10+0.65/E1 +0.233/NFH 抗退化 1.2-1.35pt/B0 血缘优势）+B 单种子过线（E2c）+C 带代价（E3 cpsc）+D 机制正果 7 条+E 边缘披露；勘误注记：events"TRC+0.47"=值班轮两指标均值综合读数，论文用分指标原始数；E5 出账后自动归档。
 - [ ] Q8d 种子补做（用户 10-07 追加指令"单种子正向补多种子"）：**seedrelay wrapper 已挂**（16:58 启动，logs/seedrelay_head.log——等 e5_summary.md 出现后串行 E2c seed2→seed4；E5 seed0 过门才补 E5 seed2/4；各链幂等可重启）。E2c/E5 脚本已参数化 --seed（默认 0=行为不变），E5 参照改同种子行（W2/W5/W6 同种子格），E5 判定文件 s{2,4} 写 e5_summary_seed{N}.md。**E2c 三种子门（预注册 2026-10-07 16:5x，s2/s4 数据未出）**：主指标 cpsc LP AUPRC 配对 Δ=b0trc_s−B0_s（B0 参照 W5 同种子 AUPRC 0.7775/0.7708/0.7712）；3/3 同向且 mean≥+0.5 → B1 升 A 档；3/3 同向且 mean∈[+0.10,+0.5) → 确认级（中幅度）；任一反向 → 维持单种子标注+分歧如实。预计 E2c s2 ~20:45 / s4 ~22:30，E5 条件项各 ~2.5h；判定读数归值班轮/主会话。
 
