@@ -30,13 +30,14 @@
 - [x] Q6a 全清: seed2 链 01:46 收官(4/4, cpsc Δ+0.26 同向); seed4 链 02:24:09 启动(修复 save-predictions 路径 W6→W7, seed2 预测4目录已迁回 W7); 待 seed4 完成后 Q6b 门判定（日志 lane_E1_dv_s2.log），链结束且 dv_results.csv 出现 seed=2 四行后跑 seed 4；**注意该脚本位置在 W6 目录但账本追加 dv_results.csv 属 W6 文件——先把脚本复制为 runlog/W7/run_e1_dv_chain.py 并把 OUT 改为 runlog/W7/e1_dv_results.csv 后再跑**（W6 冻结账本只读红线）。
 - [x] Q6b E1 门判定(10-07 04:32 链收官, 05:23 轮正式落笔)：s0 +0.27 / s2 +0.26 / s4 +0.17, **3/3 同向, mean=+0.2333pt ∈[+0.10,+0.30) → 温和正结论**(未达+0.30确认线)。心拍线最终定格: 证据链 = CCM −0.91 / 多段 −0.17 / 双视角+RR头 seed0 +0.27 → 三种子复核 3/3 同向 mean+0.2333。判定=温和正, 线就此收束(不再加种子)。
 - [ ] Q6c E2a FT期TRC：实现 run_pt.py 侧 `--trc-ft-only` 或 run_ft.py 插零初始化 TRC（默认关逐位一致单测先行），冻结 encoder 只训 TRC+头；{c1,c2}×{ptbxl,cpsc}×FT10×seeds{0,2,4}，对照 LP 与 full-FT10（引用 W6 账本），门=vs LP 同向+≥+0.5pt，e2a_trcft.csv。
-- [ ] Q6d E2c TRC×B0：`run_pt.py --data-dir data/pt_pretrain --epochs 200 --trc 1` seed0 单链（对齐 B0 更新数），PTB/CPSC LP；判读正负都入账。
+- [ ] Q6d E2c TRC×B0：链 10:24:26 启动(runlog/W7/run_e2c_chain.py, ckpt=checkpoint/w7_e2c/seed0, B0 协议逐位+trc1)；PT ~2h 后接 ptbxl/cpsc LP；值班轮查 e2c_results.csv 两行齐后对 B0 参照(W2 ptbxl s0 AUPRC 0.7177 / W5 cpsc s0 AUROC 0.9506)判读: Δ≥+0.5pt=TRC 不限外部语料, 平/负=强化 TRC×域移论点。
 
 ## Q7 · 第三批（视门走，本轮只挂占位）
 - [ ] E3 续训链 / E5 噪声注入 / E2b 变体：规格见任务书第三批；E1/E2a/E2c 门判定出来后由主会话或值班轮按决策树填具体步骤。
 
 ## 完成状态记录（执行轮次在此追加）
 - 10-06 22:5x 主会话轮：W7 开工——任务书/队列/events 建立，E4d 实现中。
+- 10-07 10:24 值班轮：E2c TRC×B0 链启动(第二批预训练线开工)。
 - 10-07 09:30 值班轮：E4b 实现+val 扫+判负关线(val 约束不满足, test 零消耗)。
 - 10-07 08:23 值班轮：E4a 收线(6/6+终表, 反转消失判定落笔)。
 - 10-07 05:23 值班轮：E1 全清(Q6b 温和正结论落笔)+E4a 启动。
