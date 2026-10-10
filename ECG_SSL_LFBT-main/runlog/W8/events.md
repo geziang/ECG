@@ -20,3 +20,10 @@
 - 链: seeds{0,2,4} × PT(NFH 100ep) → LP 三域 → FT10{ptbxl,cpsc}; 主链后补 S1 cpsc FT10 ×3(W4 冻结 simclr checkpoint 纯补格评测, 行 ckpt=simclr-w4frozen, 供 E2 vs S1 在 cpsc FT10 配对——S1 在 W4 只评过 ptbxl FT10)。
 - 判定(任务书): 无晋级门如实入表; 配对口径=vs S1(隔离"ECG 增强"单因素, LP 三域+cpsc FT10)+vs C1; 与 C1/Noise(=W7 E5 c1na)/S1 构成 {BT,SimCLR}×{RRC-TO,+NSTDB} 2×2 四格收齐。
 - 车道: GPU 车道2(与 E1 车道1 并行, 显存预算 PT~6.7G+LP~2.5G << 24G)。
+
+## 10-10 18:4x E4 预注册与启动
+
+- 实现: `models/vgg_1d.py` +AffineChannel1D(Y=F+γ⊙F+β, γ/β [1,C,1] 零初始化, 与 GRN1D 同位置[block5+maxpool 后 GAP 前]同参数量, 仅去 ⊙n 门控); VGG16 `--trc 2` 分支(trc∈{0,1,2} 断言)。入口零改动(run_pt/run_lp/mbn 均透传 trc)。**checkpoint 安全白名单 +AffineChannel1D**(utils/checkpoint.py——run_pt 双格式保存完整模块对象, 不注册则 weights_only=True 加载必炸, W4 安全门同款教训前置规避)。
+- 单测 `tests/test_w8_e4.py` 8/8: trc=0 无校准键/trc=2 零初始化==trc=0 逐位/梯度流通/与 GRN 同γ输出不同(门控确实去掉)/GRN 公式回归守卫/仿射手动公式/非法 trc 拒绝/模块对象受限加载往返逐位。回归 test_w1 14/14 + test_safe_load 3/3 + test_repro 全绿。
+- 链: seeds{0,2,4} × PT(NFH 100ep bt trc2) → LP {cpsc, ptbxl}; GPU 车道3(与 E1/E2 并行)。
+- 判定(任务书双分支均可写, 无晋级门): 三臂 C1(trc0)/affine(trc2)/C2(trc1), 参照=W5A cpsc/W2 ptbxl 冻结账本同种子配对。读法: TRC>affine 且 affine≈C1 → "响应依赖校准是活性成分"; affine≈TRC → 如实降级 "预训练耦合校准有效"。主读数=cpsc LP AUROC+AUPRC 3-seed mean±SD, ptbxl 为域内观测; "≈"操作化=|Δmean|<0.3pt(种子噪声量级, 描述性非门)。

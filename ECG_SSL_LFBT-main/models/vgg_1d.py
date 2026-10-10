@@ -104,13 +104,31 @@ class GRN1D(nn.Module):
         return x + self.gamma * (x * n) + self.beta
 
 
+class AffineChannel1D(nn.Module):
+    """W8 E4 w8-trcaff: TRC 参数匹配仿射对照 (VGG16 trc=2)。
+
+    Y = F + gamma*F + beta —— 与 GRN1D 同位置(block5+maxpool 后、GAP 前)、同参数
+    (gamma/beta [1,C,1] 零初始化, 每导联 2C=128 参数), 仅去掉 ⊙n 响应门控项。
+    零初始化 -> 开态初始前向与关态(trc=0)逐位一致。三臂对照 C1(trc0)/affine(trc2)/
+    C2(trc1) 中, affine≈C1 且 TRC>affine => "响应依赖校准是活性成分"。"""
+
+    def __init__(self, channels):
+        super().__init__()
+        self.gamma = nn.Parameter(torch.zeros(1, channels, 1))
+        self.beta = nn.Parameter(torch.zeros(1, channels, 1))
+
+    def forward(self, x):
+        return x + self.gamma * x + self.beta
+
+
 class VGG16(nn.Module):
     def __init__(self, ch_in=8, n_classes=1000, alpha=0.5, blur_pool=0, pool_power=0.0, trc=0):
         super(VGG16, self).__init__()
         self.alpha = alpha
         self.blur_pool = int(blur_pool)    # H2: >0 时每个下采样点前加 filt=blur_pool 二项式低通
         self.pool_power = float(pool_power)  # T3: >0 时末端池化换广义幂均值 Q=pool_power
-        self.trc = int(trc)                # C2: >0 时 block5 后、GAP 前插 GRN1D(零初始化)
+        self.trc = int(trc)                # C2: 1=GRN1D(TRC); W8 E4: 2=AffineChannel1D(仿射对照); 0=无
+        assert self.trc in (0, 1, 2), f"trc 取值 0/1/2, 收到 {trc}"
         c = 512 * alpha
 
         def _pool(c_out):
@@ -132,7 +150,8 @@ class VGG16(nn.Module):
                            [1, 1, 1], 2, 2, pool_module=_pool(c)),
         ]
         if self.trc > 0:
-            _blocks.append(GRN1D(int(c)))  # C2/TRC: block5+maxpool 后、全局池化前
+            # C2/TRC: block5+maxpool 后、全局池化前; W8 E4: trc=2 走参数匹配仿射对照
+            _blocks.append(GRN1D(int(c)) if self.trc == 1 else AffineChannel1D(int(c)))
         if self.pool_power == 0.0:
             _blocks.append(nn.AdaptiveAvgPool1d(1))  # 关态结构与原版逐层一致(state_dict 键名不变)
         else:

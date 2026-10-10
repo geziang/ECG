@@ -10,14 +10,15 @@ import torch
 from torch.nn import Identity, Linear, Module
 from torch.nn.modules import activation, batchnorm, container, conv, pooling
 
-from models.vgg_1d import GRN1D, VGG16
+from models.vgg_1d import AffineChannel1D, GRN1D, VGG16
 
 # 白名单 = 冻结 checkpoint 实际引用的全部自定义/nn 全局类(2026-09-23 对
 # b0/c1/c2 全系 encoder_group.pth 做 pickle opcode 静态扫描得出, 见
 # runlog/W4/diag_ckpt_globals2.py): 本仓库 VGG16/GRN1D + nn 基础模块 + 基础容器。
 # 均为数据结构/网络模块类, 不含任意可调用; 仍保持 weights_only=True 受限加载。
+# W8 E4: +AffineChannel1D(trc=2 仿射对照, run_pt 双格式保存会引用该模块对象)。
 _W4_SAFE_GLOBALS = [
-    VGG16, GRN1D,
+    VGG16, GRN1D, AffineChannel1D,
     container.Sequential,
     conv.Conv1d,
     batchnorm.BatchNorm1d,
