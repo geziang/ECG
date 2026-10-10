@@ -12,6 +12,7 @@
 """
 import argparse
 import csv
+import io
 import json
 import subprocess
 import sys
@@ -141,10 +142,11 @@ def phase_summary():
     if not rows:
         log("no metrics yet, skip summary")
         return
-    with open(out, "w", newline="", encoding="utf-8") as fp:
-        w = csv.DictWriter(fp, fieldnames=list(rows[0].keys()))
-        w.writeheader()
-        w.writerows(rows)
+    buf = io.StringIO(newline="")
+    w = csv.DictWriter(buf, fieldnames=list(rows[0].keys()))
+    w.writeheader()
+    w.writerows(rows)
+    out.write_text(buf.getvalue(), encoding="utf-8", newline="")
     import numpy as np
     lines = ["# E4c 患者级重分层敏感性摘要", "",
              "- 官方 strat_fold 本身患者不重叠; 本实验=K=3 次患者级分层重划(70/10/20, seeds 101/102/103)后冻结 ckpt LP(seed 0),",

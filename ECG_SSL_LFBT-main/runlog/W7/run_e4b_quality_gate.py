@@ -14,6 +14,7 @@
 """
 import argparse
 import csv
+import io
 import time
 from pathlib import Path
 
@@ -138,10 +139,11 @@ def stage_val(models_by_ds, limit=None):
         else:
             sel[ds] = None
             log(f"  -> 无 τ 满足 clean 约束, 该域关线")
-    with open(OUT_DIR / "e4b_val_sweep.csv", "w", newline="", encoding="utf-8") as fp:
-        w = csv.DictWriter(fp, fieldnames=["domain", "tau", "clean_delta_mean", "noisy_mean"])
-        w.writeheader()
-        w.writerows(rows)
+    buf = io.StringIO(newline="")
+    w = csv.DictWriter(buf, fieldnames=["domain", "tau", "clean_delta_mean", "noisy_mean"])
+    w.writeheader()
+    w.writerows(rows)
+    (OUT_DIR / "e4b_val_sweep.csv").write_text(buf.getvalue(), encoding="utf-8", newline="")
     (OUT_DIR / "e4b_tau_selection.json").write_text(
         __import__("json").dumps(sel, indent=1), encoding="utf-8")
     log(f"tau selection: {sel}")
@@ -188,10 +190,11 @@ def stage_test(models_by_ds, sel, limit=None):
                                  git_sha=gsha, data_sha=data_sha, protocol_id="w7-e4b"))
                 log(f"  · {kind} {name}@{inten}: 无门控 {au_u:.4f} -> 门控 {au_g:.4f} (Δ{(au_g-au_u)*100:+.2f}pt)")
             del xv, xv_t
-    with open(OUT_DIR / "e4b_quality_gate.csv", "w", newline="", encoding="utf-8") as fp:
-        w = csv.DictWriter(fp, fieldnames=list(rows[0].keys()))
-        w.writeheader()
-        w.writerows(rows)
+    buf = io.StringIO(newline="")
+    w = csv.DictWriter(buf, fieldnames=list(rows[0].keys()))
+    w.writeheader()
+    w.writerows(rows)
+    (OUT_DIR / "e4b_quality_gate.csv").write_text(buf.getvalue(), encoding="utf-8", newline="")
     # 汇总
     import json
     noisy = [r for r in rows if r["cond"] != "clean"]
