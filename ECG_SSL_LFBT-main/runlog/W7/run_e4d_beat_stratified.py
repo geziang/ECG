@@ -11,6 +11,7 @@
 """
 import argparse
 import csv
+import io
 import json
 import re
 import time
@@ -18,7 +19,9 @@ from pathlib import Path
 
 import numpy as np
 
-ROOT = Path(__file__).resolve().parents[2]
+ROOT = Path.cwd().resolve()
+if not (ROOT / "runlog/W7").is_dir():  # 文档用法=从仓库根启动(见文件头)
+    raise SystemExit(f"please run from repo root, cwd={ROOT}")
 sys_path_hack = ROOT  # noqa
 import sys
 sys.path.insert(0, str(ROOT))
@@ -27,6 +30,15 @@ DOMAINS = ["ptbxl", "cpsc", "chapman"]
 W6_PRED = ROOT / "runlog/W6/predictions"
 W5_PRED = ROOT / "runlog/W5/predictions"
 OUTD = ROOT / "runlog/W7"
+
+
+def _safe(p):
+    q = Path(p).resolve()
+    if not q.is_relative_to(ROOT):
+        raise ValueError(f"path escapes repo root: {q}")
+    return q
+
+
 FS = 204.8  # 2048 点 / 10 s
 
 
@@ -120,7 +132,7 @@ def main():
     ap.add_argument("--skip-cache", action="store_true")
     args = ap.parse_args()
 
-    OUTD.mkdir(exist_ok=True)
+    _safe(OUTD).mkdir(exist_ok=True)
     # ---- 阶段 A
     caches, features = {}, {}
     feat_rows = []
@@ -140,10 +152,11 @@ def main():
                      "rmssd_ms": float("nan"), "hr_bpm": float("nan")}
             features[(dom, stem)] = f
             feat_rows.append(dict(domain=dom, stem=stem, cls=cls, **f))
-    with open(OUTD / "e4d_rr_features.csv", "w", newline="", encoding="utf-8") as fp:
-        w = csv.DictWriter(fp, fieldnames=list(feat_rows[0].keys()))
-        w.writeheader()
-        w.writerows(feat_rows)
+    buf = io.StringIO(newline="")
+    w = csv.DictWriter(buf, fieldnames=list(feat_rows[0].keys()))
+    w.writeheader()
+    w.writerows(feat_rows)
+    _safe(OUTD / "e4d_rr_features.csv").write_text(buf.getvalue(), encoding="utf-8", newline="")
     log(f"features csv: {len(feat_rows)} rows")
 
     # 桶边界(按域, 用全体 test 记录分布; no_rr 单列)
@@ -207,10 +220,11 @@ def main():
                     feature=feat, bucket=b, n=len(idx),
                     acc=float(np.mean(correct[idx])),
                 ))
-    with open(OUTD / "e4d_bucket_summary.csv", "w", newline="", encoding="utf-8") as fp:
-        w = csv.DictWriter(fp, fieldnames=list(rows[0].keys()))
-        w.writeheader()
-        w.writerows(rows)
+    buf = io.StringIO(newline="")
+    w = csv.DictWriter(buf, fieldnames=list(rows[0].keys()))
+    w.writeheader()
+    w.writerows(rows)
+    _safe(OUTD / "e4d_bucket_summary.csv").write_text(buf.getvalue(), encoding="utf-8", newline="")
     log(f"bucket rows: {len(rows)}")
 
     # ---- 配对差: b0 vs c2 / c2 vs c1 (同 domain/eval/seed) 逐桶
@@ -227,11 +241,12 @@ def main():
                 deltas.append(dict(domain=dom, eval=ev, seed=seed, feature=feat, bucket=b,
                                    n=n, pair=f"b0-{other}", acc_b0=a, acc_other=hit[0],
                                    delta=hit[0] - a))
-    with open(OUTD / "e4d_delta_summary.csv", "w", newline="", encoding="utf-8") as fp:
-        if deltas:
-            w = csv.DictWriter(fp, fieldnames=list(deltas[0].keys()))
-            w.writeheader()
-            w.writerows(deltas)
+    if deltas:
+        buf = io.StringIO(newline="")
+        w = csv.DictWriter(buf, fieldnames=list(deltas[0].keys()))
+        w.writeheader()
+        w.writerows(deltas)
+        _safe(OUTD / "e4d_delta_summary.csv").write_text(buf.getvalue(), encoding="utf-8", newline="")
     log(f"delta rows: {len(deltas)}")
     # delta 汇总(暂存, 摘要块拼接): 按 (domain, eval, feature, bucket, pair) 对 seed 取均值
     delta_md = []
