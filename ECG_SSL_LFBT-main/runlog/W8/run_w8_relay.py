@@ -47,7 +47,8 @@ def main():
             time.sleep(60)  # 收尾记账窗口
             break
         time.sleep(120)
-    for chain in ("run_e2_simph_chain.py", "run_e4_trcaff_chain.py"):
+    for chain in ("run_e2_simph_chain.py", "run_e4_trcaff_chain.py",
+                  "run_e6_noiseiso_chain.py"):
         log(f"启动 {chain}")
         with open(LOG, "a", encoding="utf-8") as f:
             rc = subprocess.run([PY, "-u", f"runlog/W8/{chain}"],
