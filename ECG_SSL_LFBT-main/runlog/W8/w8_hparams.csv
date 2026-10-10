@@ -1,0 +1,8 @@
+item,rand_vs_c1,simph_vs_s1,trcaff_vs_c1,note
+loss_mode,bt(未预训练,不适用),simclr (NT-Xent),bt,E1 无预训练; E2/S1 核心=S1 已有差异; E4 与 C1 同为 bt
+pretrain_corpus,none(随机初始化),NFH 34905(pt_pretrain_nfh),NFH 34905(pt_pretrain_nfh),公共协议: 100ep bs128 Adam lr1e-3 seeds{0,2,4}
+temperature,n/a,0.5(S1 审计口径 run_pt --simclr-temp 默认),n/a,禁调参
+noise_injection,none,--nstdb-aug 0.5(NSTDB bw/ma/em 逐视图独立 p=0.5 SNR5-20dB 逐记录逐导联功率匹配),none,E2 与 S1 的唯一差异
+architecture,8xVGG16 a=0.125 逐导联+2048-2048-2048 projector --trc 0,同 C1 等价(S1 已对齐),同 C1 等价,公共协议 W4 B-5 公平条款
+trc_variant,none,none,逐通道仿射 F~=F+gamma_c*F+beta_c 零初始化(与 TRC 同位置同参数量 去掉 n 门控),E4 三臂 C1/affine/C2
+evaluation,LP 三域 + FT10 三域(fraction 0.1),LP 三域 + FT10 {ptbxl,cpsc},LP {cpsc,ptbxl},全部 run_lp/run_ft 默认超参
