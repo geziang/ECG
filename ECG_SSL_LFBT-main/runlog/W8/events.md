@@ -58,3 +58,9 @@
 - 实现: `data_utils/tsr_dataset.py`(build_variant+TSReverseDataset, 变体每次均匀抽 1/4, 无 RRC-TO——官方无增强, pretext 即变换); `run_pt.py`: loss-mode+tsr / --wd 默认 0(历史 Adam 行为不变) / tsr_heads(逐导联 64->2) / forward tsr 分支(BCE 8 导联平均, projector 不参与) / 训练循环 tsr 路由(flag=2 维目标)。单测 `tests/test_w8_e3.py` 6/6(含手工 BCE 对拍+梯度达 backbone), test_w1 14/14 回归绿。
 - **预注册回退(先写后跑)**: 官方 lr=1e-2 发散(日志 nan 或 末 loss>4x 初始)-> 一次性改协议 lr=1e-3(wd 不变)重跑并记录; 再失败=如实降级"未复现"(DLC 先例)不硬凑。无晋级门, 出数填表 3。
 - 排程: 接力队尾 E2→E4→E6→E3。
+
+## 10-10 19:4x E5/E7 链就绪(殿后入队) + 全批次排程定格
+
+- E5 w8-dvsplit: 两臂 seed0(仅双视角 dv=0.01/rr=0; 仅 RR rr=0.1/dv=0, run_pt 636/643 行已天然分臂)×NFH 100ep→CPSC LP(+ptbxl 观测); 与 W7 E1 联合 3-seed 并列描述性, 主结果仍为联合 3-seed 不据此单项归因(任务书判定)。零新代码(既有 W6 Stage4 开关单臂化)。
+- E7 w8-b0trc-chap: W7 E2c 冻结 b0trc(checkpoint/w7_e2c/seed{0,2,4}, trc1)→Chapman LP 纯评测补格, 如实入表 5 注; 补全 2 语料×3 目标域矩阵。
+- **接力队列定格: E1(FT10 段)→E2→E4→E6→E3→E5+E7**, run_w8_relay.py detached(PID 轮换以 restart_relay.ps1 为准), 全链幂等可断点续。值班 cron automation-66d31297 每小时:23 看护。
