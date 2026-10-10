@@ -129,13 +129,13 @@
 
 | 任务 | 主机 | 当前状态 | 交付物 | 停止线 |
 |---|---|---|---|---|
-| E1 w8-rand 随机初始化地板(LP+FT10) | A / Win4090 | 🏃 认领(10-10 18:11) | `runlog/W8/w8_rand_results.csv`+predictions | sanity:LP(rand) 三域均显著低于 C1,否则停下上报 |
-| E2 w8-simph SimCLR-Physio 预训练 | A / Win4090 | 📋 排队 | `runlog/W8/w8_simph_results.csv`+predictions | aug 开关默认关须与 S1 逐位一致 |
-| E4 w8-trcaff TRC 仿射对照 | A / Win4090 | 📋 排队 | `runlog/W8/w8_trcaff_results.csv`+predictions | 默认关==C1 逐位一致 |
-| E6 w8-noiseiso 噪声片段隔离 | A / Win4090 | 📋 排队 | `runlog/W8/w8_noiseiso_results.csv` | 门=隔离版增益方向与原版一致 |
-| E3 w8-tsr TSR 官方码适配 | A / Win4090 | 📋 排队 | `runlog/W8/w8_tsr_results.csv` | 不可复现→如实降级记"未复现" |
-| E5 w8-dvsplit Beat-RR 拆分(单种子) | A / Win4090 | 📋 殿后 | `runlog/W8/w8_dvsplit_results.csv` | 仅 seed0 描述性 |
-| E7 w8-b0trc-chap B0-TRC→Chapman | A / Win4090 | 📋 殿后 | `runlog/W8/w8_b0trc_results.csv` | 如实入表 5 注 |
+| E1 w8-rand 随机初始化地板(LP+FT10) | A / Win4090 | 🏃 LP 9/9+sanity✅(gap 39/37/56pt, 10-10 19:1x);FT10 段 18:41 起 ~5h | `runlog/W8/w8_rand_results.csv`+predictions | sanity:LP(rand) 三域均显著低于 C1,否则停下上报 |
+| E2 w8-simph SimCLR-Physio 预训练 | A / Win4090 | 📋 接力位1(实现+单测4/4就绪, 10-10 18:3x) | `runlog/W8/w8_simph_results.csv`+predictions | aug 开关默认关须与 S1 逐位一致 |
+| E4 w8-trcaff TRC 仿射对照 | A / Win4090 | 📋 接力位2(实现+单测8/8就绪, 10-10 18:4x) | `runlog/W8/w8_trcaff_results.csv`+predictions | 默认关==C1 逐位一致 |
+| E6 w8-noiseiso 噪声片段隔离 | A / Win4090 | 📋 接力位3(实现+单测8/8就绪, 10-10 19:0x) | `runlog/W8/w8_noiseiso_results.csv` | 门=隔离版增益方向与原版一致 |
+| E3 w8-tsr TSR 官方码适配 | A / Win4090 | 📋 接力位4(官方码clone+适配+单测6/6, 10-10 19:3x) | `runlog/W8/w8_tsr_results.csv` | 不可复现→如实降级记"未复现" |
+| E5 w8-dvsplit Beat-RR 拆分(单种子) | A / Win4090 | 📋 接力位5(零新代码, 10-10 19:4x) | `runlog/W8/w8_dvsplit_results.csv` | 仅 seed0 描述性 |
+| E7 w8-b0trc-chap B0-TRC→Chapman | A / Win4090 | 📋 接力位5(纯评测, 10-10 19:4x) | `runlog/W8/w8_b0trc_results.csv` | 如实入表 5 注 |
 
 ## 二、历史队列（已封存，不得启动）
 
