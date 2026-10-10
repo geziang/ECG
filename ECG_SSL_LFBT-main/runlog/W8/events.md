@@ -50,3 +50,11 @@
   ptbxl 0.4912(gap **39.36pt**) / cpsc 0.5796(gap **36.67pt**) / chapman 0.4372(gap **55.92pt**)。
 - **sanity 红线判定: 三域全部大幅显著低于 C1(远超 2.0pt"接近"阈), 红线未触发**——线性可分性不来自数据本身, 论文结论不受限, E1 如实入表 3 地板行。rand chapman 种子间方差大(0.354~0.543)为随机特征常态, 如实保留。
 - FT10 段(从头训练参照)18:41:36 起跑, 无 sanity 门。
+
+## 10-10 19:3x E3 实现与预注册(待接力)
+
+- 官方码已 clone 至 F:/新实验/ReverseECG_official(README+net1d.py+pretraining.py 三件, 无 requirements/下游)。pretext=四变体反转检测(generate_reverse)+BCEWithLogitsLoss(2-logit), 官方超参 Adam lr1e-2 wd1e-4 100ep bs128, backbone=Net1D。
+- **官方 snippet 两处适配记录**: ①官方按 [N,length] 单导联 2D 处理, 本仓 8 导联推广=时间反转翻末轴/幅值反转逐导联均值中心反转(单测逐导联对拍前 3 块逐位一致); ②官方 ts_reverse=[::-1] 反的是记录轴(与其标签 [1,1] 语义矛盾, N=1 时恒等), 属笔误, 按标签意图实现双重反转。
+- 实现: `data_utils/tsr_dataset.py`(build_variant+TSReverseDataset, 变体每次均匀抽 1/4, 无 RRC-TO——官方无增强, pretext 即变换); `run_pt.py`: loss-mode+tsr / --wd 默认 0(历史 Adam 行为不变) / tsr_heads(逐导联 64->2) / forward tsr 分支(BCE 8 导联平均, projector 不参与) / 训练循环 tsr 路由(flag=2 维目标)。单测 `tests/test_w8_e3.py` 6/6(含手工 BCE 对拍+梯度达 backbone), test_w1 14/14 回归绿。
+- **预注册回退(先写后跑)**: 官方 lr=1e-2 发散(日志 nan 或 末 loss>4x 初始)-> 一次性改协议 lr=1e-3(wd 不变)重跑并记录; 再失败=如实降级"未复现"(DLC 先例)不硬凑。无晋级门, 出数填表 3。
+- 排程: 接力队尾 E2→E4→E6→E3。

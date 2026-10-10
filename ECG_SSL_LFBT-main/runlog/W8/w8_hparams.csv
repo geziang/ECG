@@ -6,3 +6,7 @@ noise_injection,none,--nstdb-aug 0.5(NSTDB bw/ma/em 逐视图独立 p=0.5 SNR5-2
 architecture,8xVGG16 a=0.125 逐导联+2048-2048-2048 projector --trc 0,同 C1 等价(S1 已对齐),同 C1 等价,公共协议 W4 B-5 公平条款
 trc_variant,none,none,逐通道仿射 F~=F+gamma_c*F+beta_c 零初始化(与 TRC 同位置同参数量 去掉 n 门控),E4 三臂 C1/affine/C2
 evaluation,LP 三域 + FT10 三域(fraction 0.1),LP 三域 + FT10 {ptbxl,cpsc},LP {cpsc,ptbxl},全部 run_lp/run_ft 默认超参
+tsr_pretext,四变体反转检测(原图[0,0]/幅值反转[0,1]/时间反转[1,0]/双重反转[1,1]) 2-logit BCEWithLogits 逐导联头均值,官方 generate_reverse,变体每条每次均匀抽 1/4(步数对齐 27.3k; 官方 4 块拼接=4x 访问量)
+tsr_backbone,C1 同构 8xVGG16 a=0.125 逐导联(W4 CLOCS 先例),官方=Net1D(base16 filter_list 16-64),冲突以 C1 同构为准记录
+tsr_optimizer,Adam lr=1e-2 wd=1e-4(官方默认),预注册回退: 发散(nan 或 末loss>4x初始)->协议 lr=1e-3 一次性
+tsr_augmentation,无 RRC-TO(官方无增强, pretext 即变换),S1/C1=RRC-TO,deviation from official snippet: ts_reverse [::-1] 记录轴笔误, 按标签意图实现双重反转(tests/test_w8_e3 对拍)

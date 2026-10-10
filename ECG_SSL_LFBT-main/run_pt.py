@@ -44,11 +44,13 @@ parser.add_argument('--projector', default='2048-2048-2048', type=str,
                     metavar='MLP', help='projector MLP')
 parser.add_argument('--print-freq', default=100, type=int, metavar='N',
                     help='print frequency')
+parser.add_argument('--wd', default=0.0, type=float, metavar='W',
+                    help='W8 E3: Adam weight_decay(官方 TSR=1e-4); 默认 0=历史行为')
 parser.add_argument('--seed', default=0, type=int, metavar='N', help='random seed')
 parser.add_argument('--checkpoint-dir', default='./checkpoint/', type=Path,
                     metavar='DIR', help='path to checkpoint directory')
 # ===== S1/D9: VICReg 化开关 (默认全关 == B0) =====
-parser.add_argument('--loss-mode', default='bt', choices=['bt', 'vicreg', 'simclr', 'clocs'],
+parser.add_argument('--loss-mode', default='bt', choices=['bt', 'vicreg', 'simclr', 'clocs', 'tsr'],
                     help='目标函数: bt=原版 Barlow Twins (B0), vicreg=D9 三项化, '
                          'simclr=W4 A-4 外部基线 S1(NT-Xent), clocs=W4 A-5 外部基线 S2')
 parser.add_argument('--simclr-temp', default=0.5, type=float,
@@ -265,6 +267,13 @@ class LeadFusionBT(object):
             assert not self.fast, "Stage4 RR 头暂不支持 fast 路径"
             self.rr_head = nn.Sequential(
                 nn.Linear(64, 32), nn.ReLU(), nn.Linear(32, 3)).to(self.device)
+        # W8 E3: TSR 逐导联 2-logit 反转检测头(post-GAP 64 维; 仅慢路径)
+        self.tsr_heads = None
+        if getattr(args, 'loss_mode', 'bt') == 'tsr':
+            assert not self.fast, "TSR 暂不支持 fast 路径"
+            self.tsr_heads = nn.ModuleList(
+                [nn.Linear(int(512 * 0.125), 2).to(self.device)
+                 for _ in range(args.num_leads)])
         # D7: 并联重建支路(仅慢路径; 共享 backbone, 池化前特征接轻量解码器)
         # W1 T3: multiseg/ccm 复用同一解码器池(masked MSE 见 _masked_recon_loss)
         self.rec_style = getattr(args, 'rec_style', 'none')
@@ -450,6 +459,19 @@ class LeadFusionBT(object):
     def forward(self, y1, y2, y_pair=None, pair_mask=None,
                 hrv_target=None, hrv_valid=None, rec=None, dv=None):
         self.last_extra = {}
+        if getattr(self.args, 'loss_mode', 'bt') == 'tsr':
+            # W8 E3: T-S reverse detection。y1=(B,8,2048) 变体信号, y2=(B,2) 多标签目标
+            # (槽位=[时间反转?,幅值反转?])。逐导联 post-GAP 特征 -> 2-logit 头,
+            # BCEWithLogits 官方口径, 8 导联平均。projector 不参与。
+            _, f1_list, _ = self._embed_full(y1)
+            tgt = y2.to(f1_list[0].dtype)
+            loss_r = 0
+            for i in range(self.args.num_leads):
+                loss_r = loss_r + nn.functional.binary_cross_entropy_with_logits(
+                    self.tsr_heads[i](f1_list[i]), tgt)
+            loss_r = loss_r / self.args.num_leads
+            loss_t = torch.zeros_like(loss_r)
+            return loss_r, loss_r, loss_t
         if self.acl_nets is not None or rec is not None \
                 or getattr(self.args, 'lcm_weight', 0.0) > 0 \
                 or getattr(self.args, 'dualview_weight', 0.0) > 0 \
@@ -707,6 +729,12 @@ def main_worker(gpu, args):
                     param_biases.append(param)
                 else:
                     param_weights.append(param)
+        if getattr(model, 'tsr_heads', None) is not None:
+            for param in model.tsr_heads.parameters():
+                if param.ndim == 1:
+                    param_biases.append(param)
+                else:
+                    param_weights.append(param)
         if getattr(model, 'hrv_head', None) is not None:
             for param in model.hrv_head.parameters():
                 if param.ndim == 1:
@@ -725,7 +753,9 @@ def main_worker(gpu, args):
     if getattr(args, 'cautious', False):
         optimizer = CautiousAdam(parameters, lr=args.learning_rate)
     else:
-        optimizer = optim.Adam(parameters, lr=args.learning_rate)
+        # W8 E3: weight_decay 透传(官方 TSR wd=1e-4); 默认 0 与历史 Adam 逐位一致
+        optimizer = optim.Adam(parameters, lr=args.learning_rate,
+                               weight_decay=float(getattr(args, 'wd', 0.0) or 0.0))
 
     # N4: 权重 EMA(不含 BN 统计, 标准 weight-EMA 口径)
     ema_shadows = None
@@ -796,7 +826,12 @@ def main_worker(gpu, args):
         dataset = N3PairsDataset(args.data_dir, t,
                                  load_patient_map(), prob=args.n3_prob)
     else:
-        dataset = ECGDatasetFolder(args.data_dir, transform=MultiViewDataInjector([t, t2]))
+        if getattr(args, 'loss_mode', 'bt') == 'tsr':
+            # W8 E3: TSR 无额外增强(官方 pretext 即变换), 变体在 Dataset 内构造
+            from data_utils.tsr_dataset import TSReverseDataset
+            dataset = TSReverseDataset(args.data_dir)
+        else:
+            dataset = ECGDatasetFolder(args.data_dir, transform=MultiViewDataInjector([t, t2]))
     loader = torch.utils.data.DataLoader(
         dataset, batch_size=args.batch_size, num_workers=args.workers, shuffle=True,
         pin_memory=True)
@@ -858,9 +893,14 @@ def main_worker(gpu, args):
                 y_pair = views[2].to(model.device, non_blocking=True)
                 pair_mask = flag.to(model.device).float() > 0.5
             optimizer.zero_grad()
-            loss, loss_r, loss_t = model.forward(y1, y2, y_pair, pair_mask,
-                                                 hrv_target=hrv_t, hrv_valid=hrv_v,
-                                                 rec=rec_info, dv=dv_info)
+            if getattr(args, 'loss_mode', 'bt') == 'tsr':
+                # W8 E3: TSR 第二参数=2 维多标签目标(在 flag 槽), 非 pair 视图
+                loss, loss_r, loss_t = model.forward(
+                    y1, flag.to(model.device, non_blocking=True).float())
+            else:
+                loss, loss_r, loss_t = model.forward(y1, y2, y_pair, pair_mask,
+                                                     hrv_target=hrv_t, hrv_valid=hrv_v,
+                                                     rec=rec_info, dv=dv_info)
             grad_ratio = None
             if rec_info is not None and step % args.print_freq == 0 \
                     and getattr(model, '_diag_tensors', None) is not None:
