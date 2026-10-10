@@ -14,6 +14,7 @@
 用法: python runlog/W7/run_e2d_trc_mechanism.py
 """
 import csv
+import io
 import time
 from pathlib import Path
 
@@ -165,14 +166,16 @@ def main():
                     ratio_lrms=float(np.abs(lr_post).sum() / max(np.abs(lr_pre).sum(), 1e-12))))
         log(f"seed {seed}: done")
 
-    with open(OUTD / "e2d_channel_stats.csv", "w", newline="", encoding="utf-8") as fp:
-        w = csv.DictWriter(fp, fieldnames=list(stat_rows[0].keys()))
-        w.writeheader()
-        w.writerows(stat_rows)
-    with open(OUTD / "e2d_gamma_beta.csv", "w", newline="", encoding="utf-8") as fp:
-        w = csv.DictWriter(fp, fieldnames=list(gb_rows[0].keys()))
-        w.writeheader()
-        w.writerows(gb_rows)
+    buf = io.StringIO(newline="")
+    w = csv.DictWriter(buf, fieldnames=list(stat_rows[0].keys()))
+    w.writeheader()
+    w.writerows(stat_rows)
+    (OUTD / "e2d_channel_stats.csv").write_text(buf.getvalue(), encoding="utf-8", newline="")
+    buf = io.StringIO(newline="")
+    w = csv.DictWriter(buf, fieldnames=list(gb_rows[0].keys()))
+    w.writeheader()
+    w.writerows(gb_rows)
+    (OUTD / "e2d_gamma_beta.csv").write_text(buf.getvalue(), encoding="utf-8", newline="")
 
     # 摘要: ratio 按 domain 对 seed×lead 取均值; 相关同
     lines = ["# E2d TRC 机理分析摘要", "",
