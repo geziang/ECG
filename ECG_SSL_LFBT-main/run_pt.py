@@ -25,6 +25,9 @@ parser.add_argument('--cont-lr', default=0.0, type=float,
                     help='W7 E3 TAPT: >0 时在 resume 恢复优化器后覆盖 param_groups lr(续训小步长); 默认 0=不改任何行为')
 parser.add_argument('--nstdb-aug', default=0.0, type=float,
                     help='W7 E5: >0 时训练期以该概率注入 NSTDB 真实噪声(bw/ma/em, SNR 5-20dB, 两视图独立); 默认 0=不改任何行为')
+parser.add_argument('--nstdb-offset', default='full',
+                    choices=['full', 'first_half', 'last_half'],
+                    help='W8 E6: 噪声段偏移采样域, full=历史行为(默认); 仅在 --nstdb-aug>0 时生效')
 parser.add_argument('--workers', default=6, type=int, metavar='N',
                     help='number of data loader workers')
 parser.add_argument('--epochs', default=200, type=int, metavar='N',
@@ -749,11 +752,13 @@ def main_worker(gpu, args):
         t2 = t
     if float(getattr(args, 'nstdb_aug', 0.0) or 0.0) > 0:
         # W7 E5: NSTDB 真实噪声训练增强, 两视图各自独立注入(numpy 层最前端); 默认 0=本块不执行
+        # W8 E6: offset_range 偏移采样域(full=历史行为默认)
         from data_utils.nstdb_aug import NoiseInjector
-        _nj = NoiseInjector(prob=float(args.nstdb_aug))
+        _nj = NoiseInjector(prob=float(args.nstdb_aug),
+                            offset_range=str(getattr(args, 'nstdb_offset', 'full') or 'full'))
         t = transforms.Compose([_nj, t])
         t2 = transforms.Compose([_nj, t2])
-        print(f"[nstdb-aug] p={args.nstdb_aug} 训练期噪声增强开启", flush=True)
+        print(f"[nstdb-aug] p={args.nstdb_aug} offset={getattr(args, 'nstdb_offset', 'full')} 训练期噪声增强开启", flush=True)
     if getattr(args, 'rec_style', 'none') in ('multiseg', 'ccm'):
         # T3 B2/B3: 遮挡即增强 —— RRC 裁剪保留(aug-params 前两参数), 随机 TO 由
         # CCM/多段 mask 替代; 两视图独立; 附带原波形与 mask 供 masked MSE。

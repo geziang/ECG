@@ -11,6 +11,26 @@ import numpy as np
 _CACHE = {}
 
 
+def draw_offset(rng, Ln, L, offset_range="full"):
+    """W8 E6: 噪声段偏移采样。full=全域(历史行为); first_half/last_half=时间片段隔离。
+
+    rng 需提供 randint(lo, hi) 的 numpy Generator 或 RandomState 接口。
+    记录短到半段装不下窗口时回退全域(实际 NSTDB 记录长度 >> 2048, 不触发)。"""
+    if offset_range == "full":
+        return rng.randint(0, Ln - L)
+    if offset_range == "first_half":
+        hi = Ln // 2 - L
+        if hi < 1:
+            return rng.randint(0, Ln - L)
+        return rng.randint(0, hi)
+    if offset_range == "last_half":
+        lo, hi = Ln // 2, Ln - L
+        if hi <= lo:
+            return rng.randint(0, Ln - L)
+        return rng.randint(lo, hi)
+    raise ValueError(f"offset_range 取 full/first_half/last_half, 收到 {offset_range}")
+
+
 def _load(name):
     if name not in _CACHE:
         import wfdb
@@ -25,12 +45,19 @@ def _load(name):
 
 
 class NoiseInjector:
-    """np (8,2048) float32 -> np (8,2048) float32; 概率 p 注入 NSTDB 噪声。"""
+    """np (8,2048) float32 -> np (8,2048) float32; 概率 p 注入 NSTDB 噪声。
 
-    def __init__(self, prob=0.5, snr_lo=5.0, snr_hi=20.0):
+    offset_range(W8 E6): 'full'=整条记录随机偏移(默认, 历史行为逐位不变);
+    'first_half'=仅前 50% 段; 'last_half'=仅后 50% 段(与训练侧隔离)。"""
+
+    def __init__(self, prob=0.5, snr_lo=5.0, snr_hi=20.0, offset_range="full"):
         self.prob = float(prob)
         self.snr_lo = float(snr_lo)
         self.snr_hi = float(snr_hi)
+        self.offset_range = str(offset_range)
+
+    def _draw_offset(self, Ln, L):
+        return draw_offset(np.random, Ln, L, self.offset_range)
 
     def __call__(self, x):
         if np.random.random() >= self.prob:
@@ -43,7 +70,7 @@ class NoiseInjector:
             return x
         n = np.empty_like(x)
         for j in range(x.shape[0]):
-            o = np.random.randint(0, Ln - L)
+            o = self._draw_offset(Ln, L)
             n[j] = noise[j % 2, o:o + L]
         snr = np.random.uniform(self.snr_lo, self.snr_hi)
         px = (x.astype(np.float64) ** 2).mean(axis=-1, keepdims=True)

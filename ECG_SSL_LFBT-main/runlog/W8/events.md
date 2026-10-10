@@ -34,3 +34,12 @@
 - **根因实测**: F: 为 USB 桥接盘(JMicron/USB), E1(LP 特征读写)+E2(PT 34905 npy 随机读)并发把随机 IO 打穿——裸读基准 400 文件/41.6s=9.6 files/s(0.6MB/s), 平均传输延迟 42ms 队列 8。W7 时代 PT 单车道快是因 NFH 2.3GB 进文件缓存后 USB 只承担写。
 - **裁决(工程纪律, 非协议改动)**: 本机 PT 类重 IO 任务必须独占 IO 车道串行。E2 已杀干净(py-spy+ps1 双确认); 排程改串行接力=run_w8_relay.py(E1 收官标记或驱动进程退出 → E2 链 → E4 链, 幂等, detached 挂起 18:40)。判活检查走独立 ps1 文件(内联 powershell 引号被 bash 打穿导致首发接力误判, 已修复)。
 - 预计新排程: E1(FT10 段 ~5h) → E2(~9.5h) → E4(~6h) 串行; E6/E3/E5/E7 其后。E4 实现已就绪(单测 8/8)等接力。
+
+## 10-10 19:0x E6 预注册(实现完成, 入接力队尾)
+
+- 实现: ①`data_utils/nstdb_aug.py` +`draw_offset(rng,Ln,L,offset_range)`(full=历史行为同式调用; first_half/last_half=时间片段隔离; 短记录回退全域), NoiseInjector 透传 offset_range 默认 full; ②`run_pt.py` +`--nstdb-offset`(默认 full, choices 三值, 仅 --nstdb-aug>0 时生效)。
+- 单测 `tests/test_w8_e6.py` 8/8: full==legacy 逐调用一致/两半段区间+不交叠/非法拒绝/短记录回退/注入器默认 full/源码守卫。E2 单测同步更新 offset_range 属性断言(4/4), E4 8/8 保持。
+- 链 `run_e6_noiseiso_chain.py`: seeds{0,2,4} × PT(--nstdb-aug 0.5 --nstdb-offset first_half) → LP 三域 clean → 27 格后半段评测。
+- **参照口径(预注册)**: C1 冻结 checkpoint 用同一后半段偏移+同一噪声实现(同 _rng_for 种子)重评 27 格(行 ckpt=c1-lasteval), Δ=noiseiso−c1-lasteval 同种子同格配对; 不复用 W6 全域偏移旧 C1 数(避免混入评测口径变化)。
+- 判定(任务书门): 隔离版 27 格均值方向为正(与 E5 原版 +2.17/+2.59/+2.59 同向)→"守住非片段记忆"; 方向为负/零→片段记忆嫌疑如实上报。幅度变化如实报告不设门; clean 三域无伤作观测项(容差同 E5 −0.30 参考描述性)。
+- 排程: 接力器队列更新为 E2→E4→E6(串行独占 IO 车道)。

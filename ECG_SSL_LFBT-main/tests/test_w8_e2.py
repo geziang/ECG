@@ -53,7 +53,8 @@ class TestW8E2(unittest.TestCase):
         # 两视图复用同一实例: 每个 __call__ 内部独立抽 random()/噪声类型/偏移/SNR,
         # 无实例级状态 -> "两视图独立注入"由结构保证。
         nj = NoiseInjector(prob=0.5)
-        self.assertEqual(vars(nj), {"prob": 0.5, "snr_lo": 5.0, "snr_hi": 20.0})
+        self.assertEqual(vars(nj), {"prob": 0.5, "snr_lo": 5.0, "snr_hi": 20.0,
+                                    "offset_range": "full"})
 
     def test_runpt_source_guards(self):
         src = (ROOT / "run_pt.py").read_text(encoding="utf-8")
