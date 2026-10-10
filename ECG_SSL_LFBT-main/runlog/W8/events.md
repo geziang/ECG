@@ -27,3 +27,10 @@
 - 单测 `tests/test_w8_e4.py` 8/8: trc=0 无校准键/trc=2 零初始化==trc=0 逐位/梯度流通/与 GRN 同γ输出不同(门控确实去掉)/GRN 公式回归守卫/仿射手动公式/非法 trc 拒绝/模块对象受限加载往返逐位。回归 test_w1 14/14 + test_safe_load 3/3 + test_repro 全绿。
 - 链: seeds{0,2,4} × PT(NFH 100ep bt trc2) → LP {cpsc, ptbxl}; GPU 车道3(与 E1/E2 并行)。
 - 判定(任务书双分支均可写, 无晋级门): 三臂 C1(trc0)/affine(trc2)/C2(trc1), 参照=W5A cpsc/W2 ptbxl 冻结账本同种子配对。读法: TRC>affine 且 affine≈C1 → "响应依赖校准是活性成分"; affine≈TRC → 如实降级 "预训练耦合校准有效"。主读数=cpsc LP AUROC+AUPRC 3-seed mean±SD, ptbxl 为域内观测; "≈"操作化=|Δmean|<0.3pt(种子噪声量级, 描述性非门)。
+
+## 10-10 18:2x-18:4x E2 双发事故与 IO 车道裁决
+
+- 18:22 E2 首发挂死(step0 后无进展, 4 worker 死 1); 18:29 重启后极慢(~0.25 steps/s vs 正常 ~2-5)。py-spy 定位: 主线程饿死在 DataLoader queue.get, 4 worker 全卡 np.load。
+- **根因实测**: F: 为 USB 桥接盘(JMicron/USB), E1(LP 特征读写)+E2(PT 34905 npy 随机读)并发把随机 IO 打穿——裸读基准 400 文件/41.6s=9.6 files/s(0.6MB/s), 平均传输延迟 42ms 队列 8。W7 时代 PT 单车道快是因 NFH 2.3GB 进文件缓存后 USB 只承担写。
+- **裁决(工程纪律, 非协议改动)**: 本机 PT 类重 IO 任务必须独占 IO 车道串行。E2 已杀干净(py-spy+ps1 双确认); 排程改串行接力=run_w8_relay.py(E1 收官标记或驱动进程退出 → E2 链 → E4 链, 幂等, detached 挂起 18:40)。判活检查走独立 ps1 文件(内联 powershell 引号被 bash 打穿导致首发接力误判, 已修复)。
+- 预计新排程: E1(FT10 段 ~5h) → E2(~9.5h) → E4(~6h) 串行; E6/E3/E5/E7 其后。E4 实现已就绪(单测 8/8)等接力。

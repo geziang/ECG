@@ -1,0 +1,9 @@
+ts,ckpt,seed,eval,downstream,auroc,auprc,git_sha,checkpoint_sha256,protocol_id,hparams_ref
+2026-10-10 18:22,rand,0,lp,ptbxl,0.4627,0.1892,c25c8bb,random-init-TFS,w8-rand,"W8 E1: run_lp 默认超参(100ep/bs128/lr1e-3), 随机初始化冻结特征+线性头(--checkpoint none), 见 runlog/W8/run_e1_rand.py"
+2026-10-10 18:23,rand,2,lp,ptbxl,0.5323,0.2332,c25c8bb,random-init-TFS,w8-rand,"W8 E1: run_lp 默认超参(100ep/bs128/lr1e-3), 随机初始化冻结特征+线性头(--checkpoint none), 见 runlog/W8/run_e1_rand.py"
+2026-10-10 18:25,rand,4,lp,ptbxl,0.4786,0.1989,0a4691a,random-init-TFS,w8-rand,"W8 E1: run_lp 默认超参(100ep/bs128/lr1e-3), 随机初始化冻结特征+线性头(--checkpoint none), 见 runlog/W8/run_e1_rand.py"
+2026-10-10 18:30,rand,0,lp,cpsc,0.5870,0.1452,0a4691a,random-init-TFS,w8-rand,"W8 E1: run_lp 默认超参(100ep/bs128/lr1e-3), 随机初始化冻结特征+线性头(--checkpoint none), 见 runlog/W8/run_e1_rand.py"
+2026-10-10 18:31,rand,2,lp,cpsc,0.5765,0.1417,0a4691a,random-init-TFS,w8-rand,"W8 E1: run_lp 默认超参(100ep/bs128/lr1e-3), 随机初始化冻结特征+线性头(--checkpoint none), 见 runlog/W8/run_e1_rand.py"
+2026-10-10 18:32,rand,4,lp,cpsc,0.5753,0.1405,0a4691a,random-init-TFS,w8-rand,"W8 E1: run_lp 默认超参(100ep/bs128/lr1e-3), 随机初始化冻结特征+线性头(--checkpoint none), 见 runlog/W8/run_e1_rand.py"
+2026-10-10 18:39,rand,0,lp,chapman,0.3539,0.1910,0a4691a,random-init-TFS,w8-rand,"W8 E1: run_lp 默认超参(100ep/bs128/lr1e-3), 随机初始化冻结特征+线性头(--checkpoint none), 见 runlog/W8/run_e1_rand.py"
+2026-10-10 18:40,rand,2,lp,chapman,0.5425,0.2811,0a4691a,random-init-TFS,w8-rand,"W8 E1: run_lp 默认超参(100ep/bs128/lr1e-3), 随机初始化冻结特征+线性头(--checkpoint none), 见 runlog/W8/run_e1_rand.py"

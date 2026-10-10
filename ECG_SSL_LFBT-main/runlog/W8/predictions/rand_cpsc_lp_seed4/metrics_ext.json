@@ -1,0 +1,276 @@
+{
+ "metadata": {
+  "protocol_id": "w8-rand",
+  "data_manifest_sha": "",
+  "checkpoint": "random-init",
+  "checkpoint_sha256": "",
+  "eval": "lp",
+  "num_classes": 9,
+  "seed": 4,
+  "zero_leads": [],
+  "code_sha": "see git"
+ },
+ "confusion_matrix": [
+  [
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   245,
+   0,
+   0
+  ],
+  [
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   138,
+   0,
+   0
+  ],
+  [
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   39,
+   0,
+   0
+  ],
+  [
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   185,
+   0,
+   0
+  ],
+  [
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   121,
+   0,
+   0
+  ],
+  [
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   135,
+   0,
+   0
+  ],
+  [
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   309,
+   0,
+   0
+  ],
+  [
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   168,
+   0,
+   0
+  ],
+  [
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   45,
+   0,
+   0
+  ]
+ ],
+ "ap_class_0": 0.3190902254188359,
+ "ap_class_1": 0.10689623080079463,
+ "ap_class_2": 0.12044825772514238,
+ "ap_class_3": 0.1556446969768119,
+ "ap_class_4": 0.09101521607066908,
+ "ap_class_5": 0.11516314351596811,
+ "ap_class_6": 0.21434233420143442,
+ "ap_class_7": 0.10549608006397887,
+ "ap_class_8": 0.0385552564400819,
+ "macro_ap": 0.14073904902374637,
+ "class_0_precision": NaN,
+ "class_1_precision": NaN,
+ "class_2_precision": NaN,
+ "class_3_precision": NaN,
+ "class_4_precision": NaN,
+ "class_5_precision": NaN,
+ "class_6_precision": 0.22310469314079423,
+ "class_7_precision": NaN,
+ "class_8_precision": NaN,
+ "class_0_sensitivity": 0.0,
+ "class_1_sensitivity": 0.0,
+ "class_2_sensitivity": 0.0,
+ "class_3_sensitivity": 0.0,
+ "class_4_sensitivity": 0.0,
+ "class_5_sensitivity": 0.0,
+ "class_6_sensitivity": 1.0,
+ "class_7_sensitivity": 0.0,
+ "class_8_sensitivity": 0.0,
+ "class_0_specificity": 1.0,
+ "class_1_specificity": 1.0,
+ "class_2_specificity": 1.0,
+ "class_3_specificity": 1.0,
+ "class_4_specificity": 1.0,
+ "class_5_specificity": 1.0,
+ "class_6_specificity": 0.0,
+ "class_7_specificity": 1.0,
+ "class_8_specificity": 1.0,
+ "class_0_f1": NaN,
+ "class_1_f1": NaN,
+ "class_2_f1": NaN,
+ "class_3_f1": NaN,
+ "class_4_f1": NaN,
+ "class_5_f1": NaN,
+ "class_6_f1": 0.36481700118063753,
+ "class_7_f1": NaN,
+ "class_8_f1": NaN,
+ "macro_f1": 0.36481700118063753,
+ "macro_sensitivity": 0.1111111111111111,
+ "macro_specificity": 0.8888888888888888,
+ "accuracy": 0.22310469314079423,
+ "ece": 0.02256922682054638,
+ "mce": 0.02256922682054638,
+ "n_bins": 15,
+ "brier_multiclass": 0.09543631451351212,
+ "brier_formula": "mean_over_samples( mean_over_classes (p_c - y_c)^2 )",
+ "reliability_table": [
+  {
+   "bin": 0,
+   "range": "[0.000,0.067)",
+   "n": 0,
+   "avg_conf": null,
+   "avg_acc": null
+  },
+  {
+   "bin": 1,
+   "range": "[0.067,0.133)",
+   "n": 0,
+   "avg_conf": null,
+   "avg_acc": null
+  },
+  {
+   "bin": 2,
+   "range": "[0.133,0.200)",
+   "n": 0,
+   "avg_conf": null,
+   "avg_acc": null
+  },
+  {
+   "bin": 3,
+   "range": "[0.200,0.267)",
+   "n": 1385,
+   "avg_conf": 0.20053546632024785,
+   "avg_acc": 0.22310469314079423
+  },
+  {
+   "bin": 4,
+   "range": "[0.267,0.333)",
+   "n": 0,
+   "avg_conf": null,
+   "avg_acc": null
+  },
+  {
+   "bin": 5,
+   "range": "[0.333,0.400)",
+   "n": 0,
+   "avg_conf": null,
+   "avg_acc": null
+  },
+  {
+   "bin": 6,
+   "range": "[0.400,0.467)",
+   "n": 0,
+   "avg_conf": null,
+   "avg_acc": null
+  },
+  {
+   "bin": 7,
+   "range": "[0.467,0.533)",
+   "n": 0,
+   "avg_conf": null,
+   "avg_acc": null
+  },
+  {
+   "bin": 8,
+   "range": "[0.533,0.600)",
+   "n": 0,
+   "avg_conf": null,
+   "avg_acc": null
+  },
+  {
+   "bin": 9,
+   "range": "[0.600,0.667)",
+   "n": 0,
+   "avg_conf": null,
+   "avg_acc": null
+  },
+  {
+   "bin": 10,
+   "range": "[0.667,0.733)",
+   "n": 0,
+   "avg_conf": null,
+   "avg_acc": null
+  },
+  {
+   "bin": 11,
+   "range": "[0.733,0.800)",
+   "n": 0,
+   "avg_conf": null,
+   "avg_acc": null
+  },
+  {
+   "bin": 12,
+   "range": "[0.800,0.867)",
+   "n": 0,
+   "avg_conf": null,
+   "avg_acc": null
+  },
+  {
+   "bin": 13,
+   "range": "[0.867,0.933)",
+   "n": 0,
+   "avg_conf": null,
+   "avg_acc": null
+  },
+  {
+   "bin": 14,
+   "range": "[0.933,1.000)",
+   "n": 0,
+   "avg_conf": null,
+   "avg_acc": null
+  }
+ ]
+}
