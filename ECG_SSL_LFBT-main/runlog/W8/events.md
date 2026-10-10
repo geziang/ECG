@@ -64,3 +64,8 @@
 - E5 w8-dvsplit: 两臂 seed0(仅双视角 dv=0.01/rr=0; 仅 RR rr=0.1/dv=0, run_pt 636/643 行已天然分臂)×NFH 100ep→CPSC LP(+ptbxl 观测); 与 W7 E1 联合 3-seed 并列描述性, 主结果仍为联合 3-seed 不据此单项归因(任务书判定)。零新代码(既有 W6 Stage4 开关单臂化)。
 - E7 w8-b0trc-chap: W7 E2c 冻结 b0trc(checkpoint/w7_e2c/seed{0,2,4}, trc1)→Chapman LP 纯评测补格, 如实入表 5 注; 补全 2 语料×3 目标域矩阵。
 - **接力队列定格: E1(FT10 段)→E2→E4→E6→E3→E5+E7**, run_w8_relay.py detached(PID 轮换以 restart_relay.ps1 为准), 全链幂等可断点续。值班 cron automation-66d31297 每小时:23 看护。
+
+## 10-10 23:2x E1 正式收官 + E2 接棒定标
+
+- **E1 w8-rand 收官✅**: 18/18 跑零失败(23:15:58)。FT10 终账(ptbxl 0.8391/0.8296/0.8108; cpsc 0.8878/0.8960/0.8916; chapman 0.9741/0.9718/0.9707)。LP sanity 三域 gap 39/37/56pt 红线未触发(10-10 19:1x 判定)。表 3 Random 行数据齐。
+- **E2 接棒(23:16:57 relay 自动)**: 首个 PT 冷启动~8 分钟(epoch0 USB 冷读, 期间 GPU 0%+日志冻结似死非死——本机常态, 预热后恢复); 巡航定标 **5.8 steps/s ≈ 47s/ep, 单 seed PT≈78min**。据此修正: E2≈9.6h(明晨~09:00) → E4/E6/E3 各≈6-8h → E5+E7 殿后, 全链预计 10-12 上午收官。

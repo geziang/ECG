@@ -15,3 +15,5 @@ ts,ckpt,seed,eval,downstream,auroc,auprc,git_sha,checkpoint_sha256,protocol_id,h
 2026-10-10 21:14,rand,2,ft10,cpsc,0.8960,0.6338,4d3d320,random-init-TFS,w8-rand,"W8 E1: run_ft 默认超参(100ep/bs128/lr1e-4/fraction0.1), 随机初始化全参微调(省略 --checkpoint), 见 runlog/W8/run_e1_rand.py"
 2026-10-10 21:44,rand,4,ft10,cpsc,0.8916,0.6222,77e8d66,random-init-TFS,w8-rand,"W8 E1: run_ft 默认超参(100ep/bs128/lr1e-4/fraction0.1), 随机初始化全参微调(省略 --checkpoint), 见 runlog/W8/run_e1_rand.py"
 2026-10-10 22:15,rand,0,ft10,chapman,0.9741,0.9273,77e8d66,random-init-TFS,w8-rand,"W8 E1: run_ft 默认超参(100ep/bs128/lr1e-4/fraction0.1), 随机初始化全参微调(省略 --checkpoint), 见 runlog/W8/run_e1_rand.py"
+2026-10-10 22:45,rand,2,ft10,chapman,0.9718,0.9188,bd72546,random-init-TFS,w8-rand,"W8 E1: run_ft 默认超参(100ep/bs128/lr1e-4/fraction0.1), 随机初始化全参微调(省略 --checkpoint), 见 runlog/W8/run_e1_rand.py"
+2026-10-10 23:15,rand,4,ft10,chapman,0.9707,0.9130,bd72546,random-init-TFS,w8-rand,"W8 E1: run_ft 默认超参(100ep/bs128/lr1e-4/fraction0.1), 随机初始化全参微调(省略 --checkpoint), 见 runlog/W8/run_e1_rand.py"
