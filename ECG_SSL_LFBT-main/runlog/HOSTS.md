@@ -4,11 +4,11 @@
 >
 > **认领方式**:把对应任务行的状态改为 `🏃<主机名>(开始时间)` 并 commit+push;完成后改为 ✅,并把结果行写入本主机结果文件(§五-3)。
 > **更新纪律**:任务状态每次变化(领取/完成/失败)立即 push;长任务不必频繁汇报,但必须写明预计完成时间。
-> 文档路径:`runlog/HOSTS.md`;最后更新:**2026-10-10,W8 外部基线三连任务书已下发(待主机A认领,见 runlog/W8/W8_任务书.md)**。
+> 文档路径:`runlog/HOSTS.md`;最后更新:**2026-10-10 18:11,W8 批次已由主机A认领开工(见 §一-E 与 runlog/W8/W8_任务书.md)**。
 >
 > **协调方式(2026-09-23 起):全仓协作只走 `origin/main`(任务书 + 本台账),不使用 SSH 跨机操作。**
 >
-> **主机A当前状态:🔵 W7 已收官转纯值守(见 runlog/W7/W7_最终报告.md);W8 外部基线三连任务书已下发待认领(runlog/W8/W8_任务书.md,2026-10-10)——E1 Random(纯评测,机时最轻先做)/E2 SimCLR-Physio(复用 W4 S1 路径+E5 注入器,唯一差异=增强集)/E3 TSR(官方码 ReverseECG 适配,不可复现如实降级)**；W6 已收官(见 runlog/W6/W6_最终报告.md)；旧 §二/§三 队列仅作历史记录，不得启动。
+> **主机A当前状态:🏃 W8 外部基线批次执行中(10-10 18:11 起,§一-E,任务书=runlog/W8/W8_任务书.md)——顺序 E1 Random→E2 SimCLR-Physio→E4 TRC仿射→E6 噪声隔离→E3 TSR→E5/E7 殿后**;W7 已收官(见 runlog/W7/W7_最终报告.md)；W6 已收官(见 runlog/W6/W6_最终报告.md)；旧 §二/§三 队列仅作历史记录，不得启动。
 >
 > **本轮再分配三原则(2026-09-17 晚,用户指令)**:①台账只按实际情况分配任务,**实现细节(开关/脚本/单测)由各主机自理**;②**总目标 = 尽快拿到至少一个过 3-seed 门的涨点、出成果**,判决线优先于扫描线;③已判死/无判值任务一律清除,机时不许再花。
 >
@@ -20,7 +20,7 @@
 
 | 主机 | 硬件 | 关键环境 | 当前状态 |
 |---|---|---|---|
-| **主机A = `Win4090`**(F:\新实验) | RTX 4090 24G / 32 逻辑核 / 128G RAM,W6 起三车道(CPU+GPU×2) | Win10,Python 3.11.9, torch 2.5.1+cu121(10-03 W6 开工实测更正,原登记3.10.11已过时),conda env `DL` | 🏃 W6 批次执行中(10-03 14:06 起, §一-D) |
+| **主机A = `Win4090`**(F:\新实验) | RTX 4090 24G / 32 逻辑核 / 128G RAM,W6 起三车道(CPU+GPU×2) | Win10,Python 3.11.9, torch 2.5.1+cu121(10-03 W6 开工实测更正,原登记3.10.11已过时),conda env `DL` | 🏃 W8 批次执行中(10-10 18:11 起, §一-E) |
 | **主机B = `DESKTOP-0PBLCND`**(E:\GZA) | RTX 3080 10G / 16 逻辑核 / 64G RAM,**单车道** | Win10,Python 3.11.9,torch 2.5.1+cu121;数据已校验(含 5 个损坏 .mat 修复);推送走 `ECG-push-tmp` | 🟢 空闲（W3 B-0/B-1/B-2/B-3 全部完成, 09-22 22:15） |
 | 主机C | (待登记) | (待登记) | 🆓 | 
 
@@ -122,6 +122,20 @@
 | Stage 7 多标签 | A | ✅ 已完成(10-06 20:40, 9/9零失败; b0 0.8586>c2 0.8560>c1 0.8322 与单标签同向; one-hot真值限制见events) | `runlog/W6/multilabel_results.csv`+`multilabel/`明细 | 与单标签主表分列 |
 
 > **Stage 0 收口回填（主机A，10-03 14:4x，W6 Stage0-L{cpu}）**：**B-1** 官方配对统计四对全部完成（`runlog/W5/stats/paired_stats.csv`，RNG 20260923/10k/record-level），**三项自查门全过**——①schema 同 W4、n=1385、9 类、record；②两侧 macro-AUROC 与 lp_results.csv 四位小数一致 8/8；③与办公机临时数(RNG 20260925)对照 delta 差≤0.002pt、CI 端点差≤0.03pt、p 差≤0.0014 全同侧，**预授权停机线（方向/显著性翻转）未触发**。要点读数：C1vsC2 −0.103pt p=0.187（不显著）；C1vsSimCLR +3.132pt；C1vsCLOCS +0.451pt p=0.0046；C2vsB0 −0.326pt p=0.068。**B-2** 种子级差独立复算与任务书参照数**逐位一致**（C2−C1 AUPRC +0.70/+0.59/+1.20 mean+0.83, 3/3⊕, t-CI [+0.02,+1.64] 贴边含零外；C2−B0 1/3 非同向）。**B-3** `runlog/W5/paper_materials_v3/` 四表+README（PTB/Chapman 行原样、CPSC 行全换新、W3 污染分区 cpsc 行不入 v3 只留冻结件）。**B-4** `runlog/W5/stats/stats_methods_w5.md`。事件一条：任务书原样命令默认 pairs 会 skip simclr/clocs 两对，按 W4 官方先例显式 `--pairs` 传参，**代码零改动**（`runlog/W6/events.md`）。**知会办公机：论文四处 provisional 可换正式数**（主文 Table 6 注/§4.2/§4.4/摘要-讨论-结论 + 支撑论文 §4.6 record-level 表述）。代码 SHA：本提交；统计代码=W4 审计版零改动。
+
+## 一-E、W8 外部基线与四区补充批次（2026-10-10 下发，主机A 已认领，当前活跃批次）
+
+> 任务入口=`runlog/W8/W8_任务书.md`（自包含，含公共协议/三线定义/补充批次/红线自查）；产物统一写 `runlog/W8/`（`w8_hparams.csv` + `w8_{rand,simph,tsr}_results.csv` + predictions/）。W2–W7 冻结账本只读；无晋级门、如实入表，仅保留 E1 sanity 红线。
+
+| 任务 | 主机 | 当前状态 | 交付物 | 停止线 |
+|---|---|---|---|---|
+| E1 w8-rand 随机初始化地板(LP+FT10) | A / Win4090 | 🏃 认领(10-10 18:11) | `runlog/W8/w8_rand_results.csv`+predictions | sanity:LP(rand) 三域均显著低于 C1,否则停下上报 |
+| E2 w8-simph SimCLR-Physio 预训练 | A / Win4090 | 📋 排队 | `runlog/W8/w8_simph_results.csv`+predictions | aug 开关默认关须与 S1 逐位一致 |
+| E4 w8-trcaff TRC 仿射对照 | A / Win4090 | 📋 排队 | `runlog/W8/w8_trcaff_results.csv`+predictions | 默认关==C1 逐位一致 |
+| E6 w8-noiseiso 噪声片段隔离 | A / Win4090 | 📋 排队 | `runlog/W8/w8_noiseiso_results.csv` | 门=隔离版增益方向与原版一致 |
+| E3 w8-tsr TSR 官方码适配 | A / Win4090 | 📋 排队 | `runlog/W8/w8_tsr_results.csv` | 不可复现→如实降级记"未复现" |
+| E5 w8-dvsplit Beat-RR 拆分(单种子) | A / Win4090 | 📋 殿后 | `runlog/W8/w8_dvsplit_results.csv` | 仅 seed0 描述性 |
+| E7 w8-b0trc-chap B0-TRC→Chapman | A / Win4090 | 📋 殿后 | `runlog/W8/w8_b0trc_results.csv` | 如实入表 5 注 |
 
 ## 二、历史队列（已封存，不得启动）
 
