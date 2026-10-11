@@ -1,3 +1,5 @@
 ts,ckpt,seed,eval,downstream,auroc,auprc,git_sha,checkpoint_sha256,protocol_id,hparams_ref
 2026-10-11 23:08,dvo,0,lp,cpsc,0.9444,0.7544,a1244ca,0e3e1abdc7960b6283a5ea7c58ba16fdca46835373b813692dbad6ca5212aab9,w8-dvsplit,"W8 E5: 仅双视角 L_BT+0.01*L_dv(rr=0), seed0, NFH 100ep; 与 W7 E1 联合 3-seed 并列描述性"
 2026-10-11 23:09,dvo,0,lp,ptbxl,0.8837,0.6463,a1244ca,0e3e1abdc7960b6283a5ea7c58ba16fdca46835373b813692dbad6ca5212aab9,w8-dvsplit,"W8 E5: 仅双视角 L_BT+0.01*L_dv(rr=0), seed0, NFH 100ep; 与 W7 E1 联合 3-seed 并列描述性"
+2026-10-12 00:22,rro,0,lp,cpsc,0.9444,0.7569,9b3c507,c231c2286362321b5b56e0df7be3786b53a0e0e71679ef991f2813941d62f16d,w8-dvsplit,"W8 E5: 仅 RR L_BT+0.1*L_rr(dv=0), seed0, NFH 100ep; 与 W7 E1 联合 3-seed 并列描述性"
+2026-10-12 00:23,rro,0,lp,ptbxl,0.8808,0.6450,9b3c507,c231c2286362321b5b56e0df7be3786b53a0e0e71679ef991f2813941d62f16d,w8-dvsplit,"W8 E5: 仅 RR L_BT+0.1*L_rr(dv=0), seed0, NFH 100ep; 与 W7 E1 联合 3-seed 并列描述性"
