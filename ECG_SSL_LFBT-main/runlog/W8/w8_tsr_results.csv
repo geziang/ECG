@@ -1,0 +1,3 @@
+ts,ckpt,seed,eval,downstream,auroc,auprc,git_sha,checkpoint_sha256,protocol_id,hparams_ref
+2026-10-11 17:22,tsr,0,lp,ptbxl,0.7589,0.4344,dd845ab,bbb501f11e3da447d3da735eeedf51b96ae806e4d63298470aa63f3fbd700bfd,w8-tsr,"W8 E3: TSR 官方四变体 pretext(BCEWithLogits 2-logit 逐导联头均值), backbone=C1 同构 8xVGG16, 无 RRC-TO(官方无增强), 变体每条每次均匀抽 1/4, Adam lr=0.01 wd=1e-4; 见 runlog/W8/w8_hparams.csv"
+2026-10-11 17:23,tsr,0,lp,cpsc,0.8641,0.5202,dd845ab,bbb501f11e3da447d3da735eeedf51b96ae806e4d63298470aa63f3fbd700bfd,w8-tsr,"W8 E3: TSR 官方四变体 pretext(BCEWithLogits 2-logit 逐导联头均值), backbone=C1 同构 8xVGG16, 无 RRC-TO(官方无增强), 变体每条每次均匀抽 1/4, Adam lr=0.01 wd=1e-4; 见 runlog/W8/w8_hparams.csv"

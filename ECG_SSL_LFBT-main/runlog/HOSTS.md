@@ -132,7 +132,7 @@
 | E1 w8-rand 随机初始化地板(LP+FT10) | A / Win4090 | ✅ 已完成(10-10 23:15, 18/18 零失败; LP sanity gap 39/37/56pt 红线未触发) | `runlog/W8/w8_rand_results.csv`+predictions | sanity:LP(rand) 三域均显著低于 C1,否则停下上报 |
 | E2 w8-simph SimCLR-Physio 预训练 | A / Win4090 | ✅ 已完成(10-11 07:59, exit=0, 18行=simph15+S1补格3; LP 三种子 ptbxl 0.8759/cpsc 0.9095/chapman 0.9879 mean) | `runlog/W8/w8_simph_results.csv`+predictions | aug 开关默认关须与 S1 逐位一致 |
 | E4 w8-trcaff TRC 仿射对照 | A / Win4090 | ✅ 已完成(10-11 13:04, exit=0, 6行; cpsc LP mean 0.9447 三种子 affine≈C1[−0.16pt] 且 TRC>affine[+0.27pt], "门控是活性成分"分支成立) | `runlog/W8/w8_trcaff_results.csv`+predictions | 默认关==C1 逐位一致 |
-| E6 w8-noiseiso 噪声片段隔离 | A / Win4090 | 📋 接力位3(实现+单测8/8就绪, 10-10 19:0x) | `runlog/W8/w8_noiseiso_results.csv` | 门=隔离版增益方向与原版一致 |
+| E6 w8-noiseiso 噪声片段隔离 | A / Win4090 | ✅ 已完成(10-11 16:48, exit=0; 三种子后半段隔离 27 格 Δ +2.20/+2.64/+2.59 全正 mean+2.48, 门过=非片段记忆守住) | `runlog/W8/w8_noiseiso_results.csv`+e6_summary_seed{0,2,4}.md | 门=隔离版增益方向与原版一致 |
 | E3 w8-tsr TSR 官方码适配 | A / Win4090 | 📋 接力位4(官方码clone+适配+单测6/6, 10-10 19:3x) | `runlog/W8/w8_tsr_results.csv` | 不可复现→如实降级记"未复现" |
 | E5 w8-dvsplit Beat-RR 拆分(单种子) | A / Win4090 | 📋 接力位5(零新代码, 10-10 19:4x) | `runlog/W8/w8_dvsplit_results.csv` | 仅 seed0 描述性 |
 | E7 w8-b0trc-chap B0-TRC→Chapman | A / Win4090 | 📋 接力位5(纯评测, 10-10 19:4x) | `runlog/W8/w8_b0trc_results.csv` | 如实入表 5 注 |
