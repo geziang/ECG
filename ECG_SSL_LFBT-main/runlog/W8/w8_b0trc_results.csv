@@ -1,0 +1,4 @@
+ts,ckpt,seed,eval,downstream,auroc,auprc,git_sha,checkpoint_sha256,protocol_id,hparams_ref
+2026-10-12 00:24,b0trc,0,lp,chapman,0.9941,0.9817,8716141,59abb09b55e19dff11c644785f4884ee459cf7273728de57bab1630f14cd02ea,w8-b0trc,"W8 E7: W7 E2c 冻结 b0trc(ptbxl 语料+trc1) -> Chapman LP 补格, 见 runlog/W7/e2c_results.csv"
+2026-10-12 00:24,b0trc,2,lp,chapman,0.9940,0.9823,8716141,63a2901c7e033bc43b7368e6ea6c040b2608a8d7eb339d86d464122848824d22,w8-b0trc,"W8 E7: W7 E2c 冻结 b0trc(ptbxl 语料+trc1) -> Chapman LP 补格, 见 runlog/W7/e2c_results.csv"
+2026-10-12 00:25,b0trc,4,lp,chapman,0.9937,0.9804,8716141,e18644b62eaa00813baebed6356c23522a53c328e00889bba90ca57fe0086a44,w8-b0trc,"W8 E7: W7 E2c 冻结 b0trc(ptbxl 语料+trc1) -> Chapman LP 补格, 见 runlog/W7/e2c_results.csv"

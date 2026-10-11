@@ -8,7 +8,7 @@
 >
 > **协调方式(2026-09-23 起):全仓协作只走 `origin/main`(任务书 + 本台账),不使用 SSH 跨机操作。**
 >
-> **主机A当前状态:🏃 W8 外部基线批次执行中(10-10 18:11 起,§一-E,任务书=runlog/W8/W8_任务书.md)——顺序 E1 Random→E2 SimCLR-Physio→E4 TRC仿射→E6 噪声隔离→E3 TSR→E5/E7 殿后**;W7 已收官(见 runlog/W7/W7_最终报告.md)；W6 已收官(见 runlog/W6/W6_最终报告.md)；旧 §二/§三 队列仅作历史记录，不得启动。
+> **主机A当前状态:🏁 W8 主链全链收官(10-12 00:25 接力器全部完成, 235行全账本对账 ALL OK 零FAIL; 七线 E1-E7 全✅, §一-E)**——剩收尾: 统计检验(bootstrap+DeLong, CPU)+W8_最终报告.md; 值班 cron 转纯值守; W7/W6 已收官(见各自最终报告)；旧 §二/§三 队列仅作历史记录，不得启动。
 >
 > **本轮再分配三原则(2026-09-17 晚,用户指令)**:①台账只按实际情况分配任务,**实现细节(开关/脚本/单测)由各主机自理**;②**总目标 = 尽快拿到至少一个过 3-seed 门的涨点、出成果**,判决线优先于扫描线;③已判死/无判值任务一律清除,机时不许再花。
 >
@@ -134,8 +134,8 @@
 | E4 w8-trcaff TRC 仿射对照 | A / Win4090 | ✅ 已完成(10-11 13:04, exit=0, 6行; cpsc LP mean 0.9447 三种子 affine≈C1[−0.16pt] 且 TRC>affine[+0.27pt], "门控是活性成分"分支成立) | `runlog/W8/w8_trcaff_results.csv`+predictions | 默认关==C1 逐位一致 |
 | E6 w8-noiseiso 噪声片段隔离 | A / Win4090 | ✅ 已完成(10-11 16:48, exit=0; 三种子后半段隔离 27 格 Δ +2.20/+2.64/+2.59 全正 mean+2.48, 门过=非片段记忆守住) | `runlog/W8/w8_noiseiso_results.csv`+e6_summary_seed{0,2,4}.md | 门=隔离版增益方向与原版一致 |
 | E3 w8-tsr TSR 官方码适配 | A / Win4090 | ✅ 已完成(10-11 21:33, exit=0, 15行; 三种子全官方lr=1e-2无回退; LP mean ptbxl~0.77/cpsc~0.86/chapman~0.95, 全面低于S1/C1如入表) | `runlog/W8/w8_tsr_results.csv`+predictions | 不可复现→如实降级记"未复现" |
-| E5 w8-dvsplit Beat-RR 拆分(单种子) | A / Win4090 | 📋 接力位5(零新代码, 10-10 19:4x) | `runlog/W8/w8_dvsplit_results.csv` | 仅 seed0 描述性 |
-| E7 w8-b0trc-chap B0-TRC→Chapman | A / Win4090 | 📋 接力位5(纯评测, 10-10 19:4x) | `runlog/W8/w8_b0trc_results.csv` | 如实入表 5 注 |
+| E5 w8-dvsplit Beat-RR 拆分(单种子) | A / Win4090 | ✅ 已完成(10-12 00:23, 4行; 两臂单独 cpsc 0.9444/0.9444 均≈C1−0.19pt, 联合增益来自双组件协同, 描述性) | `runlog/W8/w8_dvsplit_results.csv` | 仅 seed0 描述性 |
+| E7 w8-b0trc-chap B0-TRC→Chapman | A / Win4090 | ✅ 已完成(10-12 00:25, 3行 0.9941/0.9940/0.9937, 2语料x3域矩阵补全) | `runlog/W8/w8_b0trc_results.csv` | 如实入表 5 注 |
 
 ## 二、历史队列（已封存，不得启动）
 
