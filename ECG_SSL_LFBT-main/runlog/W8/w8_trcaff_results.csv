@@ -1,0 +1,3 @@
+ts,ckpt,seed,eval,downstream,auroc,auprc,git_sha,checkpoint_sha256,protocol_id,hparams_ref
+2026-10-11 09:45,trcaff,0,lp,cpsc,0.9450,0.7555,e5603d2,709b4492020f6ed94205b385a35e4c9a29ebdabac91de7527c92680ee8867a13,w8-trcaff,"W8 E4: C1 协议 + --trc 2(逐通道仿射 F~=F+gamma*F+beta 零初始化, 与 TRC 同位置同参数量, 去 n 门控; models/vgg_1d.AffineChannel1D); 见 runlog/W8/w8_hparams.csv 与 runlog/W8/run_e4_trcaff_chain.py"
+2026-10-11 09:47,trcaff,0,lp,ptbxl,0.8838,0.6575,e5603d2,709b4492020f6ed94205b385a35e4c9a29ebdabac91de7527c92680ee8867a13,w8-trcaff,"W8 E4: C1 协议 + --trc 2(逐通道仿射 F~=F+gamma*F+beta 零初始化, 与 TRC 同位置同参数量, 去 n 门控; models/vgg_1d.AffineChannel1D); 见 runlog/W8/w8_hparams.csv 与 runlog/W8/run_e4_trcaff_chain.py"
