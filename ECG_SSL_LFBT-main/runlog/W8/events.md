@@ -77,3 +77,4 @@
 - E7 终账: b0trc chapman 0.9941/0.9940/0.9937(mean 0.9939)——B0-TRC 第三域补格, 2 语料×3 目标域矩阵齐。
 - E5 终读: 单双视角/单RR 均 cpsc 0.9444 ≈C1−0.19pt, 联合(W7 E1 +0.233)增益=双组件协同——机制消融描述性结论。
 - **W8 全链收官待报告**: 剩统计检验(逐记录配对 bootstrap 10k + DeLong vs C1, E2 另加 vs S1)与 W8_最终报告.md; 出数回填归办公机。
+- **10-12 12:5x 论文配图曲线补录包入库**(commit 2aef560): 第6/7页数据=runlog/W8/paperfig_curves_2026-10-12(fig6四分支8序列+fig7三阶段9序列+终点指标+raw_logs17份force-add); C2(trc)预训练曲线=11:33-12:52补录1h22m exit0, 命令逐字对齐confirm_matrix, checkpoint走w8_paperfig/c2_pt_seed0(sha256=607c69f5, 未触碰confirm); C1曲线=W1同协议替身(见README脚注A/B); 下游结论未动。
