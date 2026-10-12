@@ -66,3 +66,6 @@ ECG_SSL_LFBT-main/runlog/W6/logs/
 ECG_SSL_LFBT-main/runlog/W6/feat/
 # W6 逐记录预测(FT20/40 网格)是后续配对统计与复算的必需输入, 显式放行:
 !ECG_SSL_LFBT-main/runlog/W6/predictions/**/*.npy
+
+# W8 (2026-10-12): E3 TSR 官方参照码嵌套仓(URL 可复克隆, 不入本仓)
+ReverseECG_official/
