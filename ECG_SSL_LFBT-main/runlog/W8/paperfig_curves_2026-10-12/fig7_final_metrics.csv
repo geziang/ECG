@@ -1,0 +1,10 @@
+phase,seed,auroc,auprc,ledger
+lp,0,0.9455,0.7659,runlog/W5/lp_results.csv
+lp,2,0.9468,0.7642,runlog/W5/lp_results.csv
+lp,4,0.9498,0.7747,runlog/W5/lp_results.csv
+ft10,0,0.9261,0.6990,runlog/W6/ft10grid_results_L1.csv
+ft10,2,0.9213,0.6947,runlog/W6/ft10grid_results_L1.csv
+ft10,4,0.9203,0.6940,runlog/W6/ft10grid_results_L1.csv
+lpft,0,0.9445,0.7598,runlog/W7/e4a_lpft.csv
+lpft,2,0.9379,0.7444,runlog/W7/e4a_lpft.csv
+lpft,4,0.9468,0.7655,runlog/W7/e4a_lpft.csv
