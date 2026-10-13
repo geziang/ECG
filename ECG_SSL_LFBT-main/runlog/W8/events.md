@@ -78,3 +78,8 @@
 - E5 终读: 单双视角/单RR 均 cpsc 0.9444 ≈C1−0.19pt, 联合(W7 E1 +0.233)增益=双组件协同——机制消融描述性结论。
 - **W8 全链收官待报告**: 剩统计检验(逐记录配对 bootstrap 10k + DeLong vs C1, E2 另加 vs S1)与 W8_最终报告.md; 出数回填归办公机。
 - **10-12 12:5x 论文配图曲线补录包入库**(commit 2aef560): 第6/7页数据=runlog/W8/paperfig_curves_2026-10-12(fig6四分支8序列+fig7三阶段9序列+终点指标+raw_logs17份force-add); C2(trc)预训练曲线=11:33-12:52补录1h22m exit0, 命令逐字对齐confirm_matrix, checkpoint走w8_paperfig/c2_pt_seed0(sha256=607c69f5, 未触碰confirm); C1曲线=W1同协议替身(见README脚注A/B); 下游结论未动。
+
+## 2026-10-13 18:4x 更正: E5 dvsplit 口径污染判定(A1/A2 s0 错 R 峰缓存)
+
+- 复核发现 `checkpoint/w8_dvsplit/{dvo,rro}_seed0/config.json` 的 `rpeak_npz=data/pt_rpeaks.npz`(17,418 条=旧 PTB-XL 语料缓存;E5 链命令模板漏传 `--rpeak-npz`,落入了 run_pt 默认值)。NFH 全量 34,905——前 17,418 条拿错语料 R 峰索引,后 17,487 条无键(valid=0)。辅助目标全错, 模型学到"忽略垃圾目标"。
+- **本 csv 4 行(冻结只读不删)自本条起被取代**: A1/A2 由 JOINT_20261013 批次三种子全部重跑(显式 `--rpeak-npz data/pt_rpeaks_nfh.npz`, 见 runlog/JOINT_20261013/任务书.md §二)。"单双视角/单RR 均≈C1−0.19pt, 增益=双组件协同"的 E5 终读**作废**, 以 JOINT 批次新数为准; W8 最终报告引用本条。
