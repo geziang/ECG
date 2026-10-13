@@ -10,7 +10,7 @@ from pathlib import Path
 
 import numpy as np
 
-ROOT = Path(__file__).resolve().parents[2]
+ROOT = Path(__file__).resolve().parents[1]  # tests/ 在仓库根下一层(勿用 parents[2]——那是 runlog/ 深度约定, 10-14 00:1x 守夜器事故#4 根因)
 
 
 def _mod():
