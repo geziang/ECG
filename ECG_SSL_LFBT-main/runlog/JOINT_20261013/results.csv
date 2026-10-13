@@ -7,3 +7,7 @@ ts,ckpt,seed,eval,downstream,cond,auroc,auprc,git_sha,checkpoint_sha256,protocol
 2026-10-13 23:40,m3,2,lp,cpsc,clean,0.9481,0.7752,7bd8e8f,6073a372d169458b2cc548433632fa0db77bcbf418b857a70e091851e87ab678,joint-20261013,"JOINT M3: trc1+dv0.01+rr0.1, NFH 100ep, protocol §4.3 逐字"
 2026-10-13 23:40,m3,2,lp,chapman,clean,0.9963,0.9884,7bd8e8f,6073a372d169458b2cc548433632fa0db77bcbf418b857a70e091851e87ab678,joint-20261013,"JOINT M3: trc1+dv0.01+rr0.1, NFH 100ep, protocol §4.3 逐字"
 2026-10-14 00:10,m3,2,ft10,ptbxl,clean,0.8650,0.6353,7bd8e8f,6073a372d169458b2cc548433632fa0db77bcbf418b857a70e091851e87ab678,joint-20261013,"JOINT M3: trc1+dv0.01+rr0.1, NFH 100ep, protocol §4.3 逐字"
+2026-10-14 01:49,m3,4,lp,ptbxl,clean,0.8881,0.6497,26be1d6,e92da645113e3f7473b5049807b811b4c477969e8ed80c8e323c566e394c0658,joint-20261013,"JOINT M3: trc1+dv0.01+rr0.1, NFH 100ep, protocol §4.3 逐字"
+2026-10-14 01:50,m3,4,lp,cpsc,clean,0.9491,0.7661,26be1d6,e92da645113e3f7473b5049807b811b4c477969e8ed80c8e323c566e394c0658,joint-20261013,"JOINT M3: trc1+dv0.01+rr0.1, NFH 100ep, protocol §4.3 逐字"
+2026-10-14 01:51,m3,4,lp,chapman,clean,0.9960,0.9876,26be1d6,e92da645113e3f7473b5049807b811b4c477969e8ed80c8e323c566e394c0658,joint-20261013,"JOINT M3: trc1+dv0.01+rr0.1, NFH 100ep, protocol §4.3 逐字"
+2026-10-14 02:21,m3,4,ft10,ptbxl,clean,0.8569,0.6322,26be1d6,e92da645113e3f7473b5049807b811b4c477969e8ed80c8e323c566e394c0658,joint-20261013,"JOINT M3: trc1+dv0.01+rr0.1, NFH 100ep, protocol §4.3 逐字"

@@ -70,6 +70,6 @@ def test_run_pt_source_guards():
     assert src.count("rand_window=bool(int(getattr(args, 'dv_rand_window', 0) or 0))") == 1
     assert src.count("rr_shuffle=bool(int(getattr(args, 'rr_shuffle', 0) or 0))") == 1
     dsrc = (ROOT / "data_utils" / "dv_dataset.py").read_text(encoding="utf-8")
-    # 默认关时 __getitem__ 的 N1/N2 分支均被短路(rand_window False / rr_src None)
+    # 默认关时 __getitem__ 的 N1/N2 分支均被短路(rand_window False / rr_src None); 断言串=补丁实际行
     assert "if self.rand_window and bv is not None:" in dsrc
-    assert "if self.rr_src is not None:" in dsrc
+    assert "if self.rr_src is not None and self.rr_src.get(idx) is not None:" in dsrc

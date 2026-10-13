@@ -95,7 +95,7 @@ def build_rr_perm(valid_idx, seed=123):
     return {valid_idx[k]: valid_idx[int(perm[k])] for k in range(len(valid_idx))}
 
 
-""")
+class DVDataset:""")
 
 DV_INIT_SIG = (
     "def __init__(self, root, transform1, transform2, rpeak_npz):",
