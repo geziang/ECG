@@ -41,8 +41,35 @@ def rr_stats(peaks):
     return (float(rr.mean()), float(rr.std()), float(np.sqrt(np.mean(np.diff(rr) ** 2))))
 
 
+
+def rand_beat_view(raw, n_windows, rng, w=W_BEAT):
+    """N1 反事实(JOINT N1): 与 beat_view 同窗长同窗数, 起点均匀随机, 无 R 峰对齐。
+
+    rng: np.random.RandomState; 逐记录确定性由调用方用 crc32(stem) 播种。
+    """
+    T = raw.shape[1]
+    if n_windows < 3 or T < w:
+        return None
+    starts = rng.randint(0, T - w + 1, size=int(n_windows))
+    segs = [raw[:, s:s + w] for s in starts]
+    return np.mean(segs, axis=0).astype(np.float32)
+
+
+def build_rr_perm(valid_idx, seed=123):
+    """N2 反事实(JOINT N2): valid_idx 内固定置换, 返回 idx->源 idx 映射。
+
+    第 k 个有效样本拿第 perm[k] 个有效样本的 RR 统计; 自映射不排除
+    (n≈3.5 万下占比可忽略, 属目标噪声一部分)。
+    """
+    if not valid_idx:
+        return {}
+    perm = np.random.RandomState(seed).permutation(len(valid_idx))
+    return {valid_idx[k]: valid_idx[int(perm[k])] for k in range(len(valid_idx))}
+
+
 class DVDataset:
-    def __init__(self, root, transform1, transform2, rpeak_npz):
+    def __init__(self, root, transform1, transform2, rpeak_npz,
+                 rand_window=False, rr_shuffle=False):
         self.base = ECGDatasetFolder(
             root, transform=MultiViewDataInjector([transform1, transform2]))
         cache = np.load(str(rpeak_npz), allow_pickle=True)
@@ -53,6 +80,15 @@ class DVDataset:
         arr = np.asarray(stats)
         self.mu, self.sd = arr.mean(axis=0), arr.std(axis=0) + 1e-8
         self.n_valid = len(stats)
+        self.rand_window = bool(rand_window)  # N1: 默认关=原行为
+        if rr_shuffle:  # N2: idx->源idx 固定置换(顺序=base.samples, 种子123)
+            from pathlib import Path as _P
+            stats_by_idx = [rr_stats(self.rp.get(_P(self.base.samples[i][0]).stem))
+                            for i in range(len(self.base))]
+            self.rr_src = build_rr_perm(
+                [i for i, s in enumerate(stats_by_idx) if s is not None])
+        else:
+            self.rr_src = None
 
     def __len__(self):
         return len(self.base)
@@ -65,12 +101,23 @@ class DVDataset:
         raw = np.load(self.base.samples[idx][0]).astype(np.float32)
         bv = beat_view(raw, peaks)
         rs = rr_stats(peaks)
+        if self.rand_window and bv is not None:
+            # N1: 窗数=真 R 峰数, 起点均匀随机, 逐记录确定性种子(crc32(stem))
+            import zlib
+            rng = np.random.RandomState(zlib.crc32(key.encode()) % (2 ** 31))
+            bv = rand_beat_view(raw, len(peaks), rng)
         if bv is None or rs is None:
             beat = torch.zeros(8, W_BEAT)
             rr3 = torch.zeros(3)
             valid = 0.0
         else:
             beat = torch.from_numpy(bv)
+            if self.rr_src is not None and self.rr_src.get(idx) is not None:
+                # N2: 目标换成置换源记录的 RR 统计(掩码与心拍视图不动)
+                rs_src = rr_stats(self.rp.get(
+                    Path(self.base.samples[self.rr_src[idx]][0]).stem))
+                if rs_src is not None:
+                    rs = rs_src
             rr3 = torch.tensor((np.asarray(rs) - self.mu) / self.sd, dtype=torch.float32)
             valid = 1.0
         return (v1, v2, beat), (rr3, valid)

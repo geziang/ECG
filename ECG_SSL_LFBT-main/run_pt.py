@@ -133,6 +133,10 @@ parser.add_argument('--rec-ratio', default=0.2, type=float,
                     help='B2/B3 目标遮挡比例(任务书 §4.2: 约 20%%)')
 parser.add_argument('--rpeak-npz', default='data/pt_rpeaks.npz', type=str,
                     help='R 峰缓存文件(gqrs 预计算, 见 runlog/prep_rpeaks.py)')
+parser.add_argument('--dv-rand-window', default=0, type=int,
+                    help='JOINT N1 反事实: 心拍窗起点均匀随机(RR 仍用真 R 峰); 默认 0=原行为')
+parser.add_argument('--rr-shuffle', default=0, type=int,
+                    help='JOINT N2 反事实: RR 目标有效样本间固定置换(种子123); 默认 0=原行为')
 parser.add_argument('--acl-mode', default='off', choices=['off', 'intra', 'full'],
                     help='T2 ACL 区域目标: off=关(B0); intra=A2 仅区域内一致; full=A3 区域内+区域间 Eq.(11)')
 parser.add_argument('--acl-partition', default='anatomy', choices=['anatomy', 'random'],
@@ -809,7 +813,9 @@ def main_worker(gpu, args):
         rpeak_npz = Path(args.rpeak_npz)
         if not rpeak_npz.exists():
             raise FileNotFoundError('Stage4 双视角需 R 峰缓存(先跑 runlog/prep_rpeaks.py)')
-        dataset = DVDataset(args.data_dir, t, t2, rpeak_npz)
+        dataset = DVDataset(args.data_dir, t, t2, rpeak_npz,
+                            rand_window=bool(int(getattr(args, 'dv_rand_window', 0) or 0)),
+                            rr_shuffle=bool(int(getattr(args, 'rr_shuffle', 0) or 0)))
     elif getattr(args, 'hrv_weight', 0.0) > 0:
         from data_utils.h4_dataset import HRVDataset
         hrv_npz = Path('data/pt_hrv.npz')
