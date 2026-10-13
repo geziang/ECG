@@ -196,11 +196,28 @@ def main():
         apply_patches(RP, RP_PATCHES, backups)
         subprocess.run([PY, "-m", "py_compile", str(DV), str(RP)], check=True,
                        capture_output=True, timeout=120)
-        log("py_compile 通过, 跑单测")
-        tr = subprocess.run([PY, "-m", "pytest", "-q",
-                             "tests/test_joint_n1n2.py"],
-                            cwd=str(ROOT), capture_output=True, text=True, timeout=600)
-        log(f"pytest rc={tr.returncode}: {tr.stdout.strip().splitlines()[-1] if tr.stdout.strip() else '(无输出)'}")
+        log("py_compile 通过, 跑单测(自包含运行器, DL env 无 pytest——21:26 事故教训)")
+        runner = (
+            "import importlib.util, sys, traceback\n"
+            "spec = importlib.util.spec_from_file_location('t', 'tests/test_joint_n1n2.py')\n"
+            "m = importlib.util.module_from_spec(spec)\n"
+            "spec.loader.exec_module(m)\n"
+            "fails = 0\n"
+            "for name in sorted(dir(m)):\n"
+            "    if name.startswith('test_'):\n"
+            "        try:\n"
+            "            getattr(m, name)()\n"
+            "            print('PASS', name)\n"
+            "        except Exception:\n"
+            "            fails += 1\n"
+            "            print('FAIL', name)\n"
+            "            traceback.print_exc()\n"
+            "print('RESULT', 'OK' if fails == 0 else str(fails) + ' FAILED')\n"
+            "sys.exit(0 if fails == 0 else 1)\n")
+        tr = subprocess.run([PY, "-c", runner], cwd=str(ROOT),
+                            capture_output=True, text=True, timeout=600)
+        log(f"单测 rc={tr.returncode}: "
+            f"{tr.stdout.strip().splitlines()[-1] if tr.stdout.strip() else '(无输出)'}")
         if tr.returncode != 0:
             raise RuntimeError(f"单测未过:\n{tr.stdout[-2000:]}\n{tr.stderr[-1000:]}")
     except Exception as e:
