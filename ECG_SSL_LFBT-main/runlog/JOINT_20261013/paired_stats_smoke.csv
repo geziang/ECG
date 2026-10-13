@@ -1,0 +1,6 @@
+ts,dataset,pair,metric,delta_mean_pt,ci_lo_pt,ci_hi_pt,p_emp,per_seed_pt
+2026-10-13 19:46,cpsc,m1:m0,auprc,0.83,0.295,1.315,0.001,"{""0"": 0.7, ""2"": 0.59, ""4"": 1.201}"
+2026-10-13 19:46,cpsc,m1:m0,auroc,0.103,-0.047,0.248,0.206,"{""0"": -0.001, ""2"": 0.144, ""4"": 0.165}"
+2026-10-13 19:46,cpsc,m1:m0,delong_auroc_p_min,,,,0.0068,"{""0"": null}"
+2026-10-13 19:46,cpsc,m1:m0,delong_auroc_p_min,,,,0.0106,"{""2"": null}"
+2026-10-13 19:46,cpsc,m1:m0,delong_auroc_p_min,,,,0.0096,"{""4"": null}"

@@ -54,8 +54,16 @@ CONFIGS = {
     "m6": dict(ckdir="joint_m6", trc=1, dv=0.0, rr=0.0,
                noise=("0.5", "first_half"), rpeak=False, noise_ref="m1",
                hp="JOINT M6: trc1+nstdb0.5/first_half(噪声增益是否依赖 Beat-RR)"),
+    # N1/N2 反事实(protocol §3.3, 用户 10-13 指令"最新需求一并做"): 先 s0, 必要时补 3 种子。
+    # 依赖 apply_n1n2.py 落地的 --dv-rand-window/--rr-shuffle 开关(默认关==基线一致)。
+    "n1": dict(ckdir="joint_n1", trc=1, dv=0.01, rr=0.1, noise=None, rpeak=True,
+               noise_ref=None, seeds=[0], extra=["--dv-rand-window", "1"],
+               hp="JOINT N1: M3+随机心拍窗口(反事实验证 R 峰对齐必要性), s0"),
+    "n2": dict(ckdir="joint_n2", trc=1, dv=0.01, rr=0.1, noise=None, rpeak=True,
+               noise_ref=None, seeds=[0], extra=["--rr-shuffle", "1"],
+               hp="JOINT N2: M3+打乱 RR 标签(反事实验证节律目标信息量), s0"),
 }
-ORDER = ["m3", "m4", "a1", "a2", "m6"]
+ORDER = ["m3", "m4", "a1", "a2", "m6", "n1", "n2"]
 
 
 def log(msg):
@@ -162,6 +170,7 @@ def run_pt(name, seed):
             cmd += ["--rpeak-npz", "data/pt_rpeaks_nfh.npz"]
     if c["noise"] is not None:
         cmd += ["--nstdb-aug", c["noise"][0], "--nstdb-offset", c["noise"][1]]
+    cmd += c.get("extra", [])
     cmd += ["--resume", "--checkpoint-dir", str(ck)]
     log(f"{name} s{seed} PT 启动: {' '.join(cmd[2:])}")
     poll = VRamPoller()
@@ -331,8 +340,12 @@ def noise_eval(name, seed):
         for nname in ("bw", "ma", "em"):
             for inten in ("0", "5", "10"):
                 cond = f"{nname}@{inten}"
+                probs_ok = all(
+                    (OUTD / "predictions" / f"{t}_{ds}_lpnoise_seed{seed}" / cond
+                     / "y_prob.npy").exists() for t in (name, "m3" if c["noise_ref"] == "m3" else "m1"))
                 if row_done(name, seed, "lpnoise", ds, cond) and \
-                        row_done(ref_tag, seed, "lpnoise", ds, cond):
+                        row_done("m3" if c["noise_ref"] == "m3" else "m1", seed,
+                                 "lpnoise", ds, cond) and probs_ok:
                     continue
                 xp = make_perturbed_lasthalf(x, ds, "nstb_" + nname, inten)
                 with torch.no_grad():
@@ -340,9 +353,19 @@ def noise_eval(name, seed):
                     pr = F.softmax(head_r(feats(encs_r, xp)), dim=1).cpu().numpy()
                 au, ap = metrics_from_probs(y, pn, nc)
                 aur, apr = metrics_from_probs(y, pr, nc)
-                record(name, seed, "lpnoise", ds, cond, au, ap, ckn, c["hp"])
-                record(ref_tag, seed, "lpnoise", ds, cond, aur, apr, cksha_r,
-                       "JOINT 参照行: 同噪声实现配对(last_half), 见任务书 §四")
+                if not row_done(name, seed, "lpnoise", ds, cond):
+                    record(name, seed, "lpnoise", ds, cond, au, ap, ckn, c["hp"])
+                if not row_done(ref_tag, seed, "lpnoise", ds, cond):
+                    record(ref_tag, seed, "lpnoise", ds, cond, aur, apr, cksha_r,
+                           "JOINT 参照行: 同噪声实现配对(last_half), 见任务书 §四")
+                # protocol §9: 逐记录预测+噪声片段标识(确定性重放可复现同噪声)
+                for tag_, p_ in ((name, pn), (ref_tag, pr)):
+                    pdir = OUTD / "predictions" / f"{tag_}_{ds}_lpnoise_seed{seed}" / cond
+                    if not (pdir / "y_prob.npy").exists():
+                        pdir.mkdir(parents=True, exist_ok=True)
+                        np.save(pdir / "y_prob.npy", p_)
+                        np.save(pdir / "y_true.npy", y)
+                        np.save(pdir / "noise_offsets.npy", np.asarray(offs))
         del encs_r, head_r, head
         torch.cuda.empty_cache()
     manifest_update(name, seed, noise27_wall_s=round(time.time() - t0, 1))
@@ -364,7 +387,8 @@ def main():
     seeds = [args.seed] if args.seed is not None else SEEDS
     log(f"JOINT 链启动: configs={names} phase={args.phase} seeds={seeds} 解释器={PY}")
     for n in names:
-        for seed in seeds:
+        for seed in ([args.seed] if args.seed is not None
+                     else CONFIGS[n].get("seeds", SEEDS)):
             if args.phase in ("pt", "all"):
                 if not run_pt(n, seed):
                     event(f"{n} seed{seed} PT 失败, 链终止(logs/{n}_pt_seed{seed}.log)")
