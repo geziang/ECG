@@ -42,7 +42,10 @@
    "vram_peak_mib": 8151,
    "git_sha": "b204808",
    "ckpt_sha256": "20bebfd6211d86b1d6cfedb1d4835ac9a54aac9a241130c8e039233a1ac6c6b3",
-   "done": true
+   "done": true,
+   "lp_ptbxl_wall_s": 70.0,
+   "lp_cpsc_wall_s": 53.2,
+   "lp_chapman_wall_s": 57.7
   }
  }
 }
