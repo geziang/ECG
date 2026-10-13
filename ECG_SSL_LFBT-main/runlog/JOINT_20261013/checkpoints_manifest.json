@@ -45,7 +45,9 @@
    "done": true,
    "lp_ptbxl_wall_s": 70.0,
    "lp_cpsc_wall_s": 53.2,
-   "lp_chapman_wall_s": 57.7
+   "lp_chapman_wall_s": 57.7,
+   "ft10_wall_s": 1803.0,
+   "noise27_wall_s": 17.0
   }
  }
 }

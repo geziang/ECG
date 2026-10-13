@@ -301,13 +301,14 @@ def noise_eval(name, seed):
             return int(self._g.integers(lo, hi))
 
     def make_perturbed_lasthalf(x, ds, nname, intensity):
+        """返回 (加噪信号, 噪声段偏移量)——偏移量供 §9 逐记录噪声片段标识落盘。"""
         noise = load_nstdb(nname.split("_")[1])
         Ln, L = noise.shape[1], x.shape[2]
         rng = _GenWrap(_rng_for(ds, nname, intensity))
         offs = [draw_offset(rng, Ln, L, "last_half") for _ in range(x.shape[0])]
         ch = np.array([i % 2 for i in range(x.shape[1])])
         n = np.stack([noise[ch, o:o + L] for o in offs])
-        return x + _match_snr(x, n, float(intensity))
+        return x + _match_snr(x, n, float(intensity)), np.asarray(offs)
 
     ck = ck_dir(name, seed)
     ckn = sha256_of(ck / "encoder_group.pth")
@@ -352,7 +353,7 @@ def noise_eval(name, seed):
                         row_done("m3" if c["noise_ref"] == "m3" else "m1", seed,
                                  "lpnoise", ds, cond) and probs_ok:
                     continue
-                xp = make_perturbed_lasthalf(x, ds, "nstb_" + nname, inten)
+                xp, offs = make_perturbed_lasthalf(x, ds, "nstb_" + nname, inten)
                 with torch.no_grad():
                     pn = F.softmax(head(feats(encs, xp)), dim=1).cpu().numpy()
                     pr = F.softmax(head_r(feats(encs_r, xp)), dim=1).cpu().numpy()
