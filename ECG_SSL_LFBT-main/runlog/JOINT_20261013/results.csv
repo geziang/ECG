@@ -1,0 +1,4 @@
+ts,ckpt,seed,eval,downstream,cond,auroc,auprc,git_sha,checkpoint_sha256,protocol_id,hparams_ref
+2026-10-13 21:28,m3,0,lp,ptbxl,clean,0.8858,0.6499,e98bc91,b46b382b4d22ac4203d5eb27d4e580049f1848843628e5a1f0b5061711533305,joint-20261013,"JOINT M3: trc1+dv0.01+rr0.1, NFH 100ep, protocol §4.3 逐字"
+2026-10-13 21:29,m3,0,lp,cpsc,clean,0.9486,0.7696,e98bc91,b46b382b4d22ac4203d5eb27d4e580049f1848843628e5a1f0b5061711533305,joint-20261013,"JOINT M3: trc1+dv0.01+rr0.1, NFH 100ep, protocol §4.3 逐字"
+2026-10-13 21:30,m3,0,lp,chapman,clean,0.9962,0.9884,e98bc91,b46b382b4d22ac4203d5eb27d4e580049f1848843628e5a1f0b5061711533305,joint-20261013,"JOINT M3: trc1+dv0.01+rr0.1, NFH 100ep, protocol §4.3 逐字"

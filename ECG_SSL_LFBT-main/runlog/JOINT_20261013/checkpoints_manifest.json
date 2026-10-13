@@ -1,0 +1,16 @@
+{
+ "m3": {
+  "0": {
+   "pt_wall_s": 5952.0,
+   "vram_peak_mib": 8353,
+   "vram_source": "patrol sampling (poller crashed pre-return, 10-13 20:28)",
+   "git_sha": "68a85cb",
+   "ckpt_sha256": "b46b382b4d22ac4203d5eb27d4e580049f1848843628e5a1f0b5061711533305",
+   "done": true,
+   "note": "PT completed 20:28 by orphaned child after chain crash; manifest backfilled by patrol #3",
+   "lp_ptbxl_wall_s": 59.0,
+   "lp_cpsc_wall_s": 54.7,
+   "lp_chapman_wall_s": 59.7
+  }
+ }
+}

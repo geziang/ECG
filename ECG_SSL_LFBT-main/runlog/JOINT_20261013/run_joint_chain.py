@@ -125,15 +125,20 @@ def manifest_update(name, seed, **kv):
 
 
 class VRamPoller(threading.Thread):
-    """30s 轮询 nvidia-smi 显存, 记录峰值(protocol §9)。失败静默(不影响主链)。"""
+    """30s 轮询 nvidia-smi 显存, 记录峰值(protocol §9)。失败静默(不影响主链)。
+
+    注意属性名用 _halt: 不能叫 _stop —— 会遮蔽 threading.Thread 内部私有方法
+    Thread._stop(), 线程收尾时内部以 self._stop() 调用之, Event 不可调用即崩
+    (10-13 20:28 链首崩根因)。
+    """
 
     def __init__(self):
         super().__init__(daemon=True)
-        self._stop = threading.Event()
+        self._halt = threading.Event()
         self.peak = 0
 
     def run(self):
-        while not self._stop.is_set():
+        while not self._halt.is_set():
             try:
                 r = subprocess.run(
                     ["nvidia-smi", "--query-gpu=memory.used",
@@ -142,10 +147,10 @@ class VRamPoller(threading.Thread):
                 self.peak = max(self.peak, int(r.stdout.strip().splitlines()[0]))
             except Exception:
                 pass
-            self._stop.wait(30)
+            self._halt.wait(30)
 
     def stop(self):
-        self._stop.set()
+        self._halt.set()
         self.join(timeout=25)
         return self.peak
 

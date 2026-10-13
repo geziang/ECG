@@ -24,3 +24,13 @@
 - **N1/N2 入队**:run_joint_chain.py 增 n1(M3+随机心拍窗口)/n2(M3+打乱 RR 标签)配置(仅 s0,殿后于 m6);noise_eval 同步改造为逐记录预测+噪声偏移落盘(protocol §9,行已记但预测缺失时重算补存,收官可 --phase noise 补跑)。
 - **守夜器事故(重要教训, 已修复)**: apply_n1n2.py 首发在 19:38 于 m3 PT 存活期间误判"安全窗口"并写入热文件——根因①判活探针走 CIM 全枚举, 撞上本机已知"CIM 随机漏行"病(09-20 b0fast 误报同源);根因②补丁文本一处缺右括号+锚点只取首行致 help 行重复, py_compile 失败。**链的 m3 PT(pid 17892)经查毫发无损**(1 秒坏文件窗口未撞上 DataLoader 重导入, epoch 50/100 正常), 原件已自动回滚逐位恢复。修复:①判活改双通道(链分段日志为主=链进程自写免疫 WMI 抽风, CIM 兜底, 任一在跑即视为在跑)+进入窗口后 20s 双重确认;②补丁先 compile() 内存预检再落盘;③锚点改两行完整语句。守夜器 19:44 重启(Start-Process 分离), 现守候首个安全窗口(预计 ~20:30 m3 s0 PT 结束后的 LP/FT 段), 落地成功后 touch .n1n2_ready, 值班 cron 据 phase-2 条件在 phase-1 完成后重启链接跑 n1/n2。
 - **统计件就位并验证**: run_joint_stats.py(配对 bootstrap 10k 双指标[AUPRC 主/AUROC 次]+DeLong+交互效应 I 逐种子+protocol §10 三表+锚点预测重放[confirm 工件无 y_prob, X_test+classifier CPU 前向, 对拍冻结 auroc |Δ|<5e-3])。smoke 验证: m1:m0 cpsc AUPRC Δ+0.830pt CI[+0.295,+1.315] p=0.001 / AUROC +0.103pt p=0.206——与 W6 Stage0/W5 官方冻结数逐位吻合, 机器可直接用于收官。RNG=20261013, N_BOOT=10000, 全量约 2-3h CPU。
+
+## 2026-10-13 21:26 N1/N2 落地器 FAIL 已回滚: RuntimeError(详见 logs/apply_n1n2.log), 链不受影响
+
+## 2026-10-13 21:2x 值班#3: 链双崩事故定位修复 + 恢复 + m3 s0 首数落账
+
+- **现象**: m3 s0 PT 20:28 正常收官(checkpoint 三件齐, SHA b46b382b)但链无下文; 21:23 值班发现链进程(pid30880)已死, stderr 残留 TypeError: 'Event' object is not callable(chain.out.log.err, 重启已被覆写, 本文即存档)。
+- **根因一(VRamPoller 线程陷阱)**: 轮询线程把 threading.Event 存为 self._stop, 遮蔽 threading.Thread 内部私有方法 Thread._stop(); PT 完成时 stop()→join()→线程收尾内部 self._stop() 调用撞上 Event → TypeError → 链在 subprocess 返回后、写"PT: exit="行前崩死。修复: 属性改名 _halt(附注释固化教训), 回归自测 start/set/join 通过。PT 孤儿跑完无损; manifest m3/0 条目由本轮手工补录(wall≈5952s, vram 8353=巡检抽样[峰值器崩前未返回], sha 与 PT 日志打印值一致)。
+- **根因二(预测白名单)**: 重启后 m3 s0 LP 训练成功但落盘被 metrics_ext._assert_w3_dir 拒——白名单只认 runlog/W3..W8, 不含 JOINT_20261013 → 链二次退出。修复: 白名单追加 /runlog/joint_20261013/(W2 硬拒与其余拒绝不变, 单测 4 例: JOINT 过/W2/M/tmp 拒)。
+- **恢复**: 21:27:58 链三启(pid 27228, 配置含 n1/n2), m3 s0 PT 幂等跳过, LP 出数: ptbxl 0.8858/0.6499, cpsc 0.9486/0.7696(单种子, 不做判定; 对照家族: M2-s2 cpsc 0.9479/0.7709, M2-s4 0.9498/0.7658——同区间)。chapman 在跑→FT10→m3 s2。
+- **守夜器状态**: 仍存活守候(pid 30240)。其链日志通道要求出现"PT: exit="行才认窗口——m3 s2 PT 完成后(~23:1x)自动解锁, 预计在 m3 s2 的 LP/FT 段落地 N1/N2 补丁; 对 phase-2(m6 后)时间表无影响。
