@@ -127,3 +127,6 @@ ts,ckpt,seed,eval,downstream,cond,auroc,auprc,git_sha,checkpoint_sha256,protocol
 2026-10-14 07:36,m3-lasteval,2,lpnoise,chapman,em@5,0.9810,0.9492,a7b3504,6073a372d169458b2cc548433632fa0db77bcbf418b857a70e091851e87ab678,joint-20261013,"JOINT 参照行: 同噪声实现配对(last_half), 见任务书 §四"
 2026-10-14 07:36,m4,2,lpnoise,chapman,em@10,0.9952,0.9854,a7b3504,5994300a8821258168fee6f86ef6a1842c28b0a029c76e357452cbea47941a65,joint-20261013,"JOINT M4: trc1+dv0.01+rr0.1+nstdb0.5/first_half, NFH 100ep"
 2026-10-14 07:36,m3-lasteval,2,lpnoise,chapman,em@10,0.9928,0.9787,a7b3504,6073a372d169458b2cc548433632fa0db77bcbf418b857a70e091851e87ab678,joint-20261013,"JOINT 参照行: 同噪声实现配对(last_half), 见任务书 §四"
+2026-10-14 09:16,m4,4,lp,ptbxl,clean,0.8886,0.6580,4449508,4eb7fca49019fcbb508789776d81f096a59dccccf0290fc75b7fa633eccefa63,joint-20261013,"JOINT M4: trc1+dv0.01+rr0.1+nstdb0.5/first_half, NFH 100ep"
+2026-10-14 09:17,m4,4,lp,cpsc,clean,0.9508,0.7696,4449508,4eb7fca49019fcbb508789776d81f096a59dccccf0290fc75b7fa633eccefa63,joint-20261013,"JOINT M4: trc1+dv0.01+rr0.1+nstdb0.5/first_half, NFH 100ep"
+2026-10-14 09:18,m4,4,lp,chapman,clean,0.9957,0.9865,4449508,4eb7fca49019fcbb508789776d81f096a59dccccf0290fc75b7fa633eccefa63,joint-20261013,"JOINT M4: trc1+dv0.01+rr0.1+nstdb0.5/first_half, NFH 100ep"
