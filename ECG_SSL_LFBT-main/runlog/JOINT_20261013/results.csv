@@ -189,3 +189,7 @@ ts,ckpt,seed,eval,downstream,cond,auroc,auprc,git_sha,checkpoint_sha256,protocol
 2026-10-14 11:26,a1,0,lp,cpsc,clean,0.9467,0.7640,df2a49b,0d4afd6ffffab103eeb7c2f0eac17dec2b6180424ae277324561b8aba28c52a0,joint-20261013,"JOINT A1: dv0.01/rr0(Beat-only), 三种子重跑(W8 E5 s0 错缓存, 任务书 §二)"
 2026-10-14 11:26,a1,0,lp,chapman,clean,0.9961,0.9880,df2a49b,0d4afd6ffffab103eeb7c2f0eac17dec2b6180424ae277324561b8aba28c52a0,joint-20261013,"JOINT A1: dv0.01/rr0(Beat-only), 三种子重跑(W8 E5 s0 错缓存, 任务书 §二)"
 2026-10-14 11:56,a1,0,ft10,ptbxl,clean,0.8592,0.6351,df2a49b,0d4afd6ffffab103eeb7c2f0eac17dec2b6180424ae277324561b8aba28c52a0,joint-20261013,"JOINT A1: dv0.01/rr0(Beat-only), 三种子重跑(W8 E5 s0 错缓存, 任务书 §二)"
+2026-10-14 13:33,a1,2,lp,ptbxl,clean,0.8884,0.6585,c692f12,24b5ca0d3d078f5515b0e650b4dca0b294198f31f895bea686f311af80d7a573,joint-20261013,"JOINT A1: dv0.01/rr0(Beat-only), 三种子重跑(W8 E5 s0 错缓存, 任务书 §二)"
+2026-10-14 13:34,a1,2,lp,cpsc,clean,0.9482,0.7635,c692f12,24b5ca0d3d078f5515b0e650b4dca0b294198f31f895bea686f311af80d7a573,joint-20261013,"JOINT A1: dv0.01/rr0(Beat-only), 三种子重跑(W8 E5 s0 错缓存, 任务书 §二)"
+2026-10-14 13:35,a1,2,lp,chapman,clean,0.9964,0.9888,c692f12,24b5ca0d3d078f5515b0e650b4dca0b294198f31f895bea686f311af80d7a573,joint-20261013,"JOINT A1: dv0.01/rr0(Beat-only), 三种子重跑(W8 E5 s0 错缓存, 任务书 §二)"
+2026-10-14 14:05,a1,2,ft10,ptbxl,clean,0.8601,0.6332,c692f12,24b5ca0d3d078f5515b0e650b4dca0b294198f31f895bea686f311af80d7a573,joint-20261013,"JOINT A1: dv0.01/rr0(Beat-only), 三种子重跑(W8 E5 s0 错缓存, 任务书 §二)"
