@@ -383,3 +383,7 @@ ts,ckpt,seed,eval,downstream,cond,auroc,auprc,git_sha,checkpoint_sha256,protocol
 2026-10-15 02:50,m1-lasteval,4,lpnoise,chapman,em@5,0.9795,0.9475,21a4577,5979f230172000c51b9de93fc6d96d675c844841610f0b71cbb0c8e0147c982d,joint-20261013,"JOINT 参照行: 同噪声实现配对(last_half), 见任务书 §四"
 2026-10-15 02:50,m6,4,lpnoise,chapman,em@10,0.9953,0.9861,21a4577,7ad8ccedb8910aaadecfdff48e191ee2f6638ea7941a1df55f4ff52c6d6c93a4,joint-20261013,JOINT M6: trc1+nstdb0.5/first_half(噪声增益是否依赖 Beat-RR)
 2026-10-15 02:50,m1-lasteval,4,lpnoise,chapman,em@10,0.9920,0.9774,21a4577,5979f230172000c51b9de93fc6d96d675c844841610f0b71cbb0c8e0147c982d,joint-20261013,"JOINT 参照行: 同噪声实现配对(last_half), 见任务书 §四"
+2026-10-15 04:30,n1,0,lp,ptbxl,clean,0.8837,0.6480,3031258,70183087acef215904c9dc0442e70ef89a4c20f5c743b69f0ae0743c8eff5c34,joint-20261013,"JOINT N1: M3+随机心拍窗口(反事实验证 R 峰对齐必要性), s0"
+2026-10-15 04:30,n1,0,lp,cpsc,clean,0.9475,0.7598,3031258,70183087acef215904c9dc0442e70ef89a4c20f5c743b69f0ae0743c8eff5c34,joint-20261013,"JOINT N1: M3+随机心拍窗口(反事实验证 R 峰对齐必要性), s0"
+2026-10-15 04:31,n1,0,lp,chapman,clean,0.9959,0.9872,3031258,70183087acef215904c9dc0442e70ef89a4c20f5c743b69f0ae0743c8eff5c34,joint-20261013,"JOINT N1: M3+随机心拍窗口(反事实验证 R 峰对齐必要性), s0"
+2026-10-15 05:02,n1,0,ft10,ptbxl,clean,0.8657,0.6350,3031258,70183087acef215904c9dc0442e70ef89a4c20f5c743b69f0ae0743c8eff5c34,joint-20261013,"JOINT N1: M3+随机心拍窗口(反事实验证 R 峰对齐必要性), s0"

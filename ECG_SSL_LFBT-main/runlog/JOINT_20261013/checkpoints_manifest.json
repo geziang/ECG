@@ -181,5 +181,18 @@
    "ft10_wall_s": 1818.9,
    "noise27_wall_s": 16.3
   }
+ },
+ "n1": {
+  "0": {
+   "pt_wall_s": 5916.1,
+   "vram_peak_mib": 8498,
+   "git_sha": "3031258",
+   "ckpt_sha256": "70183087acef215904c9dc0442e70ef89a4c20f5c743b69f0ae0743c8eff5c34",
+   "done": true,
+   "lp_ptbxl_wall_s": 71.9,
+   "lp_cpsc_wall_s": 55.8,
+   "lp_chapman_wall_s": 61.0,
+   "ft10_wall_s": 1819.5
+  }
  }
 }
