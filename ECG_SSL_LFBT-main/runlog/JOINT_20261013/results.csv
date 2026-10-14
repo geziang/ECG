@@ -185,3 +185,7 @@ ts,ckpt,seed,eval,downstream,cond,auroc,auprc,git_sha,checkpoint_sha256,protocol
 2026-10-14 09:48,m3-lasteval,4,lpnoise,chapman,em@5,0.9821,0.9525,654ff7a,e92da645113e3f7473b5049807b811b4c477969e8ed80c8e323c566e394c0658,joint-20261013,"JOINT 参照行: 同噪声实现配对(last_half), 见任务书 §四"
 2026-10-14 09:48,m4,4,lpnoise,chapman,em@10,0.9945,0.9834,654ff7a,4eb7fca49019fcbb508789776d81f096a59dccccf0290fc75b7fa633eccefa63,joint-20261013,"JOINT M4: trc1+dv0.01+rr0.1+nstdb0.5/first_half, NFH 100ep"
 2026-10-14 09:48,m3-lasteval,4,lpnoise,chapman,em@10,0.9922,0.9774,654ff7a,e92da645113e3f7473b5049807b811b4c477969e8ed80c8e323c566e394c0658,joint-20261013,"JOINT 参照行: 同噪声实现配对(last_half), 见任务书 §四"
+2026-10-14 11:25,a1,0,lp,ptbxl,clean,0.8858,0.6572,df2a49b,0d4afd6ffffab103eeb7c2f0eac17dec2b6180424ae277324561b8aba28c52a0,joint-20261013,"JOINT A1: dv0.01/rr0(Beat-only), 三种子重跑(W8 E5 s0 错缓存, 任务书 §二)"
+2026-10-14 11:26,a1,0,lp,cpsc,clean,0.9467,0.7640,df2a49b,0d4afd6ffffab103eeb7c2f0eac17dec2b6180424ae277324561b8aba28c52a0,joint-20261013,"JOINT A1: dv0.01/rr0(Beat-only), 三种子重跑(W8 E5 s0 错缓存, 任务书 §二)"
+2026-10-14 11:26,a1,0,lp,chapman,clean,0.9961,0.9880,df2a49b,0d4afd6ffffab103eeb7c2f0eac17dec2b6180424ae277324561b8aba28c52a0,joint-20261013,"JOINT A1: dv0.01/rr0(Beat-only), 三种子重跑(W8 E5 s0 错缓存, 任务书 §二)"
+2026-10-14 11:56,a1,0,ft10,ptbxl,clean,0.8592,0.6351,df2a49b,0d4afd6ffffab103eeb7c2f0eac17dec2b6180424ae277324561b8aba28c52a0,joint-20261013,"JOINT A1: dv0.01/rr0(Beat-only), 三种子重跑(W8 E5 s0 错缓存, 任务书 §二)"
