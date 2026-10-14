@@ -205,3 +205,7 @@ ts,ckpt,seed,eval,downstream,cond,auroc,auprc,git_sha,checkpoint_sha256,protocol
 2026-10-14 19:13,a2,2,lp,cpsc,clean,0.9437,0.7583,c307b2a,97828bcb868091c74f7816a19d9a32189543c37f9a292bf467f73d9da80894d6,joint-20261013,"JOINT A2: dv0/rr0.1(RR-only), 三种子重跑(同上)"
 2026-10-14 19:13,a2,2,lp,chapman,clean,0.9963,0.9889,c307b2a,97828bcb868091c74f7816a19d9a32189543c37f9a292bf467f73d9da80894d6,joint-20261013,"JOINT A2: dv0/rr0.1(RR-only), 三种子重跑(同上)"
 2026-10-14 19:43,a2,2,ft10,ptbxl,clean,0.8621,0.6356,c307b2a,97828bcb868091c74f7816a19d9a32189543c37f9a292bf467f73d9da80894d6,joint-20261013,"JOINT A2: dv0/rr0.1(RR-only), 三种子重跑(同上)"
+2026-10-14 20:57,a2,4,lp,ptbxl,clean,0.8877,0.6512,dbfb67d,d237b3d7656a9bb69b30eb88aa1835036722ea7e7f36f1e54d99fde197bcb26e,joint-20261013,"JOINT A2: dv0/rr0.1(RR-only), 三种子重跑(同上)"
+2026-10-14 20:58,a2,4,lp,cpsc,clean,0.9465,0.7583,dbfb67d,d237b3d7656a9bb69b30eb88aa1835036722ea7e7f36f1e54d99fde197bcb26e,joint-20261013,"JOINT A2: dv0/rr0.1(RR-only), 三种子重跑(同上)"
+2026-10-14 20:59,a2,4,lp,chapman,clean,0.9962,0.9882,dbfb67d,d237b3d7656a9bb69b30eb88aa1835036722ea7e7f36f1e54d99fde197bcb26e,joint-20261013,"JOINT A2: dv0/rr0.1(RR-only), 三种子重跑(同上)"
+2026-10-14 21:29,a2,4,ft10,ptbxl,clean,0.8542,0.6275,dbfb67d,d237b3d7656a9bb69b30eb88aa1835036722ea7e7f36f1e54d99fde197bcb26e,joint-20261013,"JOINT A2: dv0/rr0.1(RR-only), 三种子重跑(同上)"
