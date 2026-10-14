@@ -209,3 +209,61 @@ ts,ckpt,seed,eval,downstream,cond,auroc,auprc,git_sha,checkpoint_sha256,protocol
 2026-10-14 20:58,a2,4,lp,cpsc,clean,0.9465,0.7583,dbfb67d,d237b3d7656a9bb69b30eb88aa1835036722ea7e7f36f1e54d99fde197bcb26e,joint-20261013,"JOINT A2: dv0/rr0.1(RR-only), 三种子重跑(同上)"
 2026-10-14 20:59,a2,4,lp,chapman,clean,0.9962,0.9882,dbfb67d,d237b3d7656a9bb69b30eb88aa1835036722ea7e7f36f1e54d99fde197bcb26e,joint-20261013,"JOINT A2: dv0/rr0.1(RR-only), 三种子重跑(同上)"
 2026-10-14 21:29,a2,4,ft10,ptbxl,clean,0.8542,0.6275,dbfb67d,d237b3d7656a9bb69b30eb88aa1835036722ea7e7f36f1e54d99fde197bcb26e,joint-20261013,"JOINT A2: dv0/rr0.1(RR-only), 三种子重跑(同上)"
+2026-10-14 22:43,m6,0,lp,ptbxl,clean,0.8916,0.6572,46f8a87,d94cc71bdd034828166be086673e3399abd1fba9734c6ea6bfdad74e6eaf5592,joint-20261013,JOINT M6: trc1+nstdb0.5/first_half(噪声增益是否依赖 Beat-RR)
+2026-10-14 22:44,m6,0,lp,cpsc,clean,0.9521,0.7783,46f8a87,d94cc71bdd034828166be086673e3399abd1fba9734c6ea6bfdad74e6eaf5592,joint-20261013,JOINT M6: trc1+nstdb0.5/first_half(噪声增益是否依赖 Beat-RR)
+2026-10-14 22:45,m6,0,lp,chapman,clean,0.9960,0.9874,46f8a87,d94cc71bdd034828166be086673e3399abd1fba9734c6ea6bfdad74e6eaf5592,joint-20261013,JOINT M6: trc1+nstdb0.5/first_half(噪声增益是否依赖 Beat-RR)
+2026-10-14 23:15,m6,0,ft10,ptbxl,clean,0.8628,0.6352,46f8a87,d94cc71bdd034828166be086673e3399abd1fba9734c6ea6bfdad74e6eaf5592,joint-20261013,JOINT M6: trc1+nstdb0.5/first_half(噪声增益是否依赖 Beat-RR)
+2026-10-14 23:15,m6,0,lpnoise,ptbxl,bw@0,0.8757,0.6384,46f8a87,d94cc71bdd034828166be086673e3399abd1fba9734c6ea6bfdad74e6eaf5592,joint-20261013,JOINT M6: trc1+nstdb0.5/first_half(噪声增益是否依赖 Beat-RR)
+2026-10-14 23:15,m1-lasteval,0,lpnoise,ptbxl,bw@0,0.8490,0.5940,46f8a87,af242a89c340969fd57e70349e4b88e4bf6725c5586f5c12d62a96a199ed9524,joint-20261013,"JOINT 参照行: 同噪声实现配对(last_half), 见任务书 §四"
+2026-10-14 23:15,m6,0,lpnoise,ptbxl,bw@5,0.8844,0.6466,46f8a87,d94cc71bdd034828166be086673e3399abd1fba9734c6ea6bfdad74e6eaf5592,joint-20261013,JOINT M6: trc1+nstdb0.5/first_half(噪声增益是否依赖 Beat-RR)
+2026-10-14 23:15,m1-lasteval,0,lpnoise,ptbxl,bw@5,0.8639,0.6133,46f8a87,af242a89c340969fd57e70349e4b88e4bf6725c5586f5c12d62a96a199ed9524,joint-20261013,"JOINT 参照行: 同噪声实现配对(last_half), 见任务书 §四"
+2026-10-14 23:15,m6,0,lpnoise,ptbxl,bw@10,0.8876,0.6541,46f8a87,d94cc71bdd034828166be086673e3399abd1fba9734c6ea6bfdad74e6eaf5592,joint-20261013,JOINT M6: trc1+nstdb0.5/first_half(噪声增益是否依赖 Beat-RR)
+2026-10-14 23:15,m1-lasteval,0,lpnoise,ptbxl,bw@10,0.8684,0.6328,46f8a87,af242a89c340969fd57e70349e4b88e4bf6725c5586f5c12d62a96a199ed9524,joint-20261013,"JOINT 参照行: 同噪声实现配对(last_half), 见任务书 §四"
+2026-10-14 23:15,m6,0,lpnoise,ptbxl,ma@0,0.8510,0.5970,46f8a87,d94cc71bdd034828166be086673e3399abd1fba9734c6ea6bfdad74e6eaf5592,joint-20261013,JOINT M6: trc1+nstdb0.5/first_half(噪声增益是否依赖 Beat-RR)
+2026-10-14 23:15,m1-lasteval,0,lpnoise,ptbxl,ma@0,0.7886,0.5091,46f8a87,af242a89c340969fd57e70349e4b88e4bf6725c5586f5c12d62a96a199ed9524,joint-20261013,"JOINT 参照行: 同噪声实现配对(last_half), 见任务书 §四"
+2026-10-14 23:15,m6,0,lpnoise,ptbxl,ma@5,0.8721,0.6326,46f8a87,d94cc71bdd034828166be086673e3399abd1fba9734c6ea6bfdad74e6eaf5592,joint-20261013,JOINT M6: trc1+nstdb0.5/first_half(噪声增益是否依赖 Beat-RR)
+2026-10-14 23:15,m1-lasteval,0,lpnoise,ptbxl,ma@5,0.8314,0.5626,46f8a87,af242a89c340969fd57e70349e4b88e4bf6725c5586f5c12d62a96a199ed9524,joint-20261013,"JOINT 参照行: 同噪声实现配对(last_half), 见任务书 §四"
+2026-10-14 23:15,m6,0,lpnoise,ptbxl,ma@10,0.8825,0.6480,46f8a87,d94cc71bdd034828166be086673e3399abd1fba9734c6ea6bfdad74e6eaf5592,joint-20261013,JOINT M6: trc1+nstdb0.5/first_half(噪声增益是否依赖 Beat-RR)
+2026-10-14 23:15,m1-lasteval,0,lpnoise,ptbxl,ma@10,0.8481,0.5952,46f8a87,af242a89c340969fd57e70349e4b88e4bf6725c5586f5c12d62a96a199ed9524,joint-20261013,"JOINT 参照行: 同噪声实现配对(last_half), 见任务书 §四"
+2026-10-14 23:15,m6,0,lpnoise,ptbxl,em@0,0.8326,0.5638,46f8a87,d94cc71bdd034828166be086673e3399abd1fba9734c6ea6bfdad74e6eaf5592,joint-20261013,JOINT M6: trc1+nstdb0.5/first_half(噪声增益是否依赖 Beat-RR)
+2026-10-14 23:15,m1-lasteval,0,lpnoise,ptbxl,em@0,0.8047,0.5099,46f8a87,af242a89c340969fd57e70349e4b88e4bf6725c5586f5c12d62a96a199ed9524,joint-20261013,"JOINT 参照行: 同噪声实现配对(last_half), 见任务书 §四"
+2026-10-14 23:15,m6,0,lpnoise,ptbxl,em@5,0.8641,0.6273,46f8a87,d94cc71bdd034828166be086673e3399abd1fba9734c6ea6bfdad74e6eaf5592,joint-20261013,JOINT M6: trc1+nstdb0.5/first_half(噪声增益是否依赖 Beat-RR)
+2026-10-14 23:15,m1-lasteval,0,lpnoise,ptbxl,em@5,0.8394,0.5825,46f8a87,af242a89c340969fd57e70349e4b88e4bf6725c5586f5c12d62a96a199ed9524,joint-20261013,"JOINT 参照行: 同噪声实现配对(last_half), 见任务书 §四"
+2026-10-14 23:15,m6,0,lpnoise,ptbxl,em@10,0.8788,0.6421,46f8a87,d94cc71bdd034828166be086673e3399abd1fba9734c6ea6bfdad74e6eaf5592,joint-20261013,JOINT M6: trc1+nstdb0.5/first_half(噪声增益是否依赖 Beat-RR)
+2026-10-14 23:15,m1-lasteval,0,lpnoise,ptbxl,em@10,0.8593,0.6127,46f8a87,af242a89c340969fd57e70349e4b88e4bf6725c5586f5c12d62a96a199ed9524,joint-20261013,"JOINT 参照行: 同噪声实现配对(last_half), 见任务书 §四"
+2026-10-14 23:15,m6,0,lpnoise,cpsc,bw@0,0.9454,0.7515,46f8a87,d94cc71bdd034828166be086673e3399abd1fba9734c6ea6bfdad74e6eaf5592,joint-20261013,JOINT M6: trc1+nstdb0.5/first_half(噪声增益是否依赖 Beat-RR)
+2026-10-14 23:15,m1-lasteval,0,lpnoise,cpsc,bw@0,0.9371,0.7250,46f8a87,af242a89c340969fd57e70349e4b88e4bf6725c5586f5c12d62a96a199ed9524,joint-20261013,"JOINT 参照行: 同噪声实现配对(last_half), 见任务书 §四"
+2026-10-14 23:15,m6,0,lpnoise,cpsc,bw@5,0.9496,0.7578,46f8a87,d94cc71bdd034828166be086673e3399abd1fba9734c6ea6bfdad74e6eaf5592,joint-20261013,JOINT M6: trc1+nstdb0.5/first_half(噪声增益是否依赖 Beat-RR)
+2026-10-14 23:15,m1-lasteval,0,lpnoise,cpsc,bw@5,0.9419,0.7406,46f8a87,af242a89c340969fd57e70349e4b88e4bf6725c5586f5c12d62a96a199ed9524,joint-20261013,"JOINT 参照行: 同噪声实现配对(last_half), 见任务书 §四"
+2026-10-14 23:15,m6,0,lpnoise,cpsc,bw@10,0.9505,0.7667,46f8a87,d94cc71bdd034828166be086673e3399abd1fba9734c6ea6bfdad74e6eaf5592,joint-20261013,JOINT M6: trc1+nstdb0.5/first_half(噪声增益是否依赖 Beat-RR)
+2026-10-14 23:15,m1-lasteval,0,lpnoise,cpsc,bw@10,0.9443,0.7544,46f8a87,af242a89c340969fd57e70349e4b88e4bf6725c5586f5c12d62a96a199ed9524,joint-20261013,"JOINT 参照行: 同噪声实现配对(last_half), 见任务书 §四"
+2026-10-14 23:15,m6,0,lpnoise,cpsc,ma@0,0.9356,0.7190,46f8a87,d94cc71bdd034828166be086673e3399abd1fba9734c6ea6bfdad74e6eaf5592,joint-20261013,JOINT M6: trc1+nstdb0.5/first_half(噪声增益是否依赖 Beat-RR)
+2026-10-14 23:15,m1-lasteval,0,lpnoise,cpsc,ma@0,0.8981,0.6161,46f8a87,af242a89c340969fd57e70349e4b88e4bf6725c5586f5c12d62a96a199ed9524,joint-20261013,"JOINT 参照行: 同噪声实现配对(last_half), 见任务书 §四"
+2026-10-14 23:15,m6,0,lpnoise,cpsc,ma@5,0.9431,0.7440,46f8a87,d94cc71bdd034828166be086673e3399abd1fba9734c6ea6bfdad74e6eaf5592,joint-20261013,JOINT M6: trc1+nstdb0.5/first_half(噪声增益是否依赖 Beat-RR)
+2026-10-14 23:15,m1-lasteval,0,lpnoise,cpsc,ma@5,0.9219,0.6872,46f8a87,af242a89c340969fd57e70349e4b88e4bf6725c5586f5c12d62a96a199ed9524,joint-20261013,"JOINT 参照行: 同噪声实现配对(last_half), 见任务书 §四"
+2026-10-14 23:15,m6,0,lpnoise,cpsc,ma@10,0.9478,0.7635,46f8a87,d94cc71bdd034828166be086673e3399abd1fba9734c6ea6bfdad74e6eaf5592,joint-20261013,JOINT M6: trc1+nstdb0.5/first_half(噪声增益是否依赖 Beat-RR)
+2026-10-14 23:15,m1-lasteval,0,lpnoise,cpsc,ma@10,0.9368,0.7342,46f8a87,af242a89c340969fd57e70349e4b88e4bf6725c5586f5c12d62a96a199ed9524,joint-20261013,"JOINT 参照行: 同噪声实现配对(last_half), 见任务书 §四"
+2026-10-14 23:15,m6,0,lpnoise,cpsc,em@0,0.9192,0.6679,46f8a87,d94cc71bdd034828166be086673e3399abd1fba9734c6ea6bfdad74e6eaf5592,joint-20261013,JOINT M6: trc1+nstdb0.5/first_half(噪声增益是否依赖 Beat-RR)
+2026-10-14 23:15,m1-lasteval,0,lpnoise,cpsc,em@0,0.8767,0.5696,46f8a87,af242a89c340969fd57e70349e4b88e4bf6725c5586f5c12d62a96a199ed9524,joint-20261013,"JOINT 参照行: 同噪声实现配对(last_half), 见任务书 §四"
+2026-10-14 23:15,m6,0,lpnoise,cpsc,em@5,0.9378,0.7205,46f8a87,d94cc71bdd034828166be086673e3399abd1fba9734c6ea6bfdad74e6eaf5592,joint-20261013,JOINT M6: trc1+nstdb0.5/first_half(噪声增益是否依赖 Beat-RR)
+2026-10-14 23:15,m1-lasteval,0,lpnoise,cpsc,em@5,0.9169,0.6562,46f8a87,af242a89c340969fd57e70349e4b88e4bf6725c5586f5c12d62a96a199ed9524,joint-20261013,"JOINT 参照行: 同噪声实现配对(last_half), 见任务书 §四"
+2026-10-14 23:15,m6,0,lpnoise,cpsc,em@10,0.9464,0.7513,46f8a87,d94cc71bdd034828166be086673e3399abd1fba9734c6ea6bfdad74e6eaf5592,joint-20261013,JOINT M6: trc1+nstdb0.5/first_half(噪声增益是否依赖 Beat-RR)
+2026-10-14 23:15,m1-lasteval,0,lpnoise,cpsc,em@10,0.9354,0.7216,46f8a87,af242a89c340969fd57e70349e4b88e4bf6725c5586f5c12d62a96a199ed9524,joint-20261013,"JOINT 参照行: 同噪声实现配对(last_half), 见任务书 §四"
+2026-10-14 23:15,m6,0,lpnoise,chapman,bw@0,0.9952,0.9848,46f8a87,d94cc71bdd034828166be086673e3399abd1fba9734c6ea6bfdad74e6eaf5592,joint-20261013,JOINT M6: trc1+nstdb0.5/first_half(噪声增益是否依赖 Beat-RR)
+2026-10-14 23:15,m1-lasteval,0,lpnoise,chapman,bw@0,0.9944,0.9827,46f8a87,af242a89c340969fd57e70349e4b88e4bf6725c5586f5c12d62a96a199ed9524,joint-20261013,"JOINT 参照行: 同噪声实现配对(last_half), 见任务书 §四"
+2026-10-14 23:15,m6,0,lpnoise,chapman,bw@5,0.9958,0.9872,46f8a87,d94cc71bdd034828166be086673e3399abd1fba9734c6ea6bfdad74e6eaf5592,joint-20261013,JOINT M6: trc1+nstdb0.5/first_half(噪声增益是否依赖 Beat-RR)
+2026-10-14 23:15,m1-lasteval,0,lpnoise,chapman,bw@5,0.9955,0.9859,46f8a87,af242a89c340969fd57e70349e4b88e4bf6725c5586f5c12d62a96a199ed9524,joint-20261013,"JOINT 参照行: 同噪声实现配对(last_half), 见任务书 §四"
+2026-10-14 23:15,m6,0,lpnoise,chapman,bw@10,0.9961,0.9877,46f8a87,d94cc71bdd034828166be086673e3399abd1fba9734c6ea6bfdad74e6eaf5592,joint-20261013,JOINT M6: trc1+nstdb0.5/first_half(噪声增益是否依赖 Beat-RR)
+2026-10-14 23:15,m1-lasteval,0,lpnoise,chapman,bw@10,0.9962,0.9879,46f8a87,af242a89c340969fd57e70349e4b88e4bf6725c5586f5c12d62a96a199ed9524,joint-20261013,"JOINT 参照行: 同噪声实现配对(last_half), 见任务书 §四"
+2026-10-14 23:15,m6,0,lpnoise,chapman,ma@0,0.9926,0.9792,46f8a87,d94cc71bdd034828166be086673e3399abd1fba9734c6ea6bfdad74e6eaf5592,joint-20261013,JOINT M6: trc1+nstdb0.5/first_half(噪声增益是否依赖 Beat-RR)
+2026-10-14 23:15,m1-lasteval,0,lpnoise,chapman,ma@0,0.9500,0.8672,46f8a87,af242a89c340969fd57e70349e4b88e4bf6725c5586f5c12d62a96a199ed9524,joint-20261013,"JOINT 参照行: 同噪声实现配对(last_half), 见任务书 §四"
+2026-10-14 23:15,m6,0,lpnoise,chapman,ma@5,0.9952,0.9857,46f8a87,d94cc71bdd034828166be086673e3399abd1fba9734c6ea6bfdad74e6eaf5592,joint-20261013,JOINT M6: trc1+nstdb0.5/first_half(噪声增益是否依赖 Beat-RR)
+2026-10-14 23:15,m1-lasteval,0,lpnoise,chapman,ma@5,0.9742,0.9288,46f8a87,af242a89c340969fd57e70349e4b88e4bf6725c5586f5c12d62a96a199ed9524,joint-20261013,"JOINT 参照行: 同噪声实现配对(last_half), 见任务书 §四"
+2026-10-14 23:15,m6,0,lpnoise,chapman,ma@10,0.9958,0.9871,46f8a87,d94cc71bdd034828166be086673e3399abd1fba9734c6ea6bfdad74e6eaf5592,joint-20261013,JOINT M6: trc1+nstdb0.5/first_half(噪声增益是否依赖 Beat-RR)
+2026-10-14 23:15,m1-lasteval,0,lpnoise,chapman,ma@10,0.9873,0.9625,46f8a87,af242a89c340969fd57e70349e4b88e4bf6725c5586f5c12d62a96a199ed9524,joint-20261013,"JOINT 参照行: 同噪声实现配对(last_half), 见任务书 §四"
+2026-10-14 23:15,m6,0,lpnoise,chapman,em@0,0.9856,0.9608,46f8a87,d94cc71bdd034828166be086673e3399abd1fba9734c6ea6bfdad74e6eaf5592,joint-20261013,JOINT M6: trc1+nstdb0.5/first_half(噪声增益是否依赖 Beat-RR)
+2026-10-14 23:15,m1-lasteval,0,lpnoise,chapman,em@0,0.9221,0.8112,46f8a87,af242a89c340969fd57e70349e4b88e4bf6725c5586f5c12d62a96a199ed9524,joint-20261013,"JOINT 参照行: 同噪声实现配对(last_half), 见任务书 §四"
+2026-10-14 23:15,m6,0,lpnoise,chapman,em@5,0.9938,0.9817,46f8a87,d94cc71bdd034828166be086673e3399abd1fba9734c6ea6bfdad74e6eaf5592,joint-20261013,JOINT M6: trc1+nstdb0.5/first_half(噪声增益是否依赖 Beat-RR)
+2026-10-14 23:15,m1-lasteval,0,lpnoise,chapman,em@5,0.9779,0.9434,46f8a87,af242a89c340969fd57e70349e4b88e4bf6725c5586f5c12d62a96a199ed9524,joint-20261013,"JOINT 参照行: 同噪声实现配对(last_half), 见任务书 §四"
+2026-10-14 23:15,m6,0,lpnoise,chapman,em@10,0.9953,0.9856,46f8a87,d94cc71bdd034828166be086673e3399abd1fba9734c6ea6bfdad74e6eaf5592,joint-20261013,JOINT M6: trc1+nstdb0.5/first_half(噪声增益是否依赖 Beat-RR)
+2026-10-14 23:15,m1-lasteval,0,lpnoise,chapman,em@10,0.9922,0.9772,46f8a87,af242a89c340969fd57e70349e4b88e4bf6725c5586f5c12d62a96a199ed9524,joint-20261013,"JOINT 参照行: 同噪声实现配对(last_half), 见任务书 §四"
