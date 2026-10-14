@@ -156,6 +156,28 @@
    "lp_chapman_wall_s": 50.8,
    "ft10_wall_s": 1794.3,
    "noise27_wall_s": 16.3
+  },
+  "2": {
+   "pt_wall_s": 4421.0,
+   "vram_peak_mib": 7786,
+   "git_sha": "8ef0647",
+   "ckpt_sha256": "5c559c37a067b17983aad2377dd88db7d776d760b3451e6176429d4512548732",
+   "done": true,
+   "lp_ptbxl_wall_s": 59.7,
+   "lp_cpsc_wall_s": 49.1,
+   "lp_chapman_wall_s": 52.0,
+   "ft10_wall_s": 1802.5,
+   "noise27_wall_s": 29.5
+  },
+  "4": {
+   "pt_wall_s": 4440.6,
+   "vram_peak_mib": 7771,
+   "git_sha": "8ef0647",
+   "ckpt_sha256": "7ad8ccedb8910aaadecfdff48e191ee2f6638ea7941a1df55f4ff52c6d6c93a4",
+   "done": true,
+   "lp_ptbxl_wall_s": 71.0,
+   "lp_cpsc_wall_s": 54.1,
+   "lp_chapman_wall_s": 58.8
   }
  }
 }
