@@ -108,5 +108,18 @@
    "lp_chapman_wall_s": 50.7,
    "ft10_wall_s": 1794.8
   }
+ },
+ "a2": {
+  "0": {
+   "pt_wall_s": 4390.0,
+   "vram_peak_mib": 7755,
+   "git_sha": "4f28fde",
+   "ckpt_sha256": "106dbee8af6ee4ea63fb132d60e89aba3fde69f1532169606568a785c2f7353a",
+   "done": true,
+   "lp_ptbxl_wall_s": 57.7,
+   "lp_cpsc_wall_s": 47.9,
+   "lp_chapman_wall_s": 51.3,
+   "ft10_wall_s": 1789.2
+  }
  }
 }
