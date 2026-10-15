@@ -1,0 +1,15 @@
+Traceback (most recent call last):
+  File "F:\新实验\ECG_SSL_LFBT-main\runlog\JOINT_20261013\run_joint_stats.py", line 335, in <module>
+    main()
+  File "F:\新实验\ECG_SSL_LFBT-main\runlog\JOINT_20261013\run_joint_stats.py", line 330, in main
+    run_tables()
+  File "F:\新实验\ECG_SSL_LFBT-main\runlog\JOINT_20261013\run_joint_stats.py", line 274, in run_tables
+    lines.append(f"{model},{ds},{np.mean(au):.4f},{np.std(au):.4f},"
+                                 ^^^^^^^^^^^
+  File "C:\Users\admin\.conda\envs\DL\Lib\site-packages\numpy\core\fromnumeric.py", line 3504, in mean
+    return _methods._mean(a, axis=axis, dtype=dtype,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\admin\.conda\envs\DL\Lib\site-packages\numpy\core\_methods.py", line 102, in _mean
+    arr = asanyarray(a)
+          ^^^^^^^^^^^^^
+ValueError: setting an array element with a sequence. The requested array has an inhomogeneous shape after 2 dimensions. The detected shape was (3, 2) + inhomogeneous part.

@@ -269,8 +269,8 @@ def run_tables():
             preds = load_preds(model, ds, SEEDS, nc)
             if preds is None:
                 continue
-            au = [W4.macro_auroc(*preds[s]) for s in SEEDS if s in preds]
-            ap = [macro_auprc(*preds[s])[0] for s in SEEDS if s in preds]
+            au = [_m_auroc(*preds[s]) for s in SEEDS if s in preds]
+            ap = [_m_auprc(*preds[s]) for s in SEEDS if s in preds]
             lines.append(f"{model},{ds},{np.mean(au):.4f},{np.std(au):.4f},"
                          f"{np.mean(ap):.4f},{np.std(ap):.4f},{len(au)}")
     (OUTD / "table1_lp_3domains.csv").write_text("\n".join(lines) + "\n", encoding="utf-8")
