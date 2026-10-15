@@ -159,3 +159,4 @@
 - **统计阶段 08:23 启动**(detached, logs/stats.out.log): 锚点重放首批 m1/ptbxl 三种子 auroc 与冻结值**四位逐位吻合**; 全量=12 对×3 域×双指标 bootstrap 10k + DeLong + 交互效应 + §10 三表, 预计 2-3h CPU。
 - 剩余: 统计产出 → JOINT_最终报告.md → HOSTS 收官改写; 值班 cron 保留看护至报告落盘。
 - 10-15 12:3x 值班#29(报告轮): 统计 11:4x 全量完成(paired 108 行/交互 2 指标); run_tables 有实现 bug(macro_auroc 返回元组直接 np.mean 崩, 统计方法零改动仅表格装配层, 已修+补跑, table1/2/3 落盘)。**JOINT_最终报告.md 落盘**: §7.1 不过门(M3−M1 +0.20 CI 跨0 / M3−M2 +0.21 CI 跨0; 但 M3−M0 +1.03pt CI[+0.39,+1.68] p=0.0014 显著 3/3 正=探索性联合正向); §7.3 三条件满足(写为联合配置下鲁棒扩展); 交互 I=−0.62 CI 跨0(亚可加趋势 ns); 反事实 N1 塌光/N2≈零; HOSTS 全 ✅。批次关闭。
+- 10-15 15:4x 主会话: 用户指令'生成实验报告上传git'——JOINT 报告已生成且已推送确认(origin=HEAD=3eb000b); 顺手启动 W8 遗留收尾: run_w8_stats.py detached(15 对×2 指标 bootstrap 10k, 复用 JOINT 统计机器+c1 锚点重放; simph:s1 仅 cpsc[S1 逐记录工件只有 W5A cpsc 在档, ptbxl/chapman 以冻结均值差描述如实注记]), ETA ~18:2x; 值班 cron 已改版=统计完成后自动写 W8_最终报告.md(九节结构含 E5 污染更正引用), 预计 ~20:4x 全部落盘。
