@@ -387,3 +387,7 @@ ts,ckpt,seed,eval,downstream,cond,auroc,auprc,git_sha,checkpoint_sha256,protocol
 2026-10-15 04:30,n1,0,lp,cpsc,clean,0.9475,0.7598,3031258,70183087acef215904c9dc0442e70ef89a4c20f5c743b69f0ae0743c8eff5c34,joint-20261013,"JOINT N1: M3+随机心拍窗口(反事实验证 R 峰对齐必要性), s0"
 2026-10-15 04:31,n1,0,lp,chapman,clean,0.9959,0.9872,3031258,70183087acef215904c9dc0442e70ef89a4c20f5c743b69f0ae0743c8eff5c34,joint-20261013,"JOINT N1: M3+随机心拍窗口(反事实验证 R 峰对齐必要性), s0"
 2026-10-15 05:02,n1,0,ft10,ptbxl,clean,0.8657,0.6350,3031258,70183087acef215904c9dc0442e70ef89a4c20f5c743b69f0ae0743c8eff5c34,joint-20261013,"JOINT N1: M3+随机心拍窗口(反事实验证 R 峰对齐必要性), s0"
+2026-10-15 06:41,n2,0,lp,ptbxl,clean,0.8854,0.6539,e85a279,1c05530a27c0b8b72a42025adb4d5db9ce106a44ad4bac708d8fccfed5dafcf9,joint-20261013,"JOINT N2: M3+打乱 RR 标签(反事实验证节律目标信息量), s0"
+2026-10-15 06:42,n2,0,lp,cpsc,clean,0.9477,0.7693,e85a279,1c05530a27c0b8b72a42025adb4d5db9ce106a44ad4bac708d8fccfed5dafcf9,joint-20261013,"JOINT N2: M3+打乱 RR 标签(反事实验证节律目标信息量), s0"
+2026-10-15 06:43,n2,0,lp,chapman,clean,0.9962,0.9880,e85a279,1c05530a27c0b8b72a42025adb4d5db9ce106a44ad4bac708d8fccfed5dafcf9,joint-20261013,"JOINT N2: M3+打乱 RR 标签(反事实验证节律目标信息量), s0"
+2026-10-15 07:13,n2,0,ft10,ptbxl,clean,0.8610,0.6397,e85a279,1c05530a27c0b8b72a42025adb4d5db9ce106a44ad4bac708d8fccfed5dafcf9,joint-20261013,"JOINT N2: M3+打乱 RR 标签(反事实验证节律目标信息量), s0"
