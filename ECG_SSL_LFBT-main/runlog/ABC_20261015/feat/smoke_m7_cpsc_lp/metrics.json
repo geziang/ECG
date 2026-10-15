@@ -1,0 +1,7 @@
+{
+ "auroc": 0.8961663368496987,
+ "auprc": 0.6284760688884066,
+ "checkpoint": "F:\\\u65b0\u5b9e\u9a8c\\ECG_SSL_LFBT-main\\checkpoint\\abc_smoke\\m7\\encoder_group.pth",
+ "num_classes": 9,
+ "seed": 0
+}

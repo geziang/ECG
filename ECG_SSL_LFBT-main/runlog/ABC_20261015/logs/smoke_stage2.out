@@ -1,0 +1,12 @@
+[10-15 17:08:47] ABC 链启动: stages=['smoke'] 解释器=C:\Users\admin\.conda\envs\DL\python.exe pid=29384
+[10-15 17:08:47] === 阶段 smoke ===
+[10-15 17:08:47] smoke m7: 1 epoch 试跑 -> F:\新实验\ECG_SSL_LFBT-main\checkpoint\abc_smoke\m7
+[10-15 17:12:00] smoke m7: 五项全过(损失有限/开关一致/resume 连续/结构加载/缓存正确)
+[10-15 17:12:00] smoke m8: 1 epoch 试跑 -> F:\新实验\ECG_SSL_LFBT-main\checkpoint\abc_smoke\m8
+[10-15 17:15:15] smoke m8: 五项全过(损失有限/开关一致/resume 连续/结构加载/缓存正确)
+[10-15 17:15:15] smoke m9: 1 epoch 试跑 -> F:\新实验\ECG_SSL_LFBT-main\checkpoint\abc_smoke\m9
+[10-15 17:18:01] smoke m9: 五项全过(损失有限/开关一致/resume 连续/结构加载/缓存正确)
+[10-15 17:18:01] smoke m4b: 1 epoch 试跑 -> F:\新实验\ECG_SSL_LFBT-main\checkpoint\abc_smoke\m4b
+[10-15 17:24:33] smoke m4b: 五项全过(损失有限/开关一致/resume 连续/结构加载/缓存正确)
+[10-15 17:25:24] smoke 阶段完成
+[10-15 17:25:24] ABC 链(本轮调度部分)完成

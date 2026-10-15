@@ -1,0 +1,12 @@
+[10-15 17:00:24] ABC 链启动: stages=['smoke'] 解释器=C:\Users\admin\.conda\envs\DL\python.exe pid=39480
+[10-15 17:00:24] === 阶段 smoke ===
+[10-15 17:00:24] smoke m7: 1 epoch 试跑 -> F:\新实验\ECG_SSL_LFBT-main\checkpoint\abc_smoke\m7
+Traceback (most recent call last):
+  File "F:\新实验\ECG_SSL_LFBT-main\runlog\ABC_20261015\run_abc_chain.py", line 702, in <module>
+    main()
+  File "F:\新实验\ECG_SSL_LFBT-main\runlog\ABC_20261015\run_abc_chain.py", line 672, in main
+    stage_smoke()
+  File "F:\新实验\ECG_SSL_LFBT-main\runlog\ABC_20261015\run_abc_chain.py", line 572, in stage_smoke
+    assert rc2 == 0 and "[resume] 恢复自 epoch 1" in txt2, \
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: smoke m7: resume 标记缺失(exit=0)

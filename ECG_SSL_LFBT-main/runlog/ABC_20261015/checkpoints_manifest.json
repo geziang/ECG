@@ -1,0 +1,135 @@
+{
+ "anchor_m0": {
+  "0": {
+   "ckpt_sha256": "de0c28eedb30841492c36644ad1d06e11aab7bb02bbb5b42ff5d18524a5bc177",
+   "ckpt_dir": "F:\\新实验\\ECG_SSL_LFBT-main\\checkpoint\\confirm\\c1_seed0",
+   "audited_at": "2026-10-15 16:58"
+  },
+  "2": {
+   "ckpt_sha256": "26ebf0e26e5abee04f4064182d79e449e3c849693979162577171717cb2b7787",
+   "ckpt_dir": "F:\\新实验\\ECG_SSL_LFBT-main\\checkpoint\\confirm\\c1_seed2",
+   "audited_at": "2026-10-15 16:58"
+  },
+  "4": {
+   "ckpt_sha256": "e599dbcdb69372186c3b49b0d0ced3389e2c909a458d86a8413a58524e31715e",
+   "ckpt_dir": "F:\\新实验\\ECG_SSL_LFBT-main\\checkpoint\\confirm\\c1_seed4",
+   "audited_at": "2026-10-15 16:58"
+  }
+ },
+ "anchor_m1": {
+  "0": {
+   "ckpt_sha256": "af242a89c340969fd57e70349e4b88e4bf6725c5586f5c12d62a96a199ed9524",
+   "ckpt_dir": "F:\\新实验\\ECG_SSL_LFBT-main\\checkpoint\\confirm\\c2_seed0",
+   "audited_at": "2026-10-15 16:58"
+  },
+  "2": {
+   "ckpt_sha256": "d3f8979f70cdce3da7eefa320f72d98ba5a975a5ea4141605fbf52ce34de5666",
+   "ckpt_dir": "F:\\新实验\\ECG_SSL_LFBT-main\\checkpoint\\confirm\\c2_seed2",
+   "audited_at": "2026-10-15 16:58"
+  },
+  "4": {
+   "ckpt_sha256": "5979f230172000c51b9de93fc6d96d675c844841610f0b71cbb0c8e0147c982d",
+   "ckpt_dir": "F:\\新实验\\ECG_SSL_LFBT-main\\checkpoint\\confirm\\c2_seed4",
+   "audited_at": "2026-10-15 16:58"
+  }
+ },
+ "anchor_m3": {
+  "0": {
+   "ckpt_sha256": "b46b382b4d22ac4203d5eb27d4e580049f1848843628e5a1f0b5061711533305",
+   "ckpt_dir": "F:\\新实验\\ECG_SSL_LFBT-main\\checkpoint\\joint_m3\\seed0",
+   "audited_at": "2026-10-15 16:58"
+  },
+  "2": {
+   "ckpt_sha256": "6073a372d169458b2cc548433632fa0db77bcbf418b857a70e091851e87ab678",
+   "ckpt_dir": "F:\\新实验\\ECG_SSL_LFBT-main\\checkpoint\\joint_m3\\seed2",
+   "audited_at": "2026-10-15 16:58"
+  },
+  "4": {
+   "ckpt_sha256": "e92da645113e3f7473b5049807b811b4c477969e8ed80c8e323c566e394c0658",
+   "ckpt_dir": "F:\\新实验\\ECG_SSL_LFBT-main\\checkpoint\\joint_m3\\seed4",
+   "audited_at": "2026-10-15 16:58"
+  }
+ },
+ "anchor_m4": {
+  "0": {
+   "ckpt_sha256": "20bebfd6211d86b1d6cfedb1d4835ac9a54aac9a241130c8e039233a1ac6c6b3",
+   "ckpt_dir": "F:\\新实验\\ECG_SSL_LFBT-main\\checkpoint\\joint_m4_noise\\seed0",
+   "audited_at": "2026-10-15 16:58"
+  },
+  "2": {
+   "ckpt_sha256": "5994300a8821258168fee6f86ef6a1842c28b0a029c76e357452cbea47941a65",
+   "ckpt_dir": "F:\\新实验\\ECG_SSL_LFBT-main\\checkpoint\\joint_m4_noise\\seed2",
+   "audited_at": "2026-10-15 16:58"
+  },
+  "4": {
+   "ckpt_sha256": "4eb7fca49019fcbb508789776d81f096a59dccccf0290fc75b7fa633eccefa63",
+   "ckpt_dir": "F:\\新实验\\ECG_SSL_LFBT-main\\checkpoint\\joint_m4_noise\\seed4",
+   "audited_at": "2026-10-15 16:58"
+  }
+ },
+ "anchor_m5": {
+  "0": {
+   "ckpt_sha256": "6883e5254be34895f8bc12859e3cd9f58fa6948a6b9aa629fe470b4641d9c4e4",
+   "ckpt_dir": "F:\\新实验\\ECG_SSL_LFBT-main\\checkpoint\\w8_noiseiso\\seed0",
+   "audited_at": "2026-10-15 16:58"
+  },
+  "2": {
+   "ckpt_sha256": "6747cb1b114df946fcb846e138ff447dd173ef271d735c0575419032b1d6809e",
+   "ckpt_dir": "F:\\新实验\\ECG_SSL_LFBT-main\\checkpoint\\w8_noiseiso\\seed2",
+   "audited_at": "2026-10-15 16:58"
+  },
+  "4": {
+   "ckpt_sha256": "8685ce9dc70d530db228424ba4eff2282eac7940230a16a665272bf12cf562fd",
+   "ckpt_dir": "F:\\新实验\\ECG_SSL_LFBT-main\\checkpoint\\w8_noiseiso\\seed4",
+   "audited_at": "2026-10-15 16:58"
+  }
+ },
+ "anchor_m6": {
+  "0": {
+   "ckpt_sha256": "d94cc71bdd034828166be086673e3399abd1fba9734c6ea6bfdad74e6eaf5592",
+   "ckpt_dir": "F:\\新实验\\ECG_SSL_LFBT-main\\checkpoint\\joint_m6\\seed0",
+   "audited_at": "2026-10-15 16:58"
+  },
+  "2": {
+   "ckpt_sha256": "5c559c37a067b17983aad2377dd88db7d776d760b3451e6176429d4512548732",
+   "ckpt_dir": "F:\\新实验\\ECG_SSL_LFBT-main\\checkpoint\\joint_m6\\seed2",
+   "audited_at": "2026-10-15 16:58"
+  },
+  "4": {
+   "ckpt_sha256": "7ad8ccedb8910aaadecfdff48e191ee2f6638ea7941a1df55f4ff52c6d6c93a4",
+   "ckpt_dir": "F:\\新实验\\ECG_SSL_LFBT-main\\checkpoint\\joint_m6\\seed4",
+   "audited_at": "2026-10-15 16:58"
+  }
+ },
+ "anchor_n1": {
+  "0": {
+   "ckpt_sha256": "70183087acef215904c9dc0442e70ef89a4c20f5c743b69f0ae0743c8eff5c34",
+   "ckpt_dir": "F:\\新实验\\ECG_SSL_LFBT-main\\checkpoint\\joint_n1\\seed0",
+   "audited_at": "2026-10-15 16:58"
+  }
+ },
+ "anchor_n2": {
+  "0": {
+   "ckpt_sha256": "1c05530a27c0b8b72a42025adb4d5db9ce106a44ad4bac708d8fccfed5dafcf9",
+   "ckpt_dir": "F:\\新实验\\ECG_SSL_LFBT-main\\checkpoint\\joint_n2\\seed0",
+   "audited_at": "2026-10-15 16:58"
+  }
+ },
+ "anchor_m2": {
+  "0": {
+   "ckpt_sha256": "123c4018768a9549dff7c418ebf61c1e1b2bf858a06836c146c754b5cb6ef726",
+   "ckpt_dir": "F:\\新实验\\ECG_SSL_LFBT-main\\checkpoint\\w6_dv\\seed0",
+   "audited_at": "2026-10-15 16:58"
+  },
+  "2": {
+   "ckpt_sha256": "62c4209d1c8a319dfca9f6b6284a6a06850dc1953e6eff56c286075f3af793f1",
+   "ckpt_dir": "F:\\新实验\\ECG_SSL_LFBT-main\\checkpoint\\w7_dv\\seed2",
+   "audited_at": "2026-10-15 16:58"
+  },
+  "4": {
+   "ckpt_sha256": "69272f12f516cd140e802dbf27eb57e1625f8be19e62ec853098a916d48acbe2",
+   "ckpt_dir": "F:\\新实验\\ECG_SSL_LFBT-main\\checkpoint\\w7_dv\\seed4",
+   "audited_at": "2026-10-15 16:58"
+  }
+ }
+}
