@@ -210,11 +210,15 @@ NOISE_TYPES = ("bw", "ma", "em")
 SNRS = ("0", "5", "10")
 
 
-def run_lp_pairs(pairs_list, n_boot):
-    """三域 LP; 返回行列表并做族内校正。"""
+def run_lp_pairs(pairs_list, n_boot, skip=None):
+    """三域 LP; 返回行列表。skip={(task,ds,pair,metric)...} 已有结果的对整体跳过(增量)。"""
     fam_core, fam_explore = [], []
     for ds, nc in DOMAINS:
         for a, b in pairs_list:
+            _pk = ("lp", ds, f"{a}:{b}")
+            if skip and (_pk + ("auprc",)) in skip and (_pk + ("auroc",)) in skip \
+                    and (ds != "cpsc" or (_pk + ("delong_auroc_p_min",)) in skip):
+                continue
             pa = load_preds(pred_dir, a, ds, SEEDS, nc)
             pb = load_preds(pred_dir, b, ds, SEEDS, nc)
             if pa is None or pb is None:
@@ -620,6 +624,89 @@ table_lp_3domains.csv / table_ft10.csv / table_noise27.csv / predictions/ / logs
 
 
 # ---------------------------------------------------------------- 主流程
+def load_csv_rows(path):
+    """paired_stats.csv -> 行 dict(保留 CSV 原值, 复用时不重推导只重算 p_adjusted)。"""
+    rows_c, rows_e = [], []
+    with open(path, encoding="utf-8") as f:
+        for r in csv.DictReader(f):
+            tgt = rows_c if r["family"] == "core" else rows_e
+            tgt.append(r)
+    return rows_c, rows_e
+
+
+def incremental_stats(args):
+    """10-18 增量模式(events 记录): 终局统计复用既有 paired_stats.csv 行(输入/RNG 冻结,
+    p0 族结果逐位不变), 只补算缺失对(m4b 跨语料/n1n2 机制), 重算全族校正与账本三表。
+    factoriaL_stats.csv 原样保留(8 模型预测未变, 结果逐位同)。"""
+    csv_path = OUTD / "paired_stats.csv"
+    rows_core, rows_explore = load_csv_rows(csv_path)
+    have = {(r["task"], r["dataset"], r["pair"], r["metric"])
+            for r in rows_core + rows_explore}
+    log(f"增量模式: 复用既有 {len(rows_core)+len(rows_explore)} 行, 补算缺失对")
+    pairs_list = list(CORE) + list(BSPLIT) + list(MECH) + list(CORPUS)
+    new_c, new_e = run_lp_pairs(pairs_list, args.nboot, skip=have)  # 已有对跳过/缺预测自动跳过
+    kept_c = [r for r in new_c
+              if (r["task"], r["dataset"], r["pair"], r["metric"]) not in have]
+    kept_e = [r for r in new_e
+              if (r["task"], r["dataset"], r["pair"], r["metric"]) not in have
+              and r["metric"] != "delong_auroc_p_min"]
+    log(f"新增 {len(kept_c)+len(kept_e)} 行(其余已存在/仍缺预测跳过)")
+    # FT/噪声族输入与 stats0 完全一致 -> 全部复用, 不重算
+    write_paired_csv(rows_core + kept_c, rows_explore + kept_e, csv_path)
+    ledger = build_ledger(rows_core + kept_c, rows_explore + kept_e)
+    with open(OUTD / "positive_gain_ledger.csv", "w", newline="", encoding="utf-8") as f:
+        w = csv.DictWriter(f, fieldnames=["comparison", "task", "dataset", "metric",
+                                          "scope", "delta_pt", "ci_low_pt", "ci_high_pt",
+                                          "p_raw", "p_adjusted", "positive_seed_count",
+                                          "total_seed_count", "evidence_tier",
+                                          "paper_location", "wording"])
+        w.writeheader()
+        w.writerows(ledger)
+    write_tables()
+    log(f"增量统计完成: paired 总行={len(rows_core)+len(kept_c)+len(rows_explore)+len(kept_e)}, "
+        f"ledger={len(ledger)} 条(factorial 沿用 stats0 版本)")
+
+
+def write_paired_csv(rows_core, rows_explore, path):
+    """写 CSV: 兼容两类行——dict(新算, 浮点) 与 DictReader 行(复用, 字符串原样)。"""
+    def _fmt(r, k, scale=True):
+        v = r.get(k)
+        if v is None or v == "":
+            return None
+        if isinstance(v, str):
+            return v  # 复用行: CSV 原值直通
+        return round(v * 100, 3) if scale else v
+    pc = [float(r["p_emp"]) for r in rows_core if r.get("p_emp") not in (None, "")]
+    ac = holm(np.array(pc)) if pc else []
+    pe = [float(r["p_emp"]) for r in rows_explore if r.get("p_emp") not in (None, "")]
+    ae = bh_fdr(np.array(pe)) if pe else []
+    with open(path, "w", newline="", encoding="utf-8") as f:
+        w = csv.writer(f)
+        w.writerow(["ts", "task", "dataset", "pair", "metric", "family",
+                    "delta_mean_pt", "ci_lo_pt", "ci_hi_pt", "p_raw", "p_adjusted",
+                    "pos_seeds", "total_seeds", "per_seed_pt"])
+        i_c = i_e = 0
+        for r in rows_core + rows_explore:
+            if r.get("p_emp") in (None, ""):
+                padj = None
+            elif r["family"] == "core":
+                padj = round(float(ac[i_c]), 4)
+                i_c += 1
+            else:
+                padj = round(float(ae[i_e]), 4)
+                i_e += 1
+            w.writerow([time.strftime("%Y-%m-%d %H:%M"), r["task"], r["dataset"],
+                        r["pair"], r["metric"], r["family"],
+                        _fmt(r, "delta_mean"), _fmt(r, "ci_lo"), _fmt(r, "ci_hi"),
+                        r.get("p_emp"), padj,
+                        r.get("pos_seeds"), r.get("total_seeds") or len(
+                            json.loads(r["per_seed_pt"]) if isinstance(r.get("per_seed_pt"), str)
+                            else r.get("per_seed", {})),
+                        r.get("per_seed_pt") if isinstance(r.get("per_seed_pt"), str)
+                        else json.dumps({k: round(v * 100, 3) for k, v in
+                                         r.get("per_seed", {}).items()})])
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--families", default="all", choices=["p0", "all"])
@@ -628,6 +715,8 @@ def main():
                     help="10-17 优化: 不重算统计, 只从既有 CSV 重新装配报告")
     ap.add_argument("--smoke", action="store_true")
     ap.add_argument("--nboot", type=int, default=N_BOOT)
+    ap.add_argument("--force-full", action="store_true",
+                    help="10-18: 忽略既有 CSV 强制全量重算(默认增量)")
     args = ap.parse_args()
     OUTD.mkdir(parents=True, exist_ok=True)
     if args.report_only:
@@ -651,6 +740,16 @@ def main():
     pairs_list = list(CORE) + list(BSPLIT) + list(MECH)
     if args.families == "all":
         pairs_list += list(CORPUS)
+    # 10-18 增量模式: 全量族 + 已有 stats0 产物 → 只补算缺失对(省 ~17h 重算)
+    if args.families == "all" and not args.force_full and \
+            (OUTD / "paired_stats.csv").exists() and \
+            (OUTD / "factorial_stats.csv").exists():
+        incremental_stats(args)
+        if args.report:
+            ledger = list(csv.DictReader(
+                open(OUTD / "positive_gain_ledger.csv", encoding="utf-8")))
+            gen_report(ledger)
+        return
     log(f"统计启动: families={args.families} nboot={args.nboot} "
         f"lp对={len(pairs_list)}")
     rows_core, rows_explore = run_lp_pairs(pairs_list, args.nboot)

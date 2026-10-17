@@ -162,3 +162,9 @@
 - **重要: 取消 events 18:1x 的"stats0 后手动树杀重启"规程**——崩溃自动重启已使新链(54464)载入新代码(report-only+stats 标记), 无需也不应再手动杀链; 后续值班轮忽略该规程, 仅在链自然死亡时按常规拉活。
 
 ## 2026-10-17 22:04 P0-4 效率基准完成: efficiency.csv
+
+## 2026-10-18 06:1x 值班#32 增量统计模式(实现层, 方案§9)
+
+- 实测: 噪声族逐记录 bootstrap 55min/对-域(12 对-域≈11h), 原设计终局全量统计会重算全部 p0 族(~20h), 其中与 stats0 输入逐位相同的部分为纯浪费。
+- 优化: run_abc_stats.py 加增量模式——终局(families=all)检测到既有 paired_stats.csv+factorial_stats.csv 时, 复用既有行(输入与 RNG 冻结, 结果逐位不变), 只补算缺失对(m4b 跨语料/n1n2 机制), 重算全族 Holm/FDR 校正、正增益账本与三表; factorial_stats.csv 沿用(8 模型预测未变)。--force-full 可退回全量。预计省 ~17h。
+- 风险控制: 增量写回对复用行做字符串直通(零精度损失), p_adjusted 由 CSV 内 p_raw 精确重算; stats0 完成后先以小 nboot 干跑验证跳过与写回完整性再放行。
