@@ -11,12 +11,17 @@ import csv
 import json
 import re
 import subprocess
+import sys
 import time
 from pathlib import Path
 
 import numpy as np
 import torch
 import torch.nn as nn
+
+ROOT = Path(__file__).resolve().parents[2]
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))  # models.* 导入需要仓库根(15:47 崩溃根因)
 
 ROOT = Path(__file__).resolve().parents[2]
 OUTD = ROOT / "runlog/ABC_20261015"
