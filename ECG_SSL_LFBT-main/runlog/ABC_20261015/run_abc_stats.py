@@ -278,6 +278,14 @@ def run_ft_pairs(n_boot):
     return rows
 
 
+def _load_noise_preds(d):
+    """噪声预测目录只存 y_prob/y_true/noise_offsets(无 y_pred), 直接加载。
+    W4.load_pred_dir 要求 y_pred.npy 会在噪声目录上 FileNotFoundError(10-17 22:00 崩因)。"""
+    y = np.load(d / "y_true.npy").astype(int)
+    p = np.load(d / "y_prob.npy").astype(np.float64)
+    return y, p
+
+
 def run_noise_pairs(n_boot):
     """逐记录噪声族: 每(ds, pair) 9 格均值 delta(AUROC 主) + bootstrap;
     行级族只进表不做 bootstrap。"""
@@ -306,10 +314,10 @@ def run_noise_pairs(n_boot):
                 for nt in NOISE_TYPES:
                     for snr in SNRS:
                         cond = f"{nt}@{snr}"
-                        ya, _, pa_ = W4.load_pred_dir(noise_pred_dir(a, ds, s, cond))
-                        yb, _, pb_ = W4.load_pred_dir(noise_pred_dir(b, ds, s, cond))
+                        ya, pa_ = _load_noise_preds(noise_pred_dir(a, ds, s, cond))
+                        yb, pb_ = _load_noise_preds(noise_pred_dir(b, ds, s, cond))
                         assert np.array_equal(ya, yb)
-                        cells.append((ya, pa_.astype(np.float64), pb_.astype(np.float64)))
+                        cells.append((ya, pa_, pb_))
                 per_seed[s] = cells
             n = len(per_seed[SEEDS[0]][0][0])
             d0 = np.array([np.mean([_m_auroc(y, pa_) - _m_auroc(y, pb_)

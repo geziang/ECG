@@ -129,3 +129,36 @@
 - 发现: 原链尾部设计 = stats(全量~11h) → report(又全量重跑~11h 才生成报告), 重复浪费。
 - 修复: ① stats/report-only 两模式加幂等完成标记(logs/stats0_done/stats_done), 链重启不再重跑统计; ② report 阶段改 --report-only(只从既有 CSV 装配报告, 分钟级)。影响面: 纯运行器效率, 统计口径/数值零变化。
 - 执行注记: 在跑链 40104 仍是旧代码——待 stats0 结束、链进入 n1n2 之后由值班轮择 PT 间隙重启一次(PT 自带 --resume, 损失≤1 epoch), 使新代码在 stats 阶段生效; 全批预计省 ~11h。
+
+## 2026-10-17 18:1x 训练连续性核验 + 优化重启操作规程（值班执行, 用户"尽量不要断"指令）
+
+- 核验: 9 次新预训练(M7/M8/M9×3)日志中 [resume] 标记 = 0 次 → 全部一次跑完, 预训练从未中断。两次链死(10-17 15:47/16:00)均在 bench 基准阶段(只读, 非训练), 当时 GPU 训练已全部完成; 10-16 共用方上卡仅拖慢未中断。
+- 今晚重启规程(stats0 完成后执行, 目的=启用 report-only 省 11h; 预期训练损失 ≤1 epoch ≈1.5min GPU, 因 PT 每 epoch 存 train_state):
+  1) 确认 stats0 真完成: logs/run_abc_stats.log 尾部出现"统计完成"或 chain.out.log 已出现 n1n2 的 PT 启动行;
+  2) taskkill /PID <链pid> /T /F (必须树杀, 防孤儿 PT 子进程与新链双写 checkpoint);
+  3) CIM 核验无 run_abc_chain/run_pt python 残留;
+  4) 手动补写 logs/stats0_done 标记(内容注明"stats0 由旧链完成于 xx:xx, 手动补标记"——旧链无标记逻辑, 不补则新链会重跑 stats0 10h);
+  5) powershell launch_abc.ps1 拉新链;
+  6) 核验: 新链快跳各阶段 → n1n2 PT 日志出现"[resume] 恢复自 epoch N"(N=被杀时已完成 epoch 数) = 续训成功;
+  7) events 记录实际损失 epoch 数。
+
+## 2026-10-17 21:39 runlog/ABC_20261015/run_abc_stats.py 失败 exit=1(见 logs/run_abc_stats.log)
+
+## 2026-10-17 22:00 audit 通过: 锚点齐(含 M2 跨批次), R峰缓存哈希 {'nfh': '8ed1e5402d09cffa', 'ptbxl': '7f23838ab25d64b3'}, pt_pretrain(17418)==pt_rpeaks.npz 严格一一对应, split_sha 就绪
+
+## 2026-10-17 22:00 P0-1 ft10fill 完成: M3/M4/M6 × cpsc/chapman × s024 = 18 格补齐
+
+## 2026-10-17 22:01 m7 seeds[0, 2, 4] 全下游完成(LP3域/FT3域/27格)
+
+## 2026-10-17 22:01 m8 seeds[0, 2, 4] 全下游完成(LP3域/FT3域/27格)
+
+## 2026-10-17 22:01 m9 seeds[0, 2, 4] 全下游完成(LP3域/FT3域/27格)
+
+## 2026-10-17 22:0x 值班#28 告警-统计噪声族加载崩因修复 + 取消手动重启规程
+
+- 现象: stats0 于 92 项后在噪声对族崩溃(FileNotFoundError y_pred.npy), 链 40104 exit; 拉活轮自动拉起新链 54464。
+- 根因: run_noise_pairs 用 W4.load_pred_dir 加载噪声预测目录, 但 JOINT/ABC 噪声目录只存 y_prob/y_true/noise_offsets(无 y_pred)——加载器与落盘口径不匹配, 纯实现 bug。已改为直接加载 y_true/y_prob(_load_noise_preds)。科学口径零变化。
+- 损失: 已算 92 项 bootstrap 未持久化(paired_stats.csv 在全部族完成后才写), 需整体重算 stats0(~7h, 新链已自动开始); 此前 18:xx 向用户报的 stats0 收尾时间顺延至 10-18 ~05:30。
+- **重要: 取消 events 18:1x 的"stats0 后手动树杀重启"规程**——崩溃自动重启已使新链(54464)载入新代码(report-only+stats 标记), 无需也不应再手动杀链; 后续值班轮忽略该规程, 仅在链自然死亡时按常规拉活。
+
+## 2026-10-17 22:04 P0-4 效率基准完成: efficiency.csv
