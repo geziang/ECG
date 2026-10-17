@@ -188,7 +188,7 @@
    "ft10_ptbxl_wall_s": 2090.1,
    "ft10_cpsc_wall_s": 2042.0,
    "ft10_chapman_wall_s": 2053.5,
-   "noise27_wall_s": 0.5
+   "noise27_wall_s": 0.6
   },
   "2": {
    "pt_wall_s": 8645.0,

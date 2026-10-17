@@ -61,7 +61,7 @@ def build_net(ckpt, trc):
 
 def count_params(net):
     total = sum(p.numel() for p in net.parameters())
-    head = sum(p.numel() for n, p in net.parameters() if n.startswith("fc"))
+    head = sum(p.numel() for n, p in net.named_parameters() if n.startswith("fc"))
     return total, total - head, head
 
 

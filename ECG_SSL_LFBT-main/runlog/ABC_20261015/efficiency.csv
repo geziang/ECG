@@ -1,0 +1,11 @@
+model,params_total,params_encoder,params_head,macs_per_record,macs_method,pt_wall_100ep,pt_epoch_mean,pt_vram_peak,pt_source,ft10_wall_cpsc,infer_latency_b1_ms_med,infer_latency_b1_ms_iqr,infer_throughput_b64_recs_s,infer_vram_peak_mib,env,seeds_pt
+m0,630345,625728,4617,145101312,hook Conv1d+Linear(BN/激活不计),n/a,n/a,n/a,n/a(历史批次未记录),n/a,6.04,0.32,4250.9,28.9,NVIDIA GeForce RTX 4090;cuda12.1;torch2.5.1+cu121;len2048;cudnn90100,0
+m1,631369,626752,4617,145101312,hook Conv1d+Linear(BN/激活不计),n/a,n/a,n/a,n/a(历史批次未记录),n/a,15.461,0.115,3982.8,29.0,NVIDIA GeForce RTX 4090;cuda12.1;torch2.5.1+cu121;len2048;cudnn90100,0
+m2,630345,625728,4617,145101312,hook Conv1d+Linear(BN/激活不计),n/a,n/a,n/a,n/a(历史批次未记录),n/a,14.511,0.105,4243.0,28.9,NVIDIA GeForce RTX 4090;cuda12.1;torch2.5.1+cu121;len2048;cudnn90100,0
+m3,631369,626752,4617,145101312,hook Conv1d+Linear(BN/激活不计),n/a,n/a,n/a,n/a(历史批次未记录),30.5min,15.448,0.105,3994.2,29.0,NVIDIA GeForce RTX 4090;cuda12.1;torch2.5.1+cu121;len2048;cudnn90100,0
+m4,631369,626752,4617,145101312,hook Conv1d+Linear(BN/激活不计),n/a,n/a,n/a,n/a(历史批次未记录),30.9min,15.462,0.101,3979.8,29.0,NVIDIA GeForce RTX 4090;cuda12.1;torch2.5.1+cu121;len2048;cudnn90100,0
+m5,630345,625728,4617,145101312,hook Conv1d+Linear(BN/激活不计),n/a,n/a,n/a,n/a(历史批次未记录),n/a,14.511,0.107,4230.0,28.9,NVIDIA GeForce RTX 4090;cuda12.1;torch2.5.1+cu121;len2048;cudnn90100,0
+m6,631369,626752,4617,145101312,hook Conv1d+Linear(BN/激活不计),n/a,n/a,n/a,n/a(历史批次未记录),34.3min,15.449,0.105,3990.3,29.0,NVIDIA GeForce RTX 4090;cuda12.1;torch2.5.1+cu121;len2048;cudnn90100,0
+m7,630345,625728,4617,145101312,hook Conv1d+Linear(BN/激活不计),129.0min,1.29min,8648MiB,ABC_20261015,34.3min,14.513,0.092,4241.2,28.9,NVIDIA GeForce RTX 4090;cuda12.1;torch2.5.1+cu121;len2048;cudnn90100,3
+m8,631369,626752,4617,145101312,hook Conv1d+Linear(BN/激活不计),162.0min,1.62min,11836MiB,ABC_20261015,35.1min,15.442,0.119,3964.0,29.0,NVIDIA GeForce RTX 4090;cuda12.1;torch2.5.1+cu121;len2048;cudnn90100,3
+m9,631369,626752,4617,145101312,hook Conv1d+Linear(BN/激活不计),114.6min,1.15min,8354MiB,ABC_20261015,34.5min,15.425,0.148,3999.3,29.0,NVIDIA GeForce RTX 4090;cuda12.1;torch2.5.1+cu121;len2048;cudnn90100,3

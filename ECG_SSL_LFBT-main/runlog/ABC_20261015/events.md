@@ -111,3 +111,7 @@
 ## 2026-10-17 16:01 m9 seeds[0, 2, 4] 全下游完成(LP3域/FT3域/27格)
 
 ## 2026-10-17 16:01 runlog/ABC_20261015/run_abc_bench.py 失败 exit=1(见 logs/run_abc_bench.log)
+
+## 2026-10-17 16:18 audit 通过: 锚点齐(含 M2 跨批次), R峰缓存哈希 {'nfh': '8ed1e5402d09cffa', 'ptbxl': '7f23838ab25d64b3'}, pt_pretrain(17418)==pt_rpeaks.npz 严格一一对应, split_sha 就绪
+
+## 2026-10-17 16:18 P0-1 ft10fill 完成: M3/M4/M6 × cpsc/chapman × s024 = 18 格补齐

@@ -1,0 +1,12 @@
+[bench 10-17 16:10:57] 环境: NVIDIA GeForce RTX 4090;cuda12.1;torch2.5.1+cu121;len2048;cudnn90100
+[bench 10-17 16:11:05] m0: params=630345 MACs=145.1M lat=6.04ms thr=4251r/s PT=n/a(n/a(历史批次未记录))
+[bench 10-17 16:11:22] m1: params=631369 MACs=145.1M lat=15.46ms thr=3983r/s PT=n/a(n/a(历史批次未记录))
+[bench 10-17 16:11:38] m2: params=630345 MACs=145.1M lat=14.51ms thr=4243r/s PT=n/a(n/a(历史批次未记录))
+[bench 10-17 16:11:55] m3: params=631369 MACs=145.1M lat=15.45ms thr=3994r/s PT=n/a(n/a(历史批次未记录))
+[bench 10-17 16:12:12] m4: params=631369 MACs=145.1M lat=15.46ms thr=3980r/s PT=n/a(n/a(历史批次未记录))
+[bench 10-17 16:12:28] m5: params=630345 MACs=145.1M lat=14.51ms thr=4230r/s PT=n/a(n/a(历史批次未记录))
+[bench 10-17 16:12:45] m6: params=631369 MACs=145.1M lat=15.45ms thr=3990r/s PT=n/a(n/a(历史批次未记录))
+[bench 10-17 16:13:02] m7: params=630345 MACs=145.1M lat=14.51ms thr=4241r/s PT=129.0min(ABC_20261015)
+[bench 10-17 16:13:19] m8: params=631369 MACs=145.1M lat=15.44ms thr=3964r/s PT=162.0min(ABC_20261015)
+[bench 10-17 16:13:36] m9: params=631369 MACs=145.1M lat=15.42ms thr=3999r/s PT=114.6min(ABC_20261015)
+[bench 10-17 16:13:36] efficiency.csv 写出(10 行)
