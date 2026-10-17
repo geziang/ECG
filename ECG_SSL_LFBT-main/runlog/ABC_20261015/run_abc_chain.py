@@ -684,17 +684,27 @@ def main():
             _run_sub("runlog/ABC_20261015/run_abc_bench.py")
             event("P0-4 效率基准完成: efficiency.csv")
         elif s == "stats0":
-            _run_sub("runlog/ABC_20261015/run_abc_stats.py", "--families", "p0")
+            mk = OUTD / "logs" / "stats0_done"
+            if mk.exists():
+                log("stats0: 已有完成标记, 跳过")
+            else:
+                _run_sub("runlog/ABC_20261015/run_abc_stats.py", "--families", "p0")
+                mk.write_text(time.strftime("%Y-%m-%d %H:%M"), encoding="utf-8")
         elif s == "stats":
-            _run_sub("runlog/ABC_20261015/run_abc_stats.py", "--families", "all")
-            event("全量统计完成: paired/factorial/ledger/三表")
+            mk = OUTD / "logs" / "stats_done"
+            if mk.exists():
+                log("stats: 已有完成标记, 跳过")
+            else:
+                _run_sub("runlog/ABC_20261015/run_abc_stats.py", "--families", "all")
+                mk.write_text(time.strftime("%Y-%m-%d %H:%M"), encoding="utf-8")
+                event("全量统计完成: paired/factorial/ledger/三表")
         elif s == "multilib":
             _run_sub("runlog/ABC_20261015/run_abc_multilib.py")
             event("P1-3 多标签敏感性完成: multilib/ 与 multilib_results.csv")
         elif s == "report":
-            _run_sub("runlog/ABC_20261015/run_abc_stats.py",
-                     "--families", "all", "--report")
-            event("ABC最终报告.md 生成")
+            # 10-17 优化: 报告只从既有 CSV 装配, 不重跑 11h 统计(值班#25 记录)
+            _run_sub("runlog/ABC_20261015/run_abc_stats.py", "--report-only")
+            event("ABC最终报告.md 生成(report-only 模式)")
     log("ABC 链(本轮调度部分)完成")
     event("ABC 链阶段完成: " + ",".join(stages))
 

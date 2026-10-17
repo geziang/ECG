@@ -218,7 +218,7 @@
    "ft10_ptbxl_wall_s": 2073.6,
    "ft10_cpsc_wall_s": 2068.6,
    "ft10_chapman_wall_s": 2206.2,
-   "noise27_wall_s": 0.6
+   "noise27_wall_s": 0.5
   }
  },
  "m8": {
@@ -250,7 +250,7 @@
    "ft10_ptbxl_wall_s": 2117.5,
    "ft10_cpsc_wall_s": 2070.2,
    "ft10_chapman_wall_s": 2084.2,
-   "noise27_wall_s": 0.6
+   "noise27_wall_s": 0.5
   },
   "4": {
    "pt_wall_s": 8992.6,
@@ -282,7 +282,7 @@
    "ft10_ptbxl_wall_s": 2124.0,
    "ft10_cpsc_wall_s": 2071.8,
    "ft10_chapman_wall_s": 2091.2,
-   "noise27_wall_s": 0.6
+   "noise27_wall_s": 0.5
   },
   "2": {
    "pt_wall_s": 6873.2,
@@ -312,7 +312,7 @@
    "ft10_ptbxl_wall_s": 2123.7,
    "ft10_cpsc_wall_s": 2072.5,
    "ft10_chapman_wall_s": 2086.4,
-   "noise27_wall_s": 0.8
+   "noise27_wall_s": 1.0
   }
  }
 }

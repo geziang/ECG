@@ -160,3 +160,11 @@
 - 链活着(pid=21992); m9 s2 已收口(12:04), m9 s4 PT 完成(13:58, 114min/vram 8.4GB — 全批 9 次 m 系新预训练至此全部完成), LP 推进中(ptbxl 0.6514 已落, GPU 2.1GB=LP 轻载正常)。
 - 对账: results.csv 284 行 = 255+29 吻合。无 Traceback/FAIL, err 空。
 - 处置: 无需干预; 未收官不推送。m9 s4 下游预计 ~15:3x 收口(快于此前 16:2x 估计) → bench(P0-4) → stats0(P0 统计快照) → n1n2(P1-1)。
+
+## 2026-10-17 16:3x 值班#24(automation-570dadd0) — bench 双崩定因修复, P0 GPU 段全部完成
+
+- 里程碑: **m9 三种子收口(15:47) = 9 次新预训练(M7/M8/M9×3)零失败**, results.csv 316 行; P0 的 GPU 侧全部完成。
+- 事故与处置: bench 阶段连续两崩(15:47 链21992 / 16:00 链48172)——根因1=run_abc_bench.py 缺 sys.path.insert(models 导入必炸), 根因2=net.parameters() 应为 named_parameters(); 均为主会话编写疏漏的纯实现 bug(方案§9 授权修复, events 已记告警+影响面), 科学数据零影响。修复(3cca7cb)后手动跑通 bench(efficiency.csv 10 行: 全模型 ~630K 参数/145.1M MACs/b1 延迟 ~15ms/吞吐 ~4000r/s), 链重启(40104)通过 bench, 16:21 进入 stats0。
+- stats0 进行中: 锚点重放四位吻合(m1/ptbxl 0.8860/0.8845/0.8876), 预计 1-3h(CPU bootstrap)。
+- 教训入账: 新运行器此前只编译检查未实跑——bench 全新代码路径应在 smoke 阶段实跑一遍(已在本轮手动补课)。
+- 处置: 无需再干预; 未收官不推送。

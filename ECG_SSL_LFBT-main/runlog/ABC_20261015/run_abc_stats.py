@@ -616,10 +616,23 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--families", default="all", choices=["p0", "all"])
     ap.add_argument("--report", action="store_true")
+    ap.add_argument("--report-only", action="store_true",
+                    help="10-17 优化: 不重算统计, 只从既有 CSV 重新装配报告")
     ap.add_argument("--smoke", action="store_true")
     ap.add_argument("--nboot", type=int, default=N_BOOT)
     args = ap.parse_args()
     OUTD.mkdir(parents=True, exist_ok=True)
+    if args.report_only:
+        ledger = []
+        p = OUTD / "positive_gain_ledger.csv"
+        if p.exists():
+            with open(p, encoding="utf-8") as f:
+                ledger = list(csv.DictReader(f))
+        for need in ("paired_stats.csv", "factorial_stats.csv",
+                     "positive_gain_ledger.csv"):
+            assert (OUTD / need).exists(), f"--report-only 缺 {need}(先跑全量统计)"
+        gen_report(ledger)
+        return
     if args.smoke:
         pa = load_preds(pred_dir, "m4", "cpsc", SEEDS, 9)
         pb = load_preds(pred_dir, "m3", "cpsc", SEEDS, 9)
