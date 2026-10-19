@@ -322,3 +322,8 @@
 - 完成度: results.csv 371 行零失败(9 新 PT + 18 FT10 + 全下游 + 噪声格); paired_stats 155 行 / factorial 20 式 / efficiency 10 模型 / multilib 27 组 / ABC最终报告.md(114 行)全齐。
 - 尾声事故与恢复(如实): 增量写回键名 bug 三处(sys.path/bench 参数解包/键名双态×2)均纯实现层, stats0 产物自 git 恢复后重算, 实验数据零损坏; 全程预训练零中断([resume] 0 次)。
 - 值班 cron automation-570dadd0 使命完成待删。遗留: W8 最终报告待写(独立事项)。
+
+## 2026-10-19 16:25 值班#51(删除前末班投递) — 收官后校对轮
+
+- 批次已于 16:15 收官(eb00310 已推送), 本轮按规程只校对: 七产物齐、无 run_abc_chain 进程残留(True)、GPU 空闲。无异常、无处置、不推送。
+- 值班 cron automation-570dadd0 已删, 此后无自动轮次; 批次回看入口=ABC最终报告.md。
