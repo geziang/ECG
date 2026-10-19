@@ -144,7 +144,7 @@ def run_checks():
         me = json.loads((pdir / "metrics_ext.json").read_text(encoding="utf-8"))
         checks["recompute_match"] = bool(
             abs(auroc - float(m["auroc"])) < 1e-6 and abs(auprc - float(m["auprc"])) < 1e-6
-            and abs(float(me["macro_ap"]) - float(m["auprc"])) < 1e-6)
+            and abs(float(me["macro_ap"]) - auprc) < 1e-3)
         # 门6: SHA/协议字段与 preflight 一致
         checks["meta_match"] = bool(
             r["protocol_id"] == PROTO

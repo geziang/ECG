@@ -513,8 +513,17 @@ def validate_task_outputs(t):
         raise ValueError("metrics_ext protocol_id 不符")
     if meta.get("checkpoint_sha256") != t["sha"]:
         raise ValueError("metrics_ext checkpoint_sha256 不符")
-    if abs(float(me.get("macro_ap", float("nan"))) - float(m["auprc"])) > 1e-6:
-        raise ValueError("metrics_ext.macro_ap 与 metrics.auprc 不一致(>1e-6)")
+    # 门5 独立复算: 从落盘预测重算指标须与 metrics.json 一致(>1e-6 即失败)。
+    # 注: metrics_ext.macro_ap 系无ties处理的手写 AP, 与 sklearn 存在 ~1e-5 固有差,
+    # 不得拿它与 sklearn auprc 做 1e-6 等价断言(20:41 假阳性根因), 只做 1e-3 粗检。
+    from sklearn.metrics import average_precision_score, roc_auc_score
+    y1h = np.eye(pr.shape[1])[yt]
+    rc_auroc = roc_auc_score(y1h, pr, average="macro")
+    rc_auprc = average_precision_score(y1h, pr, average="macro")
+    if abs(rc_auroc - float(m["auroc"])) > 1e-6 or abs(rc_auprc - float(m["auprc"])) > 1e-6:
+        raise ValueError("metrics.json 与预测独立复算不一致(>1e-6)")
+    if abs(float(me.get("macro_ap", float("nan"))) - rc_auprc) > 1e-3:
+        raise ValueError("metrics_ext.macro_ap 偏离复算 auprc >1e-3")
     return m
 
 
@@ -541,9 +550,45 @@ def _csv_cell(v):
     return s
 
 
+def try_revalidate(t, lane):
+    """§五-1 跳过规则的复验路径: metrics.json+四工件齐全且通过(修复后的)校验
+    → 不重训直接入账。覆盖账本被历史假阳性标 invalid 但产物真实的任务。"""
+    mdir = OUTD / "ft" / t["tag"]
+    pdir = OUTD / "predictions" / t["tag"]
+    need = [mdir / "metrics.json", pdir / "y_true.npy", pdir / "y_pred.npy",
+            pdir / "y_prob.npy", pdir / "metrics_ext.json"]
+    if not all(p.exists() for p in need):
+        return False
+    try:
+        m = validate_task_outputs(t)
+    except Exception:
+        return False
+    logf = LOGD / f"{t['tag']}.log"
+    try:
+        wall = round(os.path.getmtime(pdir / "metrics_ext.json")
+                     - os.path.getctime(logf), 1)
+    except OSError:
+        wall = -1.0
+    row = dict(ts=time.strftime("%Y-%m-%d %H:%M:%S"), method=t["method"],
+               seed=t["seed"], pretrain_source=PRETRAIN_SOURCE, eval="ft10",
+               dataset=t["dataset"], label_fraction="0.1",
+               git_sha=RUN_SHA["v"] or git_sha(), checkpoint_sha256=t["sha"],
+               split_sha=t["split_sha"], protocol_id=PROTO, hparams_ref=HPREF,
+               auroc=f"{float(m['auroc']):.10f}", auprc=f"{float(m['auprc']):.10f}",
+               wall_s=max(wall, 0.0), status="ok", revalidated=True,
+               wall_s_note="复验入账, wall 按文件时间近似" if wall >= 0 else "复验入账")
+    _atomic_write_json(LEDGER / f"{t['tag']}.json", row)
+    merge_results()
+    log(f"[L{lane}] REVALIDATED {t['tag']} auroc={row['auroc']} auprc={row['auprc']}"
+        f" (产物复算一致, 免重训)")
+    return True
+
+
 def run_task(t, lane):
     if task_done(t):
         log(f"[L{lane}] skip(已完成): {t['tag']}")
+        return
+    if try_revalidate(t, lane):
         return
     mdir = OUTD / "ft" / t["tag"]
     pdir = OUTD / "predictions" / t["tag"]
