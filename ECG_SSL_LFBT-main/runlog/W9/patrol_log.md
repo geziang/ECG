@@ -18,3 +18,8 @@
 - 判活: pid 49568 活, GPU 6201MiB 双车道在载(瞬时 util 0% 属 epoch 间隙, 账行 2h+6 与 wall ~2320s 稳定互证)。
 - 进度: **13/30 ok**——P0: clocs-cpsc×3/simclr-chap×3/simph-chap×3/clocs-chap×3/tsr-chap-s0 已入账; L0=tsr_chapman_s4, L1=tsr_chapman_s2 在跑, 完成后 P0=15/15 收官, 进 P1。
 - 动作: 无需重启; 推送新账行(13 ok)。ETA ~07:20-07:40。
+
+## 2026-10-20 04:00 值班#4
+- 判活: pid 49568 活, GPU 6164MiB 双车道在载, 账行 2h+6 稳定。
+- 进度: **19/30 ok**——P0=15/15 收官(tsr-chap s2/s4 于 02:32 前完成); P1: m2-cpsc×3+m2-chap-s0 入账, L0=m2_chapman_s4, L1=m2_chapman_s2 在跑。余 m5×3域=9 次 + 在跑 2 次。
+- 动作: 无需重启; 推送新账行(19 ok)。ETA ~07:30。

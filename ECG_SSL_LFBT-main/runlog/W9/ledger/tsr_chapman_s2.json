@@ -1,0 +1,18 @@
+{
+ "ts": "2026-10-20 02:05:03",
+ "method": "tsr",
+ "seed": 2,
+ "pretrain_source": "pt_pretrain_nfh",
+ "eval": "ft10",
+ "dataset": "chapman",
+ "label_fraction": "0.1",
+ "git_sha": "3cfb5e7",
+ "checkpoint_sha256": "9c9560444831d2d1c12dee948812bbdc91e25a280b363aae492b61e4717ff27e",
+ "split_sha": "09783cad0542e5d1",
+ "protocol_id": "w9-submission-ft10-20261019",
+ "hparams_ref": "W9任务书§二/§四(w9-submission-ft10-20261019): run_ft.py 逐字沿用, lr1e-4/ep100/bs128/workers4/trc0",
+ "auroc": "0.9805423199",
+ "auprc": "0.9366232012",
+ "wall_s": 2322.3,
+ "status": "ok"
+}
