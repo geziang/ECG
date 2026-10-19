@@ -442,23 +442,41 @@ def write_paired(rows_core, rows_explore, path):
 def build_ledger(rows_core, rows_explore):
     ledger = []
     for r in rows_core + rows_explore:
-        if r["delta_mean"] is None or r["delta_mean"] <= 0:
-            continue
+        if "delta_mean" in r:  # 新算行: 浮点小数
+            if r["delta_mean"] is None or r["delta_mean"] <= 0:
+                continue
+            delta_pt = r["delta_mean"] * 100
+            ci_lo_pt = r["ci_lo"] * 100 if r["ci_lo"] is not None else None
+            ci_hi_pt = r["ci_hi"] * 100 if r["ci_hi"] is not None else None
+            pos = r["pos_seeds"]
+            tot = len(r["per_seed"])
+            praw = r["p_emp"]
+        else:  # CSV 复用行(10-19 增量): 键带 _pt 后缀, 值已是百分点
+            try:
+                delta_pt = float(r.get("delta_mean_pt") or 0)
+            except (TypeError, ValueError):
+                continue
+            if delta_pt <= 0:
+                continue
+            ci_lo_pt = float(r["ci_lo_pt"]) if r.get("ci_lo_pt") else None
+            ci_hi_pt = float(r["ci_hi_pt"]) if r.get("ci_hi_pt") else None
+            pos = int(r["pos_seeds"]) if r.get("pos_seeds") else 0
+            tot = int(r["total_seeds"]) if r.get("total_seeds") else 3
+            praw = r.get("p_raw")
         scope = f"{r['task']}/{r['dataset']}/{r['metric']}"
-        if r["ci_lo"] is not None and r["ci_lo"] > 0:
+        if ci_lo_pt is not None and ci_lo_pt > 0:
             tier, wording, loc = "E1", "显著提升(95% CI 不跨 0)", "主表候选"
-        elif (r["pos_seeds"] or 0) >= 2:
+        elif (pos or 0) >= 2:
             tier, wording, loc = "E2", "观察到稳定正向趋势(描述性增益, CI 跨 0)", "主表或补表"
         else:
             tier, wording, loc = "E3", f"局部正增益(限定范围: {scope})", "补表(限定措辞)"
-        padj = None
         ledger.append(dict(comparison=r["pair"], task=r["task"], dataset=r["dataset"],
                            metric=r["metric"], scope=scope,
-                           delta_pt=round(r["delta_mean"] * 100, 3),
-                           ci_low_pt=round(r["ci_lo"] * 100, 3) if r["ci_lo"] is not None else None,
-                           ci_high_pt=round(r["ci_hi"] * 100, 3) if r["ci_hi"] is not None else None,
-                           p_raw=r["p_emp"], p_adjusted=padj,
-                           positive_seed_count=r["pos_seeds"], total_seed_count=len(r["per_seed"]),
+                           delta_pt=round(delta_pt, 3),
+                           ci_low_pt=round(ci_lo_pt, 3) if ci_lo_pt is not None else None,
+                           ci_high_pt=round(ci_hi_pt, 3) if ci_hi_pt is not None else None,
+                           p_raw=praw, p_adjusted=None,
+                           positive_seed_count=pos, total_seed_count=tot,
                            evidence_tier=tier, paper_location=loc, wording=wording))
     # p_adjusted 从 paired_stats 关联回填
     if (OUTD / "paired_stats.csv").exists():

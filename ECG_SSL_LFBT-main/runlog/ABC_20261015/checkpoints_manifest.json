@@ -188,7 +188,7 @@
    "ft10_ptbxl_wall_s": 2090.1,
    "ft10_cpsc_wall_s": 2042.0,
    "ft10_chapman_wall_s": 2053.5,
-   "noise27_wall_s": 23.8
+   "noise27_wall_s": 0.7
   },
   "2": {
    "pt_wall_s": 8645.0,
@@ -203,7 +203,7 @@
    "ft10_ptbxl_wall_s": 2105.1,
    "ft10_cpsc_wall_s": 2071.4,
    "ft10_chapman_wall_s": 2069.6,
-   "noise27_wall_s": 1.1
+   "noise27_wall_s": 0.6
   },
   "4": {
    "pt_wall_s": 5926.4,
@@ -218,7 +218,7 @@
    "ft10_ptbxl_wall_s": 2073.6,
    "ft10_cpsc_wall_s": 2068.6,
    "ft10_chapman_wall_s": 2206.2,
-   "noise27_wall_s": 1.2
+   "noise27_wall_s": 0.6
   }
  },
  "m8": {
@@ -235,7 +235,7 @@
    "ft10_ptbxl_wall_s": 2065.5,
    "ft10_cpsc_wall_s": 2168.8,
    "ft10_chapman_wall_s": 2168.8,
-   "noise27_wall_s": 1.1
+   "noise27_wall_s": 0.5
   },
   "2": {
    "pt_wall_s": 8957.3,
@@ -250,7 +250,7 @@
    "ft10_ptbxl_wall_s": 2117.5,
    "ft10_cpsc_wall_s": 2070.2,
    "ft10_chapman_wall_s": 2084.2,
-   "noise27_wall_s": 1.2
+   "noise27_wall_s": 0.6
   },
   "4": {
    "pt_wall_s": 8992.6,
@@ -265,7 +265,7 @@
    "ft10_ptbxl_wall_s": 2142.0,
    "ft10_cpsc_wall_s": 2075.0,
    "ft10_chapman_wall_s": 2089.0,
-   "noise27_wall_s": 1.1
+   "noise27_wall_s": 0.5
   }
  },
  "m9": {
@@ -282,7 +282,7 @@
    "ft10_ptbxl_wall_s": 2124.0,
    "ft10_cpsc_wall_s": 2071.8,
    "ft10_chapman_wall_s": 2091.2,
-   "noise27_wall_s": 1.1
+   "noise27_wall_s": 0.6
   },
   "2": {
    "pt_wall_s": 6873.2,
@@ -297,7 +297,7 @@
    "ft10_ptbxl_wall_s": 2121.7,
    "ft10_cpsc_wall_s": 2070.9,
    "ft10_chapman_wall_s": 2086.1,
-   "noise27_wall_s": 1.1
+   "noise27_wall_s": 0.5
   },
   "4": {
    "pt_wall_s": 6864.9,
@@ -312,7 +312,100 @@
    "ft10_ptbxl_wall_s": 2123.7,
    "ft10_cpsc_wall_s": 2072.5,
    "ft10_chapman_wall_s": 2086.4,
-   "noise27_wall_s": 1.1
+   "noise27_wall_s": 0.6
+  }
+ },
+ "n1": {
+  "2": {
+   "pt_wall_s": 9060.3,
+   "vram_peak_mib": 9248,
+   "pt_epochs": 100,
+   "git_sha": "f36e78b",
+   "ckpt_sha256": "812fcad1179a148372b96c86d4d61daff9ef0689c7a27fee54193d48e10dea60",
+   "done": true,
+   "lp_ptbxl_wall_s": 94.1,
+   "lp_cpsc_wall_s": 66.5,
+   "lp_chapman_wall_s": 74.4,
+   "ft10_ptbxl_wall_s": 2118.7
+  },
+  "4": {
+   "pt_wall_s": 9001.2,
+   "vram_peak_mib": 8975,
+   "pt_epochs": 100,
+   "git_sha": "f36e78b",
+   "ckpt_sha256": "6ace15c761b2b04a705e5cf20dc5b013cfdac8aea74631f107cd32a95ce100c3",
+   "done": true,
+   "lp_ptbxl_wall_s": 94.1,
+   "lp_cpsc_wall_s": 66.6,
+   "lp_chapman_wall_s": 74.1,
+   "ft10_ptbxl_wall_s": 2125.0
+  }
+ },
+ "n2": {
+  "2": {
+   "pt_wall_s": 9013.9,
+   "vram_peak_mib": 8975,
+   "pt_epochs": 100,
+   "git_sha": "f36e78b",
+   "ckpt_sha256": "05430e12a4fc8be4a3d2f0640671a240497964eec436956087be13b8529ebb3c",
+   "done": true,
+   "lp_ptbxl_wall_s": 94.2,
+   "lp_cpsc_wall_s": 66.7,
+   "lp_chapman_wall_s": 74.2,
+   "ft10_ptbxl_wall_s": 2121.8
+  },
+  "4": {
+   "pt_wall_s": 8977.0,
+   "vram_peak_mib": 8975,
+   "pt_epochs": 100,
+   "git_sha": "f36e78b",
+   "ckpt_sha256": "f89871869e59e3e02c1a00cdf204d6662285b719ba257d1755544062e38c87ed",
+   "done": true,
+   "lp_ptbxl_wall_s": 82.4,
+   "lp_cpsc_wall_s": 61.3,
+   "lp_chapman_wall_s": 68.1,
+   "ft10_ptbxl_wall_s": 2122.6
+  }
+ },
+ "m4b": {
+  "0": {
+   "pt_wall_s": 5243.6,
+   "vram_peak_mib": 9097,
+   "pt_epochs": 100,
+   "git_sha": "f36e78b",
+   "ckpt_sha256": "7d55af15919e0ad60930bd9b98c0925681572f7cff2da429bdd2d41540b24582",
+   "done": true,
+   "lp_ptbxl_wall_s": 64.5,
+   "lp_cpsc_wall_s": 53.9,
+   "lp_chapman_wall_s": 56.8,
+   "ft10_cpsc_wall_s": 2017.4,
+   "noise9_wall_s": 4.6
+  },
+  "2": {
+   "pt_wall_s": 3738.3,
+   "vram_peak_mib": 9080,
+   "pt_epochs": 100,
+   "git_sha": "f36e78b",
+   "ckpt_sha256": "23d8490b5843fb9b1e8be42bc728ff90af4c62694edb9e208614f07ed53864e2",
+   "done": true,
+   "lp_ptbxl_wall_s": 64.0,
+   "lp_cpsc_wall_s": 54.0,
+   "lp_chapman_wall_s": 57.1,
+   "ft10_cpsc_wall_s": 2021.4,
+   "noise9_wall_s": 4.2
+  },
+  "4": {
+   "pt_wall_s": 3743.2,
+   "vram_peak_mib": 9035,
+   "pt_epochs": 100,
+   "git_sha": "f36e78b",
+   "ckpt_sha256": "4c97f0a0550e5479f31d01c934cee963da6b9653bc839acfff54ce84c213a52d",
+   "done": true,
+   "lp_ptbxl_wall_s": 63.9,
+   "lp_cpsc_wall_s": 54.1,
+   "lp_chapman_wall_s": 56.8,
+   "ft10_cpsc_wall_s": 2020.6,
+   "noise9_wall_s": 4.3
   }
  }
 }

@@ -168,3 +168,43 @@
 - 实测: 噪声族逐记录 bootstrap 55min/对-域(12 对-域≈11h), 原设计终局全量统计会重算全部 p0 族(~20h), 其中与 stats0 输入逐位相同的部分为纯浪费。
 - 优化: run_abc_stats.py 加增量模式——终局(families=all)检测到既有 paired_stats.csv+factorial_stats.csv 时, 复用既有行(输入与 RNG 冻结, 结果逐位不变), 只补算缺失对(m4b 跨语料/n1n2 机制), 重算全族 Holm/FDR 校正、正增益账本与三表; factorial_stats.csv 沿用(8 模型预测未变)。--force-full 可退回全量。预计省 ~17h。
 - 风险控制: 增量写回对复用行做字符串直通(零精度损失), p_adjusted 由 CSV 内 p_raw 精确重算; stats0 完成后先以小 nboot 干跑验证跳过与写回完整性再放行。
+
+## 2026-10-18 22:29 n1 seed2 PT 完成: 151min, 峰值显存 9248MiB
+
+## 2026-10-19 01:38 n1 seed4 PT 完成: 150min, 峰值显存 8975MiB
+
+## 2026-10-19 02:18 n1 seeds[2, 4] 全下游完成(LP3域/FT1域/无噪)
+
+## 2026-10-19 04:48 n2 seed2 PT 完成: 150min, 峰值显存 8975MiB
+
+## 2026-10-19 07:57 n2 seed4 PT 完成: 150min, 峰值显存 8975MiB
+
+## 2026-10-19 08:36 n2 seeds[2, 4] 全下游完成(LP3域/FT1域/无噪)
+
+## 2026-10-19 10:03 m4b seed0 PT 完成: 87min, 峰值显存 9097MiB
+
+## 2026-10-19 11:42 m4b seed2 PT 完成: 62min, 峰值显存 9080MiB
+
+## 2026-10-19 13:21 m4b seed4 PT 完成: 62min, 峰值显存 9035MiB
+
+## 2026-10-19 13:58 m4b seeds[0, 2, 4] 全下游完成(LP3域/FT1域/9格)
+
+## 2026-10-19 13:59 P1-3 多标签敏感性完成: multilib/ 与 multilib_results.csv
+
+## 2026-10-19 14:35 runlog/ABC_20261015/run_abc_stats.py 失败 exit=1(见 logs/run_abc_stats.log)
+
+## 2026-10-19 14:55 audit 通过: 锚点齐(含 M2 跨批次), R峰缓存哈希 {'nfh': '8ed1e5402d09cffa', 'ptbxl': '7f23838ab25d64b3'}, pt_pretrain(17418)==pt_rpeaks.npz 严格一一对应, split_sha 就绪
+
+## 2026-10-19 14:55 P0-1 ft10fill 完成: M3/M4/M6 × cpsc/chapman × s024 = 18 格补齐
+
+## 2026-10-19 14:55 m7 seeds[0, 2, 4] 全下游完成(LP3域/FT3域/27格)
+
+## 2026-10-19 14:55 m8 seeds[0, 2, 4] 全下游完成(LP3域/FT3域/27格)
+
+## 2026-10-19 14:55 m9 seeds[0, 2, 4] 全下游完成(LP3域/FT3域/27格)
+
+## 2026-10-19 14:5x 值班#49 告警-增量账本键名崩因修复
+
+- 现象: 增量统计在 build_ledger 崩溃(KeyError delta_mean), 链 54464 exit; 拉活自动起新链 50784。
+- 根因: build_ledger 只认内存行的 delta_mean(小数), CSV 复用行键为 delta_mean_pt(百分点)——增量模式引入的键名双态未覆盖, 纯实现 bug。已改为双键兼容+单位归一(新算行×100, 复用行直用)。
+- 影响面: 仅账本装配, 配对统计数值零影响; 新链 50784 的 stats 子进程将从磁盘加载修复版(bench 会多跑一次 12min 无害)。
