@@ -8,3 +8,8 @@
 - 重启核验: L0 已 REVALIDATED clocs_cpsc_s0(auroc 0.9112449671/auprc 0.6684586504, 免重训)并 START clocs_cpsc_s4; L1 错峰 600s 后将复验 s2。
 - 实验协议零改动(超参/矩阵/种子/数据未动); events.md 已同步留痕。
 - ETA 修正: 28 新跑 × ~35min 双车道 ≈ 次日 06:00-07:00 收链。
+
+## 2026-10-20 00:00 值班#2
+- 判活: pid 49568 活(tasklist 直查), GPU 13%/6193MiB 双车道满载, chain.log 正常推进。
+- 进度: **7/30 ok**(clocs-cpsc×3 + simclr-chapman×3 + simph-chapman-s0); L0 跑 simph_chapman_s4, L1 跑 simph_chapman_s2(23:30 起)。单次 ~37-39min 与预估一致。
+- 动作: 无需重启; 推送新账行(7 ok)。ETA 维持 10-20 晨 ~07:00。

@@ -1,5 +1,5 @@
 {
- "ts": "2026-10-19 20:51:26",
+ "ts": "2026-10-19 22:12:51",
  "method": "clocs",
  "seed": 2,
  "pretrain_source": "pt_pretrain_nfh",
@@ -11,6 +11,10 @@
  "split_sha": "7808e41777518f4c",
  "protocol_id": "w9-submission-ft10-20261019",
  "hparams_ref": "W9任务书§二/§四(w9-submission-ft10-20261019): run_ft.py 逐字沿用, lr1e-4/ep100/bs128/workers4/trc0",
- "wall_s": 2480.3,
- "status": "invalid(ValueError)"
+ "auroc": "0.9143222280",
+ "auprc": "0.6749749063",
+ "wall_s": 2479.5,
+ "status": "ok",
+ "revalidated": true,
+ "wall_s_note": "复验入账, wall 按文件时间近似"
 }
