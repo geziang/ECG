@@ -132,17 +132,17 @@ def sha256_of(path):
 
 
 def _assert_w3_dir(out_dir: Path):
-    """逐记录预测落盘守卫(任务书 B-2; W4 A-8 扩展; W5 A-2 扩展; W6 Stage1 扩展; W8 E1 扩展; JOINT_20261013 扩展; ABC_20261015 扩展)。
+    """逐记录预测落盘守卫(任务书 B-2; W4 A-8 扩展; W5 A-2 扩展; W6 Stage1 扩展; W8 E1 扩展; JOINT_20261013 扩展; ABC_20261015 扩展; W9 投稿补齐扩展)。
 
-    允许 runlog/W3/…W8/ 与 runlog/JOINT_20261013/ /ABC_20261015/ 之下; runlog/W2/ 硬拒(冻结只读);
+    允许 runlog/W3/…W9/ 与 runlog/JOINT_20261013/ /ABC_20261015/ 之下; runlog/W2/ 硬拒(冻结只读);
     其余路径拒绝。不传 --save-predictions 时本函数不会被调用(默认关闭不变)。
     """
     s = str(out_dir.resolve()).replace("\\", "/").lower()
     if "/runlog/w2/" in s:
         raise ValueError(f"W2 目录只读, 拒绝写入: {out_dir}")
-    if not (any(f"/runlog/w{n}/" in s for n in (3, 4, 5, 6, 7, 8))
+    if not (any(f"/runlog/w{n}/" in s for n in (3, 4, 5, 6, 7, 8, 9))
             or "/runlog/joint_20261013/" in s or "/runlog/abc_20261015/" in s):
-        raise ValueError(f"逐记录预测只允许写 runlog/W3/ /W4/ /W5/ /W6/ /W7/ /W8/ /JOINT_20261013/ /ABC_20261015/ 之下, 收到: {out_dir}")
+        raise ValueError(f"逐记录预测只允许写 runlog/W3/ /W4/ /W5/ /W6/ /W7/ /W8/ /W9/ /JOINT_20261013/ /ABC_20261015/ 之下, 收到: {out_dir}")
 
 
 def save_eval_artifacts(out_dir, y_true, y_pred, prob, metadata, n_bins=15):
