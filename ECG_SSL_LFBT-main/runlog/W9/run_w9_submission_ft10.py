@@ -97,7 +97,7 @@ SHA_FROZEN = {  # 任务书§4.3 (encoder_group.pth 完整 SHA256)
     ("simph", 0): "b4babeb6afd6abd0737e9ed4ece96572663f6ecf70bf6e4aa9fa1b71b65e8253",
     ("simph", 2): "9977a453a579d749bee0c6aaae06bfb51c0348e26aa39bbfe6b63a19d7f549f3",
     ("simph", 4): "c506166e327f5613f0ffdf3193c5dd69552570bbe4bc40d04ba6d40728c043b0",
-    ("clocs", 0): "c1f139d98059812aeee6453c5c7ec9cb2e99d57f338178833cd4e0cd159574d5",
+    ("clocs", 0): "c1f139d98059812aeee6453c5c7ec9cb2e99d57f338178833cd6e0cd159574d5",
     ("clocs", 2): "69bc974a433ae50222178a4d084e07ed175254a3100034c7ad06451d2c4f11c1",
     ("clocs", 4): "914ed37ad35e05d70cfb00c217f5f622dfd6eef0441507ba02a5da968f13e995",
     ("tsr", 0): "bbb501f11e3da447d3da735eeedf51b96ae806e4d63298470aa63f3fbd700bfd",
