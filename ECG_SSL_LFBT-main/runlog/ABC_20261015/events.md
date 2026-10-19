@@ -230,3 +230,7 @@
 - 现象: 链 15:12 打印全部完成+报告已生成, 但收官核验发现 paired_stats.csv 137 行复用行数值列全空(delta/CI/p), 账本 57→6 条——第一增量次写回(14:5x 崩溃前)的 _fmt 只认内存键 delta_mean, CSV 行键为 delta_mean_pt, 与 14:5x 修的 build_ledger 同族键名双态 bug 的第二处。
 - 恢复: stats0 三产物自 git f36e78b 还原(m4:m0 +1.308 核验 ✓); _fmt/praw 双键修复提交; 增量统计重跑中(补算 n1n2:m3 与 m4b:m4 共 ~19 对, ~1.5h) → report-only 重出报告。实验数据零损坏(预测/results.csv/multilib/efficiency/factorial 全程未受影响)。
 - 教训: 涉及两种行来源的写回路径应有最小单测(构造一行字符串行跑一遍 _fmt); 已在本轮人工核验中补做。
+
+## 2026-10-19 16:15 🏁 批次关闭
+
+- P0+P1 全 13 阶段完成; 收官数据经损坏-恢复-核验闭环后全套就绪(p_adjusted 零空行抽验过)。后续只追加勘误。

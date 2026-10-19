@@ -697,9 +697,14 @@ def write_paired_csv(rows_core, rows_explore, path):
         if isinstance(v, str):
             return v  # 复用行: CSV 原值直通
         return round(v * 100, 3) if scale else v
-    pc = [float(r["p_emp"]) for r in rows_core if r.get("p_emp") not in (None, "")]
+    def _praw(r):
+        v = r.get("p_emp")
+        if v in (None, ""):
+            v = r.get("p_raw")  # CSV 复用行键名
+        return v
+    pc = [float(_praw(r)) for r in rows_core if _praw(r) not in (None, "")]
     ac = holm(np.array(pc)) if pc else []
-    pe = [float(r["p_emp"]) for r in rows_explore if r.get("p_emp") not in (None, "")]
+    pe = [float(_praw(r)) for r in rows_explore if _praw(r) not in (None, "")]
     ae = bh_fdr(np.array(pe)) if pe else []
     with open(path, "w", newline="", encoding="utf-8") as f:
         w = csv.writer(f)
@@ -708,7 +713,8 @@ def write_paired_csv(rows_core, rows_explore, path):
                     "pos_seeds", "total_seeds", "per_seed_pt"])
         i_c = i_e = 0
         for r in rows_core + rows_explore:
-            if r.get("p_emp") in (None, ""):
+            praw = _praw(r)
+            if praw in (None, ""):
                 padj = None
             elif r["family"] == "core":
                 padj = round(float(ac[i_c]), 4)
@@ -716,9 +722,6 @@ def write_paired_csv(rows_core, rows_explore, path):
             else:
                 padj = round(float(ae[i_e]), 4)
                 i_e += 1
-            praw = r.get("p_emp")
-            if praw in (None, ""):
-                praw = r.get("p_raw")  # CSV 复用行键名
             w.writerow([time.strftime("%Y-%m-%d %H:%M"), r["task"], r["dataset"],
                         r["pair"], r["metric"], r["family"],
                         _fmt(r, "delta_mean"), _fmt(r, "ci_lo"), _fmt(r, "ci_hi"),
