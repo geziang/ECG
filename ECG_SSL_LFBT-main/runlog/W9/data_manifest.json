@@ -1,0 +1,60 @@
+{
+ "ts": "2026-10-19 19:58:46",
+ "protocol_id": "w9-submission-ft10-20261019",
+ "datasets": {
+  "ptbxl": {
+   "split_sha": "5ca8de4ecd672a1e",
+   "counts": {
+    "train": 13639,
+    "val": 1714,
+    "test": 1739
+   },
+   "n_classes": 5,
+   "classes": [
+    "CD",
+    "HYP",
+    "MI",
+    "NORM",
+    "STTC"
+   ],
+   "sample_order_file": "sample_order/ptbxl_sample_order.txt"
+  },
+  "cpsc": {
+   "split_sha": "7808e41777518f4c",
+   "counts": {
+    "train": 4809,
+    "val": 683,
+    "test": 1385
+   },
+   "n_classes": 9,
+   "classes": [
+    "AF",
+    "IAVB",
+    "LBBB",
+    "NSR",
+    "PAC",
+    "PVC",
+    "RBBB",
+    "STD",
+    "STE"
+   ],
+   "sample_order_file": "sample_order/cpsc_sample_order.txt"
+  },
+  "chapman": {
+   "split_sha": "09783cad0542e5d1",
+   "counts": {
+    "train": 7150,
+    "val": 1019,
+    "test": 2047
+   },
+   "n_classes": 4,
+   "classes": [
+    "AFIB",
+    "GSVT",
+    "SB",
+    "SR"
+   ],
+   "sample_order_file": "sample_order/chapman_sample_order.txt"
+  }
+ }
+}

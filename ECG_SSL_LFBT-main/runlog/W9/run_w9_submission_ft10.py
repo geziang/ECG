@@ -612,7 +612,35 @@ def lane_worker(lane, tasks, stagger):
             return
 
 
+def _pid_alive_python(pid):
+    out = subprocess.run(["tasklist", "/FI", f"PID eq {pid}"],
+                         capture_output=True, text=True).stdout
+    return "python" in out.lower() and str(pid) in out
+
+
 def stage_run(lanes, stagger):
+    # 进程自守: 已有活链条则拒绝二次启动(防双链条同任务并发互踩 model-dir)
+    pidf = OUTD / "logs" / "run.pid"
+    if pidf.exists():
+        try:
+            old = int(pidf.read_text().strip())
+        except ValueError:
+            old = -1
+        if old > 0 and _pid_alive_python(old):
+            log(f"已有 W9 链条在运行(pid={old}), 本次启动退出(幂等)")
+            return
+    LOGD.mkdir(parents=True, exist_ok=True)
+    pidf.write_text(str(os.getpid()), encoding="ascii")
+    try:
+        _stage_run_inner(lanes, stagger)
+    finally:
+        try:
+            pidf.unlink()
+        except OSError:
+            pass
+
+
+def _stage_run_inner(lanes, stagger):
     pf = OUTD / "preflight.json"
     if pf.exists():
         RUN_SHA["v"] = json.loads(pf.read_text(encoding="utf-8")).get("git_sha")

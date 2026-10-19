@@ -1,0 +1,45 @@
+{
+ "ts": "2026-10-19 19:58:46",
+ "protocol_id": "w9-submission-ft10-20261019",
+ "git_sha": "3cfb5e7",
+ "git_tracked_clean": true,
+ "gpu": "NVIDIA GeForce RTX 4090, 610.74",
+ "cuda_available": true,
+ "python": "3.11.9",
+ "torch": "2.5.1+cu121",
+ "cuda": "12.1",
+ "cudnn": 90100,
+ "split_sha.ptbxl": {
+  "got": "5ca8de4ecd672a1e",
+  "want": "5ca8de4ecd672a1e",
+  "ok": true,
+  "counts": {
+   "train": 13639,
+   "val": 1714,
+   "test": 1739
+  }
+ },
+ "split_sha.cpsc": {
+  "got": "7808e41777518f4c",
+  "want": "7808e41777518f4c",
+  "ok": true,
+  "counts": {
+   "train": 4809,
+   "val": 683,
+   "test": 1385
+  }
+ },
+ "split_sha.chapman": {
+  "got": "09783cad0542e5d1",
+  "want": "09783cad0542e5d1",
+  "ok": true,
+  "counts": {
+   "train": 7150,
+   "val": 1019,
+   "test": 2047
+  }
+ },
+ "n_tasks": 30,
+ "verdict": "PASS",
+ "failures": []
+}

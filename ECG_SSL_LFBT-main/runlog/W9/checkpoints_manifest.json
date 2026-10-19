@@ -1,0 +1,149 @@
+{
+ "ts": "2026-10-19 19:58:46",
+ "entries": {
+  "clocs_s0": {
+   "path": "checkpoint\\confirm\\clocs_seed0\\encoder_group.pth",
+   "sha256": "c1f139d98059812aeee6453c5c7ec9cb2e99d57f338178833cd6e0cd159574d5",
+   "want": "c1f139d98059812aeee6453c5c7ec9cb2e99d57f338178833cd6e0cd159574d5",
+   "sha_ok": true,
+   "config_semantics_ok": true,
+   "config_diffs": []
+  },
+  "clocs_s2": {
+   "path": "checkpoint\\confirm\\clocs_seed2\\encoder_group.pth",
+   "sha256": "69bc974a433ae50222178a4d084e07ed175254a3100034c7ad06451d2c4f11c1",
+   "want": "69bc974a433ae50222178a4d084e07ed175254a3100034c7ad06451d2c4f11c1",
+   "sha_ok": true,
+   "config_semantics_ok": true,
+   "config_diffs": []
+  },
+  "clocs_s4": {
+   "path": "checkpoint\\confirm\\clocs_seed4\\encoder_group.pth",
+   "sha256": "914ed37ad35e05d70cfb00c217f5f622dfd6eef0441507ba02a5da968f13e995",
+   "want": "914ed37ad35e05d70cfb00c217f5f622dfd6eef0441507ba02a5da968f13e995",
+   "sha_ok": true,
+   "config_semantics_ok": true,
+   "config_diffs": []
+  },
+  "m2_s0": {
+   "path": "checkpoint\\w6_dv\\seed0\\encoder_group.pth",
+   "sha256": "123c4018768a9549dff7c418ebf61c1e1b2bf858a06836c146c754b5cb6ef726",
+   "want": "123c4018768a9549dff7c418ebf61c1e1b2bf858a06836c146c754b5cb6ef726",
+   "sha_ok": true,
+   "config_semantics_ok": true,
+   "config_diffs": []
+  },
+  "m2_s2": {
+   "path": "checkpoint\\w7_dv\\seed2\\encoder_group.pth",
+   "sha256": "62c4209d1c8a319dfca9f6b6284a6a06850dc1953e6eff56c286075f3af793f1",
+   "want": "62c4209d1c8a319dfca9f6b6284a6a06850dc1953e6eff56c286075f3af793f1",
+   "sha_ok": true,
+   "config_semantics_ok": true,
+   "config_diffs": []
+  },
+  "m2_s4": {
+   "path": "checkpoint\\w7_dv\\seed4\\encoder_group.pth",
+   "sha256": "69272f12f516cd140e802dbf27eb57e1625f8be19e62ec853098a916d48acbe2",
+   "want": "69272f12f516cd140e802dbf27eb57e1625f8be19e62ec853098a916d48acbe2",
+   "sha_ok": true,
+   "config_semantics_ok": true,
+   "config_diffs": []
+  },
+  "m5_s0": {
+   "path": "checkpoint\\w8_noiseiso\\seed0\\encoder_group.pth",
+   "sha256": "6883e5254be34895f8bc12859e3cd9f58fa6948a6b9aa629fe470b4641d9c4e4",
+   "want": "6883e5254be34895f8bc12859e3cd9f58fa6948a6b9aa629fe470b4641d9c4e4",
+   "sha_ok": true,
+   "config_semantics_ok": true,
+   "config_diffs": []
+  },
+  "m5_s2": {
+   "path": "checkpoint\\w8_noiseiso\\seed2\\encoder_group.pth",
+   "sha256": "6747cb1b114df946fcb846e138ff447dd173ef271d735c0575419032b1d6809e",
+   "want": "6747cb1b114df946fcb846e138ff447dd173ef271d735c0575419032b1d6809e",
+   "sha_ok": true,
+   "config_semantics_ok": true,
+   "config_diffs": []
+  },
+  "m5_s4": {
+   "path": "checkpoint\\w8_noiseiso\\seed4\\encoder_group.pth",
+   "sha256": "8685ce9dc70d530db228424ba4eff2282eac7940230a16a665272bf12cf562fd",
+   "want": "8685ce9dc70d530db228424ba4eff2282eac7940230a16a665272bf12cf562fd",
+   "sha_ok": true,
+   "config_semantics_ok": true,
+   "config_diffs": []
+  },
+  "simclr_s0": {
+   "path": "checkpoint\\confirm\\simclr_seed0\\encoder_group.pth",
+   "sha256": "cc28ed3a955490014cb582c9fb75193140b9ca5d083e3f783963b76c80d2f103",
+   "want": "cc28ed3a955490014cb582c9fb75193140b9ca5d083e3f783963b76c80d2f103",
+   "sha_ok": true,
+   "config_semantics_ok": true,
+   "config_diffs": []
+  },
+  "simclr_s2": {
+   "path": "checkpoint\\confirm\\simclr_seed2\\encoder_group.pth",
+   "sha256": "e4b431ba5c601bd52de3ad0e9b70d003d6840b5b8ce81409b50cae2b44d8b677",
+   "want": "e4b431ba5c601bd52de3ad0e9b70d003d6840b5b8ce81409b50cae2b44d8b677",
+   "sha_ok": true,
+   "config_semantics_ok": true,
+   "config_diffs": []
+  },
+  "simclr_s4": {
+   "path": "checkpoint\\confirm\\simclr_seed4\\encoder_group.pth",
+   "sha256": "5958c81aeef97f9a35144740bec47216f5b3cd8e023737f19dbdca85c328fc30",
+   "want": "5958c81aeef97f9a35144740bec47216f5b3cd8e023737f19dbdca85c328fc30",
+   "sha_ok": true,
+   "config_semantics_ok": true,
+   "config_diffs": []
+  },
+  "simph_s0": {
+   "path": "checkpoint\\w8_simph\\simph_seed0\\encoder_group.pth",
+   "sha256": "b4babeb6afd6abd0737e9ed4ece96572663f6ecf70bf6e4aa9fa1b71b65e8253",
+   "want": "b4babeb6afd6abd0737e9ed4ece96572663f6ecf70bf6e4aa9fa1b71b65e8253",
+   "sha_ok": true,
+   "config_semantics_ok": true,
+   "config_diffs": []
+  },
+  "simph_s2": {
+   "path": "checkpoint\\w8_simph\\simph_seed2\\encoder_group.pth",
+   "sha256": "9977a453a579d749bee0c6aaae06bfb51c0348e26aa39bbfe6b63a19d7f549f3",
+   "want": "9977a453a579d749bee0c6aaae06bfb51c0348e26aa39bbfe6b63a19d7f549f3",
+   "sha_ok": true,
+   "config_semantics_ok": true,
+   "config_diffs": []
+  },
+  "simph_s4": {
+   "path": "checkpoint\\w8_simph\\simph_seed4\\encoder_group.pth",
+   "sha256": "c506166e327f5613f0ffdf3193c5dd69552570bbe4bc40d04ba6d40728c043b0",
+   "want": "c506166e327f5613f0ffdf3193c5dd69552570bbe4bc40d04ba6d40728c043b0",
+   "sha_ok": true,
+   "config_semantics_ok": true,
+   "config_diffs": []
+  },
+  "tsr_s0": {
+   "path": "checkpoint\\w8_tsr\\tsr_seed0\\encoder_group.pth",
+   "sha256": "bbb501f11e3da447d3da735eeedf51b96ae806e4d63298470aa63f3fbd700bfd",
+   "want": "bbb501f11e3da447d3da735eeedf51b96ae806e4d63298470aa63f3fbd700bfd",
+   "sha_ok": true,
+   "config_semantics_ok": true,
+   "config_diffs": []
+  },
+  "tsr_s2": {
+   "path": "checkpoint\\w8_tsr\\tsr_seed2\\encoder_group.pth",
+   "sha256": "9c9560444831d2d1c12dee948812bbdc91e25a280b363aae492b61e4717ff27e",
+   "want": "9c9560444831d2d1c12dee948812bbdc91e25a280b363aae492b61e4717ff27e",
+   "sha_ok": true,
+   "config_semantics_ok": true,
+   "config_diffs": []
+  },
+  "tsr_s4": {
+   "path": "checkpoint\\w8_tsr\\tsr_seed4\\encoder_group.pth",
+   "sha256": "b5fe62d2c6e49b0ca6ba6901ac545e8dee354523f4af3a37c906442b2c5f6616",
+   "want": "b5fe62d2c6e49b0ca6ba6901ac545e8dee354523f4af3a37c906442b2c5f6616",
+   "sha_ok": true,
+   "config_semantics_ok": true,
+   "config_diffs": []
+  }
+ }
+}

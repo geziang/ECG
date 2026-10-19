@@ -1,0 +1,75 @@
+{
+ "ts": "2026-10-19 19:59:02",
+ "results": [
+  {
+   "method": "simclr",
+   "dataset": "chapman",
+   "seed": 0,
+   "ok": true,
+   "detail": "loss=1.2424"
+  },
+  {
+   "method": "simph",
+   "dataset": "chapman",
+   "seed": 0,
+   "ok": true,
+   "detail": "loss=1.3423"
+  },
+  {
+   "method": "clocs",
+   "dataset": "cpsc",
+   "seed": 0,
+   "ok": true,
+   "detail": "loss=2.2656"
+  },
+  {
+   "method": "clocs",
+   "dataset": "chapman",
+   "seed": 0,
+   "ok": true,
+   "detail": "loss=1.3599"
+  },
+  {
+   "method": "tsr",
+   "dataset": "chapman",
+   "seed": 0,
+   "ok": true,
+   "detail": "loss=1.4891"
+  },
+  {
+   "method": "m2",
+   "dataset": "cpsc",
+   "seed": 0,
+   "ok": true,
+   "detail": "loss=2.2226"
+  },
+  {
+   "method": "m2",
+   "dataset": "chapman",
+   "seed": 0,
+   "ok": true,
+   "detail": "loss=1.2433"
+  },
+  {
+   "method": "m5",
+   "dataset": "cpsc",
+   "seed": 0,
+   "ok": true,
+   "detail": "loss=2.3106"
+  },
+  {
+   "method": "m5",
+   "dataset": "chapman",
+   "seed": 0,
+   "ok": true,
+   "detail": "loss=1.3473"
+  },
+  {
+   "method": "m5",
+   "dataset": "ptbxl",
+   "seed": 0,
+   "ok": true,
+   "detail": "loss=1.8173"
+  }
+ ]
+}
