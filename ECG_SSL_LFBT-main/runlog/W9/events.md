@@ -24,3 +24,5 @@
 - 取证(22:00 值班轮): 从落盘 y_true/y_prob 独立复算 auroc/auprc 与 metrics.json 差 0.000e+00(逐位一致); macro_ap 为无ties处理手写 AP, 与 sklearn 固有差 ~1.05e-5。断言把两种不同口径公式做 1e-6 等价比较, 必然假阳性, 30 任务将全部误停。
 - 修复: ①runner/finalize 校验改为任务书§七-5 本意=预测独立复算==metrics.json @1e-6(更强), macro_ap 只做 1e-3 粗检; ②runner 加 try_revalidate 复验路径(§五-1 工件齐全且一致可跳过), s0/s2 免重训直接复验入账。
 - 动作: 修复 commit 后 launch_w9.ps1 幂等重启, 预计复验 2 + 新跑 28。实验协议零改动(超参/矩阵/种子未动)。
+
+## 2026-10-19 22:02 run 启动: 30 任务/2 车道/错峰600s (任务书27 + 用户裁决扩充m5-ptbxl×3)
