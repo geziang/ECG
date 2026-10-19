@@ -13,3 +13,8 @@
 - 判活: pid 49568 活(tasklist 直查), GPU 13%/6193MiB 双车道满载, chain.log 正常推进。
 - 进度: **7/30 ok**(clocs-cpsc×3 + simclr-chapman×3 + simph-chapman-s0); L0 跑 simph_chapman_s4, L1 跑 simph_chapman_s2(23:30 起)。单次 ~37-39min 与预估一致。
 - 动作: 无需重启; 推送新账行(7 ok)。ETA 维持 10-20 晨 ~07:00。
+
+## 2026-10-20 02:00 值班#3
+- 判活: pid 49568 活, GPU 6201MiB 双车道在载(瞬时 util 0% 属 epoch 间隙, 账行 2h+6 与 wall ~2320s 稳定互证)。
+- 进度: **13/30 ok**——P0: clocs-cpsc×3/simclr-chap×3/simph-chap×3/clocs-chap×3/tsr-chap-s0 已入账; L0=tsr_chapman_s4, L1=tsr_chapman_s2 在跑, 完成后 P0=15/15 收官, 进 P1。
+- 动作: 无需重启; 推送新账行(13 ok)。ETA ~07:20-07:40。
