@@ -208,3 +208,25 @@
 - 现象: 增量统计在 build_ledger 崩溃(KeyError delta_mean), 链 54464 exit; 拉活自动起新链 50784。
 - 根因: build_ledger 只认内存行的 delta_mean(小数), CSV 复用行键为 delta_mean_pt(百分点)——增量模式引入的键名双态未覆盖, 纯实现 bug。已改为双键兼容+单位归一(新算行×100, 复用行直用)。
 - 影响面: 仅账本装配, 配对统计数值零影响; 新链 50784 的 stats 子进程将从磁盘加载修复版(bench 会多跑一次 12min 无害)。
+
+## 2026-10-19 14:56 P0-4 效率基准完成: efficiency.csv
+
+## 2026-10-19 14:56 n1 seeds[2, 4] 全下游完成(LP3域/FT1域/无噪)
+
+## 2026-10-19 14:56 n2 seeds[2, 4] 全下游完成(LP3域/FT1域/无噪)
+
+## 2026-10-19 14:56 m4b seeds[0, 2, 4] 全下游完成(LP3域/FT1域/9格)
+
+## 2026-10-19 14:56 P1-3 多标签敏感性完成: multilib/ 与 multilib_results.csv
+
+## 2026-10-19 15:12 全量统计完成: paired/factorial/ledger/三表
+
+## 2026-10-19 15:12 ABC最终报告.md 生成(report-only 模式)
+
+## 2026-10-19 15:12 ABC 链阶段完成: audit,smoke,ft10fill,m7,m8,m9,bench,stats0,n1n2,m4b,multilib,stats,report
+
+## 2026-10-19 15:2x 值班#50 收官数据损坏发现与恢复(用户询问触发核验)
+
+- 现象: 链 15:12 打印全部完成+报告已生成, 但收官核验发现 paired_stats.csv 137 行复用行数值列全空(delta/CI/p), 账本 57→6 条——第一增量次写回(14:5x 崩溃前)的 _fmt 只认内存键 delta_mean, CSV 行键为 delta_mean_pt, 与 14:5x 修的 build_ledger 同族键名双态 bug 的第二处。
+- 恢复: stats0 三产物自 git f36e78b 还原(m4:m0 +1.308 核验 ✓); _fmt/praw 双键修复提交; 增量统计重跑中(补算 n1n2:m3 与 m4b:m4 共 ~19 对, ~1.5h) → report-only 重出报告。实验数据零损坏(预测/results.csv/multilib/efficiency/factorial 全程未受影响)。
+- 教训: 涉及两种行来源的写回路径应有最小单测(构造一行字符串行跑一遍 _fmt); 已在本轮人工核验中补做。

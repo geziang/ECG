@@ -1,11 +1,11 @@
 model,params_total,params_encoder,params_head,macs_per_record,macs_method,pt_wall_100ep,pt_epoch_mean,pt_vram_peak,pt_source,ft10_wall_cpsc,infer_latency_b1_ms_med,infer_latency_b1_ms_iqr,infer_throughput_b64_recs_s,infer_vram_peak_mib,env,seeds_pt
-m0,630345,625728,4617,145101312,hook Conv1d+Linear(BN/激活不计),n/a,n/a,n/a,n/a(历史批次未记录),n/a,6.007,0.302,4255.1,28.9,NVIDIA GeForce RTX 4090;cuda12.1;torch2.5.1+cu121;len2048;cudnn90100,0
-m1,631369,626752,4617,145101312,hook Conv1d+Linear(BN/激活不计),n/a,n/a,n/a,n/a(历史批次未记录),n/a,15.447,0.149,3995.1,29.0,NVIDIA GeForce RTX 4090;cuda12.1;torch2.5.1+cu121;len2048;cudnn90100,0
-m2,630345,625728,4617,145101312,hook Conv1d+Linear(BN/激活不计),n/a,n/a,n/a,n/a(历史批次未记录),n/a,14.478,0.129,4229.8,28.9,NVIDIA GeForce RTX 4090;cuda12.1;torch2.5.1+cu121;len2048;cudnn90100,0
-m3,631369,626752,4617,145101312,hook Conv1d+Linear(BN/激活不计),n/a,n/a,n/a,n/a(历史批次未记录),30.5min,15.447,0.205,3990.7,29.0,NVIDIA GeForce RTX 4090;cuda12.1;torch2.5.1+cu121;len2048;cudnn90100,0
-m4,631369,626752,4617,145101312,hook Conv1d+Linear(BN/激活不计),n/a,n/a,n/a,n/a(历史批次未记录),30.9min,15.499,0.303,3981.5,29.0,NVIDIA GeForce RTX 4090;cuda12.1;torch2.5.1+cu121;len2048;cudnn90100,0
-m5,630345,625728,4617,145101312,hook Conv1d+Linear(BN/激活不计),n/a,n/a,n/a,n/a(历史批次未记录),n/a,14.475,0.135,4240.4,28.9,NVIDIA GeForce RTX 4090;cuda12.1;torch2.5.1+cu121;len2048;cudnn90100,0
-m6,631369,626752,4617,145101312,hook Conv1d+Linear(BN/激活不计),n/a,n/a,n/a,n/a(历史批次未记录),34.3min,15.442,0.308,3997.4,29.0,NVIDIA GeForce RTX 4090;cuda12.1;torch2.5.1+cu121;len2048;cudnn90100,0
-m7,630345,625728,4617,145101312,hook Conv1d+Linear(BN/激活不计),129.0min,1.29min,8648MiB,ABC_20261015,34.3min,14.492,0.156,4144.0,28.9,NVIDIA GeForce RTX 4090;cuda12.1;torch2.5.1+cu121;len2048;cudnn90100,3
-m8,631369,626752,4617,145101312,hook Conv1d+Linear(BN/激活不计),162.0min,1.62min,11836MiB,ABC_20261015,35.1min,15.425,0.185,3985.4,29.0,NVIDIA GeForce RTX 4090;cuda12.1;torch2.5.1+cu121;len2048;cudnn90100,3
-m9,631369,626752,4617,145101312,hook Conv1d+Linear(BN/激活不计),114.6min,1.15min,8354MiB,ABC_20261015,34.5min,15.396,0.149,4009.3,29.0,NVIDIA GeForce RTX 4090;cuda12.1;torch2.5.1+cu121;len2048;cudnn90100,3
+m0,630345,625728,4617,145101312,hook Conv1d+Linear(BN/激活不计),n/a,n/a,n/a,n/a(历史批次未记录),n/a,6.37,0.287,9664.4,28.9,NVIDIA GeForce RTX 4090;cuda12.1;torch2.5.1+cu121;len2048;cudnn90100,0
+m1,631369,626752,4617,145101312,hook Conv1d+Linear(BN/激活不计),n/a,n/a,n/a,n/a(历史批次未记录),n/a,6.976,0.302,8946.4,29.0,NVIDIA GeForce RTX 4090;cuda12.1;torch2.5.1+cu121;len2048;cudnn90100,0
+m2,630345,625728,4617,145101312,hook Conv1d+Linear(BN/激活不计),n/a,n/a,n/a,n/a(历史批次未记录),n/a,6.379,0.267,9510.6,28.9,NVIDIA GeForce RTX 4090;cuda12.1;torch2.5.1+cu121;len2048;cudnn90100,0
+m3,631369,626752,4617,145101312,hook Conv1d+Linear(BN/激活不计),n/a,n/a,n/a,n/a(历史批次未记录),30.5min,6.833,0.273,8986.6,29.0,NVIDIA GeForce RTX 4090;cuda12.1;torch2.5.1+cu121;len2048;cudnn90100,0
+m4,631369,626752,4617,145101312,hook Conv1d+Linear(BN/激活不计),n/a,n/a,n/a,n/a(历史批次未记录),30.9min,6.843,0.28,8981.4,29.0,NVIDIA GeForce RTX 4090;cuda12.1;torch2.5.1+cu121;len2048;cudnn90100,0
+m5,630345,625728,4617,145101312,hook Conv1d+Linear(BN/激活不计),n/a,n/a,n/a,n/a(历史批次未记录),n/a,6.276,0.292,9745.5,28.9,NVIDIA GeForce RTX 4090;cuda12.1;torch2.5.1+cu121;len2048;cudnn90100,0
+m6,631369,626752,4617,145101312,hook Conv1d+Linear(BN/激活不计),n/a,n/a,n/a,n/a(历史批次未记录),34.3min,6.834,0.292,9102.8,29.0,NVIDIA GeForce RTX 4090;cuda12.1;torch2.5.1+cu121;len2048;cudnn90100,0
+m7,630345,625728,4617,145101312,hook Conv1d+Linear(BN/激活不计),129.0min,1.29min,8648MiB,ABC_20261015,34.3min,6.34,0.253,9058.1,28.9,NVIDIA GeForce RTX 4090;cuda12.1;torch2.5.1+cu121;len2048;cudnn90100,3
+m8,631369,626752,4617,145101312,hook Conv1d+Linear(BN/激活不计),162.0min,1.62min,11836MiB,ABC_20261015,35.1min,6.846,0.336,8834.1,29.0,NVIDIA GeForce RTX 4090;cuda12.1;torch2.5.1+cu121;len2048;cudnn90100,3
+m9,631369,626752,4617,145101312,hook Conv1d+Linear(BN/激活不计),114.6min,1.15min,8354MiB,ABC_20261015,34.5min,6.841,0.326,9144.1,29.0,NVIDIA GeForce RTX 4090;cuda12.1;torch2.5.1+cu121;len2048;cudnn90100,3

@@ -688,7 +688,10 @@ def incremental_stats(args):
 def write_paired_csv(rows_core, rows_explore, path):
     """写 CSV: 兼容两类行——dict(新算, 浮点) 与 DictReader 行(复用, 字符串原样)。"""
     def _fmt(r, k, scale=True):
+        # 双键兼容: 新算行=delta_mean(小数), CSV 复用行=delta_mean_pt(百分点, 10-19 修复)
         v = r.get(k)
+        if (v is None or v == "") and not k.endswith("_pt"):
+            v = r.get(k + "_pt")
         if v is None or v == "":
             return None
         if isinstance(v, str):
@@ -713,10 +716,13 @@ def write_paired_csv(rows_core, rows_explore, path):
             else:
                 padj = round(float(ae[i_e]), 4)
                 i_e += 1
+            praw = r.get("p_emp")
+            if praw in (None, ""):
+                praw = r.get("p_raw")  # CSV 复用行键名
             w.writerow([time.strftime("%Y-%m-%d %H:%M"), r["task"], r["dataset"],
                         r["pair"], r["metric"], r["family"],
                         _fmt(r, "delta_mean"), _fmt(r, "ci_lo"), _fmt(r, "ci_hi"),
-                        r.get("p_emp"), padj,
+                        praw, padj,
                         r.get("pos_seeds"), r.get("total_seeds") or len(
                             json.loads(r["per_seed_pt"]) if isinstance(r.get("per_seed_pt"), str)
                             else r.get("per_seed", {})),
