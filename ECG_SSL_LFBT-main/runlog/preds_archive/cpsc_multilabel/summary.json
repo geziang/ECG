@@ -1,0 +1,34 @@
+{
+ "ts": "2026-10-20 11:42:55",
+ "n": 6877,
+ "splits": {
+  "train": 4809,
+  "val": 683,
+  "test": 1385
+ },
+ "n_multilabel": 476,
+ "pct_multilabel": 6.92,
+ "per_class_any": {
+  "NSR": 918,
+  "AF": 1221,
+  "IAVB": 722,
+  "LBBB": 236,
+  "RBBB": 1857,
+  "PAC": 616,
+  "PVC": 700,
+  "STD": 869,
+  "STE": 220
+ },
+ "per_class_primary": {
+  "AF": 1221,
+  "IAVB": 686,
+  "LBBB": 187,
+  "NSR": 918,
+  "PAC": 598,
+  "PVC": 672,
+  "RBBB": 1543,
+  "STD": 834,
+  "STE": 218
+ },
+ "note": "顺序=canonical(类目录序+文件名序, 与预测 y_true 同序); 主类口径=CPSC_PRIORITY 与 prepare_cpsc_chapman 一致(校验 0 不一致)"
+}
