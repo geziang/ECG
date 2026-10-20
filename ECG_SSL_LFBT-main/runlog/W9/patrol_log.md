@@ -38,3 +38,7 @@
 - 状态: 批次已收官(08:0x, 85e9dbc)——30/30 ok、报告含 ALL GATES PASS 结论、HOSTS ✅、tracked files 干净, 状态与收官时一致, 无新账行。
 - 动作: 无(规则5条件不成立: 报告非草稿且含门结论, 不重跑 finalize; 无重启/无 commit)。
 - **本 cron 使命已完成, 建议用户侧删除 automation-fdf0c2c0; 后续每2h触发将仅做本类空核验。**
+
+## 2026-10-20 12:00 值班#8(收官后核验轮)
+- 状态: 与收官时一致(30/30、报告含 ALL GATES PASS、链已退出、git 与 origin/main 同步), 零动作。
+- **cron automation-fdf0c2c0 使命已完成, 再次提醒用户侧删除; 未删除前每 2h 触发均为本类空核验。**
