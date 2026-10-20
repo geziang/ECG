@@ -1,0 +1,82 @@
+{
+ "ts": "2026-10-20 11:40:36",
+ "purpose": "核心论文可复算底层数据: 逐记录预测+y_prob/y_true(+噪声offset)归档",
+ "batches": {
+  "W4": {
+   "zip": "W4_predictions.zip",
+   "files": 216,
+   "npy": 162,
+   "bytes": 2795669,
+   "sha256": "0f06f6404023b634641d6d2d590863a77292c81ec2bac44652399b2610a726ac"
+  },
+  "W5": {
+   "zip": "W5_predictions.zip",
+   "files": 60,
+   "npy": 45,
+   "bytes": 869387,
+   "sha256": "46229f33de936fe91e591a21590757eb1c81e4bc91f89962c2419c4ba323132a"
+  },
+  "W6": {
+   "zip": "W6_predictions.zip",
+   "files": 296,
+   "npy": 222,
+   "bytes": 3244952,
+   "sha256": "5b80f9eaf98e446a117ef1a12a2685e7ea943f72d561cd4bb5f2821f273b6655"
+  },
+  "W7": {
+   "zip": "W7_predictions.zip",
+   "files": 212,
+   "npy": 168,
+   "bytes": 2897652,
+   "sha256": "7b45a56112cda286f643e6ebfc0453db4e674e16efa65df42c133e1aaff3118d"
+  },
+  "W8": {
+   "zip": "W8_predictions.zip",
+   "files": 292,
+   "npy": 219,
+   "bytes": 3187202,
+   "sha256": "589772064888ac814a0ea296232c92c4c51c5ff714d6f899b1f0ab394bb080db"
+  },
+  "JOINT_20261013": {
+   "zip": "JOINT_20261013_predictions.zip",
+   "files": 1243,
+   "npy": 1175,
+   "bytes": 16782098,
+   "sha256": "4489c6a40b37587484bbf0db31a02aeca6e7f55e0163c262057ca57ca791bc4d"
+  },
+  "ABC_20261015": {
+   "zip": "ABC_20261015_predictions.zip",
+   "files": 1213,
+   "npy": 1110,
+   "bytes": 16397666,
+   "sha256": "eedb4e790c8bc9c580168d7a0f118692901a6f6831cdf514cac33e1dde9d3f03"
+  },
+  "W9": {
+   "zip": "W9_predictions.zip",
+   "files": 120,
+   "npy": 90,
+   "bytes": 1309771,
+   "sha256": "7b8342dad5e4dda11b7bc1c7e67273bcba567c0b13b2e5e01f2716c36af429cf"
+  }
+ },
+ "sample_order": {
+  "ptbxl": {
+   "sha": "5ca8de4ecd672a1e",
+   "frozen": "5ca8de4ecd672a1e",
+   "ok": true,
+   "n": 17092
+  },
+  "cpsc": {
+   "sha": "7808e41777518f4c",
+   "frozen": "7808e41777518f4c",
+   "ok": true,
+   "n": 6877
+  },
+  "chapman": {
+   "sha": "09783cad0542e5d1",
+   "frozen": "09783cad0542e5d1",
+   "ok": true,
+   "n": 10216
+  }
+ }
+}
