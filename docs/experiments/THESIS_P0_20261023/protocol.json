@@ -1,8 +1,8 @@
 {
   "protocol_id": "thesis-p0-20261023-v1",
-  "status": "draft_not_dispatched",
+  "status": "dispatched_2026-10-23",
   "code_implemented": false,
-  "training_authorized_by_this_document": false,
+  "training_authorized_by_this_document": true,
   "resolved_execution_code_commit": null,
   "results_root_relative_to_code_root": "runlog/THESIS_P0_20261023",
   "stages": [
