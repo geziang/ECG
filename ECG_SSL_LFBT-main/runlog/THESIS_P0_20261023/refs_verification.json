@@ -1,0 +1,79 @@
+{
+ "refs_root": "D:\\thesis_p0_20261023_backup\\refs",
+ "files": [
+  {
+   "repo": "heartlang",
+   "commit": "a08afd8117e813fee212a1ac283db4a7140a4669",
+   "path": "QRSTokenizer.py",
+   "expected_sha256": "b435e521ffe4503f1d34c287eb3cd4512d6b49044f7960442d82397eebb90919",
+   "actual_sha256": "b435e521ffe4503f1d34c287eb3cd4512d6b49044f7960442d82397eebb90919",
+   "status": "ok"
+  },
+  {
+   "repo": "heartlang",
+   "commit": "a08afd8117e813fee212a1ac283db4a7140a4669",
+   "path": "run_class_finetuning.py",
+   "expected_sha256": "e8b574303c39d7bd9493711c685ab7537cf8d24e94abe1ccf4c095d12eea76d7",
+   "actual_sha256": "e8b574303c39d7bd9493711c685ab7537cf8d24e94abe1ccf4c095d12eea76d7",
+   "status": "ok"
+  },
+  {
+   "repo": "heartlang",
+   "commit": "a08afd8117e813fee212a1ac283db4a7140a4669",
+   "path": "scripts/finetune/CPSC2018/base_cpsc2018_linear_prob.sh",
+   "expected_sha256": "427a2546cd1ab87893badaf26c122f28e4f7ab83932473c9d83566486bc4b8d4",
+   "actual_sha256": "427a2546cd1ab87893badaf26c122f28e4f7ab83932473c9d83566486bc4b8d4",
+   "status": "ok"
+  },
+  {
+   "repo": "ecg_tokenizer",
+   "commit": "ce976cecaa27912fbba38c28fdda07abcc211b7d",
+   "path": "models/tokenizers/heartlang.py",
+   "expected_sha256": "862ec49d06ba8b4db7b9cb5bf8d0b7079af00b08b46eacd5a0b7d04f759f4776",
+   "actual_sha256": "862ec49d06ba8b4db7b9cb5bf8d0b7079af00b08b46eacd5a0b7d04f759f4776",
+   "status": "ok"
+  },
+  {
+   "repo": "ecg_tokenizer",
+   "commit": "ce976cecaa27912fbba38c28fdda07abcc211b7d",
+   "path": "models/tokenizers/median_beat.py",
+   "expected_sha256": "a64537265130e0ce34f0088061b0fbe88c928f64691b6e47ff90856b37f6329a",
+   "actual_sha256": "a64537265130e0ce34f0088061b0fbe88c928f64691b6e47ff90856b37f6329a",
+   "status": "ok"
+  },
+  {
+   "repo": "ecg_tokenizer",
+   "commit": "ce976cecaa27912fbba38c28fdda07abcc211b7d",
+   "path": "exp/exp_classification.py",
+   "expected_sha256": "133309c0c71d1e5b3a1a5b15fc8d1451379ebffdb4c961baa9584ce9bf4419f9",
+   "actual_sha256": "133309c0c71d1e5b3a1a5b15fc8d1451379ebffdb4c961baa9584ce9bf4419f9",
+   "status": "ok"
+  },
+  {
+   "repo": "ecg_tokenizer",
+   "commit": "ce976cecaa27912fbba38c28fdda07abcc211b7d",
+   "path": "data_provider/data_loader.py",
+   "expected_sha256": "490282cdead993674555ae995727765df6d1b572a87d347581a8874f4dc4b2e5",
+   "actual_sha256": "490282cdead993674555ae995727765df6d1b572a87d347581a8874f4dc4b2e5",
+   "status": "ok"
+  },
+  {
+   "repo": "shapeefm",
+   "commit": "9bb1b6e1f61cca5b2ccc5cbfff02f63e57dd2af3",
+   "path": "shape/extraction.py",
+   "expected_sha256": "94078f8601ee2df3c0a9b7b544e580864869d9ff81a24e1d9a11201b1603c2b4",
+   "actual_sha256": "94078f8601ee2df3c0a9b7b544e580864869d9ff81a24e1d9a11201b1603c2b4",
+   "status": "ok"
+  },
+  {
+   "repo": "shapeefm",
+   "commit": "9bb1b6e1f61cca5b2ccc5cbfff02f63e57dd2af3",
+   "path": "tokenizer.py",
+   "expected_sha256": "64b492b8a25b3d4ce29a9674f20842afe7d89994ccc8ca9e387fb968d7cdc51e",
+   "actual_sha256": "64b492b8a25b3d4ce29a9674f20842afe7d89994ccc8ca9e387fb968d7cdc51e",
+   "status": "ok"
+  }
+ ],
+ "passed": true,
+ "issues": []
+}

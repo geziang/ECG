@@ -1,0 +1,214 @@
+{
+ "protocol_id": "thesis-p0-20261023-v1",
+ "stage": "A0_preflight",
+ "timestamp": "2026-10-23 22:59:57",
+ "machine": {
+  "hostname": "Win4090",
+  "os": "Windows-10-10.0.19045-SP0",
+  "processor_cores_logical": 32
+ },
+ "git": {
+  "head": "3c3c35c889a98a50d35ec353a2d8907655587f69",
+  "branch": "main",
+  "dirty_files": [
+   "?? ECG_SSL_LFBT-main/tools/"
+  ]
+ },
+ "environment": {
+  "python_executable": "C:\\Users\\admin\\.conda\\envs\\DL\\python.exe",
+  "python_version": "3.11.9 | packaged by Anaconda, Inc. | (main, Apr 19 2024, 16:40:41) [MSC v.1916 64 bit (AMD64)]",
+  "numpy": "1.26.3",
+  "scikit_learn": "1.5.0",
+  "wfdb": "4.1.2",
+  "torch": "2.5.1+cu121",
+  "torch_cuda_available": true,
+  "torch_cuda_version": "12.1",
+  "gpu_name": "NVIDIA GeForce RTX 4090",
+  "gpu_total_mem_gb": 23.99
+ },
+ "checkpoints": [
+  {
+   "model": "M0",
+   "pretrain_seed": 0,
+   "expected_sha256": "de0c28eedb30841492c36644ad1d06e11aab7bb02bbb5b42ff5d18524a5bc177",
+   "source_lock_trc": 0,
+   "candidate_path": "F:\\新实验\\ECG_SSL_LFBT-main\\checkpoint\\confirm\\c1_seed0\\encoder_group.pth",
+   "actual_sha256": "de0c28eedb30841492c36644ad1d06e11aab7bb02bbb5b42ff5d18524a5bc177",
+   "actual_bytes": 2964930,
+   "status": "ok",
+   "backup_path": "D:\\thesis_p0_20261023_backup\\checkpoints\\M0_s0_encoder_group.pth",
+   "backup_sha256": "de0c28eedb30841492c36644ad1d06e11aab7bb02bbb5b42ff5d18524a5bc177",
+   "backup_verified": true,
+   "backup_config_path": "D:\\thesis_p0_20261023_backup\\checkpoints\\M0_s0_config.json"
+  },
+  {
+   "model": "M0",
+   "pretrain_seed": 2,
+   "expected_sha256": "26ebf0e26e5abee04f4064182d79e449e3c849693979162577171717cb2b7787",
+   "source_lock_trc": 0,
+   "candidate_path": "F:\\新实验\\ECG_SSL_LFBT-main\\checkpoint\\confirm\\c1_seed2\\encoder_group.pth",
+   "actual_sha256": "26ebf0e26e5abee04f4064182d79e449e3c849693979162577171717cb2b7787",
+   "actual_bytes": 2964930,
+   "status": "ok",
+   "backup_path": "D:\\thesis_p0_20261023_backup\\checkpoints\\M0_s2_encoder_group.pth",
+   "backup_sha256": "26ebf0e26e5abee04f4064182d79e449e3c849693979162577171717cb2b7787",
+   "backup_verified": true,
+   "backup_config_path": "D:\\thesis_p0_20261023_backup\\checkpoints\\M0_s2_config.json"
+  },
+  {
+   "model": "M0",
+   "pretrain_seed": 4,
+   "expected_sha256": "e599dbcdb69372186c3b49b0d0ced3389e2c909a458d86a8413a58524e31715e",
+   "source_lock_trc": 0,
+   "candidate_path": "F:\\新实验\\ECG_SSL_LFBT-main\\checkpoint\\confirm\\c1_seed4\\encoder_group.pth",
+   "actual_sha256": "e599dbcdb69372186c3b49b0d0ced3389e2c909a458d86a8413a58524e31715e",
+   "actual_bytes": 2964930,
+   "status": "ok",
+   "backup_path": "D:\\thesis_p0_20261023_backup\\checkpoints\\M0_s4_encoder_group.pth",
+   "backup_sha256": "e599dbcdb69372186c3b49b0d0ced3389e2c909a458d86a8413a58524e31715e",
+   "backup_verified": true,
+   "backup_config_path": "D:\\thesis_p0_20261023_backup\\checkpoints\\M0_s4_config.json"
+  },
+  {
+   "model": "M4",
+   "pretrain_seed": 0,
+   "expected_sha256": "20bebfd6211d86b1d6cfedb1d4835ac9a54aac9a241130c8e039233a1ac6c6b3",
+   "source_lock_trc": 1,
+   "candidate_path": "F:\\新实验\\ECG_SSL_LFBT-main\\checkpoint\\joint_m4_noise\\seed0\\encoder_group.pth",
+   "actual_sha256": "20bebfd6211d86b1d6cfedb1d4835ac9a54aac9a241130c8e039233a1ac6c6b3",
+   "actual_bytes": 2978082,
+   "status": "ok",
+   "backup_path": "D:\\thesis_p0_20261023_backup\\checkpoints\\M4_s0_encoder_group.pth",
+   "backup_sha256": "20bebfd6211d86b1d6cfedb1d4835ac9a54aac9a241130c8e039233a1ac6c6b3",
+   "backup_verified": true,
+   "backup_config_path": "D:\\thesis_p0_20261023_backup\\checkpoints\\M4_s0_config.json"
+  },
+  {
+   "model": "M4",
+   "pretrain_seed": 2,
+   "expected_sha256": "5994300a8821258168fee6f86ef6a1842c28b0a029c76e357452cbea47941a65",
+   "source_lock_trc": 1,
+   "candidate_path": "F:\\新实验\\ECG_SSL_LFBT-main\\checkpoint\\joint_m4_noise\\seed2\\encoder_group.pth",
+   "actual_sha256": "5994300a8821258168fee6f86ef6a1842c28b0a029c76e357452cbea47941a65",
+   "actual_bytes": 2978082,
+   "status": "ok",
+   "backup_path": "D:\\thesis_p0_20261023_backup\\checkpoints\\M4_s2_encoder_group.pth",
+   "backup_sha256": "5994300a8821258168fee6f86ef6a1842c28b0a029c76e357452cbea47941a65",
+   "backup_verified": true,
+   "backup_config_path": "D:\\thesis_p0_20261023_backup\\checkpoints\\M4_s2_config.json"
+  },
+  {
+   "model": "M4",
+   "pretrain_seed": 4,
+   "expected_sha256": "4eb7fca49019fcbb508789776d81f096a59dccccf0290fc75b7fa633eccefa63",
+   "source_lock_trc": 1,
+   "candidate_path": "F:\\新实验\\ECG_SSL_LFBT-main\\checkpoint\\joint_m4_noise\\seed4\\encoder_group.pth",
+   "actual_sha256": "4eb7fca49019fcbb508789776d81f096a59dccccf0290fc75b7fa633eccefa63",
+   "actual_bytes": 2978082,
+   "status": "ok",
+   "backup_path": "D:\\thesis_p0_20261023_backup\\checkpoints\\M4_s4_encoder_group.pth",
+   "backup_sha256": "4eb7fca49019fcbb508789776d81f096a59dccccf0290fc75b7fa633eccefa63",
+   "backup_verified": true,
+   "backup_config_path": "D:\\thesis_p0_20261023_backup\\checkpoints\\M4_s4_config.json"
+  },
+  {
+   "model": "M6",
+   "pretrain_seed": 0,
+   "expected_sha256": "d94cc71bdd034828166be086673e3399abd1fba9734c6ea6bfdad74e6eaf5592",
+   "source_lock_trc": 1,
+   "candidate_path": "F:\\新实验\\ECG_SSL_LFBT-main\\checkpoint\\joint_m6\\seed0\\encoder_group.pth",
+   "actual_sha256": "d94cc71bdd034828166be086673e3399abd1fba9734c6ea6bfdad74e6eaf5592",
+   "actual_bytes": 2978082,
+   "status": "ok",
+   "backup_path": "D:\\thesis_p0_20261023_backup\\checkpoints\\M6_s0_encoder_group.pth",
+   "backup_sha256": "d94cc71bdd034828166be086673e3399abd1fba9734c6ea6bfdad74e6eaf5592",
+   "backup_verified": true,
+   "backup_config_path": "D:\\thesis_p0_20261023_backup\\checkpoints\\M6_s0_config.json"
+  },
+  {
+   "model": "M6",
+   "pretrain_seed": 2,
+   "expected_sha256": "5c559c37a067b17983aad2377dd88db7d776d760b3451e6176429d4512548732",
+   "source_lock_trc": 1,
+   "candidate_path": "F:\\新实验\\ECG_SSL_LFBT-main\\checkpoint\\joint_m6\\seed2\\encoder_group.pth",
+   "actual_sha256": "5c559c37a067b17983aad2377dd88db7d776d760b3451e6176429d4512548732",
+   "actual_bytes": 2978082,
+   "status": "ok",
+   "backup_path": "D:\\thesis_p0_20261023_backup\\checkpoints\\M6_s2_encoder_group.pth",
+   "backup_sha256": "5c559c37a067b17983aad2377dd88db7d776d760b3451e6176429d4512548732",
+   "backup_verified": true,
+   "backup_config_path": "D:\\thesis_p0_20261023_backup\\checkpoints\\M6_s2_config.json"
+  },
+  {
+   "model": "M6",
+   "pretrain_seed": 4,
+   "expected_sha256": "7ad8ccedb8910aaadecfdff48e191ee2f6638ea7941a1df55f4ff52c6d6c93a4",
+   "source_lock_trc": 1,
+   "candidate_path": "F:\\新实验\\ECG_SSL_LFBT-main\\checkpoint\\joint_m6\\seed4\\encoder_group.pth",
+   "actual_sha256": "7ad8ccedb8910aaadecfdff48e191ee2f6638ea7941a1df55f4ff52c6d6c93a4",
+   "actual_bytes": 2978082,
+   "status": "ok",
+   "backup_path": "D:\\thesis_p0_20261023_backup\\checkpoints\\M6_s4_encoder_group.pth",
+   "backup_sha256": "7ad8ccedb8910aaadecfdff48e191ee2f6638ea7941a1df55f4ff52c6d6c93a4",
+   "backup_verified": true,
+   "backup_config_path": "D:\\thesis_p0_20261023_backup\\checkpoints\\M6_s4_config.json"
+  }
+ ],
+ "local_assets": [
+  {
+   "path": "ECG_SSL_LFBT-main/runlog/preds_archive/cpsc_multilabel/cpsc_multilabel.csv",
+   "expected_sha256": "e866ef1b2a8f21663c34421dab3126fd903bf0db3fbbea57097df10a4f60921b",
+   "status": "ok",
+   "actual_sha256": "e866ef1b2a8f21663c34421dab3126fd903bf0db3fbbea57097df10a4f60921b",
+   "actual_bytes": 577056
+  },
+  {
+   "path": "ECG_SSL_LFBT-main/runlog/preds_archive/cpsc_sample_order.txt",
+   "expected_sha256": "b4309504ba88cd5a457d8b9fb76d94bb985802cebf5a60391a09cf609142b053",
+   "status": "ok",
+   "actual_sha256": "b4309504ba88cd5a457d8b9fb76d94bb985802cebf5a60391a09cf609142b053",
+   "actual_bytes": 104374
+  },
+  {
+   "path": "ECG_SSL_LFBT-main/runlog/preds_archive/export_cpsc_multilabel.py",
+   "expected_sha256": "c6de8aa4374963054f712a8011c4a49f560d19a4c5dfef03f89e967f6dca2dcb",
+   "status": "sha_mismatch",
+   "actual_sha256": "638bcbce6b81760cb6a1be6bc20c0ba03c4aeda9d4fdf49526baa9b34d70fe12",
+   "actual_bytes": 5128
+  },
+  {
+   "path": "ECG_SSL_LFBT-main/runlog/W2/freeze_manifest_v2.json",
+   "expected_sha256": "7a1697c0be4779fe9b5ef0ddd11f1aee6a809f97d3ce9a0735e4b3da8b0e265e",
+   "status": "ok",
+   "actual_sha256": "7a1697c0be4779fe9b5ef0ddd11f1aee6a809f97d3ce9a0735e4b3da8b0e265e",
+   "actual_bytes": 2802
+  },
+  {
+   "path": "ECG_SSL_LFBT-main/runlog/W5/lp_results.csv",
+   "expected_sha256": "b509f154061f2ee5202d205b923dcf75745355e59e877c9ad92ddf6b48a9311a",
+   "status": "ok",
+   "actual_sha256": "b509f154061f2ee5202d205b923dcf75745355e59e877c9ad92ddf6b48a9311a",
+   "actual_bytes": 3076
+  },
+  {
+   "path": "ECG_SSL_LFBT-main/runlog/JOINT_20261013/results.csv",
+   "expected_sha256": "b0afc7da7cadce7f57ddaa22ccb108f7eac051cfc9594fb86b703a2f4530b7a9",
+   "status": "ok",
+   "actual_sha256": "b0afc7da7cadce7f57ddaa22ccb108f7eac051cfc9594fb86b703a2f4530b7a9",
+   "actual_bytes": 84848
+  },
+  {
+   "path": "ECG_SSL_LFBT-main/runlog/JOINT_20261013/checkpoints_manifest.json",
+   "expected_sha256": "598c755b54c4150d7a85790f10e94ee7a635ec399b073677257c73a33036bcda",
+   "status": "ok",
+   "actual_sha256": "598c755b54c4150d7a85790f10e94ee7a635ec399b073677257c73a33036bcda",
+   "actual_bytes": 5773
+  }
+ ],
+ "backup_dir": "D:\\thesis_p0_20261023_backup",
+ "issues": [
+  "asset sha mismatch: F:\\新实验\\ECG_SSL_LFBT-main\\runlog\\preds_archive\\export_cpsc_multilabel.py"
+ ],
+ "passed": false,
+ "elapsed_s": 3.3
+}
