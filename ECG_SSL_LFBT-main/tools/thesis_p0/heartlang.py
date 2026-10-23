@@ -126,6 +126,44 @@ def cosine_schedule(base, final, epochs, niter, warmup_epochs, start_warm):
     return np.concatenate([warm, sched])
 
 
+def import_heartlang():
+    """导入作者模型模块。仓库根 utils/ 是常规包, 会按 PEP420 优先于作者的命名空间包
+    utils/, 故导入期间把仓库根摘出 sys.path(本模块自身的 common 已加载完毕)。
+    作者 utils.utils 顶部 import tensorboardX(本环境无) -> load/freeze 语义
+    在本文件等价复刻并记录(见 ADAPTED_LOAD)。"""
+    repo_root = str(Path(__file__).resolve().parents[2])
+    saved = sys.path[:]
+    sys.path[:] = [str(REFS)] + [p for p in sys.path
+                                 if Path(p or ".").resolve() != Path(repo_root).resolve()]
+    try:
+        import modeling_finetune as mf
+        return mf
+    finally:
+        sys.path[:] = saved
+
+
+def load_state_dict_backbone(model, ckpt_model):
+    """= 作者 utils.utils.load_state_dict(prefix='') 的语义复刻:
+    ckpt 键加 backbone. 前缀后 strict=False 载入, 返回 (missing, unexpected)。
+    例外记录: 预训练 lm_head(vocab 8192=VQ 词表) 与微调构造(作者默认 1024)尺寸
+    不符, 且分类器 forward(return_all_tokens=True) 不经过 lm_head —— 作为
+    预训练专属头排除, 不参与 LP 计算路径。"""
+    src = {(("backbone." + k) if not k.startswith("backbone.") else k): v
+           for k, v in ckpt_model.items()}
+    excluded = sorted(k for k in src if k.startswith("backbone.lm_head."))
+    for k in excluded:
+        del src[k]
+    missing, unexpected = model.load_state_dict(src, strict=False)
+    return list(missing), list(unexpected), excluded
+
+
+def freeze_except_prefix(model, prefix):
+    """= 作者 utils.utils.freeze_except_prefix 逐行同义。"""
+    for name, param in model.named_parameters():
+        if not name.startswith(prefix):
+            param.requires_grad = False
+
+
 def train():
     assert C.sha256_of(WEIGHT) == WEIGHT_SHA, "HeartLang weight sha mismatch"
     leak = list(OUT.glob("test_*"))
@@ -134,9 +172,7 @@ def train():
     if (job_dir / "DONE.json").exists():
         return json.loads((job_dir / "DONE.json").read_text(encoding="utf-8"))
     job_dir.mkdir(parents=True, exist_ok=True)
-    sys.path.insert(0, str(REFS))
-    import modeling_finetune as mf
-    from utils.utils import load_state_dict, freeze_except_prefix
+    mf = import_heartlang()
 
     C.set_seed(HL["training_seed"])
     dev = "cuda" if torch.cuda.is_available() else "cpu"
@@ -145,9 +181,11 @@ def train():
     ckpt = torch.load(WEIGHT, map_location="cpu", weights_only=False)
     model_key = next((k for k in ("model", "model_ema", "module", "state_dict") if k in ckpt), None)
     ckpt_model = ckpt[model_key] if model_key else ckpt
-    load_state_dict(model, ckpt_model, prefix="")
-    # 严格核对: 除 mlp_head(新头)外, backbone 权重必须全部来自 ckpt
-    want = {k: v for k, v in model.state_dict().items() if not k.startswith("mlp_head")}
+    missing, unexpected, excluded = load_state_dict_backbone(model, ckpt_model)
+    # 严格核对: 除 mlp_head(新头)与已记录排除的 lm_head(预训练专属)外,
+    # backbone 权重必须全部来自 ckpt 且形状一致
+    want = {k: v for k, v in model.state_dict().items()
+            if not k.startswith("mlp_head") and not k.startswith("backbone.lm_head.")}
     src = {f"backbone.{k}": v for k, v in ckpt_model.items()}
     missing = [k for k in want if k not in src]
     assert not missing, f"backbone keys missing from ckpt: {missing[:8]}"
@@ -239,6 +277,10 @@ def train():
         "train_wall_s": round(train_wall, 1), "gpu_wall_s": round(train_wall, 1),
         "vram_peak_mib": vram,
         "weight_sha256": WEIGHT_SHA, "author_commit": "a08afd8",
+        "load_report": {"model_key": model_key, "torch_missing_head": missing,
+                        "torch_unexpected_n": len(unexpected),
+                        "excluded_pretrain_only": excluded,
+                        "note": "author utils.load_state_dict semantics replicated (tensorboardX absent in env); lm_head excluded = pretrain VQ head (8192 vs constructor 1024), unused in LP forward; strict backbone accounting asserted below"},
         "backbone_keys_loaded": n_loaded, "backbone_missing": missing,
         "backbone_frozen_verified": True, "test_loader_called": 0,
         "selection": "min val BCE (deviation from author AUC selection, protocol-fixed)",
