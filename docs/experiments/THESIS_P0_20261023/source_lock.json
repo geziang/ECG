@@ -1,0 +1,240 @@
+{
+  "protocol_id": "thesis-p0-20261023-v1",
+  "status": "draft_not_dispatched",
+  "office_observed_head": "21f83960a1777ecb39d4fb63234a7121bd965763",
+  "note": "Do not require the old HEAD after A implements code. Freeze the actual execution code commit plus delivered file hashes before training. Paths and the HeartLang weight revision are unresolved, not verified on A.",
+  "local_assets": [
+    {
+      "path_relative_to_git_root": "ECG_SSL_LFBT-main/runlog/preds_archive/cpsc_multilabel/cpsc_multilabel.csv",
+      "sha256": "e866ef1b2a8f21663c34421dab3126fd903bf0db3fbbea57097df10a4f60921b",
+      "bytes": 577056,
+      "note": "Current working-file bytes; office uncommitted changes may differ from HEAD. A must verify the delivered bytes."
+    },
+    {
+      "path_relative_to_git_root": "ECG_SSL_LFBT-main/runlog/preds_archive/cpsc_sample_order.txt",
+      "sha256": "b4309504ba88cd5a457d8b9fb76d94bb985802cebf5a60391a09cf609142b053",
+      "bytes": 104374,
+      "note": "Current working-file bytes; office uncommitted changes may differ from HEAD. A must verify the delivered bytes."
+    },
+    {
+      "path_relative_to_git_root": "ECG_SSL_LFBT-main/runlog/preds_archive/export_cpsc_multilabel.py",
+      "sha256": "c6de8aa4374963054f712a8011c4a49f560d19a4c5dfef03f89e967f6dca2dcb",
+      "bytes": 5070,
+      "note": "Current working-file bytes; office uncommitted changes may differ from HEAD. A must verify the delivered bytes."
+    },
+    {
+      "path_relative_to_git_root": "ECG_SSL_LFBT-main/runlog/W2/freeze_manifest_v2.json",
+      "sha256": "7a1697c0be4779fe9b5ef0ddd11f1aee6a809f97d3ce9a0735e4b3da8b0e265e",
+      "bytes": 2802,
+      "note": "Current working-file bytes; office uncommitted changes may differ from HEAD. A must verify the delivered bytes."
+    },
+    {
+      "path_relative_to_git_root": "ECG_SSL_LFBT-main/runlog/W5/lp_results.csv",
+      "sha256": "b509f154061f2ee5202d205b923dcf75745355e59e877c9ad92ddf6b48a9311a",
+      "bytes": 3076,
+      "note": "Current working-file bytes; office uncommitted changes may differ from HEAD. A must verify the delivered bytes."
+    },
+    {
+      "path_relative_to_git_root": "ECG_SSL_LFBT-main/runlog/JOINT_20261013/results.csv",
+      "sha256": "b0afc7da7cadce7f57ddaa22ccb108f7eac051cfc9594fb86b703a2f4530b7a9",
+      "bytes": 84848,
+      "note": "Current working-file bytes; office uncommitted changes may differ from HEAD. A must verify the delivered bytes."
+    },
+    {
+      "path_relative_to_git_root": "ECG_SSL_LFBT-main/runlog/JOINT_20261013/checkpoints_manifest.json",
+      "sha256": "598c755b54c4150d7a85790f10e94ee7a635ec399b073677257c73a33036bcda",
+      "bytes": 5773,
+      "note": "Current working-file bytes; office uncommitted changes may differ from HEAD. A must verify the delivered bytes."
+    }
+  ],
+  "local_checkpoints": [
+    {
+      "model": "M0",
+      "pretrain_seed": 0,
+      "sha256": "de0c28eedb30841492c36644ad1d06e11aab7bb02bbb5b42ff5d18524a5bc177",
+      "trc": 0,
+      "pretrain_source": "NFH",
+      "evidence": "ECG_SSL_LFBT-main/runlog/W2/freeze_manifest_v2.json + W5/lp_results.csv(c1)",
+      "resolved_host_a_path": null,
+      "actual_file_verified": false,
+      "backup_verified": false
+    },
+    {
+      "model": "M0",
+      "pretrain_seed": 2,
+      "sha256": "26ebf0e26e5abee04f4064182d79e449e3c849693979162577171717cb2b7787",
+      "trc": 0,
+      "pretrain_source": "NFH",
+      "evidence": "ECG_SSL_LFBT-main/runlog/W2/freeze_manifest_v2.json + W5/lp_results.csv(c1)",
+      "resolved_host_a_path": null,
+      "actual_file_verified": false,
+      "backup_verified": false
+    },
+    {
+      "model": "M0",
+      "pretrain_seed": 4,
+      "sha256": "e599dbcdb69372186c3b49b0d0ced3389e2c909a458d86a8413a58524e31715e",
+      "trc": 0,
+      "pretrain_source": "NFH",
+      "evidence": "ECG_SSL_LFBT-main/runlog/W2/freeze_manifest_v2.json + W5/lp_results.csv(c1)",
+      "resolved_host_a_path": null,
+      "actual_file_verified": false,
+      "backup_verified": false
+    },
+    {
+      "model": "M4",
+      "pretrain_seed": 0,
+      "sha256": "20bebfd6211d86b1d6cfedb1d4835ac9a54aac9a241130c8e039233a1ac6c6b3",
+      "trc": 1,
+      "pretrain_source": "NFH",
+      "evidence": "ECG_SSL_LFBT-main/runlog/JOINT_20261013/results.csv",
+      "resolved_host_a_path": null,
+      "actual_file_verified": false,
+      "backup_verified": false
+    },
+    {
+      "model": "M4",
+      "pretrain_seed": 2,
+      "sha256": "5994300a8821258168fee6f86ef6a1842c28b0a029c76e357452cbea47941a65",
+      "trc": 1,
+      "pretrain_source": "NFH",
+      "evidence": "ECG_SSL_LFBT-main/runlog/JOINT_20261013/results.csv",
+      "resolved_host_a_path": null,
+      "actual_file_verified": false,
+      "backup_verified": false
+    },
+    {
+      "model": "M4",
+      "pretrain_seed": 4,
+      "sha256": "4eb7fca49019fcbb508789776d81f096a59dccccf0290fc75b7fa633eccefa63",
+      "trc": 1,
+      "pretrain_source": "NFH",
+      "evidence": "ECG_SSL_LFBT-main/runlog/JOINT_20261013/results.csv",
+      "resolved_host_a_path": null,
+      "actual_file_verified": false,
+      "backup_verified": false
+    },
+    {
+      "model": "M6",
+      "pretrain_seed": 0,
+      "sha256": "d94cc71bdd034828166be086673e3399abd1fba9734c6ea6bfdad74e6eaf5592",
+      "trc": 1,
+      "pretrain_source": "NFH",
+      "evidence": "ECG_SSL_LFBT-main/runlog/JOINT_20261013/results.csv",
+      "resolved_host_a_path": null,
+      "actual_file_verified": false,
+      "backup_verified": false
+    },
+    {
+      "model": "M6",
+      "pretrain_seed": 2,
+      "sha256": "5c559c37a067b17983aad2377dd88db7d776d760b3451e6176429d4512548732",
+      "trc": 1,
+      "pretrain_source": "NFH",
+      "evidence": "ECG_SSL_LFBT-main/runlog/JOINT_20261013/results.csv",
+      "resolved_host_a_path": null,
+      "actual_file_verified": false,
+      "backup_verified": false
+    },
+    {
+      "model": "M6",
+      "pretrain_seed": 4,
+      "sha256": "7ad8ccedb8910aaadecfdff48e191ee2f6638ea7941a1df55f4ff52c6d6c93a4",
+      "trc": 1,
+      "pretrain_source": "NFH",
+      "evidence": "ECG_SSL_LFBT-main/runlog/JOINT_20261013/results.csv",
+      "resolved_host_a_path": null,
+      "actual_file_verified": false,
+      "backup_verified": false
+    }
+  ],
+  "references": [
+    {
+      "id": "heartlang",
+      "repository_url": "https://github.com/PKUDigitalHealth/HeartLang",
+      "commit": "a08afd8117e813fee212a1ac283db4a7140a4669",
+      "paper_url": "https://arxiv.org/abs/2502.10707",
+      "pdf_url": "https://arxiv.org/pdf/2502.10707",
+      "pdf_sha256": "3383a778b24d19901e28473a1e8985036ed97c3d7ef678fe6f8df81cb99f6390",
+      "use": "phase_1_reference",
+      "required_source_files": [
+        {
+          "path": "QRSTokenizer.py",
+          "sha256": "b435e521ffe4503f1d34c287eb3cd4512d6b49044f7960442d82397eebb90919"
+        },
+        {
+          "path": "run_class_finetuning.py",
+          "sha256": "e8b574303c39d7bd9493711c685ab7537cf8d24e94abe1ccf4c095d12eea76d7"
+        },
+        {
+          "path": "scripts/finetune/CPSC2018/base_cpsc2018_linear_prob.sh",
+          "sha256": "427a2546cd1ab87893badaf26c122f28e4f7ab83932473c9d83566486bc4b8d4"
+        }
+      ],
+      "weight_urls": [
+        "https://huggingface.co/PKUDigitalHealth/HeartLang/tree/main/checkpoints"
+      ],
+      "weights_downloaded_on_office": false
+    },
+    {
+      "id": "ecg_tokenizer",
+      "repository_url": "https://github.com/LeeJarvis996/ecg_tokenizer",
+      "commit": "ce976cecaa27912fbba38c28fdda07abcc211b7d",
+      "paper_url": "https://arxiv.org/abs/2609.15433",
+      "pdf_url": "https://arxiv.org/pdf/2609.15433",
+      "pdf_sha256": "e1025bf439c8cf9f9f564c71b69e8ab8d8808f9cfa556192077516c2d84a7b37",
+      "use": "phase_1_reference",
+      "required_source_files": [
+        {
+          "path": "models/tokenizers/heartlang.py",
+          "sha256": "862ec49d06ba8b4db7b9cb5bf8d0b7079af00b08b46eacd5a0b7d04f759f4776"
+        },
+        {
+          "path": "models/tokenizers/median_beat.py",
+          "sha256": "a64537265130e0ce34f0088061b0fbe88c928f64691b6e47ff90856b37f6329a"
+        },
+        {
+          "path": "exp/exp_classification.py",
+          "sha256": "133309c0c71d1e5b3a1a5b15fc8d1451379ebffdb4c961baa9584ce9bf4419f9"
+        },
+        {
+          "path": "data_provider/data_loader.py",
+          "sha256": "490282cdead993674555ae995727765df6d1b572a87d347581a8874f4dc4b2e5"
+        }
+      ],
+      "weight_urls": [
+        "https://github.com/willxxy/ECG-Byte"
+      ],
+      "weights_downloaded_on_office": false
+    },
+    {
+      "id": "shapeefm",
+      "repository_url": "https://github.com/AQ-MedAI/ShapeEFM",
+      "commit": "9bb1b6e1f61cca5b2ccc5cbfff02f63e57dd2af3",
+      "paper_url": "https://papers.miccai.org/miccai-2026/0954-Paper2861.html",
+      "pdf_url": "https://papers.miccai.org/miccai-2026/paper/2861_paper.pdf",
+      "pdf_sha256": "41f97d7cbc2d4169cd663046bf1462be762e02d73acc08be20ea082a7d63751e",
+      "use": "static_reference_only",
+      "required_source_files": [
+        {
+          "path": "shape/extraction.py",
+          "sha256": "94078f8601ee2df3c0a9b7b544e580864869d9ff81a24e1d9a11201b1603c2b4"
+        },
+        {
+          "path": "tokenizer.py",
+          "sha256": "64b492b8a25b3d4ce29a9674f20842afe7d89994ccc8ca9e387fb968d7cdc51e"
+        }
+      ],
+      "weight_urls": [],
+      "weights_downloaded_on_office": false
+    }
+  ],
+  "heartlang_checkpoint_to_resolve": {
+    "repository": "https://huggingface.co/PKUDigitalHealth/HeartLang",
+    "purpose": "pretrained HeartLang main encoder; no CPSC-finetuned checkpoint",
+    "revision": null,
+    "file": null,
+    "sha256": null,
+    "gate": "Must be resolved and verified before A4"
+  }
+}

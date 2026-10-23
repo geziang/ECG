@@ -1,0 +1,95 @@
+{
+  "operation": "SendToRecycleBin",
+  "recycled_files": 1541,
+  "recycled_bytes": 144058069,
+  "recycle_bin_emptied": false,
+  "journal_matches_plan": true,
+  "remaining_candidate_count": 0,
+  "missing_protected": [],
+  "changed_protected": [],
+  "preserved_files_checked": 2532,
+  "expected_cleanup_edits": [
+    "ECG/PROJECT_MAP.md",
+    "ECG/docs/maintenance/CLEANUP_AUDIT_2026-10-23.md",
+    "ECG/docs/maintenance/recycle_cleanup.ps1",
+    "WORKSPACE_INDEX.md"
+  ],
+  "git_equal": {
+    "refs": true,
+    "reflog": true,
+    "objects": true,
+    "index": true,
+    "head": true
+  },
+  "archives": {
+    "W4": {
+      "sha256_ok": true,
+      "zip_crc_ok": true
+    },
+    "W5": {
+      "sha256_ok": true,
+      "zip_crc_ok": true
+    },
+    "W6": {
+      "sha256_ok": true,
+      "zip_crc_ok": true
+    },
+    "W7": {
+      "sha256_ok": true,
+      "zip_crc_ok": true
+    },
+    "W8": {
+      "sha256_ok": true,
+      "zip_crc_ok": true
+    },
+    "JOINT_20261013": {
+      "sha256_ok": true,
+      "zip_crc_ok": true
+    },
+    "ABC_20261015": {
+      "sha256_ok": true,
+      "zip_crc_ok": true
+    },
+    "W9": {
+      "sha256_ok": true,
+      "zip_crc_ok": true
+    }
+  },
+  "papers": {
+    "主论文中文成稿版V6-联合框架与正向收益-2026-10-23.md": {
+      "images": 5,
+      "paths_ok": true
+    },
+    "主论文中文成稿版V7-投稿修订与图文一致性-2026-10-23.md": {
+      "images": 5,
+      "paths_ok": true
+    }
+  },
+  "git_status_after": [
+    " M .gitignore",
+    " M ECG_SSL_LFBT-main/runlog/preds_archive/cpsc_multilabel/cpsc_multilabel.csv",
+    " M ECG_SSL_LFBT-main/runlog/preds_archive/export_cpsc_multilabel.py",
+    "?? AGENTS.md",
+    "?? ECG_SSL_LFBT-main/runlog/W8/paperfig_curves_2026-10-12/plot_sci_curves.m",
+    "?? ECG_SSL_LFBT-main/runlog/W8/paperfig_curves_2026-10-12/sci_exports/Fig10_matched_TRC_controls.pdf",
+    "?? ECG_SSL_LFBT-main/runlog/W8/paperfig_curves_2026-10-12/sci_exports/Fig10_matched_TRC_controls.tif",
+    "?? ECG_SSL_LFBT-main/runlog/W8/paperfig_curves_2026-10-12/sci_exports/Fig6_pretraining_loss.pdf",
+    "?? ECG_SSL_LFBT-main/runlog/W8/paperfig_curves_2026-10-12/sci_exports/Fig6_pretraining_loss.tif",
+    "?? ECG_SSL_LFBT-main/runlog/W8/paperfig_curves_2026-10-12/sci_exports/Fig7_downstream_loss_metrics.pdf",
+    "?? ECG_SSL_LFBT-main/runlog/W8/paperfig_curves_2026-10-12/sci_exports/Fig7_downstream_loss_metrics.tif",
+    "?? ECG_SSL_LFBT-main/runlog/W8/paperfig_curves_2026-10-12/sci_exports/Fig9_label_fraction.pdf",
+    "?? ECG_SSL_LFBT-main/runlog/W8/paperfig_curves_2026-10-12/sci_exports/Fig9_label_fraction.tif",
+    "?? PROJECT_MAP.md",
+    "?? docs/maintenance/CLEANUP_AUDIT_2026-10-23.md",
+    "?? docs/maintenance/cleanup_2026-10-23/manifest.json.gz",
+    "?? docs/maintenance/cleanup_2026-10-23/verification.json",
+    "?? docs/maintenance/cleanup_audit.py",
+    "?? docs/maintenance/cleanup_recycle_2026-10-23/plan.json.gz",
+    "?? docs/maintenance/cleanup_recycle_2026-10-23/recycled.jsonl",
+    "?? docs/maintenance/recycle_cleanup.ps1",
+    "?? docs/maintenance/verify_recycle_cleanup.py",
+    "?? docs/research/READING_LIST_2026-10-23.md",
+    "?? docs/research/RESEARCH_ROADMAP_2026-10-23.md"
+  ],
+  "pass": true
+}

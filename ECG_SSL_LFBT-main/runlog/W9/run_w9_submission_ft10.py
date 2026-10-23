@@ -32,7 +32,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT))
-from utils.pathguard import open_out
+from utils.pathguard import open_out, open_out_file
 
 PY = sys.executable
 OUTD = ROOT / "runlog/W9"
@@ -537,7 +537,7 @@ def merge_results():
                 row = json.loads(lj.read_text(encoding="utf-8"))
                 rows.append(",".join(_csv_cell(row.get(c, "")) for c in RESULTS_COLS))
         tmp = OUTD / "results.csv.tmp"
-        with open(tmp, "w", encoding="utf-8", newline="") as f:
+        with open_out_file(tmp, "w", encoding="utf-8", newline="") as f:
             f.write(",".join(RESULTS_COLS) + "\n")
             f.write("\n".join(rows) + ("\n" if rows else ""))
         os.replace(tmp, OUTD / "results.csv")

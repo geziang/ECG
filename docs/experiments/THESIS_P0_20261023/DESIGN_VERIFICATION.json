@@ -1,0 +1,45 @@
+{
+  "date": "2026-10-23",
+  "scope": "Design-document integrity and source-lock verification only; no model/environment implementation or training executed",
+  "status": "pass",
+  "checks": {
+    "draft_status_and_no_execution_authorization": true,
+    "matrix_22_unique_jobs": true,
+    "matrix_stage_counts": true,
+    "matrix_splits_status_and_pointers_valid": true,
+    "local_and_diagnostic_three_seeds": true,
+    "nine_unique_checkpoint_model_seed_keys": true,
+    "checkpoint_host_paths_and_backups_not_falsely_marked_verified": true,
+    "assets_and_reference_modules_match_lock": true,
+    "diagnostic_parameter_count_matches": true,
+    "test_and_new_pretraining_disabled": true,
+    "all_checked_local_links_exist": true,
+    "markdown_whitespace_ok": true,
+    "preexisting_protected_files_unchanged": true,
+    "git_head_unchanged": true
+  },
+  "matrix_counts": {
+    "A2_local_lp": 9,
+    "A3_representation": 12,
+    "A4_heartlang": 1
+  },
+  "total_training_jobs": 22,
+  "protected_files_checked": 2427,
+  "changed_protected_files": [],
+  "local_links_checked": 115,
+  "missing_links": [],
+  "matrix_errors": [],
+  "asset_errors": [],
+  "format_errors": [],
+  "diagnostic_parameter_count_by_formula": 12713,
+  "plan_artifacts": {
+    "TASKBOOK.md": "8e72e915377e09b4e1ff69413e4b9ccc48d3a018afd68c9ed32d24a2c53c9371",
+    "protocol.json": "8a2e9d0e5caccf4bed3eb9cd68754337e7c9f435ea2796dfb55a366c737ad67f",
+    "task_matrix.csv": "b7cdbb43c5fc58dbba760481920be9f1e0da81c2874e76c5ffabe2cd1717dfa1",
+    "source_lock.json": "282ef10a1cc60162b17ba1f47b0a1f4aa72991bdb88aefd8adcb617c686d6b02"
+  },
+  "git_head": "21f83960a1777ecb39d4fb63234a7121bd965763",
+  "host_a_contacted": false,
+  "training_started": false,
+  "committed_or_pushed": false
+}

@@ -1,0 +1,23 @@
+﻿job_id,stage,model,pretrain_seed,training_seed,dataset,split_scope,label_fraction,requires_gate,config_ref,status
+lp_m0_s0,A2_local_lp,M0,0,0,CPSC2018,train_val_only,1.0,A0_A1_pass; matched seed0 engineering pass before seed2/4,protocol.json#/local_lp,planned_not_dispatched
+lp_m4_s0,A2_local_lp,M4,0,0,CPSC2018,train_val_only,1.0,A0_A1_pass; matched seed0 engineering pass before seed2/4,protocol.json#/local_lp,planned_not_dispatched
+lp_m6_s0,A2_local_lp,M6,0,0,CPSC2018,train_val_only,1.0,A0_A1_pass; matched seed0 engineering pass before seed2/4,protocol.json#/local_lp,planned_not_dispatched
+lp_m0_s2,A2_local_lp,M0,2,2,CPSC2018,train_val_only,1.0,A0_A1_pass; matched seed0 engineering pass before seed2/4,protocol.json#/local_lp,planned_not_dispatched
+lp_m4_s2,A2_local_lp,M4,2,2,CPSC2018,train_val_only,1.0,A0_A1_pass; matched seed0 engineering pass before seed2/4,protocol.json#/local_lp,planned_not_dispatched
+lp_m6_s2,A2_local_lp,M6,2,2,CPSC2018,train_val_only,1.0,A0_A1_pass; matched seed0 engineering pass before seed2/4,protocol.json#/local_lp,planned_not_dispatched
+lp_m0_s4,A2_local_lp,M0,4,4,CPSC2018,train_val_only,1.0,A0_A1_pass; matched seed0 engineering pass before seed2/4,protocol.json#/local_lp,planned_not_dispatched
+lp_m4_s4,A2_local_lp,M4,4,4,CPSC2018,train_val_only,1.0,A0_A1_pass; matched seed0 engineering pass before seed2/4,protocol.json#/local_lp,planned_not_dispatched
+lp_m6_s4,A2_local_lp,M6,4,4,CPSC2018,train_val_only,1.0,A0_A1_pass; matched seed0 engineering pass before seed2/4,protocol.json#/local_lp,planned_not_dispatched
+d0_matched_fixed_s0,A3_representation,D0_matched_fixed,none,0,CPSC2018,train_val_only,1.0,A0_A1_pass; common mask/shape/parameter/overfit checks; seed0 engineering pass,protocol.json#/representation_diagnostic,planned_not_dispatched
+d1_mean_template_s0,A3_representation,D1_mean_template,none,0,CPSC2018,train_val_only,1.0,A0_A1_pass; common mask/shape/parameter/overfit checks; seed0 engineering pass,protocol.json#/representation_diagnostic,planned_not_dispatched
+d2_median_template_s0,A3_representation,D2_median_template,none,0,CPSC2018,train_val_only,1.0,A0_A1_pass; common mask/shape/parameter/overfit checks; seed0 engineering pass,protocol.json#/representation_diagnostic,planned_not_dispatched
+d3_beat_set_s0,A3_representation,D3_beat_set,none,0,CPSC2018,train_val_only,1.0,A0_A1_pass; common mask/shape/parameter/overfit checks; seed0 engineering pass,protocol.json#/representation_diagnostic,planned_not_dispatched
+d0_matched_fixed_s2,A3_representation,D0_matched_fixed,none,2,CPSC2018,train_val_only,1.0,A0_A1_pass; common mask/shape/parameter/overfit checks; seed0 engineering pass,protocol.json#/representation_diagnostic,planned_not_dispatched
+d1_mean_template_s2,A3_representation,D1_mean_template,none,2,CPSC2018,train_val_only,1.0,A0_A1_pass; common mask/shape/parameter/overfit checks; seed0 engineering pass,protocol.json#/representation_diagnostic,planned_not_dispatched
+d2_median_template_s2,A3_representation,D2_median_template,none,2,CPSC2018,train_val_only,1.0,A0_A1_pass; common mask/shape/parameter/overfit checks; seed0 engineering pass,protocol.json#/representation_diagnostic,planned_not_dispatched
+d3_beat_set_s2,A3_representation,D3_beat_set,none,2,CPSC2018,train_val_only,1.0,A0_A1_pass; common mask/shape/parameter/overfit checks; seed0 engineering pass,protocol.json#/representation_diagnostic,planned_not_dispatched
+d0_matched_fixed_s4,A3_representation,D0_matched_fixed,none,4,CPSC2018,train_val_only,1.0,A0_A1_pass; common mask/shape/parameter/overfit checks; seed0 engineering pass,protocol.json#/representation_diagnostic,planned_not_dispatched
+d1_mean_template_s4,A3_representation,D1_mean_template,none,4,CPSC2018,train_val_only,1.0,A0_A1_pass; common mask/shape/parameter/overfit checks; seed0 engineering pass,protocol.json#/representation_diagnostic,planned_not_dispatched
+d2_median_template_s4,A3_representation,D2_median_template,none,4,CPSC2018,train_val_only,1.0,A0_A1_pass; common mask/shape/parameter/overfit checks; seed0 engineering pass,protocol.json#/representation_diagnostic,planned_not_dispatched
+d3_beat_set_s4,A3_representation,D3_beat_set,none,4,CPSC2018,train_val_only,1.0,A0_A1_pass; common mask/shape/parameter/overfit checks; seed0 engineering pass,protocol.json#/representation_diagnostic,planned_not_dispatched
+heartlang_lp_s0,A4_heartlang,HeartLang_pretrained,official_checkpoint,0,CPSC2018,train_val_only,1.0,A0_A1_pass; official checkpoint/raw input/frozen trunk/test-zero-access verified,protocol.json#/heartlang,planned_not_dispatched

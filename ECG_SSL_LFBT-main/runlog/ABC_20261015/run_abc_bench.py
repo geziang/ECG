@@ -22,6 +22,7 @@ import torch.nn as nn
 ROOT = Path(__file__).resolve().parents[2]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))  # models.* 导入需要仓库根(15:47 崩溃根因)
+from utils.pathguard import open_out_file
 
 ROOT = Path(__file__).resolve().parents[2]
 OUTD = ROOT / "runlog/ABC_20261015"
@@ -213,7 +214,7 @@ def main():
             f"thr={thr:.0f}r/s PT={pt_wall}({pt_src})")
         del net
         torch.cuda.empty_cache()
-    with open(OUT, "w", newline="", encoding="utf-8") as f:
+    with open_out_file(OUT, "w", newline="", encoding="utf-8") as f:
         w = csv.DictWriter(f, fieldnames=list(rows[0].keys()))
         w.writeheader()
         w.writerows(rows)

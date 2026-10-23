@@ -31,6 +31,8 @@ import numpy as np
 
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT))
+from utils.pathguard import open_out, open_out_file
+
 OUTD = ROOT / "runlog/ABC_20261015"
 JOUT = ROOT / "runlog/JOINT_20261013"
 SEEDS = [0, 2, 4]
@@ -415,7 +417,7 @@ def write_paired(rows_core, rows_explore, path):
     ac = holm(np.array(pc)) if pc else []
     pe = [r["p_emp"] for r in rows_explore if r["p_emp"] is not None]
     ae = bh_fdr(np.array(pe)) if pe else []
-    with open(path, "w", newline="", encoding="utf-8") as f:
+    with open_out_file(path, "w", newline="", encoding="utf-8") as f:
         w = csv.writer(f)
         w.writerow(["ts", "task", "dataset", "pair", "metric", "family",
                     "delta_mean_pt", "ci_lo_pt", "ci_hi_pt", "p_raw", "p_adjusted",
@@ -672,7 +674,7 @@ def incremental_stats(args):
     # FT/噪声族输入与 stats0 完全一致 -> 全部复用, 不重算
     write_paired_csv(rows_core + kept_c, rows_explore + kept_e, csv_path)
     ledger = build_ledger(rows_core + kept_c, rows_explore + kept_e)
-    with open(OUTD / "positive_gain_ledger.csv", "w", newline="", encoding="utf-8") as f:
+    with open_out(OUTD, "positive_gain_ledger.csv", mode="w", newline="", encoding="utf-8") as f:
         w = csv.DictWriter(f, fieldnames=["comparison", "task", "dataset", "metric",
                                           "scope", "delta_pt", "ci_low_pt", "ci_high_pt",
                                           "p_raw", "p_adjusted", "positive_seed_count",
@@ -706,7 +708,7 @@ def write_paired_csv(rows_core, rows_explore, path):
     ac = holm(np.array(pc)) if pc else []
     pe = [float(_praw(r)) for r in rows_explore if _praw(r) not in (None, "")]
     ae = bh_fdr(np.array(pe)) if pe else []
-    with open(path, "w", newline="", encoding="utf-8") as f:
+    with open_out_file(path, "w", newline="", encoding="utf-8") as f:
         w = csv.writer(f)
         w.writerow(["ts", "task", "dataset", "pair", "metric", "family",
                     "delta_mean_pt", "ci_lo_pt", "ci_hi_pt", "p_raw", "p_adjusted",
@@ -786,7 +788,7 @@ def main():
     rows_explore += ft_rows + noise_rows
     write_paired(rows_core, rows_explore, OUTD / "paired_stats.csv")
     fact = run_factorial(args.nboot)
-    with open(OUTD / "factorial_stats.csv", "w", newline="", encoding="utf-8") as f:
+    with open_out(OUTD, "factorial_stats.csv", mode="w", newline="", encoding="utf-8") as f:
         w = csv.writer(f)
         w.writerow(["ts", "name", "metric", "mean_pt", "ci_lo_pt", "ci_hi_pt",
                     "p_emp", "per_seed_pt"])
@@ -795,7 +797,7 @@ def main():
                         r["mean_pt"], r["ci_lo_pt"], r["ci_hi_pt"], r["p_emp"],
                         json.dumps(r["per_seed_pt"], ensure_ascii=False)])
     ledger = build_ledger(rows_core, rows_explore)
-    with open(OUTD / "positive_gain_ledger.csv", "w", newline="", encoding="utf-8") as f:
+    with open_out(OUTD, "positive_gain_ledger.csv", mode="w", newline="", encoding="utf-8") as f:
         w = csv.DictWriter(f, fieldnames=["comparison", "task", "dataset", "metric",
                                           "scope", "delta_pt", "ci_low_pt", "ci_high_pt",
                                           "p_raw", "p_adjusted", "positive_seed_count",

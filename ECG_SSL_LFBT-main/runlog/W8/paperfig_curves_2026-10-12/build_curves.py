@@ -20,6 +20,8 @@ from pathlib import Path
 
 PKG = Path(__file__).resolve().parent
 ROOT = PKG.parents[2]  # ECG_SSL_LFBT-main
+sys.path.insert(0, str(ROOT))
+from utils.pathguard import open_out_file
 
 FIG6_SOURCES = [
     # (branch, seed, relpath, note)
@@ -84,7 +86,7 @@ def parse_pt_log(path):
 def build_fig6():
     out = PKG / "fig6_pretrain_curves.csv"
     summary = []
-    with open(out, "w", newline="", encoding="utf-8") as f:
+    with open_out_file(out, "w", newline="", encoding="utf-8") as f:
         w = csv.writer(f)
         w.writerow(["branch", "seed", "source", "note", "epoch", "step"] + PT_FIELDS)
         for branch, seed, rel, note in FIG6_SOURCES:
@@ -112,7 +114,7 @@ EPOCH_RE = re.compile(r"^Epoch\s+(\d+)\s+-")
 def build_fig7():
     out = PKG / "fig7_downstream_curves.csv"
     summary = []
-    with open(out, "w", newline="", encoding="utf-8") as f:
+    with open_out_file(out, "w", newline="", encoding="utf-8") as f:
         w = csv.writer(f)
         w.writerow(["phase", "seed", "source", "epoch", "val_loss"])
         for phase, seed, rel in FIG7_SOURCES:
@@ -139,7 +141,7 @@ def build_fig7():
 def build_final_metrics():
     out = PKG / "fig7_final_metrics.csv"
     n = 0
-    with open(out, "w", newline="", encoding="utf-8") as f:
+    with open_out_file(out, "w", newline="", encoding="utf-8") as f:
         w = csv.writer(f)
         w.writerow(["phase", "seed", "auroc", "auprc", "ledger"])
         for phase, ledger, eval_name, ds, ckpt in FINAL_LEDGERS:

@@ -1,0 +1,216 @@
+{
+  "protocol_id": "thesis-p0-20261023-v1",
+  "status": "draft_not_dispatched",
+  "code_implemented": false,
+  "training_authorized_by_this_document": false,
+  "resolved_execution_code_commit": null,
+  "results_root_relative_to_code_root": "runlog/THESIS_P0_20261023",
+  "stages": [
+    "A0_preflight",
+    "A1_data_contract",
+    "A2_local_lp",
+    "A3_representation",
+    "A4_heartlang",
+    "summarize_and_stop"
+  ],
+  "allowed_model_training": "heads and the specified small diagnostic network only",
+  "ssl_pretraining_allowed": false,
+  "test_policy": {
+    "allowed_loader_splits": [
+      "train",
+      "val"
+    ],
+    "test_signal_or_label_access_allowed": false,
+    "test_metadata_counts_and_existing_manifest_audit_allowed": true,
+    "test_metrics_allowed": false,
+    "historical_cpsc_test_is_not_unseen": true
+  },
+  "budgets": {
+    "max_gpu_process_hours": 12,
+    "max_cpu_compute_hours": 6,
+    "max_engineering_hours": 8,
+    "third_party_environment_debug_hours_per_branch": 2,
+    "max_concurrent_gpu_processes": 1,
+    "max_primary_training_jobs": 22,
+    "max_recorded_engineering_retry_per_failed_job": 1
+  },
+  "data": {
+    "dataset": "CPSC2018",
+    "label_type": "original_multihot",
+    "class_order": [
+      "NSR",
+      "AF",
+      "IAVB",
+      "LBBB",
+      "RBBB",
+      "PAC",
+      "PVC",
+      "STD",
+      "STE"
+    ],
+    "expected_records": {
+      "train": 4809,
+      "val": 683,
+      "test_metadata_only": 1385
+    },
+    "expected_multidiagnosis_development_records": {
+      "train": 343,
+      "val": 36
+    },
+    "split_policy": "preserve record IDs; patient-ID overlap requires review before comparisons",
+    "native_input": {
+      "lead_order": [
+        "II",
+        "III",
+        "V1",
+        "V2",
+        "V3",
+        "V4",
+        "V5",
+        "V6"
+      ],
+      "shape": [
+        8,
+        2048
+      ],
+      "sampling_rate_hz": 204.8,
+      "dtype": "float32",
+      "normalization": "existing per-record per-lead z-score; audit provenance, do not normalize twice"
+    },
+    "heartlang_input": "author-native pipeline on the identical CPSC record IDs, labels and split; resolve raw lead/rate/window contract before A4"
+  },
+  "local_and_diagnostic_training": {
+    "criterion": "BCEWithLogitsLoss",
+    "positive_class_weights": null,
+    "optimizer": "Adam",
+    "learning_rate": 0.001,
+    "betas": [
+      0.9,
+      0.999
+    ],
+    "eps": 1e-08,
+    "weight_decay": 0.0,
+    "batch_size": 128,
+    "epochs_max": 100,
+    "early_stop_patience": 15,
+    "early_stop_min_delta": 0.0,
+    "selection": "minimum sample/class-element-weighted validation BCE; earliest epoch on exact tie",
+    "scheduler": null,
+    "precision": "float32",
+    "augmentation": null,
+    "drop_last": false,
+    "train_seeds": [
+      0,
+      2,
+      4
+    ]
+  },
+  "local_lp": {
+    "models": [
+      "M0",
+      "M4",
+      "M6"
+    ],
+    "feature_dim": 512,
+    "head": "Linear(512,9)",
+    "pretrain_seed_equals_head_seed": true,
+    "encoder_trainable": false,
+    "encoder_mode": "eval"
+  },
+  "representation_diagnostic": {
+    "modes": [
+      "D0_matched_fixed",
+      "D1_mean_template",
+      "D2_median_template",
+      "D3_beat_set"
+    ],
+    "max_windows": 16,
+    "window_samples": 205,
+    "window_start_offset": -102,
+    "window_end_offset_exclusive": 103,
+    "edge_padding": "edge",
+    "beat_valid_min_peaks": 4,
+    "peak_detector": "wfdb.processing.gqrs_detect",
+    "detector_sampling_rate_hz": 204.8,
+    "detector_primary_lead": "V5 (8-lead index6)",
+    "detector_fallback_lead": "II (8-lead index0)",
+    "wfdb_version_to_resolve": true,
+    "peak_selection": "all if <=16; deterministic evenly spaced ordered peak indices otherwise",
+    "matched_window_count": "all modes share K_r=min(valid peak count,16); D0 uses count but not peak positions",
+    "no_peak_fallback": "all modes use 16 uniform fixed windows; retain record and mark invalid",
+    "architecture": [
+      "Conv1d(8,32,kernel_size=7,padding=3,bias=True)",
+      "ReLU",
+      "AvgPool1d(2)",
+      "Conv1d(32,64,kernel_size=5,padding=2,bias=True)",
+      "ReLU",
+      "AdaptiveAvgPool1d(1)",
+      "masked mean over windows",
+      "Linear(64,9)"
+    ],
+    "expected_trainable_parameters": 12713,
+    "rr_or_position_input": false,
+    "batch_norm_or_dropout": false,
+    "pretrained": false,
+    "validation_peak_jitter_samples": [
+      0,
+      4,
+      8
+    ],
+    "jitter_seed": 20261023,
+    "jitter_distribution": "independent uniform integer [-a,+a], shared per-record perturbation across modes, preserve K_r/mask; clip to [0,2047]; D0 unchanged"
+  },
+  "heartlang": {
+    "jobs": 1,
+    "training_seed": 0,
+    "label_fraction": 1.0,
+    "trainable": "linear",
+    "criterion": "BCEWithLogitsLoss",
+    "optimizer": "AdamW, resolve exact author defaults and compare before execution",
+    "batch_size": 256,
+    "epochs_max": 100,
+    "learning_rate": 0.005,
+    "weight_decay": 0.05,
+    "warmup_epochs": 10,
+    "selection": "minimum validation BCE, patience15; adaptation relative to upstream AUC selection",
+    "pretraining_allowed": false,
+    "other_label_ratios_allowed": false,
+    "test_access_allowed": false
+  },
+  "metrics": {
+    "primary_development": "macro average_precision_score over the fixed nine classes",
+    "secondary": [
+      "macro roc_auc_score",
+      "per-class AP",
+      "per-class AUROC",
+      "support",
+      "validation BCE",
+      "single/multidiagnosis groups",
+      "beat-valid groups"
+    ],
+    "threshold_tuning_allowed": false,
+    "development_significance_claims_allowed": false,
+    "independent_metric_recompute_absolute_tolerance": 1e-08
+  },
+  "engineering_selection_gate": {
+    "scope": "D0-D3 validation only; budget allocation, not statistical/clinical proof",
+    "reference": "highest three-seed mean validation macro-AUPRC among D0,D1,D2",
+    "D3_minus_reference_mean_min": 0.005,
+    "positive_seed_count_required": 3,
+    "per_class_AP_mean_drop_max": 0.02,
+    "class_gate_min_validation_positives": 20,
+    "auto_launch_next_pretraining": false
+  },
+  "unresolved_before_training": [
+    "actual host paths and environment",
+    "delivered source and data hashes",
+    "nine local checkpoint files and backups",
+    "resolved execution code commit",
+    "train/val-only guards and dry run"
+  ],
+  "unresolved_before_A4": [
+    "HeartLang public checkpoint filename/revision/full hash",
+    "author-native raw CPSC inputs",
+    "frozen backbone and explicit train/val-only wrapper"
+  ]
+}

@@ -1,0 +1,162 @@
+{
+  "date": "2026-10-23",
+  "scope": "小论文任务与证据入口整理；文档核验，未重新训练或全面重算论文科学统计",
+  "status": "pass",
+  "checks": {
+    "all_protected_file_hashes_unchanged": true,
+    "git_head_unchanged": true,
+    "git_index_unchanged": true,
+    "all_checked_local_links_exist": true,
+    "HOSTS_historical_body_preserved": true,
+    "HANDOFF_historical_body_preserved": true,
+    "old_table_index_body_preserved": true,
+    "W9_ledger_structure_ok": true,
+    "eight_prediction_archives_match_manifest": true,
+    "V7_five_image_references_exist": true
+  },
+  "protected_file_count": 1811,
+  "changed_or_missing_protected_files": [],
+  "local_link_count": 278,
+  "missing_links": [],
+  "link_check_scope": {
+    "full_documents": [
+      "WORKSPACE_INDEX.md",
+      "ECG/PROJECT_MAP.md",
+      "ECG/报告归档/README.md",
+      "ECG/报告归档/已完成报告/README.md",
+      "ECG/报告归档/未完成报告/README.md",
+      "ECG/docs/paper/PAPER_CLOSEOUT_2026-10-23.md",
+      "ECG/docs/paper/PAPER_EVIDENCE_MAP_2026-10-23.md"
+    ],
+    "current_header_only": [
+      "ECG/ECG_SSL_LFBT-main/runlog/HOSTS.md",
+      "ECG/runlog/HANDOFF.md",
+      "实验报告与结果索引.md"
+    ]
+  },
+  "git_head": "21f83960a1777ecb39d4fb63234a7121bd965763",
+  "git_status_before": [
+    " M .gitignore",
+    " M ECG_SSL_LFBT-main/runlog/preds_archive/cpsc_multilabel/cpsc_multilabel.csv",
+    " M ECG_SSL_LFBT-main/runlog/preds_archive/export_cpsc_multilabel.py",
+    "?? AGENTS.md",
+    "?? ECG_SSL_LFBT-main/runlog/W8/paperfig_curves_2026-10-12/plot_sci_curves.m",
+    "?? ECG_SSL_LFBT-main/runlog/W8/paperfig_curves_2026-10-12/sci_exports/",
+    "?? PROJECT_MAP.md",
+    "?? docs/",
+    ""
+  ],
+  "git_status_after": [
+    " M .gitignore",
+    " M ECG_SSL_LFBT-main/runlog/HOSTS.md",
+    " M ECG_SSL_LFBT-main/runlog/preds_archive/cpsc_multilabel/cpsc_multilabel.csv",
+    " M ECG_SSL_LFBT-main/runlog/preds_archive/export_cpsc_multilabel.py",
+    " M runlog/HANDOFF.md",
+    " M 报告归档/README.md",
+    " M 报告归档/已完成报告/README.md",
+    " M 报告归档/未完成报告/README.md",
+    "?? AGENTS.md",
+    "?? ECG_SSL_LFBT-main/runlog/W8/paperfig_curves_2026-10-12/plot_sci_curves.m",
+    "?? ECG_SSL_LFBT-main/runlog/W8/paperfig_curves_2026-10-12/sci_exports/",
+    "?? PROJECT_MAP.md",
+    "?? docs/",
+    ""
+  ],
+  "W9_ledger": {
+    "rows": 30,
+    "unique_keys": 30,
+    "cells": 10,
+    "every_cell_seeds_0_2_4": true,
+    "all_status_ok": true,
+    "protocol_ids": [
+      "w9-submission-ft10-20261019"
+    ]
+  },
+  "W8_source_rows": [
+    {
+      "file": "w8_rand_results.csv",
+      "rows": 18,
+      "use": "historical_result_entry"
+    },
+    {
+      "file": "w8_simph_results.csv",
+      "rows": 18,
+      "use": "historical_result_entry"
+    },
+    {
+      "file": "w8_tsr_results.csv",
+      "rows": 15,
+      "use": "historical_result_entry"
+    },
+    {
+      "file": "w8_trcaff_results.csv",
+      "rows": 6,
+      "use": "historical_result_entry"
+    },
+    {
+      "file": "w8_noiseiso_results.csv",
+      "rows": 171,
+      "use": "historical_result_entry"
+    },
+    {
+      "file": "w8_dvsplit_results.csv",
+      "rows": 4,
+      "use": "superseded_by_JOINT"
+    },
+    {
+      "file": "w8_b0trc_results.csv",
+      "rows": 3,
+      "use": "historical_result_entry"
+    }
+  ],
+  "prediction_archive_hashes": [
+    {
+      "batch": "W4",
+      "sha256_matches_manifest": true
+    },
+    {
+      "batch": "W5",
+      "sha256_matches_manifest": true
+    },
+    {
+      "batch": "W6",
+      "sha256_matches_manifest": true
+    },
+    {
+      "batch": "W7",
+      "sha256_matches_manifest": true
+    },
+    {
+      "batch": "W8",
+      "sha256_matches_manifest": true
+    },
+    {
+      "batch": "JOINT_20261013",
+      "sha256_matches_manifest": true
+    },
+    {
+      "batch": "ABC_20261015",
+      "sha256_matches_manifest": true
+    },
+    {
+      "batch": "W9",
+      "sha256_matches_manifest": true
+    }
+  ],
+  "known_open_items": [
+    "独立代码与关键权重冻结包未完成",
+    "S4固定复算脚本及结果表待定位归档",
+    "R峰缓存生成环境待核验",
+    "W8独立最终报告本轮未定位",
+    "作者信息与最终材料获取地址待补充"
+  ],
+  "actions_not_performed": [
+    "模型训练或推理",
+    "论文科学统计重算",
+    "提交或推送",
+    "远端主机操作或发消息",
+    "Git标签/分支创建",
+    "历史任务书或冻结结果移动/重写",
+    "自动化查询或修改"
+  ]
+}

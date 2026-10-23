@@ -23,6 +23,15 @@ __pycache__/
 *.pyc
 *.egg-info/
 
+# ===== 可重建的开发缓存（2026-10-23 工作区减负）=====
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.ipynb_checkpoints/
+node_modules/
+.chart-data-*/
+# 不按 pdf/docx/pptx/tif/zip 扩展名批量忽略：稿件、图源和预测证据须可入库。
+
 # ===== 日志与临时产物 =====
 *.log
 ECG_SSL_LFBT-main/pt_err.txt

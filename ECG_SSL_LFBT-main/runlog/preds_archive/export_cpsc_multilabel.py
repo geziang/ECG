@@ -6,6 +6,8 @@
 校验: ①6877 条一一对应 ②priority 主类==目录放置 100% 一致(与 prepare_cpsc_chapman 同口径)。
 产出: runlog/preds_archive/cpsc_multilabel/{cpsc_multilabel.csv, cpsc_multilabel.npz, summary.json}
 """
+import csv
+import io
 import json
 import re
 import time
@@ -63,7 +65,7 @@ def main():
                 r = rec.get(rid)
                 if r is None or r["primary"] is None:
                     mismatch += 1
-                    rows.append((rid, split, cls, None, "", "", ""))
+                    rows.append((rid, split, cls, None, "", "", [0] * 9))
                     ys.append([0] * 9)
                     ids.append(rid)
                     continue
@@ -71,7 +73,7 @@ def main():
                     mismatch += 1
                 mh = [1 if c in r["mapped"] else 0 for c in CPSC_CLASSES]
                 rows.append((rid, split, cls, r["primary"], ";".join(r["codes"]),
-                             ";".join(r["mapped"]), ";".join(str(x) for x in mh)))
+                             ";".join(r["mapped"]), mh))
                 ys.append(mh)
                 ids.append(rid)
                 n_s += 1
@@ -81,11 +83,13 @@ def main():
     assert mismatch == 0, "主类与目录放置不一致, 停止(须先定因)"
 
     OUTD.mkdir(parents=True, exist_ok=True)
-    with open(OUTD / "cpsc_multilabel.csv", "w", encoding="utf-8", newline="") as f:
-        f.write("record_id,split,dir_class,primary_class,all_snomed_codes,mapped_classes,"
-                + ",".join(CPSC_CLASSES) + "\n")
-        for rid, sp, dc, pr, codes, mp, mhs in rows:
-            f.write(f"{rid},{sp},{dc},{pr},{codes},{mp},{mhs}\n")
+    buf = io.StringIO(newline="")
+    writer = csv.writer(buf, quoting=csv.QUOTE_ALL)
+    writer.writerow(["record_id", "split", "dir_class", "primary_class",
+                     "all_snomed_codes", "mapped_classes", *CPSC_CLASSES])
+    for rid, sp, dc, pr, codes, mp, mhs in rows:
+        writer.writerow([rid, sp, dc, pr, codes, mp, *mhs])
+    (OUTD / "cpsc_multilabel.csv").write_text(buf.getvalue(), encoding="utf-8", newline="")
     np.savez_compressed(OUTD / "cpsc_multilabel.npz", multihot=ys,
                         record_ids=np.array(ids), classes=np.array(CPSC_CLASSES))
     n_multi = int((ys.sum(1) >= 2).sum())
