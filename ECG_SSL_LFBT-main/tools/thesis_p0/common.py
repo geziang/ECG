@@ -92,6 +92,17 @@ def multilabel_metrics(y_true: np.ndarray, y_prob: np.ndarray) -> dict:
     bce = float(-(y_true * np.log(p) + (1 - y_true) * np.log(1 - p)).mean())
     single = y_true.sum(1) == 1
     multi = y_true.sum(1) >= 2
+
+    def group_auprc(mask):
+        """组内宏 AP: 仅对组内阳性数>=1 的类计算, 显式记录分母(不悄悄改)."""
+        if not mask.any():
+            return None, 0
+        aps = [float(average_precision_score(y_true[mask][:, c], y_prob[mask][:, c]))
+               for c in range(n_classes) if y_true[mask, c].sum() >= 1]
+        return (float(np.mean(aps)), len(aps)) if aps else (None, 0)
+
+    auprc_single, n_single_used = group_auprc(single)
+    auprc_multi, n_multi_used = group_auprc(multi)
     out = {
         "macro_auprc": float(np.mean(per_ap)),
         "macro_auroc": float(np.mean([a if a is not None else np.nan for a in per_auc])),
@@ -101,10 +112,10 @@ def multilabel_metrics(y_true: np.ndarray, y_prob: np.ndarray) -> dict:
         "val_bce_from_prob": bce,
         "n_single": int(single.sum()),
         "n_multi": int(multi.sum()),
-        "macro_auprc_single": (float(np.mean([average_precision_score(y_true[single][:, c], y_prob[single][:, c])
-                                              for c in range(n_classes)])) if single.any() else None),
-        "macro_auprc_multi": (float(np.mean([average_precision_score(y_true[multi][:, c], y_prob[multi][:, c])
-                                             for c in range(n_classes)])) if multi.any() else None),
+        "macro_auprc_single": auprc_single,
+        "group_single_ap_denominator_classes": n_single_used,
+        "macro_auprc_multi": auprc_multi,
+        "group_multi_ap_denominator_classes": n_multi_used,
     }
     return out
 

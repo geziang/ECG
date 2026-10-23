@@ -1,0 +1,22 @@
+ts,job_id,phase,wall_s,counts_as_gpu_process,vram_peak_mib
+2026-10-23 23:16:40,feat_M0_s0,feature_extract,1.0,1,77.1
+2026-10-23 23:16:45,lp_m0_s0,head_train,2.4,1,20.1
+2026-10-23 23:16:46,feat_M4_s0,feature_extract,0.6,1,93.3
+2026-10-23 23:16:48,lp_m4_s0,head_train,2.3,1,20.1
+2026-10-23 23:16:49,feat_M6_s0,feature_extract,0.6,1,93.3
+2026-10-23 23:16:51,lp_m6_s0,head_train,2.3,1,20.1
+2026-10-23 23:17:41,lp_m0_s0,head_train,2.3,1,20.1
+2026-10-23 23:17:43,lp_m4_s0,head_train,2.3,1,20.1
+2026-10-23 23:17:46,lp_m6_s0,head_train,2.3,1,20.1
+2026-10-23 23:17:57,feat_M0_s2,feature_extract,0.8,1,77.1
+2026-10-23 23:18:01,lp_m0_s2,head_train,2.3,1,20.1
+2026-10-23 23:18:01,feat_M0_s4,feature_extract,0.6,1,93.3
+2026-10-23 23:18:04,lp_m0_s4,head_train,2.3,1,20.1
+2026-10-23 23:18:04,feat_M4_s2,feature_extract,0.6,1,93.3
+2026-10-23 23:18:07,lp_m4_s2,head_train,2.3,1,20.1
+2026-10-23 23:18:08,feat_M4_s4,feature_extract,0.7,1,93.3
+2026-10-23 23:18:10,lp_m4_s4,head_train,2.0,1,20.1
+2026-10-23 23:18:11,feat_M6_s2,feature_extract,0.6,1,93.3
+2026-10-23 23:18:13,lp_m6_s2,head_train,2.2,1,20.1
+2026-10-23 23:18:14,feat_M6_s4,feature_extract,0.6,1,93.3
+2026-10-23 23:18:16,lp_m6_s4,head_train,2.3,1,20.1

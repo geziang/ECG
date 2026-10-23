@@ -1,0 +1,153 @@
+{
+ "protocol_id": "thesis-p0-20261023-v1",
+ "frozen_at": "2026-10-23 23:15:38",
+ "note": "冻结于本批首个训练作业前; 训练开始后不再修改",
+ "execution_code_commit": "7d60621604f8e057b21abb291e03ea5342f7c37c",
+ "code_dirty_at_freeze": [],
+ "environment": {
+  "hostname": "Win4090",
+  "python": "3.11.9",
+  "torch": "2.5.1+cu121",
+  "numpy": "1.26.3",
+  "scikit_learn": "1.5.0",
+  "wfdb": "4.1.2",
+  "gpu": "NVIDIA GeForce RTX 4090"
+ },
+ "resolved_paths": {
+  "git_root": "F:\\新实验",
+  "adaptation_data": "D:\\thesis_p0_20261023_backup\\adaptation_data",
+  "feature_cache": "D:\\thesis_p0_20261023_backup\\adaptation_data\\feat_cache",
+  "results_root": "F:\\新实验\\ECG_SSL_LFBT-main\\runlog\\THESIS_P0_20261023",
+  "checkpoints": {
+   "M0_s0": "F:\\新实验\\ECG_SSL_LFBT-main\\checkpoint\\confirm\\c1_seed0\\encoder_group.pth",
+   "M0_s2": "F:\\新实验\\ECG_SSL_LFBT-main\\checkpoint\\confirm\\c1_seed2\\encoder_group.pth",
+   "M0_s4": "F:\\新实验\\ECG_SSL_LFBT-main\\checkpoint\\confirm\\c1_seed4\\encoder_group.pth",
+   "M4_s0": "F:\\新实验\\ECG_SSL_LFBT-main\\checkpoint\\joint_m4_noise\\seed0\\encoder_group.pth",
+   "M4_s2": "F:\\新实验\\ECG_SSL_LFBT-main\\checkpoint\\joint_m4_noise\\seed2\\encoder_group.pth",
+   "M4_s4": "F:\\新实验\\ECG_SSL_LFBT-main\\checkpoint\\joint_m4_noise\\seed4\\encoder_group.pth",
+   "M6_s0": "F:\\新实验\\ECG_SSL_LFBT-main\\checkpoint\\joint_m6\\seed0\\encoder_group.pth",
+   "M6_s2": "F:\\新实验\\ECG_SSL_LFBT-main\\checkpoint\\joint_m6\\seed2\\encoder_group.pth",
+   "M6_s4": "F:\\新实验\\ECG_SSL_LFBT-main\\checkpoint\\joint_m6\\seed4\\encoder_group.pth"
+  },
+  "heartlang_repo": "D:\\thesis_p0_20261023_backup\\refs\\HeartLang",
+  "heartlang_weight": "D:\\thesis_p0_20261023_backup\\heartlang_weights\\checkpoint-200.pth"
+ },
+ "data": {
+  "class_order": [
+   "NSR",
+   "AF",
+   "IAVB",
+   "LBBB",
+   "RBBB",
+   "PAC",
+   "PVC",
+   "STD",
+   "STE"
+  ],
+  "counts": {
+   "train": 4809,
+   "val": 683,
+   "test": 1385
+  },
+  "npz_sha256": {
+   "train": "d3be19f82390b93ec67b407297390206fe4706933836a7e16bd236fbed035e68",
+   "val": "f0389355a5708a6a30b5d92e43c962c0c1ee19b7aa3350e0aee36c734d2e677c"
+  },
+  "preprocessing_provenance": "prepare_cpsc_chapman.py: 中心10s裁剪@500Hz(短则尾零填) -> LFBT 8导联 -> scipy.signal.resample 2048 -> 整记录全局标量 z-score (x-x.mean())/(x.std()+1e-5) -> float32; 有效采样率 204.8Hz。协议文'逐导联 z-score'与实测(整记录全局标量)不符, 以实测为准记录, 本批不重算/不二次归一化。"
+ },
+ "training_params_local_and_diagnostic": {
+  "criterion": "BCEWithLogitsLoss",
+  "positive_class_weights": null,
+  "optimizer": "Adam",
+  "learning_rate": 0.001,
+  "betas": [
+   0.9,
+   0.999
+  ],
+  "eps": 1e-08,
+  "weight_decay": 0.0,
+  "batch_size": 128,
+  "epochs_max": 100,
+  "early_stop_patience": 15,
+  "early_stop_min_delta": 0.0,
+  "selection": "minimum sample/class-element-weighted validation BCE; earliest epoch on exact tie",
+  "scheduler": null,
+  "precision": "float32",
+  "augmentation": null,
+  "drop_last": false,
+  "train_seeds": [
+   0,
+   2,
+   4
+  ]
+ },
+ "representation_diagnostic": {
+  "modes": [
+   "D0_matched_fixed",
+   "D1_mean_template",
+   "D2_median_template",
+   "D3_beat_set"
+  ],
+  "max_windows": 16,
+  "window_samples": 205,
+  "window_start_offset": -102,
+  "window_end_offset_exclusive": 103,
+  "edge_padding": "edge",
+  "beat_valid_min_peaks": 4,
+  "peak_detector": "wfdb.processing.gqrs_detect",
+  "detector_sampling_rate_hz": 204.8,
+  "detector_primary_lead": "V5 (8-lead index6)",
+  "detector_fallback_lead": "II (8-lead index0)",
+  "wfdb_version_to_resolve": true,
+  "peak_selection": "all if <=16; deterministic evenly spaced ordered peak indices otherwise",
+  "matched_window_count": "all modes share K_r=min(valid peak count,16); D0 uses count but not peak positions",
+  "no_peak_fallback": "all modes use 16 uniform fixed windows; retain record and mark invalid",
+  "architecture": [
+   "Conv1d(8,32,kernel_size=7,padding=3,bias=True)",
+   "ReLU",
+   "AvgPool1d(2)",
+   "Conv1d(32,64,kernel_size=5,padding=2,bias=True)",
+   "ReLU",
+   "AdaptiveAvgPool1d(1)",
+   "masked mean over windows",
+   "Linear(64,9)"
+  ],
+  "expected_trainable_parameters": 12713,
+  "rr_or_position_input": false,
+  "batch_norm_or_dropout": false,
+  "pretrained": false,
+  "validation_peak_jitter_samples": [
+   0,
+   4,
+   8
+  ],
+  "jitter_seed": 20261023,
+  "jitter_distribution": "independent uniform integer [-a,+a], shared per-record perturbation across modes, preserve K_r/mask; clip to [0,2047]; D0 unchanged"
+ },
+ "heartlang": {
+  "jobs": 1,
+  "training_seed": 0,
+  "label_fraction": 1.0,
+  "trainable": "linear",
+  "criterion": "BCEWithLogitsLoss",
+  "optimizer": "AdamW, resolve exact author defaults and compare before execution",
+  "batch_size": 256,
+  "epochs_max": 100,
+  "learning_rate": 0.005,
+  "weight_decay": 0.05,
+  "warmup_epochs": 10,
+  "selection": "minimum validation BCE, patience15; adaptation relative to upstream AUC selection",
+  "pretraining_allowed": false,
+  "other_label_ratios_allowed": false,
+  "test_access_allowed": false
+ },
+ "budgets": {
+  "max_gpu_process_hours": 12,
+  "max_cpu_compute_hours": 6,
+  "max_engineering_hours": 8,
+  "third_party_environment_debug_hours_per_branch": 2,
+  "max_concurrent_gpu_processes": 1,
+  "max_primary_training_jobs": 22,
+  "max_recorded_engineering_retry_per_failed_job": 1
+ }
+}

@@ -68,10 +68,10 @@ def extract_features(encs, X: np.ndarray, batch=256) -> np.ndarray:
 
 def get_features(model: str, seed: int):
     """缓存特征; 复用前核对权重/数据/代码 SHA 一致。"""
-    FEAT_CACHE.mkdir(parents=True, exist_ok=True)
+    C.FEAT_CACHE.mkdir(parents=True, exist_ok=True)
     ckpt = C.CKPT_PATHS[(model, seed)]
     ckpt_sha = C.sha256_of(ckpt)
-    cache = FEAT_CACHE / f"{model}_s{seed}.npz"
+    cache = C.FEAT_CACHE / f"{model}_s{seed}.npz"
     dsha = C.data_sha()
     code_sha = C.git_head()
     if cache.exists():
@@ -99,8 +99,8 @@ def get_features(model: str, seed: int):
     np.savez(cache, X_train=Ftr, X_val=Fva, train_ids=rid_tr, val_ids=rid_va,
              meta=np.array(json.dumps(meta)))
     C.log_resource(f"feat_{model}_s{seed}", "feature_extract", wall, gpu=True,
-                   {"vram_peak_mib": round(torch.cuda.max_memory_allocated() / 2**20, 1)
-                    if torch.cuda.is_available() else 0})
+                   extra={"vram_peak_mib": round(torch.cuda.max_memory_allocated() / 2**20, 1)
+                          if torch.cuda.is_available() else 0})
     return Ftr, Fva, meta
 
 
@@ -217,7 +217,7 @@ def run_job(model: str, seed: int) -> dict:
     torch.save(head.state_dict(), job_dir / "head_best.pth")
     C.append_csv(C.RESULTS / "results.csv", {k: (json.dumps(v, ensure_ascii=False) if isinstance(v, list) else v)
                                              for k, v in result.items()})
-    C.log_resource(job_id, "head_train", train_wall, gpu=True, {"vram_peak_mib": vram})
+    C.log_resource(job_id, "head_train", train_wall, gpu=True, extra={"vram_peak_mib": vram})
     print(f"[{job_id}] auprc={metrics['macro_auprc']:.4f} auroc={metrics['macro_auroc']:.4f} "
           f"bce={best['val']:.4f} best_ep={best['epoch']} stop={stop_reason}")
     return result
