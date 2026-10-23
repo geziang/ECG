@@ -1,0 +1,2 @@
+job_id,macro_auprc,macro_auroc,val_bce,best_epoch,trainable_params,stop_reason
+heartlang_lp_s0,0.4464,0.8121,0.2616,92,6921,max_epochs

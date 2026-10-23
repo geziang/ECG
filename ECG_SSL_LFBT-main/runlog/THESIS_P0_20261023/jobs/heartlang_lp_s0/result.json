@@ -1,0 +1,37 @@
+{
+ "job_id": "heartlang_lp_s0",
+ "stage": "A4_heartlang",
+ "model": "HeartLang_pretrained",
+ "training_seed": 0,
+ "label_fraction": 1.0,
+ "trainable": "linear(mlp_head)",
+ "trainable_params": 6921,
+ "status": "complete",
+ "macro_auprc": 0.4463853484663349,
+ "macro_auroc": 0.8121183613136973,
+ "val_bce": 0.2616258022047086,
+ "best_epoch": 92,
+ "stop_reason": "max_epochs",
+ "train_wall_s": 535.6,
+ "gpu_wall_s": 535.6,
+ "vram_peak_mib": 4856.5,
+ "weight_sha256": "9dc89d72a3f1cacd941892103eaa523d44e373164cd4fadfb975907cc65864f6",
+ "author_commit": "a08afd8",
+ "load_report": {
+  "model_key": "model",
+  "torch_missing_head": [],
+  "torch_unexpected_n": 0,
+  "excluded_pretrain_only": [
+   "backbone.lm_head.bias",
+   "backbone.lm_head.weight"
+  ],
+  "note": "author utils.load_state_dict semantics replicated (tensorboardX absent in env); lm_head excluded = pretrain VQ head (8192 vs constructor 1024), unused in LP forward; strict backbone accounting asserted below"
+ },
+ "backbone_keys_loaded": 140,
+ "backbone_missing": [],
+ "backbone_frozen_verified": true,
+ "test_loader_called": 0,
+ "selection": "min val BCE (deviation from author AUC selection, protocol-fixed)",
+ "code_sha": "bbcf0b52c2cbacb757c31ff3172bdfecfbb937d2",
+ "recompute_abs_diff_max": 0.0
+}

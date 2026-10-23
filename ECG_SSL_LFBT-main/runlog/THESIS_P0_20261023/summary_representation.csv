@@ -1,0 +1,5 @@
+mode,seed0,seed2,seed4,mean_auprc,mean_auroc,n_beat_valid(val)
+D0_matched_fixed,0.5968,0.5968,0.5982,0.5973,0.8771,683
+D1_mean_template,0.5822,0.5967,0.5986,0.5925,0.8718,683
+D2_median_template,0.5566,0.5663,0.5627,0.5619,0.8607,683
+D3_beat_set,0.5824,0.5805,0.5965,0.5865,0.8710,683

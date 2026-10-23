@@ -1,0 +1,52 @@
+{
+ "timestamp": "2026-10-24 00:05:20",
+ "jobs_done": [
+  "d0_matched_fixed_s0",
+  "d0_matched_fixed_s2",
+  "d0_matched_fixed_s4",
+  "d1_mean_template_s0",
+  "d1_mean_template_s2",
+  "d1_mean_template_s4",
+  "d2_median_template_s0",
+  "d2_median_template_s2",
+  "d2_median_template_s4",
+  "d3_beat_set_s0",
+  "d3_beat_set_s2",
+  "d3_beat_set_s4",
+  "heartlang_lp_s0",
+  "lp_m0_s0",
+  "lp_m0_s2",
+  "lp_m0_s4",
+  "lp_m4_s0",
+  "lp_m4_s2",
+  "lp_m4_s4",
+  "lp_m6_s0",
+  "lp_m6_s2",
+  "lp_m6_s4"
+ ],
+ "n_done": 22,
+ "gate": {
+  "reference_mode": "D0_matched_fixed",
+  "reference_mean": 0.5972706968704086,
+  "d3_mean": 0.5864515469579832,
+  "paired_deltas": [
+   -0.014453254057349874,
+   -0.016284641213762385,
+   -0.0017195544661636752
+  ],
+  "d3_minus_ref_mean": -0.01081914991242531,
+  "mean_min_required": 0.005,
+  "positive_seed_count": 0,
+  "positive_seed_required": 3,
+  "per_class_gate": "见 FINAL_REPORT(逐类 AP 均值降幅)",
+  "passed": false
+ },
+ "budget": {
+  "gpu_process_hours_used": 0.24,
+  "gpu_budget_hours": 12,
+  "cpu_hours_used": 0.06,
+  "cpu_budget_hours": 6,
+  "primary_training_jobs_budget": 22
+ },
+ "remaining_matrix_jobs": 0
+}

@@ -34,3 +34,5 @@ ts,job_id,phase,wall_s,counts_as_gpu_process,vram_peak_mib
 2026-10-23 23:27:13,d2_median_template_s4,train,25.3,1,497.6
 2026-10-23 23:27:38,d3_beat_set_s2,train,25.2,1,497.6
 2026-10-23 23:28:04,d3_beat_set_s4,train,25.1,1,497.6
+2026-10-23 23:40:57,a4_build_data,tokenize_train_val,146.0,0,4809,683
+2026-10-24 00:01:33,heartlang_lp_s0,train,535.6,1,4856.5
