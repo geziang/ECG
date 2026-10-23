@@ -1,0 +1,22 @@
+{
+ "job_id": "d3_beat_set_s2",
+ "stage": "A3_representation",
+ "mode": "D3_beat_set",
+ "training_seed": 2,
+ "pretrain_seed": "none",
+ "status": "complete",
+ "trainable_params": 12713,
+ "macro_auprc": 0.5804665415832226,
+ "macro_auroc": 0.867517901758741,
+ "val_bce": 0.20476854062766897,
+ "best_epoch": 100,
+ "stop_reason": "max_epochs",
+ "train_wall_s": 25.2,
+ "gpu_wall_s": 25.2,
+ "vram_peak_mib": 497.6,
+ "macro_auprc_beat_valid": 0.5804665415832226,
+ "n_beat_valid": 683,
+ "n_beat_invalid": 0,
+ "code_sha": "4f49e815862f3dbcfcaa30a8aec5273971537618",
+ "recompute_abs_diff_max": 0.0
+}

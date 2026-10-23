@@ -20,3 +20,17 @@ ts,job_id,phase,wall_s,counts_as_gpu_process,vram_peak_mib
 2026-10-23 23:18:13,lp_m6_s2,head_train,2.2,1,20.1
 2026-10-23 23:18:14,feat_M6_s4,feature_extract,0.6,1,93.3
 2026-10-23 23:18:16,lp_m6_s4,head_train,2.3,1,20.1
+2026-10-23 23:21:58,a3_peak_cache,peak_detection,54.9,0,"{'v5': 4802, 'ii': 7, 'fail': 0}","{'v5': 683, 'ii': 0, 'fail': 0}",4.1.2,gqrs_detect(defaults),204.8,V5(idx6),II(idx0)
+2026-10-23 23:22:19,a3_engineering_checks,checks,0.0,1,12713,0.6837713122367859,0.04992447793483734,True
+2026-10-23 23:23:04,d0_matched_fixed_s0,train,25.7,1,497.6
+2026-10-23 23:23:30,d1_mean_template_s0,train,25.2,1,497.6
+2026-10-23 23:23:56,d2_median_template_s0,train,25.2,1,497.6
+2026-10-23 23:24:21,d3_beat_set_s0,train,25.3,1,497.6
+2026-10-23 23:25:04,d0_matched_fixed_s2,train,26.0,1,497.6
+2026-10-23 23:25:30,d0_matched_fixed_s4,train,25.4,1,497.6
+2026-10-23 23:25:55,d1_mean_template_s2,train,25.0,1,497.6
+2026-10-23 23:26:21,d1_mean_template_s4,train,25.3,1,497.6
+2026-10-23 23:26:47,d2_median_template_s2,train,25.7,1,497.6
+2026-10-23 23:27:13,d2_median_template_s4,train,25.3,1,497.6
+2026-10-23 23:27:38,d3_beat_set_s2,train,25.2,1,497.6
+2026-10-23 23:28:04,d3_beat_set_s4,train,25.1,1,497.6

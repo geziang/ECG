@@ -1,0 +1,22 @@
+{
+ "job_id": "d1_mean_template_s0",
+ "stage": "A3_representation",
+ "mode": "D1_mean_template",
+ "training_seed": 0,
+ "pretrain_seed": "none",
+ "status": "complete",
+ "trainable_params": 12713,
+ "macro_auprc": 0.5821644437470135,
+ "macro_auroc": 0.8704034614618598,
+ "val_bce": 0.2082023217229314,
+ "best_epoch": 100,
+ "stop_reason": "max_epochs",
+ "train_wall_s": 25.2,
+ "gpu_wall_s": 25.2,
+ "vram_peak_mib": 497.6,
+ "macro_auprc_beat_valid": 0.5821644437470135,
+ "n_beat_valid": 683,
+ "n_beat_invalid": 0,
+ "code_sha": "4f49e815862f3dbcfcaa30a8aec5273971537618",
+ "recompute_abs_diff_max": 0.0
+}

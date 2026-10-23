@@ -1,0 +1,128 @@
+[
+ {
+  "job_id": "d1_mean_template_s0",
+  "jitter_samples": 4,
+  "macro_auprc_orig": 0.5821644437470135,
+  "macro_auprc_jitter": 0.5819225912798753,
+  "mean_abs_prob_delta": 0.0029026453848928213
+ },
+ {
+  "job_id": "d1_mean_template_s0",
+  "jitter_samples": 8,
+  "macro_auprc_orig": 0.5821644437470135,
+  "macro_auprc_jitter": 0.5781753218576369,
+  "mean_abs_prob_delta": 0.004432178568094969
+ },
+ {
+  "job_id": "d1_mean_template_s2",
+  "jitter_samples": 4,
+  "macro_auprc_orig": 0.5967305472645759,
+  "macro_auprc_jitter": 0.598044268453749,
+  "mean_abs_prob_delta": 0.002793726045638323
+ },
+ {
+  "job_id": "d1_mean_template_s2",
+  "jitter_samples": 8,
+  "macro_auprc_orig": 0.5967305472645759,
+  "macro_auprc_jitter": 0.5926461307358843,
+  "mean_abs_prob_delta": 0.004409941378980875
+ },
+ {
+  "job_id": "d1_mean_template_s4",
+  "jitter_samples": 4,
+  "macro_auprc_orig": 0.5985928852404048,
+  "macro_auprc_jitter": 0.6002866818927106,
+  "mean_abs_prob_delta": 0.0027631092816591263
+ },
+ {
+  "job_id": "d1_mean_template_s4",
+  "jitter_samples": 8,
+  "macro_auprc_orig": 0.5985928852404048,
+  "macro_auprc_jitter": 0.5953086390295416,
+  "mean_abs_prob_delta": 0.004344714339822531
+ },
+ {
+  "job_id": "d2_median_template_s0",
+  "jitter_samples": 4,
+  "macro_auprc_orig": 0.5565893598867112,
+  "macro_auprc_jitter": 0.5583138595739213,
+  "mean_abs_prob_delta": 0.002679054392501712
+ },
+ {
+  "job_id": "d2_median_template_s0",
+  "jitter_samples": 8,
+  "macro_auprc_orig": 0.5565893598867112,
+  "macro_auprc_jitter": 0.5541363434516274,
+  "mean_abs_prob_delta": 0.004061192274093628
+ },
+ {
+  "job_id": "d2_median_template_s2",
+  "jitter_samples": 4,
+  "macro_auprc_orig": 0.5663154528028883,
+  "macro_auprc_jitter": 0.5678845154234814,
+  "mean_abs_prob_delta": 0.002682952443137765
+ },
+ {
+  "job_id": "d2_median_template_s2",
+  "jitter_samples": 8,
+  "macro_auprc_orig": 0.5663154528028883,
+  "macro_auprc_jitter": 0.5618724072293527,
+  "mean_abs_prob_delta": 0.004102996550500393
+ },
+ {
+  "job_id": "d2_median_template_s4",
+  "jitter_samples": 4,
+  "macro_auprc_orig": 0.5627358734090974,
+  "macro_auprc_jitter": 0.5635493716243026,
+  "mean_abs_prob_delta": 0.0024330453015863895
+ },
+ {
+  "job_id": "d2_median_template_s4",
+  "jitter_samples": 8,
+  "macro_auprc_orig": 0.5627358734090974,
+  "macro_auprc_jitter": 0.5556179510331865,
+  "mean_abs_prob_delta": 0.0037946600932627916
+ },
+ {
+  "job_id": "d3_beat_set_s0",
+  "jitter_samples": 4,
+  "macro_auprc_orig": 0.5823733542188726,
+  "macro_auprc_jitter": 0.5826544937425819,
+  "mean_abs_prob_delta": 0.0023849012795835733
+ },
+ {
+  "job_id": "d3_beat_set_s0",
+  "jitter_samples": 8,
+  "macro_auprc_orig": 0.5823733542188726,
+  "macro_auprc_jitter": 0.5802181236648134,
+  "mean_abs_prob_delta": 0.0037111027631908655
+ },
+ {
+  "job_id": "d3_beat_set_s2",
+  "jitter_samples": 4,
+  "macro_auprc_orig": 0.5804665415832226,
+  "macro_auprc_jitter": 0.5809176248605743,
+  "mean_abs_prob_delta": 0.002473712433129549
+ },
+ {
+  "job_id": "d3_beat_set_s2",
+  "jitter_samples": 8,
+  "macro_auprc_orig": 0.5804665415832226,
+  "macro_auprc_jitter": 0.5790817731628533,
+  "mean_abs_prob_delta": 0.0038689286448061466
+ },
+ {
+  "job_id": "d3_beat_set_s4",
+  "jitter_samples": 4,
+  "macro_auprc_orig": 0.5965147450718544,
+  "macro_auprc_jitter": 0.5959727335778092,
+  "mean_abs_prob_delta": 0.0023147817701101303
+ },
+ {
+  "job_id": "d3_beat_set_s4",
+  "jitter_samples": 8,
+  "macro_auprc_orig": 0.5965147450718544,
+  "macro_auprc_jitter": 0.5922171640998625,
+  "mean_abs_prob_delta": 0.003716543549671769
+ }
+]

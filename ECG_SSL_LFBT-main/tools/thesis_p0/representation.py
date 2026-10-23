@@ -336,7 +336,7 @@ def engineering_checks() -> bool:
 def jitter_sensitivity():
     """训练后验证推理: ±4/±8 峰位扰动, 逐记录配对输出(仅 D1/D2/D3 重构输入)。"""
     rng = np.random.RandomState(RD["jitter_seed"])
-    Xva, _, _, rid_va, yva = C.load_dev_data("val")
+    Xva, rid_va, yva = C.load_dev_data("val")
     peaks = load_peaks()
     out_dir = C.RESULTS / "peak_sensitivity"
     out_dir.mkdir(parents=True, exist_ok=True)
@@ -365,12 +365,14 @@ def jitter_sensitivity():
                         else:
                             centers = np.clip(centers[:k_r] + int(offs[i]), 0, T_LEN - 1)
                         wins = np.stack([cut_window(Xva[i], c) for c in centers[:k_r]])
-                        m = np.zeros((1, KMAX), dtype=np.float32); m[0, :k_r] = 1.0
                         if mode == "D1_mean_template":
                             wins = np.broadcast_to(wins.mean(0), (k_r, 8, W))
                         elif mode == "D2_median_template":
                             wins = np.broadcast_to(np.median(wins, axis=0), (k_r, 8, W))
-                        xb = torch.from_numpy(wins[None]).float()
+                        full = np.zeros((1, KMAX, 8, W), dtype=np.float32)
+                        full[0, :k_r] = wins
+                        m = np.zeros((1, KMAX), dtype=np.float32); m[0, :k_r] = 1.0
+                        xb = torch.from_numpy(full)
                         if torch.cuda.is_available():
                             xb = xb.cuda(); m_t = torch.from_numpy(m).cuda()
                         else:
