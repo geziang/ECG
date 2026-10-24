@@ -188,7 +188,8 @@ def base_args(tokenizer: str):
              heartlang_used_chans=",".join(str(i) for i in range(12)),
              median_beat_window_size=60,
              median_beat_used_chans=",".join(str(i) for i in range(12)),
-             median_beat_detect_lead_index=1, ecg_byte_padding_idx=0, seed=2025)
+             median_beat_detect_lead_index=1, ecg_byte_padding_idx=0, seed=2025,
+             num_class=9, output_attention=False)
     if tokenizer == "patching":
         d["use_lead_embedding"] = 1
     elif tokenizer == "heartlang":
@@ -233,7 +234,7 @@ def train(tokenizer: str, micro_bs: int, accum: int, stop_deadline):
     ytr = torch.from_numpy(np.load(DATA / "y_train.npy"))
     Xva = torch.from_numpy(np.load(DATA / "X_val.npy"))
     yva = torch.from_numpy(np.load(DATA / "y_val.npy"))
-    rid_va = np.load(DATA / "val_ids.npy").astype(str)
+    rid_va = np.load(DATA / "val_ids.npy", allow_pickle=True).astype(str)
     log(event="data", n_train=int(Xtr.shape[0]), n_val=int(Xva.shape[0]),
         micro_bs=micro_bs, accum=accum)
 
@@ -257,7 +258,7 @@ def train(tokenizer: str, micro_bs: int, accum: int, stop_deadline):
     g.manual_seed(2025)
     train_loader = torch.utils.data.DataLoader(
         DS(Xtr, ytr), batch_size=micro_bs, shuffle=True, num_workers=0,
-        drop_last=False, generator=g)
+        drop_last=False, generator=g, collate_fn=collate)
     opt = torch.optim.RAdam(model.parameters(), lr=0.001)
     criterion = nn.BCEWithLogitsLoss(reduction="sum")
     best = {"epoch": -1, "auc": -1.0, "state": None}

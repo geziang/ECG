@@ -22,3 +22,4 @@ r1_i5_s0_e20_pt,R1,pretrain,I5,0,20,trained,all_epochs,1903.1,,,0479e5d0057e076f
 r1_i5_s0_e20_lp,R1,linear_probe,I5,0,20,complete,max_epochs,3.5,0.7292782244283783,0.9288527610168836,0479e5d0057e076fb623e28ab360ad17abee708e154b9075521fee74c575e114
 r2_combo_slot1_s0_e20_pt,R2,pretrain,I2+RR,0,20,trained,all_epochs,1593.3,,,cb28ac4e1e8b097d159b663f9dfe4e649c20f2ac1db9e773f5ff21493176128d
 r2_combo_slot1_s0_e20_lp,R2,linear_probe,I2+RR,0,20,complete,max_epochs,3.5,0.7359810107014414,0.9280621280973804,cb28ac4e1e8b097d159b663f9dfe4e649c20f2ac1db9e773f5ff21493176128d
+ref_heartlang_s0,REF,reference_linear_probe,HeartLang_author,0,,complete,fixed_100_epochs,620.4,0.4217605439934261,0.794680953568374,9dc89d72a3f1cacd941892103eaa523d44e373164cd4fadfb975907cc65864f6
