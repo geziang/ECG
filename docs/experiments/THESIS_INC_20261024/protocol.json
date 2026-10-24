@@ -1,0 +1,372 @@
+{
+  "protocol_id": "thesis-inc-20261024-v1",
+  "task_id": "thesis-inc-20261024",
+  "version": 1,
+  "status": "authorized_2026-10-24",
+  "training_authorized_by_this_document": true,
+  "code_implemented": false,
+  "authorization": "User requested experiments for today, tomorrow, through noon the day after tomorrow; incremental ECG SSL, combinations and bounded parameter trials authorized within this document.",
+  "timezone": "Asia/Shanghai",
+  "window": {
+    "authorized_date": "2026-10-24",
+    "latest_start_pretraining": "2026-10-26T10:00:00+08:00",
+    "latest_start_gpu_job": "2026-10-26T11:00:00+08:00",
+    "gpu_stop_and_save_by": "2026-10-26T11:30:00+08:00",
+    "final_report_by": "2026-10-26T12:00:00+08:00",
+    "launch_estimate_safety_factor": 1.25,
+    "checkpoint_reserve_minutes": 10
+  },
+  "budgets": {
+    "max_gpu_process_hours": 36,
+    "max_cpu_compute_hours": 12,
+    "max_engineering_hours": 12,
+    "max_reference_gpu_hours": 4,
+    "max_reference_debug_hours_per_branch": 1,
+    "max_concurrent_gpu_processes": 1,
+    "max_primary_training_jobs": 50,
+    "max_recorded_repair_per_failed_job": 1,
+    "stage_logical_job_caps": {
+      "R1": 12,
+      "R2": 6,
+      "R3": 4,
+      "R4": 12,
+      "R5": 12,
+      "REF": 4
+    },
+    "all_retries_smokes_and_io_count_toward_resources": true
+  },
+  "execution": {
+    "host": "Win4090",
+    "claim_in_HOSTS_and_push_before_training": true,
+    "coordination": "origin/main only; no SSH",
+    "output_relative_to_code_root": "runlog/THESIS_INC_20261024",
+    "implementation_suggested": "tools/thesis_inc",
+    "training_in_frozen_copy": true,
+    "freeze_full_resolved_config_and_code_before_first_training": true,
+    "reuse_DONE_requires_all_hashes_files_and_recompute": true
+  },
+  "test_policy": {
+    "allowed_downstream_splits": [
+      "train",
+      "val"
+    ],
+    "test_signals_or_label_access_allowed": false,
+    "test_metrics_allowed": false,
+    "existing_metadata_ID_counts_audit_allowed": true,
+    "author_paper_test_numeric_reproduction_not_claimed_this_batch": true
+  },
+  "pretrain": {
+    "source": "NFH",
+    "source_relative_to_code_root": "data/pt_pretrain_nfh",
+    "expected_records": 34905,
+    "rpeak_cache_relative_to_code_root": "data/pt_rpeaks_nfh.npz",
+    "sampling_hz": 204.8,
+    "shape": [
+      8,
+      2048
+    ],
+    "lead_order": [
+      "II",
+      "III",
+      "V1",
+      "V2",
+      "V3",
+      "V4",
+      "V5",
+      "V6"
+    ],
+    "dtype": "float32",
+    "normalization": "preserve existing audited inputs; no renormalization",
+    "architecture": "per-lead VGG16(alpha=0.125), existing projector, TRC=1",
+    "initialization": "from scratch for each seed; common backbone initial fingerprint matched across configs",
+    "loss_mode": "bt",
+    "gamma": 0.8,
+    "lambda": 0.0051,
+    "optimizer": "Adam",
+    "lr": 0.001,
+    "betas": [
+      0.9,
+      0.999
+    ],
+    "eps": 1e-08,
+    "weight_decay": 0,
+    "scheduler": null,
+    "batch_size": 128,
+    "workers": 4,
+    "drop_last": true,
+    "precision": "float32",
+    "pilot_epochs": 20,
+    "full_epochs": 100,
+    "pilot_seeds": [
+      0
+    ],
+    "confirmation_seeds": [
+      2,
+      4
+    ],
+    "full_seeds": [
+      0,
+      2,
+      4
+    ],
+    "checkpoint_selection": "last fixed epoch, not downstream-selected PT epoch",
+    "global_views": "existing RRC-TO actual defaults and current noise-before-RRC order; resolve all defaults",
+    "noise": {
+      "probability": 0.5,
+      "types": [
+        "bw",
+        "ma",
+        "em"
+      ],
+      "snr_db_uniform": [
+        5,
+        20
+      ],
+      "offset_range": "first_half"
+    },
+    "common_data_order_global_rng_across_configs": true,
+    "auxiliary_rng_separate": true,
+    "rpeak_source": "cached pre-augmentation raw NFH only; manifest keys intersect exact train IDs"
+  },
+  "auxiliary": {
+    "valid_min_peaks": 3,
+    "window_samples": 205,
+    "window_bounds": [
+      -102,
+      103
+    ],
+    "padding": "edge",
+    "per_beat_normalization": false,
+    "templates": "all cached valid peaks; only aggregate mean vs median changes",
+    "rr_target": [
+      "mean_RR",
+      "SDNN",
+      "RMSSD"
+    ],
+    "rr_units": "seconds",
+    "rr_normalization": "NFH training records only",
+    "rr_head": "existing run_pt RR implementation on first lead feature",
+    "local": {
+      "max_windows": 8,
+      "selection": "ordered evenly spaced peak indices if more than 8",
+      "fixed_control_centers": "floor((j+0.5)*2048/K)",
+      "two_views": "same raw windows, independent NoiseInjector only; no time shift/crop/flip",
+      "shared_backbone_and_projector": true,
+      "weight_per_row": "1/(N_valid*K_record)",
+      "standardization": "weighted per-coordinate mean; sqrt(weighted variance+1e-4)",
+      "cross_correlation": "Z1.T @ diag(weights) @ Z2",
+      "loss_per_lead": "sum((diag(C)-1)^2)+0.0051*sum(offdiag(C)^2)",
+      "lead_reduce": "mean over eight leads",
+      "skip_batch_if_valid_records_less_than": 2,
+      "invalid_records": "keep global objective; skip local auxiliary only"
+    }
+  },
+  "configs": {
+    "I0": {
+      "morphology": "none",
+      "morphology_weight": 0,
+      "rr_weight": 0
+    },
+    "I1": {
+      "morphology": "mean_template_old_dv",
+      "morphology_weight": 0.01,
+      "rr_weight": 0
+    },
+    "I2": {
+      "morphology": "median_template_old_dv",
+      "morphology_weight": 0.01,
+      "rr_weight": 0
+    },
+    "I3": {
+      "morphology": "per_beat_weighted_bt",
+      "morphology_weight": 0.01,
+      "rr_weight": 0
+    },
+    "I4": {
+      "morphology": "none",
+      "morphology_weight": 0,
+      "rr_weight": 0.1
+    },
+    "I5": {
+      "morphology": "matched_fixed_window_weighted_bt",
+      "morphology_weight": 0.01,
+      "rr_weight": 0
+    }
+  },
+  "lp": {
+    "data_source": "P0 isolated exports, verify SHA",
+    "counts": {
+      "train": 4809,
+      "val": 683
+    },
+    "class_order": [
+      "NSR",
+      "AF",
+      "IAVB",
+      "LBBB",
+      "RBBB",
+      "PAC",
+      "PVC",
+      "STD",
+      "STE"
+    ],
+    "label_type": "original_multihot",
+    "feature_dim": 512,
+    "auxiliary_heads_discarded": true,
+    "encoder_trainable": false,
+    "encoder_mode": "eval",
+    "head": "Linear(512,9)",
+    "criterion": "BCEWithLogitsLoss",
+    "optimizer": "Adam",
+    "lr": 0.001,
+    "betas": [
+      0.9,
+      0.999
+    ],
+    "eps": 1e-08,
+    "weight_decay": 0,
+    "batch_size": 128,
+    "epochs_max": 100,
+    "patience": 15,
+    "selection": "strict minimum element-weighted val BCE, earliest on tie",
+    "pretrain_seed_equals_head_seed": true,
+    "drop_last": false,
+    "scheduler": null,
+    "precision": "float32",
+    "class_weight": null,
+    "augmentation": null
+  },
+  "decision_rules": {
+    "primary": "validation macro average_precision_score over fixed nine classes",
+    "reference": "I0 with matching PT budget and seed",
+    "positive_delta_threshold": 0,
+    "positive_comparator": ">",
+    "all_predefined_seeds_used_in_mean": true,
+    "require_all_seeds_positive": false,
+    "require_statistical_significance": false,
+    "class_drops": "report all, no 0.02 veto",
+    "rank_ties": [
+      "smaller measured train_seconds",
+      "config_id lexicographic"
+    ],
+    "R2": "at most top two positive among I1,I2,I3 each +RR0.1; one remaining nonpositive morphology +RR opportunity, document complementarity; if all negative best morphology +RR once",
+    "R3": "best positive config, only dominant morphology/local weight x0.3/x3; if RR-only use 0.03/0.3; reuse x1; no positive means no sweep",
+    "R4": "up to top two positive recipes plus I0, all complete seeds2/4; I5 is eligible",
+    "R5": "best positive three-seed mean recipe plus I0 at100ep seeds0/2/4; launch only if time/resources permit; no FT or external test expansion",
+    "combo_log": "report delta_vs_I0 and delta_vs_parent separately",
+    "all_negative": "allow specified single complementary combo; then conclude valid negative if still nonpositive"
+  },
+  "references": {
+    "heartlang": {
+      "commit": "a08afd8117e813fee212a1ac283db4a7140a4669",
+      "train_records": 4950,
+      "val_records": 551,
+      "training_seed": 0,
+      "label_fraction": 1,
+      "trainable": "linear",
+      "batch_size": 256,
+      "lr": 0.005,
+      "weight_decay": 0.05,
+      "warmup_epochs": 10,
+      "epochs": 100,
+      "optimizer": "AdamW",
+      "selection": "max val macro-AUROC; author training-mode dropout with frozen backbone parameters",
+      "test_access": false
+    },
+    "tokenizer": {
+      "commit": "ce976cecaa27912fbba38c28fdda07abcc211b7d",
+      "tokenizers": [
+        "patching",
+        "median_beat",
+        "heartlang"
+      ],
+      "model": "Transformer",
+      "d_model": 128,
+      "e_layers": 3,
+      "n_heads": 8,
+      "d_ff": 96,
+      "patch_size": 16,
+      "patch_stride": 8,
+      "median_window": 60,
+      "heartlang_max_len": 256,
+      "heartlang_token_len": 96,
+      "lead_indices": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11
+      ],
+      "position_embedding": 1,
+      "lead_embedding": {
+        "patching": 1,
+        "median_beat": 0,
+        "heartlang": 1
+      },
+      "seed": 2025,
+      "fix_seed": 1,
+      "optimizer": "RAdam",
+      "lr": 0.001,
+      "epochs_max": 300,
+      "patience_val_auroc": 15,
+      "effective_batch_size": 256,
+      "preauthorized_microbatch_options": [
+        [
+          32,
+          8
+        ],
+        [
+          16,
+          16
+        ]
+      ],
+      "all_three_same_choice_before_training": true,
+      "no_test_constructor": true,
+      "identity": "resource-adapted subset verification, not full paper numeric reproduction"
+    }
+  },
+  "deliverables": [
+    "preflight.json",
+    "protocol_resolved.json",
+    "source_manifest.json",
+    "data_manifest.json",
+    "job_manifest.json",
+    "results.csv",
+    "resource_usage.csv",
+    "events.md",
+    "decisions.jsonl",
+    "resume_manifest.json",
+    "DAILY_REPORT_2026-10-24.md",
+    "DAILY_REPORT_2026-10-25.md",
+    "FINAL_REPORT.md"
+  ],
+  "checkpoint_requirements": [
+    "model",
+    "optimizer",
+    "epoch",
+    "global_step",
+    "Python RNG",
+    "NumPy RNG",
+    "Torch RNG",
+    "CUDA RNG",
+    "sampler and data order",
+    "worker or per-record RNG",
+    "consumed resources",
+    "configuration SHA"
+  ],
+  "forbidden": [
+    "test use",
+    "overwriting old freezes",
+    "unbounded search",
+    "unrecorded batch/sample/epoch changes",
+    "claiming LP-only as SSL PT",
+    "starting unrelated old queues"
+  ]
+}

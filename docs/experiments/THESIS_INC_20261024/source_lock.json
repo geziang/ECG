@@ -1,0 +1,238 @@
+{
+  "protocol_id": "thesis-inc-20261024-v1",
+  "observed_git_base": "9b135eedf2c27f7beefd5d825d3be2952b8eba36",
+  "code_implemented_on_office": false,
+  "note": "Fixed existing sources; A must freeze its new execution commit/diff and actual NFH/data/weight hashes before training. No office assertion of live A state.",
+  "local_assets": [
+    {
+      "path_relative_to_git_root": "ECG_SSL_LFBT-main/run_pt.py",
+      "canonical_git_blob_sha256": "5c241c66934c3e5d7cc77c36126f1f78f6780d873570e818840a8de22ee22476",
+      "canonical_bytes": 61948,
+      "verification": "hash git show BASE:path; working-tree CRLF may differ, do not relax data identity checks"
+    },
+    {
+      "path_relative_to_git_root": "ECG_SSL_LFBT-main/data_utils/dv_dataset.py",
+      "canonical_git_blob_sha256": "62c34ecb981fc848cd4d17bc9336bf5fac28d446a077f54bcceed01666b298d8",
+      "canonical_bytes": 5234,
+      "verification": "hash git show BASE:path; working-tree CRLF may differ, do not relax data identity checks"
+    },
+    {
+      "path_relative_to_git_root": "ECG_SSL_LFBT-main/data_utils/nstdb_aug.py",
+      "canonical_git_blob_sha256": "1625cd0c9338ee62b96e28c5f9f1b9fbc37d679cacb10582f272e755962e72ef",
+      "canonical_bytes": 3189,
+      "verification": "hash git show BASE:path; working-tree CRLF may differ, do not relax data identity checks"
+    },
+    {
+      "path_relative_to_git_root": "ECG_SSL_LFBT-main/models/vgg_1d.py",
+      "canonical_git_blob_sha256": "d4977823cd61a02d8d4d3289d6982830c9e9a2b5029ca02594d006aab4feb4fc",
+      "canonical_bytes": 7792,
+      "verification": "hash git show BASE:path; working-tree CRLF may differ, do not relax data identity checks"
+    },
+    {
+      "path_relative_to_git_root": "ECG_SSL_LFBT-main/tools/thesis_p0/local_lp.py",
+      "canonical_git_blob_sha256": "1232210109c1e445b78037cc558bd0d2c4974b34be2118692ba97b3518b404b2",
+      "canonical_bytes": 11997,
+      "verification": "hash git show BASE:path; working-tree CRLF may differ, do not relax data identity checks"
+    },
+    {
+      "path_relative_to_git_root": "ECG_SSL_LFBT-main/tools/thesis_p0/common.py",
+      "canonical_git_blob_sha256": "776c8da2b82d8066c6ce1b59d503c423846433ff8f3ad8afb293ca56b0ffb063",
+      "canonical_bytes": 5541,
+      "verification": "hash git show BASE:path; working-tree CRLF may differ, do not relax data identity checks"
+    },
+    {
+      "path_relative_to_git_root": "ECG_SSL_LFBT-main/runlog/ABC_20261015/protocol_frozen.md",
+      "canonical_git_blob_sha256": "f453a787d11029949572f6de8a53516d51331c462f6dda46072b6188f44b2621",
+      "canonical_bytes": 7599,
+      "verification": "hash git show BASE:path; working-tree CRLF may differ, do not relax data identity checks"
+    },
+    {
+      "path_relative_to_git_root": "ECG_SSL_LFBT-main/runlog/THESIS_P0_20261023/data_manifest.json",
+      "canonical_git_blob_sha256": "66246175a5da7bcfea8c4fdfa0038c06f567c7305f0d90dab52fa8515916ea26",
+      "canonical_bytes": 16443,
+      "verification": "hash git show BASE:path; working-tree CRLF may differ, do not relax data identity checks"
+    },
+    {
+      "path_relative_to_git_root": "ECG_SSL_LFBT-main/runlog/THESIS_P0_20261023/source_and_checkpoint_manifest.json",
+      "canonical_git_blob_sha256": "adbf38d782fcd107de2f15b8973e312fddf893cd39c923fa21235c7788610aeb",
+      "canonical_bytes": 12636,
+      "verification": "hash git show BASE:path; working-tree CRLF may differ, do not relax data identity checks"
+    },
+    {
+      "path_relative_to_git_root": "ECG_SSL_LFBT-main/runlog/preds_archive/cpsc_multilabel/cpsc_multilabel.csv",
+      "canonical_git_blob_sha256": "c8fc8b8e68c8962aed3372ac5716c227250fbabcbb769a92f3f772ce24e256b2",
+      "canonical_bytes": 570178,
+      "verification": "hash git show BASE:path; working-tree CRLF may differ, do not relax data identity checks"
+    },
+    {
+      "path_relative_to_git_root": "ECG_SSL_LFBT-main/runlog/preds_archive/cpsc_sample_order.txt",
+      "canonical_git_blob_sha256": "7341fad637c8b9d56acacb24cac673afb68fe399fbd90042b870c522a4f37f31",
+      "canonical_bytes": 97494,
+      "verification": "hash git show BASE:path; working-tree CRLF may differ, do not relax data identity checks"
+    }
+  ],
+  "p0_isolated_dev_data": {
+    "train": {
+      "npz_sha256": "d3be19f82390b93ec67b407297390206fe4706933836a7e16bd236fbed035e68",
+      "n": 4809
+    },
+    "val": {
+      "npz_sha256": "f0389355a5708a6a30b5d92e43c962c0c1ee19b7aa3350e0aee36c734d2e677c",
+      "n": 683
+    }
+  },
+  "existing_checkpoints_read_only": [
+    {
+      "model": "M4",
+      "pretrain_seed": 0,
+      "expected_sha256": "20bebfd6211d86b1d6cfedb1d4835ac9a54aac9a241130c8e039233a1ac6c6b3",
+      "actual_sha256": "20bebfd6211d86b1d6cfedb1d4835ac9a54aac9a241130c8e039233a1ac6c6b3",
+      "candidate_path": "F:\\新实验\\ECG_SSL_LFBT-main\\checkpoint\\joint_m4_noise\\seed0\\encoder_group.pth",
+      "backup_path": "D:\\thesis_p0_20261023_backup\\checkpoints\\M4_s0_encoder_group.pth"
+    },
+    {
+      "model": "M4",
+      "pretrain_seed": 2,
+      "expected_sha256": "5994300a8821258168fee6f86ef6a1842c28b0a029c76e357452cbea47941a65",
+      "actual_sha256": "5994300a8821258168fee6f86ef6a1842c28b0a029c76e357452cbea47941a65",
+      "candidate_path": "F:\\新实验\\ECG_SSL_LFBT-main\\checkpoint\\joint_m4_noise\\seed2\\encoder_group.pth",
+      "backup_path": "D:\\thesis_p0_20261023_backup\\checkpoints\\M4_s2_encoder_group.pth"
+    },
+    {
+      "model": "M4",
+      "pretrain_seed": 4,
+      "expected_sha256": "4eb7fca49019fcbb508789776d81f096a59dccccf0290fc75b7fa633eccefa63",
+      "actual_sha256": "4eb7fca49019fcbb508789776d81f096a59dccccf0290fc75b7fa633eccefa63",
+      "candidate_path": "F:\\新实验\\ECG_SSL_LFBT-main\\checkpoint\\joint_m4_noise\\seed4\\encoder_group.pth",
+      "backup_path": "D:\\thesis_p0_20261023_backup\\checkpoints\\M4_s4_encoder_group.pth"
+    },
+    {
+      "model": "M6",
+      "pretrain_seed": 0,
+      "expected_sha256": "d94cc71bdd034828166be086673e3399abd1fba9734c6ea6bfdad74e6eaf5592",
+      "actual_sha256": "d94cc71bdd034828166be086673e3399abd1fba9734c6ea6bfdad74e6eaf5592",
+      "candidate_path": "F:\\新实验\\ECG_SSL_LFBT-main\\checkpoint\\joint_m6\\seed0\\encoder_group.pth",
+      "backup_path": "D:\\thesis_p0_20261023_backup\\checkpoints\\M6_s0_encoder_group.pth"
+    },
+    {
+      "model": "M6",
+      "pretrain_seed": 2,
+      "expected_sha256": "5c559c37a067b17983aad2377dd88db7d776d760b3451e6176429d4512548732",
+      "actual_sha256": "5c559c37a067b17983aad2377dd88db7d776d760b3451e6176429d4512548732",
+      "candidate_path": "F:\\新实验\\ECG_SSL_LFBT-main\\checkpoint\\joint_m6\\seed2\\encoder_group.pth",
+      "backup_path": "D:\\thesis_p0_20261023_backup\\checkpoints\\M6_s2_encoder_group.pth"
+    },
+    {
+      "model": "M6",
+      "pretrain_seed": 4,
+      "expected_sha256": "7ad8ccedb8910aaadecfdff48e191ee2f6638ea7941a1df55f4ff52c6d6c93a4",
+      "actual_sha256": "7ad8ccedb8910aaadecfdff48e191ee2f6638ea7941a1df55f4ff52c6d6c93a4",
+      "candidate_path": "F:\\新实验\\ECG_SSL_LFBT-main\\checkpoint\\joint_m6\\seed4\\encoder_group.pth",
+      "backup_path": "D:\\thesis_p0_20261023_backup\\checkpoints\\M6_s4_encoder_group.pth"
+    }
+  ],
+  "references": [
+    {
+      "id": "heartlang",
+      "repository_url": "https://github.com/PKUDigitalHealth/HeartLang",
+      "commit": "a08afd8117e813fee212a1ac283db4a7140a4669",
+      "paper_url": "https://arxiv.org/abs/2502.10707",
+      "pdf_url": "https://arxiv.org/pdf/2502.10707",
+      "pdf_sha256": "3383a778b24d19901e28473a1e8985036ed97c3d7ef678fe6f8df81cb99f6390",
+      "use": "phase_1_reference",
+      "required_source_files": [
+        {
+          "path": "QRSTokenizer.py",
+          "sha256": "b435e521ffe4503f1d34c287eb3cd4512d6b49044f7960442d82397eebb90919"
+        },
+        {
+          "path": "run_class_finetuning.py",
+          "sha256": "e8b574303c39d7bd9493711c685ab7537cf8d24e94abe1ccf4c095d12eea76d7"
+        },
+        {
+          "path": "scripts/finetune/CPSC2018/base_cpsc2018_linear_prob.sh",
+          "sha256": "427a2546cd1ab87893badaf26c122f28e4f7ab83932473c9d83566486bc4b8d4"
+        }
+      ],
+      "weight_urls": [
+        "https://huggingface.co/PKUDigitalHealth/HeartLang/tree/main/checkpoints"
+      ],
+      "weights_downloaded_on_office": false
+    },
+    {
+      "id": "ecg_tokenizer",
+      "repository_url": "https://github.com/LeeJarvis996/ecg_tokenizer",
+      "commit": "ce976cecaa27912fbba38c28fdda07abcc211b7d",
+      "paper_url": "https://arxiv.org/abs/2609.15433",
+      "pdf_url": "https://arxiv.org/pdf/2609.15433",
+      "pdf_sha256": "e1025bf439c8cf9f9f564c71b69e8ab8d8808f9cfa556192077516c2d84a7b37",
+      "use": "phase_1_reference",
+      "required_source_files": [
+        {
+          "path": "models/tokenizers/heartlang.py",
+          "sha256": "862ec49d06ba8b4db7b9cb5bf8d0b7079af00b08b46eacd5a0b7d04f759f4776"
+        },
+        {
+          "path": "models/tokenizers/median_beat.py",
+          "sha256": "a64537265130e0ce34f0088061b0fbe88c928f64691b6e47ff90856b37f6329a"
+        },
+        {
+          "path": "exp/exp_classification.py",
+          "sha256": "133309c0c71d1e5b3a1a5b15fc8d1451379ebffdb4c961baa9584ce9bf4419f9"
+        },
+        {
+          "path": "data_provider/data_loader.py",
+          "sha256": "490282cdead993674555ae995727765df6d1b572a87d347581a8874f4dc4b2e5"
+        }
+      ],
+      "weight_urls": [
+        "https://github.com/willxxy/ECG-Byte"
+      ],
+      "weights_downloaded_on_office": false
+    }
+  ],
+  "heartlang_pretrained_checkpoint": {
+    "repo": "https://huggingface.co/PKUDigitalHealth/HeartLang",
+    "revision": "b8118c1bc34a43cc2202b6d30267244ac7fc52c1",
+    "path_in_repo": "checkpoints/pretrain/MIMIC-IV/checkpoint-200.pth",
+    "expected_sha256_lfs": "9dc89d72a3f1cacd941892103eaa523d44e373164cd4fadfb975907cc65864f6",
+    "expected_bytes": 534928678,
+    "local_path": "D:\\thesis_p0_20261023_backup\\heartlang_weights\\checkpoint-200.pth",
+    "actual_bytes": 534928678,
+    "actual_sha256": "9dc89d72a3f1cacd941892103eaa523d44e373164cd4fadfb975907cc65864f6",
+    "verified": true
+  },
+  "new_task_files": [
+    {
+      "path": "TASKBOOK.md",
+      "sha256_lf": "b41037c8044c95006a6ab88ee98d464026e335284dd59fcfb519870bd1dc87a4",
+      "note": "LF-normalized task text hash"
+    },
+    {
+      "path": "protocol.json",
+      "sha256_lf": "e786d2b1f8183e551fd88a1f1102b9980a7a6607766522ea19a3b924f01f1658",
+      "note": "LF-normalized task text hash"
+    },
+    {
+      "path": "task_matrix.csv",
+      "sha256_lf": "bca3cdfa906bedc176677e0cdbf90274338fabef705c591d93262dbd12e16303",
+      "note": "LF-normalized task text hash"
+    },
+    {
+      "path": "validate_dispatch.py",
+      "sha256_lf": "01b37f4adfaa9bac060e8e9c26976efa9bf3c0b580fc5f787905d3ba2b464112",
+      "note": "LF-normalized task text hash"
+    },
+    {
+      "path": "OFFICE_MONITOR.md",
+      "sha256_lf": "3f6522336da3b8ba7bb225cc05dead3add9d27be0bee4b430d624b88128a751a",
+      "note": "LF-normalized task text hash"
+    }
+  ],
+  "nfh_to_verify_on_A": {
+    "expected_records": 34905,
+    "data_content_manifest_sha256": null,
+    "rpeak_cache_sha256": null,
+    "gate": "must resolve exact record and peak IDs on A before SSL"
+  }
+}

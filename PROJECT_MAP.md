@@ -1,6 +1,12 @@
 # ECG 项目地图
 
-更新：2026-10-23。以下路径相对本文件所在的 Git 根 `ECG/`。本文件负责定位；真实数值仍须核对协议与原始结果。
+更新：2026-10-24。以下路径相对本文件所在的 Git 根 `ECG/`。本文件负责定位；真实数值仍须核对协议与原始结果。
+
+**当前执行入口**：[THESIS_INC_20261024正式任务书](docs/experiments/THESIS_INC_20261024/TASKBOOK.md)与[HOSTS顶部](ECG_SSL_LFBT-main/runlog/HOSTS.md)。用户授权10-24至10-26中午的增量SSL实验，已登记📋待A机认领；主线六组20epoch及条件组合/调参/确认/完整训练，总GPU36h、最多50主作业，10-26 12:00前报告停止。新入口代码待A机实现和预检；下文草案状态不覆盖本条。
+
+办公机[按小时巡检](docs/experiments/THESIS_INC_20261024/OFFICE_MONITOR.md)已创建为ACTIVE，到截止汇总后停止；仅反映Git回传，不代表远端进程核验。
+
+**10-24最新状态**：大论文首批 `thesis-p0-20261023` 已回传22/22，收官提交 `9b135ee` 已同步本地。先读[P0报告](ECG_SSL_LFBT-main/runlog/THESIS_P0_20261023/FINAL_REPORT.md)与[复现及下一阶段设计草案](docs/research/REPRODUCTION_AND_NEXT_EXPERIMENTS_2026-10-24.md)。P0完成本地多标签LP、受控表示诊断和HeartLang公开权重适配；论文数值复现尚未完成。A3阴性限定于当前小网络/无序聚合，后续方案尚未下发，未启动新预训练。下文10-23“仅设计/未实施”的表述均为当时快照，不覆盖本条。
 
 ## 1. 项目与当前状态
 
@@ -28,7 +34,7 @@
 | [报告归档/](报告归档/) | 开题报告、历史设计、完成与未完成报告 |
 | [paper/](paper/) | 历史成稿与负结果支撑稿 |
 | [docs/paper/](docs/paper/PAPER_CLOSEOUT_2026-10-23.md) | 小论文收官总账、V7 表图证据映射与本轮整理核验 |
-| [docs/experiments/](docs/experiments/THESIS_P0_20261023/TASKBOOK.md) | 首批主机 A 实验设计草案及协议/22 作业矩阵/来源锁；未下发、未实现新入口、未启动训练 |
+| [docs/experiments/](docs/experiments/THESIS_P0_20261023/TASKBOOK.md) | 首批已正式执行并回传22/22；原协议/矩阵/来源锁保持冻结 |
 | [docs/research/](docs/research/) | 当前后续研究计划与阅读清单 |
 | [../参考代码/](../参考代码/论文与代码总览.md) | Git 仓库外的九篇论文/源码资料；PDF、源码、权重及复现状态分别记录；尚未运行复现 |
 | [runlog/HANDOFF.md](runlog/HANDOFF.md) | 2026-09-18 旧快照，不是当前总账本 |
@@ -51,6 +57,7 @@
 | 数据划分/分类加载 | [data_utils/cls_datasets.py](ECG_SSL_LFBT-main/data_utils/cls_datasets.py)、[data_utils/data_folder.py](ECG_SSL_LFBT-main/data_utils/data_folder.py) | 样本读取与分类任务 |
 | 多标签与扩展指标 | [utils/multilabel.py](ECG_SSL_LFBT-main/utils/multilabel.py)、[metrics_ext.py](ECG_SSL_LFBT-main/metrics_ext.py) | 评价基础；存在这些工具不等于原生多标签训练已完成 |
 | 测试 | [tests/](ECG_SSL_LFBT-main/tests/) | 按被修改模块选择相关测试 |
+| 大论文首批独立入口 | [tools/thesis_p0/](ECG_SSL_LFBT-main/tools/thesis_p0/) | 已实现train/val隔离、多标签LP、受控表示诊断及HeartLang适配；机器路径固定于主机A，不能在办公机直接据旧路径启动 |
 
 当前 V7 基于 8 个独立导联与长度 2048 的输入，不能因数据原始包含 12 导联而写成已完成所有 12 导联结构验证。原生多标签训练须另建协议，不能只把既有 softmax 分数换一种真值重算。
 
@@ -61,7 +68,8 @@
 | 要核对的内容 | 入口 |
 |---|---|
 | 小论文历史状态/当前材料缺口 | [收官总账](docs/paper/PAPER_CLOSEOUT_2026-10-23.md)、[V7 表图证据映射](docs/paper/PAPER_EVIDENCE_MAP_2026-10-23.md)；不等同主机认领队列 |
-| 当前任务与主机状态快照 | [HOSTS.md](ECG_SSL_LFBT-main/runlog/HOSTS.md)；先读顶部当前有效区，下文全部旧队列/活跃措辞均为历史语境；当前无本轮新下发任务 |
+| 当前任务与主机状态快照 | [HOSTS.md](ECG_SSL_LFBT-main/runlog/HOSTS.md)；P0已标✅，停在P1；下文全部旧队列/活跃措辞均为历史语境；10-24新设计未下发 |
+| 大论文首批及复现状态 | [P0报告](ECG_SSL_LFBT-main/runlog/THESIS_P0_20261023/FINAL_REPORT.md)、[结果](ECG_SSL_LFBT-main/runlog/THESIS_P0_20261023/results.csv)、[新设计草案](docs/research/REPRODUCTION_AND_NEXT_EXPERIMENTS_2026-10-24.md)；本地适配、局部诊断与论文数值复现分开记账，交接材料缺口见新设计§2 |
 | 联合框架最初完整链路 | [JOINT 报告](ECG_SSL_LFBT-main/runlog/JOINT_20261013/JOINT_最终报告.md)、[protocol.md](ECG_SSL_LFBT-main/runlog/JOINT_20261013/protocol.md)、[results.csv](ECG_SSL_LFBT-main/runlog/JOINT_20261013/results.csv)、[paired_stats.csv](ECG_SSL_LFBT-main/runlog/JOINT_20261013/paired_stats.csv) |
 | 完整因子、拆分与反事实 | [ABC 冻结协议](ECG_SSL_LFBT-main/runlog/ABC_20261015/protocol_frozen.md)、[ABC 报告](ECG_SSL_LFBT-main/runlog/ABC_20261015/ABC最终报告.md)、[paired_stats.csv](ECG_SSL_LFBT-main/runlog/ABC_20261015/paired_stats.csv)、[factorial_stats.csv](ECG_SSL_LFBT-main/runlog/ABC_20261015/factorial_stats.csv) |
 | LP 与噪声汇总 | [table_lp_3domains.csv](ECG_SSL_LFBT-main/runlog/ABC_20261015/table_lp_3domains.csv)、[table_noise27.csv](ECG_SSL_LFBT-main/runlog/ABC_20261015/table_noise27.csv)；结合 JOINT 来源及具体比较对 |
@@ -103,6 +111,14 @@ ABC 报告有自动装配的条件性判读模板。尤其是 R 峰“必要性�
 
 ## 7. 后续工作入口与维护
 
+- **最新入口：[心电自监督增量实验计划](docs/research/INCREMENTAL_SSL_EXPERIMENT_PLAN_2026-10-24.md)**。用户明确允许试错、组合和小范围调参；探索前不要求证明全新机制。建议短训单项6配方→至多3个组合→主要权重局部三档→补种子，保留全部尝试；这是草案，未下发或部署自动训练。
+
+- [无人值守实验与自监督研究审查](docs/research/AUTONOMOUS_SSL_RESEARCH_REVIEW_2026-10-24.md)：论文核对深度、已有方法边界、有限假设/对照、无标签预训练与下游融合的区别，以及工作机执行器/Git回传/办公机巡检职责；尚未部署自动训练。
+
+后续探索门按用户2026-10-24偏好更新为“固定主验证指标正向即可继续；多种子看配对均值>0”，不再要求≥0.005或3/3为正；工程/预算边界保留，P0历史协议不回改。见[新设计§4.3](docs/research/REPRODUCTION_AND_NEXT_EXPERIMENTS_2026-10-24.md#43-后续统一探索门正向即可继续)。
+
+- [大论文总任务清单（2026-10-24，待审阅）](docs/research/TOTAL_TASK_QUEUE_2026-10-24.md)：完整阶段、主训练作业数、依赖及条件分支；仅规划，不改变HOSTS认领状态。
+- [2026-10-24复现与下一阶段实验设计](docs/research/REPRODUCTION_AND_NEXT_EXPERIMENTS_2026-10-24.md)：当前首选入口；先交接核验与四作业复现，再按证据选择条件性互补诊断或导联瓶颈诊断；尚未下发训练。
 - [整体实验设计](docs/research/EXPERIMENT_DESIGN_2026-10-23.md)、[主机 A 首批任务书草案](docs/experiments/THESIS_P0_20261023/TASKBOOK.md)：拟按预检→多标签 LP→匹配表示诊断→HeartLang 单任务验证执行；9+12+1 个主作业，训练/验证范围与建议预算写入协议。当前仅本地设计，未下发或启动。
 - [小论文收官总账](docs/paper/PAPER_CLOSEOUT_2026-10-23.md)：历史任务接续、关闭/替代裁决、独立冻结材料缺口和本轮整理核验。`报告归档/未完成报告/` 内的 W5A/W5B/W6 原任务书保留原路径，不能按目录名启动旧任务。
 - [论文与代码总览](../参考代码/论文与代码总览.md)、[PDF 下载记录](../参考代码/论文下载清单.json)、[本地参考代码总目录](../参考代码/README.md)、[复现与移植顺序](../参考代码/实验推进建议.md)：公开全文与固定源码分别记账；原始快照与主实验分开；先最小运行/行为核对，再按问题移植，不同时完整重训所有论文。
