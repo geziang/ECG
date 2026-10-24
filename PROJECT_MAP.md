@@ -34,7 +34,7 @@
 | [报告归档/](报告归档/) | 开题报告、历史设计、完成与未完成报告 |
 | [paper/](paper/) | 历史成稿与负结果支撑稿 |
 | [docs/paper/](docs/paper/PAPER_CLOSEOUT_2026-10-23.md) | 小论文收官总账、V7 表图证据映射与本轮整理核验 |
-| [docs/experiments/](docs/experiments/THESIS_P0_20261023/TASKBOOK.md) | 首批已正式执行并回传22/22；原协议/矩阵/来源锁保持冻结 |
+| [docs/experiments/](docs/experiments/THESIS_P0_20261023/TASKBOOK.md) | 主机 A 批次任务书：首批 `THESIS_P0_20261023` 已回传22/22；增量 SSL 批次 `THESIS_INC_20261024` 已于 10-25 收口（主线有效阴性；回看 [runlog/THESIS_INC_20261024/FINAL_REPORT.md](ECG_SSL_LFBT-main/runlog/THESIS_INC_20261024/FINAL_REPORT.md)） |
 | [docs/research/](docs/research/) | 当前后续研究计划与阅读清单 |
 | [../参考代码/](../参考代码/论文与代码总览.md) | Git 仓库外的九篇论文/源码资料；PDF、源码、权重及复现状态分别记录；尚未运行复现 |
 | [runlog/HANDOFF.md](runlog/HANDOFF.md) | 2026-09-18 旧快照，不是当前总账本 |
