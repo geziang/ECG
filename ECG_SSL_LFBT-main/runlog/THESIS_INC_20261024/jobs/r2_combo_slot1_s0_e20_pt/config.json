@@ -1,0 +1,14 @@
+{
+ "job_id": "r2_combo_slot1_s0_e20_pt",
+ "stage": "R2",
+ "recipe_name": "I2+RR",
+ "seed": 0,
+ "epochs": 20,
+ "recipe": {
+  "template_mode": "median",
+  "local_mode": null,
+  "morph_weight": 0.01,
+  "rr_weight": 0.1
+ },
+ "config_sha": "1ee7cd19ba18da6cd8ac479af5ba887e184562a3b0527a3619be586591d1a61e"
+}

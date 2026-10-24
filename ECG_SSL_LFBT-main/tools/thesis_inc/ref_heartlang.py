@@ -28,7 +28,7 @@ from tools.thesis_p0 import heartlang as HL0  # 复用已核验的复刻件
 CSV_DIR = HL0.REFS / "datasets" / "dataset_preprocess" / "CPSC2018"
 OUT = C.CKPT_ROOT / "ref_heartlang_data"
 JOB_ID = "ref_heartlang_s0"
-AUTHOR_ORDER = HL0.AUTHOR_CLASS_ORDER  # AFIB,VPC,NORM,1AVB,CRBBB,STE,PAC,CLBBB,STD
+CSV_COLS = ["AFIB", "VPC", "NORM", "1AVB", "CRBBB", "STE", "PAC", "CLBBB", "STD"]  # 作者 csv 原始列序
 
 
 def read_author_csv(split: str):
@@ -38,7 +38,7 @@ def read_author_csv(split: str):
     with open(f, newline="", encoding="utf-8") as fh:
         for row in csv.DictReader(fh):
             rids.append(row["filename"])
-            labels.append([int(row[c]) for c in AUTHOR_ORDER])
+            labels.append([int(row[c]) for c in CSV_COLS])
     return rids, np.asarray(labels, dtype=np.float32)
 
 
@@ -73,7 +73,7 @@ def build_data():
     assert not leak, f"test files present: {leak}"
     (OUT / "manifest.json").write_text(json.dumps({
         "ts": C.bj_str(), "author_commit": "a08afd8117e813fee212a1ac283db4a7140a4669",
-        "split": {"train": 4950, "val": 551}, "class_order": AUTHOR_ORDER,
+        "split": {"train": 4950, "val": 551}, "class_order": CSV_COLS,
         "csv_sha256": {s: C.sha256_of(CSV_DIR / f"icbeb_{s}.csv") for s in ("train", "val")},
         "files_sha256": {f.name: C.sha256_of(f) for f in sorted(OUT.glob("*.npy"))},
         "wall_s": round(time.perf_counter() - t0, 1)}, ensure_ascii=False, indent=1),
@@ -161,7 +161,7 @@ def train():
     np.savez_compressed(job_dir / "val_predictions.npz", record_ids=rid_va,
                         y_true=yva.numpy().astype(np.int8),
                         y_prob=best["probs"].astype(np.float32),
-                        class_order=np.array(AUTHOR_ORDER))
+                        class_order=np.array(CSV_COLS))
     zj = np.load(job_dir / "val_predictions.npz", allow_pickle=False)
     recompute = C.multilabel_metrics(zj["y_true"].astype(np.float32), zj["y_prob"].astype(np.float32))
     diffs = max(abs(metrics[k] - recompute[k])
@@ -172,7 +172,7 @@ def train():
     result = {"job_id": JOB_ID, "stage": "REF", "kind": "reference_linear_probe",
               "model": "HeartLang_author_protocol", "status": "complete",
               "train_records": 4950, "val_records": 551,
-              "class_order": AUTHOR_ORDER, "seed": 0, "label_fraction": 1.0,
+              "class_order": CSV_COLS, "seed": 0, "label_fraction": 1.0,
               "trainable": "linear(mlp_head)", "trainable_params": n_trainable,
               "macro_auprc": metrics["macro_auprc"], "macro_auroc": metrics["macro_auroc"],
               "val_bce_from_prob": metrics["val_bce_from_prob"],

@@ -1,6 +1,6 @@
 {
  "protocol_id": "thesis-inc-20261024-v1",
- "ts": "2026-10-24 17:12:13+08:00",
+ "ts": "2026-10-24 19:04:02+08:00",
  "jobs": [
   {
    "job_id": "r1_i0_s0_e20_lp",
@@ -60,7 +60,7 @@
    "depends_on": "r1_i2_s0_e20_pt",
    "condition": "always",
    "priority": 12,
-   "status": "planned"
+   "status": "complete"
   },
   {
    "job_id": "r1_i2_s0_e20_pt",
@@ -72,7 +72,7 @@
    "depends_on": "",
    "condition": "always",
    "priority": 12,
-   "status": "planned"
+   "status": "complete"
   },
   {
    "job_id": "r1_i3_s0_e20_lp",
@@ -84,7 +84,7 @@
    "depends_on": "r1_i3_s0_e20_pt",
    "condition": "always",
    "priority": 13,
-   "status": "planned"
+   "status": "complete"
   },
   {
    "job_id": "r1_i3_s0_e20_pt",
@@ -96,7 +96,7 @@
    "depends_on": "",
    "condition": "always",
    "priority": 13,
-   "status": "planned"
+   "status": "complete"
   },
   {
    "job_id": "r1_i4_s0_e20_lp",
@@ -108,7 +108,7 @@
    "depends_on": "r1_i4_s0_e20_pt",
    "condition": "always",
    "priority": 14,
-   "status": "planned"
+   "status": "complete"
   },
   {
    "job_id": "r1_i4_s0_e20_pt",
@@ -120,7 +120,7 @@
    "depends_on": "",
    "condition": "always",
    "priority": 14,
-   "status": "planned"
+   "status": "complete"
   },
   {
    "job_id": "r1_i5_s0_e20_lp",
@@ -132,7 +132,7 @@
    "depends_on": "r1_i5_s0_e20_pt",
    "condition": "always",
    "priority": 15,
-   "status": "planned"
+   "status": "complete"
   },
   {
    "job_id": "r1_i5_s0_e20_pt",
@@ -144,7 +144,7 @@
    "depends_on": "",
    "condition": "always",
    "priority": 15,
-   "status": "planned"
+   "status": "complete"
   },
   {
    "job_id": "r2_combo_slot1_s0_e20_lp",

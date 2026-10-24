@@ -1,0 +1,22 @@
+{
+ "job_id": "r1_i4_s0_e20_pt",
+ "stage": "R1",
+ "kind": "pretrain",
+ "recipe": "I4",
+ "seed": 0,
+ "epochs_target": 20,
+ "status": "trained",
+ "stop_reason": "all_epochs",
+ "init_fingerprint": "8ec4e139a46ae29812c931589f6d76389b9e2983a0a859ad1d54f2917588bbb8",
+ "wall_s": 1278.3,
+ "global_step": 5440,
+ "aux_counters": {
+  "local_skip_batches": 0,
+  "valid_records_seen": 696180,
+  "records_seen": 696320
+ },
+ "config_sha": "20974b85e4689becca277cf0a009dd6779d0d8b0fbd2a3a4b95102a63793e53f",
+ "git_head": "c3b2fbd6e7dd0699f2f2a86fb21d29f4cc711ea7",
+ "encoder_sha256": "2c906fb16ce0106535db37de29944517aaf27a69fea7fca5ee42a5fb14476c92",
+ "encoder_path": "F:\\新实验\\ECG_SSL_LFBT-main\\checkpoint\\thesis_inc\\r1_i4_s0_e20_pt\\encoder_group.pth"
+}
