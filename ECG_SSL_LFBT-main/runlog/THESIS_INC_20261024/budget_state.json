@@ -1,10 +1,12 @@
 {
- "gpu_s": 1777.3358974456787,
+ "gpu_s": 0.0,
  "ref_gpu_s": 0.0,
- "cpu_s": 335.3,
+ "cpu_s": 2112.635897445679,
  "eng_s": 2400.0,
- "jobs_started": 0,
- "jobs_started_by_stage": {},
+ "jobs_started": 1,
+ "jobs_started_by_stage": {
+  "R1": 1
+ },
  "repairs": {},
- "updated": "2026-10-24 16:10:12+08:00"
+ "updated": "2026-10-24 16:24:06+08:00"
 }

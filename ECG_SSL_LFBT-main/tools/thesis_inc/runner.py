@@ -299,8 +299,8 @@ def write_job_manifest():
         elif res is not None:
             row["status"] = res["status"]
         else:
-            # decisions.jsonl 的最后状态
-            row["status"] = row["initial_status"]
+            # decisions.jsonl 的最后状态(无记录则维持 planned/conditional)
+            row["status"] = row.get("initial_status", "planned")
             p = C.RESULTS / "decisions.jsonl"
             if p.exists():
                 for line in p.read_text(encoding="utf-8").splitlines():
