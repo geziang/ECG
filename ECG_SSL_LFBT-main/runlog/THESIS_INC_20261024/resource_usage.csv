@@ -39,3 +39,7 @@ ts,job_id,kind,add_s,cum_gpu_h,cum_ref_gpu_h,cum_cpu_h,cum_eng_h
 2026-10-24 19:30:41+08:00,r2_combo_slot1_s0_e20_lp,gpu,3.5,3.092,0.0,0.631,0.667
 2026-10-24 19:44:13+08:00,ref_heartlang_s0,ref_gpu,620.4,3.092,0.172,0.631,0.667
 2026-10-24 20:02:53+08:00,impl_session_2_ref_debug,eng,3300,3.092,0.172,0.631,1.583
+2026-10-24 20:21:59+08:00,ref_tokenizer_patching_s2025,ref_gpu,1141.3,3.092,0.489,0.631,1.583
+2026-10-24 20:23:47+08:00,ref_tokenizer_patching_s2025,ref_gpu,26.8,3.092,0.497,0.631,1.583
+2026-10-24 20:52:14+08:00,ref_tokenizer_median_beat_s2025,ref_gpu,260.6,3.092,0.569,0.631,1.583
+2026-10-24 21:02:11+08:00,ref_tokenizer_heartlang_s2025,ref_gpu,570.5,3.092,0.728,0.631,1.583

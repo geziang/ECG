@@ -53,3 +53,12 @@ R1 六组今晚完成 → 按门自动推进 R2/R3/R4；R2 后穿插 R-HL GPU �
 I0 参考：P0 的 100ep M6 冻结权重 LP 为 0.7318；本批 20ep I0 为 0.7367（不同批次口径，只作量级参考不作跨批结论）。
 
 REF 旁线：R-HL（作者协议：4950/551 作者 split、train 模式 dropout+冻结参数、max val macro-AUROC 选模、100ep 固定）训练中；R-TK 三行数据已就绪（作者 fold 复现：10 折 687–689；隔离缓存 train5500/val688；fold10 信号零读取），待 R-HL 后串行。资源：GPU ~3.1h/36h、REF 0h/4h、CPU ~0.75h/12h、工程 ~0.7h/12h、作业 15/50。
+
+## 追更二（21:1x，REF 旁线）
+
+- **R-HL 完成（作者协议完整 100ep）**：val macro-AUPRC 0.4218 / macro-AUROC 0.7947（best_ep=81，选模=max val macro-AUROC；backbone train 模式 dropout+参数冻结，训练前后哈希核验不变；test_loader_called=0；复算差 0）。与 P0 A4（我们 split/eval 模式/BCE 选模：0.4464/0.8121）分表，不合并口径。
+- **R-TK**：用户授权公开数据后解锁。实测**无需下载**：作者 fold 复现=HeartLang 仓库 CSV 元数据（ecg_id 1..6877 双射；与本地 2020 镜像 .hea Age/Sex 交叉验证 294/300 逐条一致，6 处差异均为 >89 岁审查伪影且同落 '>=80' 桶，fold 分配不受影响）+ 作者 stratisfy_df（seed 0）原样运行（10 折 687–689）；隔离缓存 train5500/val688（**fold10 信号零读取**；fold10 标签/年龄/性别仅作分层输入，不入任何训练/选模/评价路径——记录性偏差）。三行统一 micro16×accum16（32×8 在 patching 行实测 OOM 触发统一降档；模型无 BatchNorm，microbatch 无统计影响）。
+  - **median_beat 完成**：val macro-AUROC **0.8977**（best_ep=69，早停 patience15）
+  - **heartlang 完成**：val macro-AUROC **0.8971**（best_ep=84，早停）
+  - **patching**：1500-token 注意力在本卡上 epoch1 未能在 19 分钟内完成且 32×8 OOM；同进程降档重试因 CUDA 堆碎片 27 秒 OOM（工程伪影）；按每作业一次工程修复原则，新进程 16×16 限时 100 分钟尝试运行中，OOM/截断/完成三态均如实记录。
+- 资源（21:10）：GPU ~3.1h/36h；REF ~0.9h/4h；CPU ~0.75h/12h；工程 ~1.6h/12h；作业 17/50。

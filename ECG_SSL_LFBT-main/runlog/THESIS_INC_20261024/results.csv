@@ -23,3 +23,5 @@ r1_i5_s0_e20_lp,R1,linear_probe,I5,0,20,complete,max_epochs,3.5,0.72927822442837
 r2_combo_slot1_s0_e20_pt,R2,pretrain,I2+RR,0,20,trained,all_epochs,1593.3,,,cb28ac4e1e8b097d159b663f9dfe4e649c20f2ac1db9e773f5ff21493176128d
 r2_combo_slot1_s0_e20_lp,R2,linear_probe,I2+RR,0,20,complete,max_epochs,3.5,0.7359810107014414,0.9280621280973804,cb28ac4e1e8b097d159b663f9dfe4e649c20f2ac1db9e773f5ff21493176128d
 ref_heartlang_s0,REF,reference_linear_probe,HeartLang_author,0,,complete,fixed_100_epochs,620.4,0.4217605439934261,0.794680953568374,9dc89d72a3f1cacd941892103eaa523d44e373164cd4fadfb975907cc65864f6
+ref_tokenizer_median_beat_s2025,REF,reference_supervised,Tokenizer_median_beat,2025,,complete,early_stop_patience15,261.9,0.6348909326161593,0.8976942262064919,
+ref_tokenizer_heartlang_s2025,REF,reference_supervised,Tokenizer_heartlang,2025,,complete,early_stop_patience15,571.7,0.6537766770375152,0.8971041837078781,

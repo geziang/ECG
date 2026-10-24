@@ -1,0 +1,30 @@
+{
+ "job_id": "ref_tokenizer_median_beat_s2025",
+ "stage": "REF",
+ "kind": "reference_supervised",
+ "tokenizer": "median_beat",
+ "status": "complete",
+ "stop_reason": "early_stop_patience15",
+ "val_macro_auroc": 0.8976942262064919,
+ "macro_auprc": 0.6348909326161593,
+ "macro_auroc": 0.8976942262064919,
+ "best_epoch": 69,
+ "train_wall_s": 261.9,
+ "seed": 2025,
+ "effective_batch": 256,
+ "micro": "16x16",
+ "class_order_mlb": [
+  "1AVB",
+  "AFIB",
+  "CLBBB",
+  "CRBBB",
+  "NORM",
+  "PAC",
+  "STD",
+  "STE",
+  "VPC"
+ ],
+ "git_head": "bbc33def9bdf1a2a926d23bed80ad0fdcb47be9f",
+ "identity": "resource-adapted subset verification; recorded deviations see decisions/events",
+ "recompute_abs_diff": 0.0
+}
