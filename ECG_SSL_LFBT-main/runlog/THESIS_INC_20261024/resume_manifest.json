@@ -1,19 +1,20 @@
 {
  "protocol_id": "thesis-inc-20261024-v1",
- "ts": "2026-10-24 19:34:22+08:00",
+ "ts": "2026-10-24 23:11:05+08:00",
  "state": "main_line_closed_negative; REF side-line running",
  "budget": {
   "gpu_s": 11132.990589380264,
-  "ref_gpu_s": 0.0,
+  "ref_gpu_s": 9879.509566527326,
   "cpu_s": 2269.86525015831,
-  "eng_s": 2400.0,
-  "jobs_started": 15,
+  "eng_s": 8100.0,
+  "jobs_started": 18,
   "jobs_started_by_stage": {
    "R1": 13,
-   "R2": 2
+   "R2": 2,
+   "REF": 3
   },
   "repairs": {},
-  "updated": "2026-10-24 19:30:41+08:00"
+  "updated": "2026-10-24 23:11:05+08:00"
  },
  "jobs": [
   {

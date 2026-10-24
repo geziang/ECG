@@ -32,3 +32,5 @@
 - **2026-10-24 19:31:58+08:00** --auto 进入 R5
 - **2026-10-24 20:23:47+08:00** R-TK: 32x8 与 16x16 两档预检均 OOM, 支线 partial
 - **2026-10-24 20:2x** R-TK patching行: 32x8训练19分钟未完成epoch1后OOM(1500-token注意力, 23.8G贴线+分配器颠簸); run_all同进程自动降16x16, 预检过但27秒即OOM=继承了32x8残留的碎片化CUDA堆(工程伪影非独立证据); 按任务书"如任一行预检OOM三行统一micro16/accum16"冻结16x16; 同进程重试判定为工程缺陷, 改用全新进程逐行执行=每作业一次的工程修复; patching行限时(100min)截断跑, OOM或截断均如实partial
+- **2026-10-24 23:10:32+08:00** R-TK patching定案partial_infeasible_on_gpu: 两档OOM/超时实测证据齐; median/heartlang两行完整完成不受影响
+- **2026-10-24 23:1x / 10-25 收口** patching定案partial_infeasible_on_gpu(修复尝试>120min未完成epoch1, 证据三重: 32x8 OOM@19min / 16x16同进程27s碎片OOM / 16x16新进程120min+单epoch未竟, 资源7260s已补记); 最终机械核验: 11个评估作业复算全OK(≤1e-8)、frozen_encoder全true、矩阵16 complete+32 not_entered_by_gate+1 partial+1 planned(patching最终态已标); FINAL_REPORT/两份日报/resume_manifest/job_manifest齐; HOSTS回写✅收口

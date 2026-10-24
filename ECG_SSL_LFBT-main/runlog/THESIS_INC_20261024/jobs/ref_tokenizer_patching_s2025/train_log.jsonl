@@ -3,3 +3,5 @@
 {"ts": "2026-10-24 20:02:58+08:00", "job_id": "ref_tokenizer_patching_s2025", "event": "microbatch_precheck", "ok": true, "micro_bs": 32}
 {"ts": "2026-10-24 20:22:00+08:00", "job_id": "ref_tokenizer_patching_s2025", "event": "data", "n_train": 5500, "n_val": 688, "micro_bs": 16, "accum": 16}
 {"ts": "2026-10-24 20:23:20+08:00", "job_id": "ref_tokenizer_patching_s2025", "event": "microbatch_precheck", "ok": true, "micro_bs": 16}
+{"ts": "2026-10-24 21:02:28+08:00", "job_id": "ref_tokenizer_patching_s2025", "event": "data", "n_train": 5500, "n_val": 688, "micro_bs": 16, "accum": 16}
+{"ts": "2026-10-24 21:02:30+08:00", "job_id": "ref_tokenizer_patching_s2025", "event": "microbatch_precheck", "ok": true, "micro_bs": 16}

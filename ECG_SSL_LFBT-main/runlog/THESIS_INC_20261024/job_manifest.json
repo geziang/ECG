@@ -1,6 +1,6 @@
 {
  "protocol_id": "thesis-inc-20261024-v1",
- "ts": "2026-10-24 19:34:22+08:00",
+ "ts": "2026-10-24 23:11:05+08:00",
  "jobs": [
   {
    "job_id": "r1_i0_s0_e20_lp",
@@ -608,7 +608,9 @@
    "depends_on": "",
    "condition": "core_SSL_not_blocked_and_reference_budget_fit",
    "priority": 80,
-   "status": "blocked_not_started"
+   "status": "complete",
+   "note": "val macro-AUROC 0.8971 best_ep84 早停(16x16)",
+   "history": "曾判blocked_not_started(元数据缺失), 用户授权公开数据后解锁并完成(见decisions.jsonl)"
   },
   {
    "job_id": "ref_tokenizer_median_beat_s2025",
@@ -620,7 +622,9 @@
    "depends_on": "",
    "condition": "core_SSL_not_blocked_and_reference_budget_fit",
    "priority": 80,
-   "status": "blocked_not_started"
+   "status": "complete",
+   "note": "val macro-AUROC 0.8977 best_ep69 早停(16x16)",
+   "history": "曾判blocked_not_started(元数据缺失), 用户授权公开数据后解锁并完成(见decisions.jsonl)"
   },
   {
    "job_id": "ref_tokenizer_patching_s2025",
@@ -632,7 +636,9 @@
    "depends_on": "",
    "condition": "core_SSL_not_blocked_and_reference_budget_fit",
    "priority": 80,
-   "status": "blocked_not_started"
+   "status": "partial_infeasible_on_gpu",
+   "note": "两档OOM/单epoch>120min实测; 详见decisions",
+   "history": "曾判blocked_not_started(元数据缺失), 用户授权公开数据后解锁并完成(见decisions.jsonl)"
   }
  ]
 }

@@ -43,3 +43,5 @@ ts,job_id,kind,add_s,cum_gpu_h,cum_ref_gpu_h,cum_cpu_h,cum_eng_h
 2026-10-24 20:23:47+08:00,ref_tokenizer_patching_s2025,ref_gpu,26.8,3.092,0.497,0.631,1.583
 2026-10-24 20:52:14+08:00,ref_tokenizer_median_beat_s2025,ref_gpu,260.6,3.092,0.569,0.631,1.583
 2026-10-24 21:02:11+08:00,ref_tokenizer_heartlang_s2025,ref_gpu,570.5,3.092,0.728,0.631,1.583
+2026-10-24 23:10:32+08:00,ref_tokenizer_patching_s2025_repair,ref_gpu,7260,3.092,2.744,0.631,1.583
+2026-10-24 23:11:05+08:00,impl_session_3_closeout,eng,2400,3.092,2.744,0.631,2.25

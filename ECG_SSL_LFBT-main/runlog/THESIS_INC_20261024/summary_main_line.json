@@ -1,5 +1,5 @@
 {
- "ts": "2026-10-24 19:34:22+08:00",
+ "ts": "2026-10-24 23:11:05+08:00",
  "primary_metric": "val macro-AUPRC (CPSC train4809/val683, 冻结编码器 LP)",
  "r1_seed0_20ep": [
   {

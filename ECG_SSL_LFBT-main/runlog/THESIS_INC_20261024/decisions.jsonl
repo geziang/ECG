@@ -38,3 +38,4 @@
 {"ts": "2026-10-24 19:31:58+08:00", "gate": "R3", "slots": []}
 {"ts": "2026-10-24 19:31:58+08:00", "gate": "R4", "winners": []}
 {"ts": "2026-10-24 19:31:58+08:00", "gate": "R5", "decision": "no_positive_three_seed_mean", "note": "无三种子平均增量>0 的配方, R5 不启动"}
+{"ts": "2026-10-24 23:10:32+08:00", "job": "ref_tokenizer_patching_s2025", "status": "partial_infeasible_on_gpu", "note": "工程修复尝试(新进程16x16)运行>120分钟未完成epoch1; 32x8档19分钟OOM于epoch1中途; patience15需>=16epoch≈32h+, 远超REF 4h子预算与截止窗口; 按协议记录资源适配不可行, 不改输入/模型, 不称完整训练"}
