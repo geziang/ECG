@@ -1,6 +1,6 @@
 {
  "protocol_id": "thesis-inc-20261024-v1",
- "ts": "2026-10-24 16:24:06+08:00",
+ "ts": "2026-10-24 17:12:13+08:00",
  "jobs": [
   {
    "job_id": "r1_i0_s0_e20_lp",
@@ -12,7 +12,7 @@
    "depends_on": "r1_i0_s0_e20_pt",
    "condition": "always",
    "priority": 10,
-   "status": "planned"
+   "status": "complete"
   },
   {
    "job_id": "r1_i0_s0_e20_pt",
@@ -24,7 +24,7 @@
    "depends_on": "",
    "condition": "always",
    "priority": 10,
-   "status": "planned"
+   "status": "complete"
   },
   {
    "job_id": "r1_i1_s0_e20_lp",
@@ -36,7 +36,7 @@
    "depends_on": "r1_i1_s0_e20_pt",
    "condition": "always",
    "priority": 11,
-   "status": "planned"
+   "status": "complete"
   },
   {
    "job_id": "r1_i1_s0_e20_pt",
@@ -48,7 +48,7 @@
    "depends_on": "",
    "condition": "always",
    "priority": 11,
-   "status": "planned"
+   "status": "complete"
   },
   {
    "job_id": "r1_i2_s0_e20_lp",
@@ -576,7 +576,7 @@
    "depends_on": "",
    "condition": "core_SSL_not_blocked_and_reference_budget_fit",
    "priority": 80,
-   "status": "planned"
+   "status": "blocked_not_started"
   },
   {
    "job_id": "ref_tokenizer_median_beat_s2025",
@@ -588,7 +588,7 @@
    "depends_on": "",
    "condition": "core_SSL_not_blocked_and_reference_budget_fit",
    "priority": 80,
-   "status": "planned"
+   "status": "blocked_not_started"
   },
   {
    "job_id": "ref_tokenizer_patching_s2025",
@@ -600,7 +600,7 @@
    "depends_on": "",
    "condition": "core_SSL_not_blocked_and_reference_budget_fit",
    "priority": 80,
-   "status": "planned"
+   "status": "blocked_not_started"
   }
  ]
 }

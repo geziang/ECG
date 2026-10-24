@@ -1,0 +1,14 @@
+{
+ "job_id": "r1_i2_s0_e20_pt",
+ "stage": "R1",
+ "recipe_name": "I2",
+ "seed": 0,
+ "epochs": 20,
+ "recipe": {
+  "template_mode": "median",
+  "local_mode": null,
+  "morph_weight": 0.01,
+  "rr_weight": 0.0
+ },
+ "config_sha": "11cb8722825136947ae0e283cff0f72ed48b44d09c8a9a494513eb9b969d4c31"
+}

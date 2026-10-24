@@ -1,0 +1,49 @@
+{
+ "job_id": "r1_i0_s0_e20_lp",
+ "stage": "R1",
+ "kind": "linear_probe",
+ "recipe": "I0",
+ "seed": 0,
+ "pt_job_id": "r1_i0_s0_e20_pt",
+ "status": "complete",
+ "macro_auprc": 0.7366614531762419,
+ "macro_auroc": 0.9319685210628916,
+ "per_class_ap": [
+  0.7616979166590475,
+  0.930350037646991,
+  0.8388423656873543,
+  0.9331884127239909,
+  0.9659127546736609,
+  0.29178503709271997,
+  0.661426089955077,
+  0.7728994951151363,
+  0.47385096903219986
+ ],
+ "support": [
+  91,
+  122,
+  69,
+  21,
+  177,
+  60,
+  70,
+  88,
+  21
+ ],
+ "val_bce": 0.1454323501301448,
+ "val_bce_from_prob": 0.14543235301971436,
+ "best_epoch": 100,
+ "stop_reason": "max_epochs",
+ "feat_wall_s": 0.5,
+ "train_wall_s": 2.3,
+ "wall_s": 4.0,
+ "vram_peak_mib": 22.7,
+ "encoder_sha256": "500b0714e358c1a861a4b7efb054e738f03114682dbec0c8fe640bc460c8395c",
+ "data_sha256": {
+  "train": "d3be19f82390b93ec67b407297390206fe4706933836a7e16bd236fbed035e68",
+  "val": "f0389355a5708a6a30b5d92e43c962c0c1ee19b7aa3350e0aee36c734d2e677c"
+ },
+ "recompute_abs_diff_max": 0.0,
+ "frozen_encoder": true,
+ "git_head": "ddba233447b325efb725f3edca63d4d3b3494ecc"
+}

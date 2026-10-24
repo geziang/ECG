@@ -238,6 +238,22 @@ def run_pt_job(cfg: dict, stop_deadline, budget_guard=None, limit=None) -> dict:
                 aux_counters["valid_records_seen"] += int((valid > 0.5).sum().item())
                 aux_counters["records_seen"] += int(valid.numel())
 
+                grad_ratio = None
+                if (template is not None or local is not None) and morph_w > 0 \
+                        and aux_val is not None and step % (PRINT_FREQ * 5) == 0:
+                    # 辅助/主干梯度范数比(lead0 backbone 探针, backward 前计算, 图仍保留)
+                    try:
+                        probe = list(model.backbone_group[0].parameters())
+                        g_bt = torch.autograd.grad(loss_bt, probe, retain_graph=True,
+                                                   allow_unused=True)
+                        g_aux = torch.autograd.grad(morph_w * aux_val, probe,
+                                                    retain_graph=True, allow_unused=True)
+                        n_bt = torch.sqrt(sum(g.pow(2).sum() for g in g_bt if g is not None))
+                        n_aux = torch.sqrt(sum(g.pow(2).sum() for g in g_aux if g is not None))
+                        grad_ratio = (n_aux / n_bt.clamp(min=1e-12)).item()
+                    except Exception:
+                        grad_ratio = None
+
                 optimizer.zero_grad()
                 loss.backward()
                 optimizer.step()
@@ -256,20 +272,8 @@ def run_pt_job(cfg: dict, stop_deadline, budget_guard=None, limit=None) -> dict:
                         rec["aux"] = round(aux_val.item(), 6)
                     if diag_mean is not None:
                         rec["local_diag_mean"] = round(float(diag_mean), 5)
-                    # 辅助梯度范数比(lead0 backbone 探针, 确认辅助项非零接入)
-                    if (template is not None or local is not None) and morph_w > 0 \
-                            and aux_val is not None and step % (PRINT_FREQ * 5) == 0:
-                        try:
-                            probe = list(model.backbone_group[0].parameters())
-                            g_bt = torch.autograd.grad(loss_bt, probe, retain_graph=True,
-                                                       allow_unused=True)
-                            g_aux = torch.autograd.grad(morph_w * aux_val, probe,
-                                                        retain_graph=True, allow_unused=True)
-                            n_bt = torch.sqrt(sum(g.pow(2).sum() for g in g_bt if g is not None))
-                            n_aux = torch.sqrt(sum(g.pow(2).sum() for g in g_aux if g is not None))
-                            rec["grad_aux_bt"] = round((n_aux / n_bt.clamp(min=1e-12)).item(), 5)
-                        except Exception:
-                            rec["grad_aux_bt"] = None
+                    if grad_ratio is not None:
+                        rec["grad_aux_bt"] = round(grad_ratio, 5)
                     log(**rec)
                 flush_budget()
             ep_wall = time.time() - ep_t0

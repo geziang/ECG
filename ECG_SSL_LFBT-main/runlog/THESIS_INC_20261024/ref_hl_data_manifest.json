@@ -1,0 +1,36 @@
+{
+ "ts": "2026-10-24 16:49:04+08:00",
+ "author_commit": "a08afd8117e813fee212a1ac283db4a7140a4669",
+ "split": {
+  "train": 4950,
+  "val": 551
+ },
+ "class_order": [
+  "AFIB",
+  "VPC",
+  "NORM",
+  "1AVB",
+  "CRBBB",
+  "STE",
+  "PAC",
+  "CLBBB",
+  "STD"
+ ],
+ "csv_sha256": {
+  "train": "013fa62513598e7a141d5ea810f73b6b75cdddbab25e11bcbbcdf84a18f000de",
+  "val": "17fc4f6f95aa818e147ff3b6d5c314c9ae4301989469a0488aaa19638d3e44c8"
+ },
+ "files_sha256": {
+  "train_data.npy": "f869f46723b873684c3599daa57ef079b93d41c978f5a0621eeba83e82ae5165",
+  "train_data_in_chans.npy": "7d51f0713b6e623ed4dd1f80937a25adabbd1b96ea1637f4c77cf2e4f0f1904b",
+  "train_data_in_times.npy": "a66b751eb22e18367f333b672b8ffe4b45eab21d5905524b6cb31a772f95c878",
+  "train_labels.npy": "20fc3637ac7743fdcc1108ac6f1d6a8702c81f9ab9d19d8260d59539c34598b5",
+  "train_record_ids.npy": "092f2dd6e1aeb68fe38f5813e1179f3f2be2f820739824f77bce571102fa48a9",
+  "val_data.npy": "227cb85b21f66cf2104e5316dcb7f12929db2049ccdcd46914e4c35cc86b5bee",
+  "val_data_in_chans.npy": "5db5f8b0f73b632827b4628d54aa27aed042f8f24f91c6f3269d7f9f81b9c9ca",
+  "val_data_in_times.npy": "220cc3f22fdf7b943b644be4a7f2c97bc4b6eee02a590db2394be4e378a03a94",
+  "val_labels.npy": "fab3dcb12e13a41c85e3707c3e09367d3f0d4420f76edbdba5665d3762767448",
+  "val_record_ids.npy": "fc27369e4fc8db1375b2290675da98861aa1d8ec49f6ba26cb3e5887485b5a90"
+ },
+ "wall_s": 114.5
+}

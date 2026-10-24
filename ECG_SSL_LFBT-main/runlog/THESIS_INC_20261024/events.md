@@ -10,3 +10,7 @@
 - **2026-10-24 16:2x** 环境事故与修复: 首次R1启动用了conda base python(无CUDA), 训练实际全在CPU(GPU显存低于空闲基线判定), 约11分钟内终止; 已将误记gpu_s(1777s含smoke段, smoke实为CPU)整体重归类cpu_s, jobs_started复位, 清理未完成epoch的r1_i0作业目录; 改用 C:/Users/admin/.conda/envs/DL/python.exe 重启(实测CUDA可用). smoke 16/16结论不受影响(确定性/恢复检查与环境无关), 但smoke的GPU计时实为CPU计时已同批修正
 - **2026-10-24 16:24:06+08:00** --auto 进入 R1
 - **2026-10-24 16:24:06+08:00** 启动 PT r1_i0_s0_e20_pt (I0, seed0, 20ep)
+- **2026-10-24 16:45:46+08:00** 启动 PT r1_i1_s0_e20_pt (I1, seed0, 20ep)
+- **2026-10-24 17:04:19+08:00** R-TK三行判定blocked_not_started: 原始CPSC人口学元数据缺失且禁止新下载, 无法复现作者fold身份; REF旁线仅R-HL可执行
+- **2026-10-24 17:12:13+08:00** 启动 PT r1_i2_s0_e20_pt (I2, seed0, 20ep)
+- **2026-10-24 17:12** I1完成 LP auprc 0.7314 (vs I0 0.7367, delta -0.0053 非正); 梯度范数探针修复(移到backward前, 之前图已释放恒null); runner边界重启载入修复, I2续跑
