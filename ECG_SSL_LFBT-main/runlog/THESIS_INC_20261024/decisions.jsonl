@@ -30,3 +30,11 @@
 {"ts": "2026-10-24 19:04:02+08:00", "gate": "R2", "combos": [["combo_slot1", "I2+RR", "I1/I2/I3 全非正: 最佳形态项 I2(delta=-0.0003)+RR 单次组合机会"]]}
 {"ts": "2026-10-24 19:04:02+08:00", "job": "r2_combo_slot1_s0_e20_pt", "recipe_frozen": {"recipe_name": "I2+RR", "recipe": {"template_mode": "median", "local_mode": null, "morph_weight": 0.01, "rr_weight": 0.1}}}
 {"ts": "2026-10-24 19:12:08+08:00", "gate": "R-TK_unblock", "reason": "用户2026-10-24指示: 公开代码/数据集不构成安全限制, 授权获取公开原始数据。核实后无需下载: 本地2020镜像.hea注释含Age/Sex, HeartLang仓库CSV含ecg_id/age/sex/标签列, 作者stratify函数可原样运行(seed0)。原blocked判定撤销。", "recorded_deviations": ["信号取自2020 WFDB镜像(同一CPSC源重编码, 作者用原始TrainingSet mats)", "ecg_id基准取HeartLang CSV(同ecg_ptbxl_benchmarking谱系假定)", "分层构建读取了全库(含fold10)标签/年龄/性别公开元数据作为作者fold复现输入; test信号零读取, test标签不进入任何训练/选模/评价路径"]}
+{"ts": "2026-10-24 19:30:36+08:00", "job": "r2_combo_slot1_s0_e20_pt", "status": "trained", "note": "all_epochs"}
+{"ts": "2026-10-24 19:30:37+08:00", "job": "r2_combo_slot1_s0_e20_pt", "backup": {"job_id": "r2_combo_slot1_s0_e20_pt", "ts": "2026-10-24 19:30:36+08:00", "files": {"encoder_group.pth": {"bytes": 2882658, "sha256": "cb28ac4e1e8b097d159b663f9dfe4e649c20f2ac1db9e773f5ff21493176128d"}, "train_state.pth": {"bytes": 827311192, "sha256": "30cac01bc32e0b5f639192464ecd909360ab0ce57aa68cb0559c7119448f8bff"}}}}
+{"ts": "2026-10-24 19:30:41+08:00", "job": "r2_combo_slot1_s0_e20_lp", "status": "complete", "note": "max_epochs"}
+{"ts": "2026-10-24 19:30:41+08:00", "gate": "R3", "slots": []}
+{"ts": "2026-10-24 19:31:58+08:00", "gate": "R2", "combos": [["combo_slot1", "I2+RR", "I1/I2/I3 全非正: 最佳形态项 I2(delta=-0.0003)+RR 单次组合机会"]]}
+{"ts": "2026-10-24 19:31:58+08:00", "gate": "R3", "slots": []}
+{"ts": "2026-10-24 19:31:58+08:00", "gate": "R4", "winners": []}
+{"ts": "2026-10-24 19:31:58+08:00", "gate": "R5", "decision": "no_positive_three_seed_mean", "note": "无三种子平均增量>0 的配方, R5 不启动"}

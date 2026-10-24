@@ -436,7 +436,17 @@ def run_all(stop_deadline):
                 continue
             C.log_decision({"gate": "R-TK_microbatch", "choice": f"{micro_bs}x{accum}",
                             "note": "预检通过, 三行冻结此档"})
-            for tkz in TOKENIZERS:
+            for tkz in TOKENIZERS[1:]:
+                if C.budget_left_hours()["ref_gpu"] < 0.75:
+                    C.log_decision({"job": f"ref_tokenizer_{tkz}_s2025",
+                                    "status": "queued_not_started",
+                                    "note": "REF GPU 子预算(4h)余量不足"})
+                    continue
+                if C.now_bj() >= stop_deadline:
+                    C.log_decision({"job": f"ref_tokenizer_{tkz}_s2025",
+                                    "status": "queued_not_started",
+                                    "note": "GPU 停止截止前无法完成, 不开新行"})
+                    continue
                 train(tkz, micro_bs, accum, stop_deadline)
             return
         except torch.cuda.OutOfMemoryError:

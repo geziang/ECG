@@ -157,7 +157,7 @@ def _pos_rank(lp_by):
 
 
 def resolve_r4(lp_by) -> list:
-    top = _pos_rank(lp_by, None)[:2]
+    top = _pos_rank(lp_by)[:2]
     if not top:
         return []
     out = []

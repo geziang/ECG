@@ -1,6 +1,6 @@
 {
  "protocol_id": "thesis-inc-20261024-v1",
- "ts": "2026-10-24 19:04:02+08:00",
+ "ts": "2026-10-24 19:34:22+08:00",
  "jobs": [
   {
    "job_id": "r1_i0_s0_e20_lp",
@@ -156,7 +156,7 @@
    "depends_on": "r2_combo_slot1_s0_e20_pt",
    "condition": "resolve_by_R2_rule",
    "priority": 31,
-   "status": "planned"
+   "status": "complete"
   },
   {
    "job_id": "r2_combo_slot1_s0_e20_pt",
@@ -168,7 +168,7 @@
    "depends_on": "",
    "condition": "resolve_by_R2_rule",
    "priority": 31,
-   "status": "planned"
+   "status": "complete"
   },
   {
    "job_id": "r2_combo_slot2_s0_e20_lp",
@@ -180,7 +180,8 @@
    "depends_on": "r2_combo_slot2_s0_e20_pt",
    "condition": "resolve_by_R2_rule",
    "priority": 32,
-   "status": "planned"
+   "status": "not_entered_by_gate",
+   "note": "not_entered_by_gate: R2 规则=I1/I2/I3 全非正时仅 combo_slot1(最佳形态项+RR)一次机会, slot2/3 不进"
   },
   {
    "job_id": "r2_combo_slot2_s0_e20_pt",
@@ -192,7 +193,8 @@
    "depends_on": "",
    "condition": "resolve_by_R2_rule",
    "priority": 32,
-   "status": "planned"
+   "status": "not_entered_by_gate",
+   "note": "not_entered_by_gate: R2 规则=I1/I2/I3 全非正时仅 combo_slot1(最佳形态项+RR)一次机会, slot2/3 不进"
   },
   {
    "job_id": "r2_combo_slot3_s0_e20_lp",
@@ -204,7 +206,8 @@
    "depends_on": "r2_combo_slot3_s0_e20_pt",
    "condition": "resolve_by_R2_rule",
    "priority": 33,
-   "status": "planned"
+   "status": "not_entered_by_gate",
+   "note": "not_entered_by_gate: R2 规则=I1/I2/I3 全非正时仅 combo_slot1(最佳形态项+RR)一次机会, slot2/3 不进"
   },
   {
    "job_id": "r2_combo_slot3_s0_e20_pt",
@@ -216,7 +219,8 @@
    "depends_on": "",
    "condition": "resolve_by_R2_rule",
    "priority": 33,
-   "status": "planned"
+   "status": "not_entered_by_gate",
+   "note": "not_entered_by_gate: R2 规则=I1/I2/I3 全非正时仅 combo_slot1(最佳形态项+RR)一次机会, slot2/3 不进"
   },
   {
    "job_id": "r3_weight_slot1_s0_e20_lp",
@@ -228,7 +232,8 @@
    "depends_on": "r3_weight_slot1_s0_e20_pt",
    "condition": "positive_parent_exists",
    "priority": 41,
-   "status": "planned"
+   "status": "not_entered_by_gate",
+   "note": "not_entered_by_gate: R1+R2 无任何相对 I0 正向配方, 无权重档可扫"
   },
   {
    "job_id": "r3_weight_slot1_s0_e20_pt",
@@ -240,7 +245,8 @@
    "depends_on": "",
    "condition": "positive_parent_exists",
    "priority": 41,
-   "status": "planned"
+   "status": "not_entered_by_gate",
+   "note": "not_entered_by_gate: R1+R2 无任何相对 I0 正向配方, 无权重档可扫"
   },
   {
    "job_id": "r3_weight_slot2_s0_e20_lp",
@@ -252,7 +258,8 @@
    "depends_on": "r3_weight_slot2_s0_e20_pt",
    "condition": "positive_parent_exists",
    "priority": 42,
-   "status": "planned"
+   "status": "not_entered_by_gate",
+   "note": "not_entered_by_gate: R1+R2 无任何相对 I0 正向配方, 无权重档可扫"
   },
   {
    "job_id": "r3_weight_slot2_s0_e20_pt",
@@ -264,7 +271,8 @@
    "depends_on": "",
    "condition": "positive_parent_exists",
    "priority": 42,
-   "status": "planned"
+   "status": "not_entered_by_gate",
+   "note": "not_entered_by_gate: R1+R2 无任何相对 I0 正向配方, 无权重档可扫"
   },
   {
    "job_id": "r4_i0_s2_e20_lp",
@@ -276,7 +284,8 @@
    "depends_on": "r4_i0_s2_e20_pt",
    "condition": "I0_and_up_to_two_positive_recipes",
    "priority": 50,
-   "status": "planned"
+   "status": "not_entered_by_gate",
+   "note": "not_entered_by_gate: 无正向配方, 种子确认阶段按规则结束"
   },
   {
    "job_id": "r4_i0_s2_e20_pt",
@@ -288,7 +297,8 @@
    "depends_on": "",
    "condition": "I0_and_up_to_two_positive_recipes",
    "priority": 50,
-   "status": "planned"
+   "status": "not_entered_by_gate",
+   "note": "not_entered_by_gate: 无正向配方, 种子确认阶段按规则结束"
   },
   {
    "job_id": "r4_i0_s4_e20_lp",
@@ -300,7 +310,8 @@
    "depends_on": "r4_i0_s4_e20_pt",
    "condition": "I0_and_up_to_two_positive_recipes",
    "priority": 50,
-   "status": "planned"
+   "status": "not_entered_by_gate",
+   "note": "not_entered_by_gate: 无正向配方, 种子确认阶段按规则结束"
   },
   {
    "job_id": "r4_i0_s4_e20_pt",
@@ -312,7 +323,8 @@
    "depends_on": "",
    "condition": "I0_and_up_to_two_positive_recipes",
    "priority": 50,
-   "status": "planned"
+   "status": "not_entered_by_gate",
+   "note": "not_entered_by_gate: 无正向配方, 种子确认阶段按规则结束"
   },
   {
    "job_id": "r4_winner_slot1_s2_e20_lp",
@@ -324,7 +336,8 @@
    "depends_on": "r4_winner_slot1_s2_e20_pt",
    "condition": "I0_and_up_to_two_positive_recipes",
    "priority": 51,
-   "status": "planned"
+   "status": "not_entered_by_gate",
+   "note": "not_entered_by_gate: 无正向配方, 种子确认阶段按规则结束"
   },
   {
    "job_id": "r4_winner_slot1_s2_e20_pt",
@@ -336,7 +349,8 @@
    "depends_on": "",
    "condition": "I0_and_up_to_two_positive_recipes",
    "priority": 51,
-   "status": "planned"
+   "status": "not_entered_by_gate",
+   "note": "not_entered_by_gate: 无正向配方, 种子确认阶段按规则结束"
   },
   {
    "job_id": "r4_winner_slot1_s4_e20_lp",
@@ -348,7 +362,8 @@
    "depends_on": "r4_winner_slot1_s4_e20_pt",
    "condition": "I0_and_up_to_two_positive_recipes",
    "priority": 51,
-   "status": "planned"
+   "status": "not_entered_by_gate",
+   "note": "not_entered_by_gate: 无正向配方, 种子确认阶段按规则结束"
   },
   {
    "job_id": "r4_winner_slot1_s4_e20_pt",
@@ -360,7 +375,8 @@
    "depends_on": "",
    "condition": "I0_and_up_to_two_positive_recipes",
    "priority": 51,
-   "status": "planned"
+   "status": "not_entered_by_gate",
+   "note": "not_entered_by_gate: 无正向配方, 种子确认阶段按规则结束"
   },
   {
    "job_id": "r4_winner_slot2_s2_e20_lp",
@@ -372,7 +388,8 @@
    "depends_on": "r4_winner_slot2_s2_e20_pt",
    "condition": "I0_and_up_to_two_positive_recipes",
    "priority": 52,
-   "status": "planned"
+   "status": "not_entered_by_gate",
+   "note": "not_entered_by_gate: 无正向配方, 种子确认阶段按规则结束"
   },
   {
    "job_id": "r4_winner_slot2_s2_e20_pt",
@@ -384,7 +401,8 @@
    "depends_on": "",
    "condition": "I0_and_up_to_two_positive_recipes",
    "priority": 52,
-   "status": "planned"
+   "status": "not_entered_by_gate",
+   "note": "not_entered_by_gate: 无正向配方, 种子确认阶段按规则结束"
   },
   {
    "job_id": "r4_winner_slot2_s4_e20_lp",
@@ -396,7 +414,8 @@
    "depends_on": "r4_winner_slot2_s4_e20_pt",
    "condition": "I0_and_up_to_two_positive_recipes",
    "priority": 52,
-   "status": "planned"
+   "status": "not_entered_by_gate",
+   "note": "not_entered_by_gate: 无正向配方, 种子确认阶段按规则结束"
   },
   {
    "job_id": "r4_winner_slot2_s4_e20_pt",
@@ -408,7 +427,8 @@
    "depends_on": "",
    "condition": "I0_and_up_to_two_positive_recipes",
    "priority": 52,
-   "status": "planned"
+   "status": "not_entered_by_gate",
+   "note": "not_entered_by_gate: 无正向配方, 种子确认阶段按规则结束"
   },
   {
    "job_id": "r5_full_winner_s0_e100_lp",
@@ -420,7 +440,8 @@
    "depends_on": "r5_full_winner_s0_e100_pt",
    "condition": "positive_confirmed_winner_and_budget_deadline_fit",
    "priority": 71,
-   "status": "planned"
+   "status": "not_entered_by_gate",
+   "note": "not_entered_by_gate: 无三种子平均增量>0 配方(种子确认未进入), R5 不启动"
   },
   {
    "job_id": "r5_full_winner_s0_e100_pt",
@@ -432,7 +453,8 @@
    "depends_on": "",
    "condition": "positive_confirmed_winner_and_budget_deadline_fit",
    "priority": 71,
-   "status": "planned"
+   "status": "not_entered_by_gate",
+   "note": "not_entered_by_gate: 无三种子平均增量>0 配方(种子确认未进入), R5 不启动"
   },
   {
    "job_id": "r5_full_winner_s2_e100_lp",
@@ -444,7 +466,8 @@
    "depends_on": "r5_full_winner_s2_e100_pt",
    "condition": "positive_confirmed_winner_and_budget_deadline_fit",
    "priority": 73,
-   "status": "planned"
+   "status": "not_entered_by_gate",
+   "note": "not_entered_by_gate: 无三种子平均增量>0 配方(种子确认未进入), R5 不启动"
   },
   {
    "job_id": "r5_full_winner_s2_e100_pt",
@@ -456,7 +479,8 @@
    "depends_on": "",
    "condition": "positive_confirmed_winner_and_budget_deadline_fit",
    "priority": 73,
-   "status": "planned"
+   "status": "not_entered_by_gate",
+   "note": "not_entered_by_gate: 无三种子平均增量>0 配方(种子确认未进入), R5 不启动"
   },
   {
    "job_id": "r5_full_winner_s4_e100_lp",
@@ -468,7 +492,8 @@
    "depends_on": "r5_full_winner_s4_e100_pt",
    "condition": "positive_confirmed_winner_and_budget_deadline_fit",
    "priority": 75,
-   "status": "planned"
+   "status": "not_entered_by_gate",
+   "note": "not_entered_by_gate: 无三种子平均增量>0 配方(种子确认未进入), R5 不启动"
   },
   {
    "job_id": "r5_full_winner_s4_e100_pt",
@@ -480,7 +505,8 @@
    "depends_on": "",
    "condition": "positive_confirmed_winner_and_budget_deadline_fit",
    "priority": 75,
-   "status": "planned"
+   "status": "not_entered_by_gate",
+   "note": "not_entered_by_gate: 无三种子平均增量>0 配方(种子确认未进入), R5 不启动"
   },
   {
    "job_id": "r5_i0_s0_e100_lp",
@@ -492,7 +518,8 @@
    "depends_on": "r5_i0_s0_e100_pt",
    "condition": "positive_confirmed_winner_and_budget_deadline_fit",
    "priority": 70,
-   "status": "planned"
+   "status": "not_entered_by_gate",
+   "note": "not_entered_by_gate: 无三种子平均增量>0 配方(种子确认未进入), R5 不启动"
   },
   {
    "job_id": "r5_i0_s0_e100_pt",
@@ -504,7 +531,8 @@
    "depends_on": "",
    "condition": "positive_confirmed_winner_and_budget_deadline_fit",
    "priority": 70,
-   "status": "planned"
+   "status": "not_entered_by_gate",
+   "note": "not_entered_by_gate: 无三种子平均增量>0 配方(种子确认未进入), R5 不启动"
   },
   {
    "job_id": "r5_i0_s2_e100_lp",
@@ -516,7 +544,8 @@
    "depends_on": "r5_i0_s2_e100_pt",
    "condition": "positive_confirmed_winner_and_budget_deadline_fit",
    "priority": 72,
-   "status": "planned"
+   "status": "not_entered_by_gate",
+   "note": "not_entered_by_gate: 无三种子平均增量>0 配方(种子确认未进入), R5 不启动"
   },
   {
    "job_id": "r5_i0_s2_e100_pt",
@@ -528,7 +557,8 @@
    "depends_on": "",
    "condition": "positive_confirmed_winner_and_budget_deadline_fit",
    "priority": 72,
-   "status": "planned"
+   "status": "not_entered_by_gate",
+   "note": "not_entered_by_gate: 无三种子平均增量>0 配方(种子确认未进入), R5 不启动"
   },
   {
    "job_id": "r5_i0_s4_e100_lp",
@@ -540,7 +570,8 @@
    "depends_on": "r5_i0_s4_e100_pt",
    "condition": "positive_confirmed_winner_and_budget_deadline_fit",
    "priority": 74,
-   "status": "planned"
+   "status": "not_entered_by_gate",
+   "note": "not_entered_by_gate: 无三种子平均增量>0 配方(种子确认未进入), R5 不启动"
   },
   {
    "job_id": "r5_i0_s4_e100_pt",
@@ -552,7 +583,8 @@
    "depends_on": "",
    "condition": "positive_confirmed_winner_and_budget_deadline_fit",
    "priority": 74,
-   "status": "planned"
+   "status": "not_entered_by_gate",
+   "note": "not_entered_by_gate: 无三种子平均增量>0 配方(种子确认未进入), R5 不启动"
   },
   {
    "job_id": "ref_heartlang_s0",

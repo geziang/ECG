@@ -1,0 +1,22 @@
+{
+ "job_id": "r2_combo_slot1_s0_e20_pt",
+ "stage": "R2",
+ "kind": "pretrain",
+ "recipe": "I2+RR",
+ "seed": 0,
+ "epochs_target": 20,
+ "status": "trained",
+ "stop_reason": "all_epochs",
+ "init_fingerprint": "8ec4e139a46ae29812c931589f6d76389b9e2983a0a859ad1d54f2917588bbb8",
+ "wall_s": 1593.3,
+ "global_step": 5440,
+ "aux_counters": {
+  "local_skip_batches": 0,
+  "valid_records_seen": 696180,
+  "records_seen": 696320
+ },
+ "config_sha": "1ee7cd19ba18da6cd8ac479af5ba887e184562a3b0527a3619be586591d1a61e",
+ "git_head": "8c4fb6ab63749d8cc006e90280ef861ad61fe1e4",
+ "encoder_sha256": "cb28ac4e1e8b097d159b663f9dfe4e649c20f2ac1db9e773f5ff21493176128d",
+ "encoder_path": "F:\\新实验\\ECG_SSL_LFBT-main\\checkpoint\\thesis_inc\\r2_combo_slot1_s0_e20_pt\\encoder_group.pth"
+}

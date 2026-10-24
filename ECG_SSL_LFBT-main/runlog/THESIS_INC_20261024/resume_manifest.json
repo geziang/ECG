@@ -1,0 +1,110 @@
+{
+ "protocol_id": "thesis-inc-20261024-v1",
+ "ts": "2026-10-24 19:34:22+08:00",
+ "state": "main_line_closed_negative; REF side-line running",
+ "budget": {
+  "gpu_s": 11132.990589380264,
+  "ref_gpu_s": 0.0,
+  "cpu_s": 2269.86525015831,
+  "eng_s": 2400.0,
+  "jobs_started": 15,
+  "jobs_started_by_stage": {
+   "R1": 13,
+   "R2": 2
+  },
+  "repairs": {},
+  "updated": "2026-10-24 19:30:41+08:00"
+ },
+ "jobs": [
+  {
+   "job_id": "r1_i0_s0_e20_pt",
+   "config": "F:\\新实验\\ECG_SSL_LFBT-main\\runlog\\THESIS_INC_20261024\\jobs\\r1_i0_s0_e20_pt\\config.json",
+   "result": "F:\\新实验\\ECG_SSL_LFBT-main\\runlog\\THESIS_INC_20261024\\jobs\\r1_i0_s0_e20_pt\\result.json",
+   "done": true,
+   "ckpt_dir": "F:\\新实验\\ECG_SSL_LFBT-main\\checkpoint\\thesis_inc\\r1_i0_s0_e20_pt",
+   "backup_dir": "D:\\thesis_inc_20261024_backup\\r1_i0_s0_e20_pt",
+   "backup_exists": true,
+   "encoder_sha256": "500b0714e358c1a861a4b7efb054e738f03114682dbec0c8fe640bc460c8395c"
+  },
+  {
+   "job_id": "r1_i1_s0_e20_pt",
+   "config": "F:\\新实验\\ECG_SSL_LFBT-main\\runlog\\THESIS_INC_20261024\\jobs\\r1_i1_s0_e20_pt\\config.json",
+   "result": "F:\\新实验\\ECG_SSL_LFBT-main\\runlog\\THESIS_INC_20261024\\jobs\\r1_i1_s0_e20_pt\\result.json",
+   "done": true,
+   "ckpt_dir": "F:\\新实验\\ECG_SSL_LFBT-main\\checkpoint\\thesis_inc\\r1_i1_s0_e20_pt",
+   "backup_dir": "D:\\thesis_inc_20261024_backup\\r1_i1_s0_e20_pt",
+   "backup_exists": true,
+   "encoder_sha256": "77c5786ea0321715bda38090c26d68b57200fb26e615afed56f6d852c2de9026"
+  },
+  {
+   "job_id": "r1_i2_s0_e20_pt",
+   "config": "F:\\新实验\\ECG_SSL_LFBT-main\\runlog\\THESIS_INC_20261024\\jobs\\r1_i2_s0_e20_pt\\config.json",
+   "result": "F:\\新实验\\ECG_SSL_LFBT-main\\runlog\\THESIS_INC_20261024\\jobs\\r1_i2_s0_e20_pt\\result.json",
+   "done": true,
+   "ckpt_dir": "F:\\新实验\\ECG_SSL_LFBT-main\\checkpoint\\thesis_inc\\r1_i2_s0_e20_pt",
+   "backup_dir": "D:\\thesis_inc_20261024_backup\\r1_i2_s0_e20_pt",
+   "backup_exists": true,
+   "encoder_sha256": "7180c213bd1d7cc41fa4cfe4cff1ae6ea8222a2344bee24d724c75add7b9ac91"
+  },
+  {
+   "job_id": "r1_i3_s0_e20_pt",
+   "config": "F:\\新实验\\ECG_SSL_LFBT-main\\runlog\\THESIS_INC_20261024\\jobs\\r1_i3_s0_e20_pt\\config.json",
+   "result": "F:\\新实验\\ECG_SSL_LFBT-main\\runlog\\THESIS_INC_20261024\\jobs\\r1_i3_s0_e20_pt\\result.json",
+   "done": true,
+   "ckpt_dir": "F:\\新实验\\ECG_SSL_LFBT-main\\checkpoint\\thesis_inc\\r1_i3_s0_e20_pt",
+   "backup_dir": "D:\\thesis_inc_20261024_backup\\r1_i3_s0_e20_pt",
+   "backup_exists": true,
+   "encoder_sha256": "ad49c00b10ab062a8587d76f27eda2450723e6cad79a2b2e7df89a2f4b5bd894"
+  },
+  {
+   "job_id": "r1_i4_s0_e20_pt",
+   "config": "F:\\新实验\\ECG_SSL_LFBT-main\\runlog\\THESIS_INC_20261024\\jobs\\r1_i4_s0_e20_pt\\config.json",
+   "result": "F:\\新实验\\ECG_SSL_LFBT-main\\runlog\\THESIS_INC_20261024\\jobs\\r1_i4_s0_e20_pt\\result.json",
+   "done": true,
+   "ckpt_dir": "F:\\新实验\\ECG_SSL_LFBT-main\\checkpoint\\thesis_inc\\r1_i4_s0_e20_pt",
+   "backup_dir": "D:\\thesis_inc_20261024_backup\\r1_i4_s0_e20_pt",
+   "backup_exists": true,
+   "encoder_sha256": "2c906fb16ce0106535db37de29944517aaf27a69fea7fca5ee42a5fb14476c92"
+  },
+  {
+   "job_id": "r1_i5_s0_e20_pt",
+   "config": "F:\\新实验\\ECG_SSL_LFBT-main\\runlog\\THESIS_INC_20261024\\jobs\\r1_i5_s0_e20_pt\\config.json",
+   "result": "F:\\新实验\\ECG_SSL_LFBT-main\\runlog\\THESIS_INC_20261024\\jobs\\r1_i5_s0_e20_pt\\result.json",
+   "done": true,
+   "ckpt_dir": "F:\\新实验\\ECG_SSL_LFBT-main\\checkpoint\\thesis_inc\\r1_i5_s0_e20_pt",
+   "backup_dir": "D:\\thesis_inc_20261024_backup\\r1_i5_s0_e20_pt",
+   "backup_exists": true,
+   "encoder_sha256": "0479e5d0057e076fb623e28ab360ad17abee708e154b9075521fee74c575e114"
+  },
+  {
+   "job_id": "r2_combo_slot1_s0_e20_pt",
+   "config": "F:\\新实验\\ECG_SSL_LFBT-main\\runlog\\THESIS_INC_20261024\\jobs\\r2_combo_slot1_s0_e20_pt\\config.json",
+   "result": "F:\\新实验\\ECG_SSL_LFBT-main\\runlog\\THESIS_INC_20261024\\jobs\\r2_combo_slot1_s0_e20_pt\\result.json",
+   "done": true,
+   "ckpt_dir": "F:\\新实验\\ECG_SSL_LFBT-main\\checkpoint\\thesis_inc\\r2_combo_slot1_s0_e20_pt",
+   "backup_dir": "D:\\thesis_inc_20261024_backup\\r2_combo_slot1_s0_e20_pt",
+   "backup_exists": true,
+   "encoder_sha256": "cb28ac4e1e8b097d159b663f9dfe4e649c20f2ac1db9e773f5ff21493176128d"
+  },
+  {
+   "job_id": "smoke_a_2ep",
+   "config": "F:\\新实验\\ECG_SSL_LFBT-main\\runlog\\THESIS_INC_20261024\\jobs\\smoke_a_2ep\\config.json",
+   "result": "F:\\新实验\\ECG_SSL_LFBT-main\\runlog\\THESIS_INC_20261024\\jobs\\smoke_a_2ep\\result.json",
+   "done": true,
+   "ckpt_dir": "F:\\新实验\\ECG_SSL_LFBT-main\\checkpoint\\thesis_inc\\smoke_a_2ep",
+   "backup_dir": "D:\\thesis_inc_20261024_backup\\smoke_a_2ep",
+   "backup_exists": false,
+   "encoder_sha256": "71150c1314ae761dbb4ae7a5de919778955d0dd29ef2e671598d4a4a3ba42819"
+  },
+  {
+   "job_id": "smoke_b_1ep",
+   "config": "F:\\新实验\\ECG_SSL_LFBT-main\\runlog\\THESIS_INC_20261024\\jobs\\smoke_b_1ep\\config.json",
+   "result": "F:\\新实验\\ECG_SSL_LFBT-main\\runlog\\THESIS_INC_20261024\\jobs\\smoke_b_1ep\\result.json",
+   "done": true,
+   "ckpt_dir": "F:\\新实验\\ECG_SSL_LFBT-main\\checkpoint\\thesis_inc\\smoke_b_1ep",
+   "backup_dir": "D:\\thesis_inc_20261024_backup\\smoke_b_1ep",
+   "backup_exists": false,
+   "encoder_sha256": "72e55ea03f9f0bb3d32726381051dc91111d3602466e60e602bd39a47fd6626b"
+  }
+ ]
+}
