@@ -1,0 +1,10 @@
+job_id,stage,kind,recipe,seed,pt_epochs,status,stop_reason,wall_s,macro_auprc,macro_auroc,encoder_sha256
+smoke_a_2ep,SMOKE,pretrain,I0,0,2,trained,all_epochs,268.9,,,71150c1314ae761dbb4ae7a5de919778955d0dd29ef2e671598d4a4a3ba42819
+smoke_b_1ep,SMOKE,pretrain,I0,0,1,trained,all_epochs,143.3,,,6c094e12e2215b5675904e84cf0bd31d95666ad017a0c0452c8295db83d08ba4
+smoke_a_2ep,SMOKE,pretrain,I0,0,2,trained,all_epochs,269.1,,,71150c1314ae761dbb4ae7a5de919778955d0dd29ef2e671598d4a4a3ba42819
+smoke_b_1ep,SMOKE,pretrain,I0,0,1,trained,all_epochs,143.5,,,6c094e12e2215b5675904e84cf0bd31d95666ad017a0c0452c8295db83d08ba4
+smoke_a_2ep,SMOKE,pretrain,I0,0,2,trained,all_epochs,269.2,,,71150c1314ae761dbb4ae7a5de919778955d0dd29ef2e671598d4a4a3ba42819
+smoke_b_1ep,SMOKE,pretrain,I0,0,1,trained,all_epochs,143.6,,,6c094e12e2215b5675904e84cf0bd31d95666ad017a0c0452c8295db83d08ba4
+smoke_b_1ep,SMOKE,pretrain,I0,0,2,trained,all_epochs,144.5,,,71150c1314ae761dbb4ae7a5de919778955d0dd29ef2e671598d4a4a3ba42819
+smoke_b_1ep,SMOKE,pretrain,I0,0,2,trained,all_epochs,94.7,,,72e55ea03f9f0bb3d32726381051dc91111d3602466e60e602bd39a47fd6626b
+smoke_lp,SMOKE,linear_probe,SMOKE,0,2,complete,early_stop_patience15,30.6,0.20488567869642826,0.6487978305874853,72e55ea03f9f0bb3d32726381051dc91111d3602466e60e602bd39a47fd6626b

@@ -1,0 +1,14 @@
+{
+ "job_id": "smoke_b_1ep",
+ "stage": "SMOKE",
+ "recipe_name": "I0",
+ "seed": 0,
+ "epochs": 2,
+ "recipe": {
+  "template_mode": null,
+  "local_mode": null,
+  "morph_weight": 0.0,
+  "rr_weight": 0.0
+ },
+ "config_sha": "0f5bf6b5a6bc2f3b68822832b0260f62ecc1ec7806ddc65549c8f865284e8c64"
+}

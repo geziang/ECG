@@ -1,0 +1,215 @@
+{
+ "protocol_id": "thesis-inc-20261024-v1",
+ "frozen_at": "2026-10-24 16:10:22+08:00",
+ "git_head": "42fe1c127ef34b800846b97359fb83b670d8d10f",
+ "git_dirty": [
+  "?? ECG_SSL_LFBT-main/runlog/THESIS_INC_20261024/",
+  "?? ECG_SSL_LFBT-main/tools/thesis_inc/"
+ ],
+ "impl_versions": {
+  "aug": "det-aug-v1",
+  "dataset": "nfh-pt-ds-v1",
+  "model": "incbt-v1",
+  "pretrain": "pt-v1",
+  "lp": "lp-v1",
+  "runner": "runner-v1"
+ },
+ "paths": {
+  "results_dir": "F:\\新实验\\ECG_SSL_LFBT-main\\runlog\\THESIS_INC_20261024",
+  "ckpt_root": "F:\\新实验\\ECG_SSL_LFBT-main\\checkpoint\\thesis_inc",
+  "backup_root": "D:\\thesis_inc_20261024_backup",
+  "nfh_samples": "F:\\新实验\\ECG_SSL_LFBT-main\\data\\pt_pretrain_nfh\\samples",
+  "rpeak_npz": "F:\\新实验\\ECG_SSL_LFBT-main\\data\\pt_rpeaks_nfh.npz",
+  "lp_train_npz": "D:\\thesis_p0_20261023_backup\\adaptation_data\\train_data.npz",
+  "lp_val_npz": "D:\\thesis_p0_20261023_backup\\adaptation_data\\val_data.npz"
+ },
+ "pretrain_resolved": {
+  "architecture": "per-lead VGG16(alpha=0.125, trc=1 GRN1D, fc=Identity) x8; projector 64-2048-2048-2048 (Linear no-bias + BN + ReLU, last Linear no-bias); output BN BatchNorm1d(2048, affine=False) per lead",
+  "loss": "LFBT Barlow Twins: per lead-pair recompute BN, C=c1.T@c2/batch_size, on=(diag-1)^2, off=lambd*offdiag^2, loss=gamma*loss_r+(1-gamma)*loss_t",
+  "gamma": 0.8,
+  "lambd": 0.0051,
+  "optimizer": "Adam(lr=1e-3, betas=(0.9,0.999), eps=1e-8, wd=0); param order = weights(ndim>1) then biases(ndim==1) across backbone,projector,bn,rr_head (run_pt 同口径)",
+  "batch_size": 128,
+  "drop_last": true,
+  "workers": 4,
+  "precision": "float32",
+  "scheduler": null,
+  "pilot_epochs": 20,
+  "full_epochs": 100,
+  "seeds": {
+   "pilot": [
+    0
+   ],
+   "confirm": [
+    2,
+    4
+   ],
+   "full": [
+    0,
+    2,
+    4
+   ]
+  },
+  "init": "from scratch per seed; set_seed(seed) before construction; construction order backbone->projector->bn->rr_head 保证共享部分初始指纹跨配方一致",
+  "sample_order": "per-epoch permutation via torch.Generator seeded by blake2b(f'perm|{seed}|{epoch}'); 同 seed 跨配方逐位一致; drop_last=True",
+  "global_views": {
+   "pipeline": "NSTDB NoiseInjector -> RRC-TO (源码 Compose 顺序); ToTensor",
+   "noise": {
+    "prob": 0.5,
+    "types": [
+     "bw",
+     "ma",
+     "em"
+    ],
+    "snr_db_uniform": [
+     5.0,
+     20.0
+    ],
+    "offset_range": "first_half",
+    "resample": "wfdb 360Hz -> 204.8Hz resample_poly(2048,3600)",
+    "snr_match": "per-lead power ratio, x + n*sqrt(px/(pn*10^(snr/10)))"
+   },
+   "rrc_to_params": [
+    0.5,
+    1.0,
+    0.0,
+    0.5
+   ],
+   "rng": "per-(seed,epoch,record,view g1/g2) blake2b 流(det-aug-v1); 分布与抽样顺序与源代码一致, 机制从 worker 全局 RNG 改为逐记录确定流; 保证跨配方一致与断点续训复现"
+  },
+  "aux_resolved": {
+   "valid_min_peaks": 3,
+   "window": {
+    "w": 205,
+    "lo": -102,
+    "hi_exclusive": 103,
+    "padding": "edge",
+    "per_beat_norm": false
+   },
+   "I1_I2_template": "全部有效缓存峰取窗后逐点 mean(I1)/median(I2); 一致性=复刻 _dv_consistency(逐对重算BN, on-diag, 两整段视图平均)",
+   "I3_peaks_selection": "K=min(峰数,8); 超过8按有序峰索引 round(linspace(0,P-1,8))",
+   "I5_fixed_centers": "floor((j+0.5)*2048/K)",
+   "local_views": "同一组原始窗两份, 各自仅 NoiseInjector(prob0.5), 无时间裁剪/平移/翻转; RNG=(seed,epoch,record,loc{j}v{1,2}) 独立于整段流",
+   "local_objective": "共享 backbone+projector; 权重 w_bj=1/(N_valid*K_b); 加权标准化 sqrt(var+1e-4); C=Z1s.T diag(w) Z2s; 逐导联 on=(diag-1)^2 + 0.0051*off^2; 八导联平均; N_valid<2 跳过该批局部项并计数; padding 窗(峰近边界)按 edge 填充后照常入行",
+   "rr": "rr_head=Linear(64,32)+ReLU+Linear(32,3), 输入视图1首导(II) 64维GAP特征; 目标 [mean_RR,SDNN,RMSSD] 秒, 全库 z-score (mu/sd 实测见 data_manifest)",
+   "rr_mu": [
+    0.7335849772199916,
+    0.1127129341761502,
+    0.16430685659604852
+   ],
+   "rr_sd": [
+    0.21893187657474164,
+    0.10432986021273122,
+    0.1653909388841418
+   ],
+   "rr_stats_n": 34898
+  },
+  "checkpoint_selection": "固定最后 epoch 导出编码器; 每 epoch 保存完整恢复状态"
+ },
+ "lp_resolved": {
+  "data": "P0 隔离 train4809/val683 (SHA 见 data_manifest); 九类 multihot 原始顺序",
+  "features": "共同整段编码器 8x64=512 维, eval+冻结",
+  "head": "Linear(512,9); BCEWithLogitsLoss; Adam(lr1e-3,b(0.9,0.999),eps1e-8,wd0)",
+  "batch_size": 128,
+  "drop_last": false,
+  "epochs_max": 100,
+  "patience": 15,
+  "selection": "严格最小元素加权 val BCE, 平局取更早 epoch",
+  "head_seed": "head_seed = pretrain_seed",
+  "no_tuning": "无增强/类别权重/scheduler/调参"
+ },
+ "r1_recipes": {
+  "I0": {
+   "template_mode": null,
+   "local_mode": null,
+   "morph_weight": 0.0,
+   "rr_weight": 0.0
+  },
+  "I1": {
+   "template_mode": "mean",
+   "local_mode": null,
+   "morph_weight": 0.01,
+   "rr_weight": 0.0
+  },
+  "I2": {
+   "template_mode": "median",
+   "local_mode": null,
+   "morph_weight": 0.01,
+   "rr_weight": 0.0
+  },
+  "I3": {
+   "template_mode": null,
+   "local_mode": "peaks",
+   "morph_weight": 0.01,
+   "rr_weight": 0.0
+  },
+  "I4": {
+   "template_mode": null,
+   "local_mode": null,
+   "morph_weight": 0.0,
+   "rr_weight": 0.1
+  },
+  "I5": {
+   "template_mode": null,
+   "local_mode": "fixed",
+   "morph_weight": 0.01,
+   "rr_weight": 0.0
+  }
+ },
+ "decision_rules": {
+  "primary": "validation macro average_precision_score over fixed nine classes",
+  "reference": "I0 with matching PT budget and seed",
+  "positive_delta_threshold": 0,
+  "positive_comparator": ">",
+  "all_predefined_seeds_used_in_mean": true,
+  "require_all_seeds_positive": false,
+  "require_statistical_significance": false,
+  "class_drops": "report all, no 0.02 veto",
+  "rank_ties": [
+   "smaller measured train_seconds",
+   "config_id lexicographic"
+  ],
+  "R2": "at most top two positive among I1,I2,I3 each +RR0.1; one remaining nonpositive morphology +RR opportunity, document complementarity; if all negative best morphology +RR once",
+  "R3": "best positive config, only dominant morphology/local weight x0.3/x3; if RR-only use 0.03/0.3; reuse x1; no positive means no sweep",
+  "R4": "up to top two positive recipes plus I0, all complete seeds2/4; I5 is eligible",
+  "R5": "best positive three-seed mean recipe plus I0 at100ep seeds0/2/4; launch only if time/resources permit; no FT or external test expansion",
+  "combo_log": "report delta_vs_I0 and delta_vs_parent separately",
+  "all_negative": "allow specified single complementary combo; then conclude valid negative if still nonpositive"
+ },
+ "budgets": {
+  "max_gpu_process_hours": 36,
+  "max_cpu_compute_hours": 12,
+  "max_engineering_hours": 12,
+  "max_reference_gpu_hours": 4,
+  "max_reference_debug_hours_per_branch": 1,
+  "max_concurrent_gpu_processes": 1,
+  "max_primary_training_jobs": 50,
+  "max_recorded_repair_per_failed_job": 1,
+  "stage_logical_job_caps": {
+   "R1": 12,
+   "R2": 6,
+   "R3": 4,
+   "R4": 12,
+   "R5": 12,
+   "REF": 4
+  },
+  "all_retries_smokes_and_io_count_toward_resources": true
+ },
+ "window": {
+  "authorized_date": "2026-10-24",
+  "latest_start_pretraining": "2026-10-26T10:00:00+08:00",
+  "latest_start_gpu_job": "2026-10-26T11:00:00+08:00",
+  "gpu_stop_and_save_by": "2026-10-26T11:30:00+08:00",
+  "final_report_by": "2026-10-26T12:00:00+08:00",
+  "launch_estimate_safety_factor": 1.25,
+  "checkpoint_reserve_minutes": 10
+ },
+ "forbidden": [
+  "test use",
+  "overwriting old freezes",
+  "unbounded search",
+  "unrecorded batch/sample/epoch changes",
+  "claiming LP-only as SSL PT",
+  "starting unrelated old queues"
+ ]
+}

@@ -1,0 +1,35 @@
+{
+ "protocol_id": "thesis-inc-20261024-v1",
+ "ts": "2026-10-24 15:27:51+08:00",
+ "nfh": {
+  "records": 34905,
+  "content_manifest_sha256": "9153b1f91ab7b2dd18894bf711c605e674eca2d2cc9ffa1e2567336e85ec1e01",
+  "rpeak_npz_sha256": "8ed1e5402d09cffa43ebefd2ae0395a6df97e365274d0dd9a051efa2e7c849eb",
+  "keys_match": true,
+  "valid_records_peaks_ge3": 34898,
+  "rr_mu": [
+   0.7335849772199916,
+   0.1127129341761502,
+   0.16430685659604852
+  ],
+  "rr_sd": [
+   0.21893187657474164,
+   0.10432986021273122,
+   0.1653909388841418
+  ],
+  "rr_stats_n": 34898
+ },
+ "lp_dev_data": {
+  "train": {
+   "sha_match": true,
+   "n": 4809,
+   "n_expected": 4809
+  },
+  "val": {
+   "sha_match": true,
+   "n": 683,
+   "n_expected": 683
+  }
+ },
+ "per_record_csv": "nfh_record_manifest.csv"
+}

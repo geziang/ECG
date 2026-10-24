@@ -1,0 +1,7 @@
+{"ts": "2026-10-24 15:58:05+08:00", "job_id": "smoke_a_2ep", "event": "init", "init_fingerprint": "8ec4e139a46ae29812c931589f6d76389b9e2983a0a859ad1d54f2917588bbb8", "n_params": 68849728}
+{"ts": "2026-10-24 15:58:22+08:00", "job_id": "smoke_a_2ep", "event": "dataset", "n_records": 256, "rr_mu": [0.6518023964972124, 0.09631822971848007, 0.138628801199397], "rr_sd": [0.24960238713975774, 0.09738304372056575, 0.1627200833468394], "rr_n_valid": 256, "aug_impl": "det-aug-v1"}
+{"ts": "2026-10-24 15:59:15+08:00", "job_id": "smoke_a_2ep", "epoch": 0, "step": 0, "loss": 2509.54541, "loss_r": 2498.44531, "loss_t": 2553.94653}
+{"ts": "2026-10-24 16:00:05+08:00", "job_id": "smoke_a_2ep", "event": "epoch_end", "epoch": 0, "wall_s": 103.2, "loss": 2983.04321, "loss_r": 3038.85547, "loss_t": 2759.79443, "aux": 0.0, "local_skip_batches": 0, "elapsed_s": 120.1}
+{"ts": "2026-10-24 16:01:21+08:00", "job_id": "smoke_a_2ep", "epoch": 1, "step": 0, "loss": 3303.00732, "loss_r": 3427.74316, "loss_t": 2804.06372}
+{"ts": "2026-10-24 16:02:11+08:00", "job_id": "smoke_a_2ep", "event": "epoch_end", "epoch": 1, "wall_s": 103.1, "loss": 2951.96973, "loss_r": 3019.86841, "loss_t": 2680.37488, "aux": 0.0, "local_skip_batches": 0, "elapsed_s": 246.1}
+{"ts": "2026-10-24 16:02:34+08:00", "job_id": "smoke_a_2ep", "event": "export_encoder", "sha": "71150c1314ae761dbb4ae7a5de919778955d0dd29ef2e671598d4a4a3ba42819"}

@@ -1,0 +1,106 @@
+{
+ "protocol_id": "thesis-inc-20261024-v1",
+ "ts": "2026-10-24 15:22:16+08:00",
+ "host": "Win4090",
+ "env": {
+  "python": "3.10.9",
+  "torch": "1.12.1",
+  "cuda_available": false,
+  "gpu": null,
+  "numpy": "1.23.5",
+  "wfdb": "4.1.2"
+ },
+ "gpu_state": "7 %, 1510 MiB, 24564 MiB",
+ "disk_free_bytes": {
+  "code": "?",
+  "backup": "?"
+ },
+ "source_lock_hashes_ok": 11,
+ "git_head_at_preflight": "42fe1c127ef34b800846b97359fb83b670d8d10f",
+ "git_dirty_at_preflight": [
+  "?? ECG_SSL_LFBT-main/tools/thesis_inc/"
+ ],
+ "readonly_checkpoints": [
+  {
+   "model": "M4",
+   "seed": 0,
+   "match": true,
+   "path": "F:\\新实验\\ECG_SSL_LFBT-main\\checkpoint\\joint_m4_noise\\seed0\\encoder_group.pth",
+   "backup_exists": true,
+   "backup_match": true
+  },
+  {
+   "model": "M4",
+   "seed": 2,
+   "match": true,
+   "path": "F:\\新实验\\ECG_SSL_LFBT-main\\checkpoint\\joint_m4_noise\\seed2\\encoder_group.pth",
+   "backup_exists": true,
+   "backup_match": true
+  },
+  {
+   "model": "M4",
+   "seed": 4,
+   "match": true,
+   "path": "F:\\新实验\\ECG_SSL_LFBT-main\\checkpoint\\joint_m4_noise\\seed4\\encoder_group.pth",
+   "backup_exists": true,
+   "backup_match": true
+  },
+  {
+   "model": "M6",
+   "seed": 0,
+   "match": true,
+   "path": "F:\\新实验\\ECG_SSL_LFBT-main\\checkpoint\\joint_m6\\seed0\\encoder_group.pth",
+   "backup_exists": true,
+   "backup_match": true
+  },
+  {
+   "model": "M6",
+   "seed": 2,
+   "match": true,
+   "path": "F:\\新实验\\ECG_SSL_LFBT-main\\checkpoint\\joint_m6\\seed2\\encoder_group.pth",
+   "backup_exists": true,
+   "backup_match": true
+  },
+  {
+   "model": "M6",
+   "seed": 4,
+   "match": true,
+   "path": "F:\\新实验\\ECG_SSL_LFBT-main\\checkpoint\\joint_m6\\seed4\\encoder_group.pth",
+   "backup_exists": true,
+   "backup_match": true
+  }
+ ],
+ "nfh_records": 34905,
+ "rpeak_keys": 34905,
+ "rpeak_key_match_sample_stems": true,
+ "nfh_valid_records_peaks_ge3": 34898,
+ "nfh_content_manifest_sha256": "9153b1f91ab7b2dd18894bf711c605e674eca2d2cc9ffa1e2567336e85ec1e01",
+ "rpeak_npz_sha256": "8ed1e5402d09cffa43ebefd2ae0395a6df97e365274d0dd9a051efa2e7c849eb",
+ "nfh_hash_elapsed_s": 316.7,
+ "rr_mu": [
+  0.7335849772199916,
+  0.1127129341761502,
+  0.16430685659604852
+ ],
+ "rr_sd": [
+  0.21893187657474164,
+  0.10432986021273122,
+  0.1653909388841418
+ ],
+ "rr_stats_n": 34898,
+ "lp_data": {
+  "train": {
+   "sha_match": true,
+   "n": 4809,
+   "n_expected": 4809
+  },
+  "val": {
+   "sha_match": true,
+   "n": 683,
+   "n_expected": 683
+  }
+ },
+ "issues": [],
+ "elapsed_s": 335.3,
+ "passed": true
+}

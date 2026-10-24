@@ -1,0 +1,22 @@
+{
+ "job_id": "smoke_a_2ep",
+ "stage": "SMOKE",
+ "kind": "pretrain",
+ "recipe": "I0",
+ "seed": 0,
+ "epochs_target": 2,
+ "status": "trained",
+ "stop_reason": "all_epochs",
+ "init_fingerprint": "8ec4e139a46ae29812c931589f6d76389b9e2983a0a859ad1d54f2917588bbb8",
+ "wall_s": 269.2,
+ "global_step": 4,
+ "aux_counters": {
+  "local_skip_batches": 0,
+  "valid_records_seen": 512,
+  "records_seen": 512
+ },
+ "config_sha": "108aad82355cb6a7c76c505420aabd55280c010ff77e3d2900a6848805e3a3b6",
+ "git_head": "42fe1c127ef34b800846b97359fb83b670d8d10f",
+ "encoder_sha256": "71150c1314ae761dbb4ae7a5de919778955d0dd29ef2e671598d4a4a3ba42819",
+ "encoder_path": "F:\\新实验\\ECG_SSL_LFBT-main\\checkpoint\\thesis_inc\\smoke_a_2ep\\encoder_group.pth"
+}

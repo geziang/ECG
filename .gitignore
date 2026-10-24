@@ -78,3 +78,6 @@ ECG_SSL_LFBT-main/runlog/W6/feat/
 
 # W8 (2026-10-12): E3 TSR 官方参照码嵌套仓(URL 可复克隆, 不入本仓)
 ReverseECG_official/
+
+# ===== thesis-inc 20261024: 可重建特征缓存不入库(逐记录预测npz保留) =====
+ECG_SSL_LFBT-main/runlog/THESIS_INC_20261024/jobs/*/feat.npz

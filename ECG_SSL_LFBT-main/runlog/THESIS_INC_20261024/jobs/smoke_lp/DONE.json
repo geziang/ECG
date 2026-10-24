@@ -1,0 +1,49 @@
+{
+ "job_id": "smoke_lp",
+ "stage": "SMOKE",
+ "kind": "linear_probe",
+ "recipe": "SMOKE",
+ "seed": 0,
+ "pt_job_id": "smoke_b_1ep",
+ "status": "complete",
+ "macro_auprc": 0.20488567869642826,
+ "macro_auroc": 0.6487978305874853,
+ "per_class_ap": [
+  0.17219756260442431,
+  0.3616040916893894,
+  0.15205046565217642,
+  0.1356526459593336,
+  0.5805575262980509,
+  0.10960431197158516,
+  0.15729514633372643,
+  0.12410917045312825,
+  0.05090018730603998
+ ],
+ "support": [
+  91,
+  122,
+  69,
+  21,
+  177,
+  60,
+  70,
+  88,
+  21
+ ],
+ "val_bce": 0.33867634713833983,
+ "val_bce_from_prob": 0.3386763036251068,
+ "best_epoch": 42,
+ "stop_reason": "early_stop_patience15",
+ "feat_wall_s": 27.5,
+ "train_wall_s": 1.6,
+ "wall_s": 30.6,
+ "vram_peak_mib": 0.0,
+ "encoder_sha256": "72e55ea03f9f0bb3d32726381051dc91111d3602466e60e602bd39a47fd6626b",
+ "data_sha256": {
+  "train": "d3be19f82390b93ec67b407297390206fe4706933836a7e16bd236fbed035e68",
+  "val": "f0389355a5708a6a30b5d92e43c962c0c1ee19b7aa3350e0aee36c734d2e677c"
+ },
+ "recompute_abs_diff_max": 0.0,
+ "frozen_encoder": true,
+ "git_head": "42fe1c127ef34b800846b97359fb83b670d8d10f"
+}
