@@ -1,0 +1,31 @@
+{
+ "ts": "2026-10-24 19:19:49+08:00",
+ "records": 6877,
+ "fold_counts": {
+  "1": 687,
+  "2": 687,
+  "3": 689,
+  "4": 687,
+  "5": 688,
+  "6": 688,
+  "7": 687,
+  "8": 687,
+  "9": 688,
+  "10": 689
+ },
+ "train_fold_le8": 5500,
+ "val_fold_9": 688,
+ "age_missing": 5,
+ "identity_notes": [
+  "数据身份(记录性偏差, 见 decisions/events):",
+  "- 作者 fold 复现: ecg_id/age/sex/标签取自 HeartLang 仓库三份 icbeb CSV",
+  "  (6877 条, ecg_id 为 1..6877 双射; 与本地 2020 镜像 .hea Age/Sex 逐条核对",
+  "  294/300 全一致, 6 处差异均为 >89 岁审查伪影(镜像封顶 92 vs 原值 90-94),",
+  "  分层年龄桶同落 '>=80', fold 分配不受影响)。",
+  "- 作者 stratisfy_df(含 Sechidis 多标签分层, np.random.seed(0))原样导入运行。",
+  "- 信号取自本地 2020 PhysioNet 镜像(同一 CPSC 源重编码, wfdb mat), 未走作者",
+  "  records100 的 16bit wfdb 往返(浮点路径, 记录偏差); zoom(0.2) 500->100Hz、",
+  "  data_slice(->1000x12)、select_data、train-fitted StandardScaler 均作者原码。",
+  "- 隔离信号清单: 仅 fold<=9 记录的信号被读取; fold10 信号零读取; fold10 的"
+ ]
+}

@@ -1,0 +1,19 @@
+{
+ "ts": "2026-10-24 19:21:28+08:00",
+ "class_order_mlb": [
+  "1AVB",
+  "AFIB",
+  "CLBBB",
+  "CRBBB",
+  "NORM",
+  "PAC",
+  "STD",
+  "STE",
+  "VPC"
+ ],
+ "train_n": 5500,
+ "val_n": 688,
+ "dropped_no_label": 0,
+ "signals_read": "fold<=9 only; fold10 信号零读取",
+ "wall_s": 42.7
+}
